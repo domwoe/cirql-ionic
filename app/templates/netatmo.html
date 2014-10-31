@@ -1,0 +1,18 @@
+<div id="menu-left" snap-drawer>
+  <div ng-include="'views/menu.html'"></div>
+</div>
+<div id="content" class="scrollable" snap-content>
+  <div>
+   	<button class="btn btn-default" role="button" ng-hide="isConnected" ng-click="authorizeNetatmo()">Connect to Netatmo</button>
+   </div>
+   <div>
+    <ul class="list-group">  
+      <li class="list-group-item" ng-repeat="(key, netatmo) in netatmos">{{netatmo.name}}
+      	<ul class="list-group">
+      		<li class="list-group-item" ng-repeat="(moduleId, module) in netatmo.modules" ng-click="toggleNetatmo(netatmo.$id,moduleId, module.room)">{{module.name}} {{module.room}}</li>
+      	</ul>
+      </li>
+    </ul>
+  </div>
+</div>
+

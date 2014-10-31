@@ -1,0 +1,30 @@
+<div class="circle">
+  <div class="title">
+    <div>
+      <h1>Hi!</h1>
+      <p>It seems you logged in from a new device. Please select your user</p>
+    </div>
+  </div>
+  <p class="error">{{err}}</p>
+  <form role="form">
+    <div class="form-group">
+      <button class="btn btn-primary btn-block" ng-repeat="resident in residents">{{resident.name}}</button>
+    </div>
+    <div class="form-group">
+      <div class="center-block">
+        <div class="divider">
+          <hr class="pull-left"/>OR<hr class="pull-right" />
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <p>Create a new user</p>
+    </div>
+    <div class="form-group">
+      <input type="email" ng-model="resident.name" class="form-control" id="InputUserResident" placeholder="Enter your name">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success btn-block">Log In</button>
+    </div>
+  </form>
+</div>

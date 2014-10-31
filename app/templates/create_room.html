@@ -1,0 +1,35 @@
+<div id="content" class="scrollable">
+  <div class="circle circle-wizard">
+    <a class="step step-1 step-done">1</a>
+    <a class="step step-2 step-done">2</a>
+    <a class="step step-3 step-done">3</a>
+    <a class="step step-4 step-active">4</a>
+    <div class="title">
+      <h1>Add a room to your home</h1>
+    </div>
+    <p class="error">{{err}}</p>
+    <form role="form">
+      <div class="form-group">
+        <input type="text" ng-model="room.name" class="form-control" id="roomName" placeholder="Give your room a name">
+      </div>
+      <div class="form-group">
+        <select ng-model="room.category" class="form-control placeholder"id="roomCategory" placeholder="Category (Dropdown)">
+          <option value="" disabled selected>Category</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="bedroom">Bedroom</option>
+          <option value="livingroom">Livingroom</option>
+          <option value="office">Office</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-default btn-block btn-primary">Add Thermostat</button>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-default btn-block btn-primary">Add another room</button>
+      </div>
+      <div class="form-group">
+        <button ng-click="createRoom(room.name, room.category)" type="submit" class="btn btn-default btn-block btn-success">Next</button>
+      </div>
+    </form>
+  </div>
+</div>

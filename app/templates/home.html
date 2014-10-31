@@ -1,0 +1,42 @@
+<div id="menu-left" snap-drawer>
+  <div ng-include="'views/menu.html'"></div>
+</div>
+<div id="content" class="scrollable" snap-content>
+  <h3>{{home.name}}</h3>
+  <div class="circle">
+    <table class="rooms-table">
+      <tr ng-repeat="room in rooms">
+        <th><a ng-href="#/room/{{room.$id}}"> {{room.name}}</th>
+      </tr>
+    </table>
+  </div>
+  <!--<form role="form">
+    <div class="form-group">
+      <input type="text" ng-model="home.name" class="form-control" id="homeName" placeholder="name your home">
+    </div>
+  </form>
+  div class="panel panel-default">
+    
+    <div class="panel-heading">Rooms</div>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="room in rooms">
+      {{room.name}}
+      <button class="btn btn-danger btn-xs pull-right" role="button" ng-click="removeItem(rooms, room)">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+      </li>
+    </ul>
+  </div>
+  <form ng-submit="addRoom(newRoom)">
+    <div class="form-group">
+      <input type="text" ng-model="newRoom" class="form-control" id="roomName" placeholder="new room">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success btn-block" role="button" ng-click="addRoom(newRoom)">Add room</button>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-default navbar-btn pull-right" role="button" ng-click="logout()">Log Out</button>
+    </div>
+  -->
+  </form>
+</div>
