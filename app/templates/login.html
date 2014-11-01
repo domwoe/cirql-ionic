@@ -1,29 +1,29 @@
-<div id="content" class="scrollable" snap-content>
-  <div class="circle">
-    <div class="title">
-      <h1>Connected intelligent room climate</h1>
+<ion-view>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">Login</h1>
+  </ion-header-bar>
+  <ion-content class="has-header">
+    <div class="list">
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Email</span>
+        <input type="email" placeholder="me@gmail.com" ng-model="user.email">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Password</span>
+        <input type="password" placeholder="mySECRETpassword" ng-model="user.password">
+      </label>
     </div>
-    <p class="error">{{err}}</p>
-    <form role="form">
-      <div class="form-group">
-        <input type="email" ng-model="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+    <div class="padding">
+      <button class="button button-positive button-block" ng-click="login()">Login</button>
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
       </div>
-      <div class="form-group">
-        <input type="password" ng-model="pass" class="form-control" id="exampleInputPassword1" placeholder="Password">
-      </div>
-      <div class="form-group">
-        <button ng-click="passwordLogin(email, pass)" class="btn btn-success btn-block">Log In</button>
-      </div>
-      <div class="form-group">
-        <div class="center-block">
-          <div class="divider">
-            <hr class="pull-left"/>OR<hr class="pull-right" />
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <a ng-click="create()" class="btn btn-primary btn-block">Create New Account</a>
-      </div>
-    </form>
-  </div>
-</div>
+      <br><br><br>
+      <button class="button button-stable button-block" ui-sref="reset-password">
+        Can't remember my password
+      </button>
+      <button class="button button-stable button-block" ui-sref="signup">
+        FREE Sign Up
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

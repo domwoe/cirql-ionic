@@ -8,67 +8,49 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('LoginCtrl', ['$scope', '$rootScope', 'simpleLogin', '$state', function($scope, $rootScope, simpleLogin, $state) {
-  //deactivate menu
-  $rootScope.menu = false;
+.controller('LoginCtrl',
+  function($scope, $state, $ionicLoading, Auth, User) {
+    $scope.user = {
+      email: '',
+      password: ''
+    };
+    $scope.errorMessage = null;
 
-  //redirect to home if user is already logged in
-  if(simpleLogin.user) {
-    $state.go('home');
-  }
+    $scope.login = function() {
+      $scope.errorMessage = null;
 
-  $scope.awesomeThings = [
-    'HTML5 Boilerplate',
-    'AngularJS',
-    'Karma'
-  ];
-  $scope.oauthlogin = function(provider) {
-    login(provider, {
-      rememberMe: true
-    });
-  };
-
-  $scope.passwordLogin = function(email, pass) {
-    $rootScope.user = {uid: 'simplelogin:15'};
-    $state.go('home');
-    // login('password', {
-    //   email: email,
-    //   password: pass,
-    //   rememberMe: true
-    // });
-  };
-
-  $scope.create = function() {
-    $state.go('create');
-  };
-
-  $scope.createAccount = function(email, pass, confirm) {
-    $scope.err = null;
-    if( !pass ) {
-      $scope.err = 'Please enter a password';
-    }
-    else if( pass !== confirm ) {
-      $scope.err = 'Passwords do not match';
-    }
-    else {
-      simpleLogin.createAccount(email, pass/*, name*/)
-      .then(function() {
-        $state.go('create_user');
-      }, function(err) {
-        $scope.err = err;
+      $ionicLoading.show({
+        template: 'Please wait...'
       });
-    }
-  };
 
-  function login(provider, opts) {
-    $scope.err = null;
-    simpleLogin.login(provider, opts).then(
-      function() {
-      $state.go('home');
-    },
-    function(err) {
-      $scope.err = err;
+      console.log($scope.user.email);
+      Auth.login($scope.user.email, $scope.user.password)
+          .then(User.loadCurrentUser)
+          .then(redirectBasedOnStatus)
+          .catch(handleError);
+    };
+
+    function redirectBasedOnStatus() {
+      $ionicLoading.hide();
+
+      if (User.hasChangedPassword()) {
+        $state.go('app.home');
+      } else {
+        $state.go('change-password');
+      }
     }
-    );
-  }
-}]);
+
+    function handleError(error) {
+      switch (error.code) {
+        case 'INVALID_EMAIL':
+        case 'INVALID_PASSWORD':
+        case 'INVALID_USER':
+          $scope.errorMessage = 'Email or password is incorrect';
+          break;
+        default:
+          $scope.errorMessage = 'Error: [' + error.code + ']';
+      }
+
+      $ionicLoading.hide();
+    }
+  });

@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'development',
-            apiEndpoint: 'http://dev.yoursite.com:10000/'
+            fburl: 'https://cirql.firebaseio.com'
           }
         }
       },
@@ -49,7 +49,7 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'production',
-            apiEndpoint: 'http://api.yoursite.com/'
+            fburl: 'https://cirql.firebaseio.com'
           }
         }
       }
@@ -520,7 +520,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('init', [
     'clean',
-    //'ngconstant:development',
+    'ngconstant:development',
     'wiredep',
     'concurrent:server',
     'autoprefixer',
@@ -531,7 +531,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('compress', [
     'clean',
-    //'ngconstant:production',
+    'ngconstant:production',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

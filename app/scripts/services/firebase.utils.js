@@ -8,8 +8,8 @@
  * # firebase.utils
  * a simple wrapper on Firebase and AngularFire to simplify deps and keep things DRY 
  */
-angular.module('firebase.utils', ['firebase', 'cirqlApp.config'])
-  .factory('fbutil', ['$window', 'FBURL', '$firebase', function($window, FBURL, $firebase) {
+angular.module('firebase.utils', ['firebase', 'config'])
+  .factory('fbutil', ['$window', 'ENV', '$firebase', function($window, ENV, $firebase) {
     return {
       syncObject: function(path, factoryConfig) { // jshint ignore:line
         return syncData.apply(null, arguments).$asObject();
@@ -48,7 +48,7 @@ angular.module('firebase.utils', ['firebase', 'cirqlApp.config'])
      * @return a Firebase instance
      */
     function firebaseRef(path) { // jshint ignore:line
-      var ref = new $window.Firebase(FBURL);
+      var ref = new $window.Firebase(ENV.fburl);
       var args = Array.prototype.slice.call(arguments);
       if( args.length ) {
         ref = ref.child(pathRef(args));
