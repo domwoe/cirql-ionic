@@ -8,41 +8,7 @@
 angular.module('cirqlApp')
 
 .config(function($stateProvider, $urlRouterProvider) {
-  var resolve = {
-    auth: function($q, $timeout, Auth, User) {
-      var defer = $q.defer();
-      var state = this;
-
-      Auth.getCurrentUser().then(function() {
-        User.loadCurrentUser().then(function() {
-          if (state.name === 'change-password') {
-            defer.resolve();
-          } else {
-            if (User.hasChangedPassword()) {
-              defer.resolve();
-            } else {
-              defer.reject('change-password');
-            }
-          }
-        });
-      }, function() {
-        $timeout(function() { // See: http://stackoverflow.com/q/24945731/247243
-          defer.reject('login');
-        }, 250);
-      });
-
-      return defer.promise;
-    }
-  };
   $stateProvider
-
-    .state('app', {
-      url: '/app',
-      abstract: true,
-      templateUrl: 'templates/menu.html',
-      controller: 'SideMenuCtrl'
-    })
-
     .state('login', {
       url: '/login',
       templateUrl: 'templates/login.html',
@@ -64,14 +30,33 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app', {
+      url: '/app',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'SideMenuCtrl',
+      resolve: {
+        // controller will not be invoked until getCurrentUser resolves
+        'user': ['simpleLogin', function(simpleLogin) {
+          // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
+          // since $getCurrentUser returns a promise resolved when auth is initialized,
+          // we can simple return that here to ensure the controller waits for auth before
+          // loading
+          return simpleLogin.getUser();
+        }]
+      }
+    })
+
     .state('app.home', {
       url: '/home',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/home.html'
+          templateUrl: 'templates/home.html',
+          controller: 'HomeCtrl'
         }
       }
     })
+
     .state('app.room', {
       url: '/rooms/:roomId',
       views: {

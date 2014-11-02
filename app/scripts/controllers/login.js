@@ -9,7 +9,7 @@
  */
 angular.module('cirqlApp')
 .controller('LoginCtrl',
-  function($scope, $state, $ionicLoading, Auth, User) {
+  function($scope, $state, $ionicLoading, simpleLogin, resident) {
     $scope.user = {
       email: '',
       password: ''
@@ -23,21 +23,17 @@ angular.module('cirqlApp')
         template: 'Please wait...'
       });
 
-      console.log($scope.user.email);
-      Auth.login($scope.user.email, $scope.user.password)
-          .then(User.loadCurrentUser)
-          .then(redirectBasedOnStatus)
-          .catch(handleError);
+      simpleLogin.login('password', {
+        email: $scope.user.email,
+        password: $scope.user.password
+      })
+      .then(redirectBasedOnStatus)
+      .catch(handleError);
     };
 
     function redirectBasedOnStatus() {
       $ionicLoading.hide();
-
-      if (User.hasChangedPassword()) {
-        $state.go('app.home');
-      } else {
-        $state.go('change-password');
-      }
+      $state.go('app.home');
     }
 
     function handleError(error) {

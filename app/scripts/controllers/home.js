@@ -8,33 +8,11 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('HomeCtrl', ['$scope', '$rootScope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$location', 'roomDetailService', 
-  function ($scope, $rootScope, user, simpleLogin, fbutil, $timeout, $location, $roomDetailService) {
-
-    $rootScope.menu = true;
-    $scope.user = user;
+.controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', 'roomDetailService', 
+  function ($scope, user, simpleLogin, fbutil, $roomDetailService) {
+    
     $scope.logout = simpleLogin.logout;
-    $scope.newResident;
 
-    $scope.addResident = function(name){
-      if(name) {
-        $scope.residents.$add({name: name});
-        console.log(name + ' added');
-        $scope.newResident = null;
-      }
-    };
-    $scope.newRoom;
-    $scope.addRoom = function(name){
-      if(name) {
-        $scope.rooms.$add({name: name});
-        console.log(name + ' added');
-        $scope.newRoom = null;
-      }
-    };
-    $scope.removeItem = function(list, item){
-      list.$remove(item);
-      console.log('removed', item.name);
-    };
     function loadHome(user) {
       if( $scope.home ) {
         $scope.home.$destroy();
@@ -70,41 +48,4 @@ angular.module('cirqlApp')
           }, error);
       }
     };
-
-    $scope.roomDetail = function(room) {
-      $roomDetailService.setRoom(room);
-      $location.path('/room');
-    };
-
-    $scope.changeEmail = function(pass, newEmail) {
-      $scope.err = null;
-      simpleLogin.changeEmail(pass, newEmail)
-        .then(function(user) {
-          loadHome(user);
-          success('Email changed');
-        })
-        .catch(error);
-    };
-
-    function error(err) {
-      alert(err, 'danger');
-    }
-
-    function success(msg) {
-      alert(msg, 'success');
-    }
-
-    function alert(msg, type) {
-      var obj = {text: msg, type: type};
-      $scope.messages.unshift(obj);
-      $timeout(function() {
-        $scope.messages.splice($scope.messages.indexOf(obj), 1);
-      }, 10000);
-    }
-
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }]);

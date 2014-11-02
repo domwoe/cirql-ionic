@@ -8,10 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$routeParams', '$rootScope',
-  function ($scope, user, simpleLogin, fbutil, $timeout, $routeParams, $rootScope) {
+.controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
+  function ($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
 
-    var room = $routeParams.room;
+    var room = $stateParams.roomId;
     var homeUrl = 'homes/' + user.uid;
     var roomUrl = homeUrl +'/rooms/' + room;
     var sensorUrl = roomUrl + '/sensors/netatmo';

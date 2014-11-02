@@ -3,6 +3,7 @@
 angular.module('cirqlApp', [
   'ionic',
   'config',
+  'simpleLogin',
   'firebase.utils',
 ])
 
@@ -18,5 +19,4 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
   });
-})
-
+});
