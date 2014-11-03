@@ -8,9 +8,11 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
-  function ($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
+.controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
+  function ($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
 
+    //disable dragging of sidemenu
+    $ionicSideMenuDelegate.canDragContent(false);
     var room = $stateParams.roomId;
     var homeUrl = 'homes/' + user.uid;
     var roomUrl = homeUrl +'/rooms/' + room;
@@ -37,16 +39,14 @@ angular.module('cirqlApp')
         });
     });
 
+    $scope.roomId = room;
     $scope.user = user;
     $scope.logout = simpleLogin.logout;
-    $scope.start = 0;
+    $scope.min = 0;
     $scope.max = 30;
-    $scope.stroke = 5;
+    $scope.stroke = 12;
     $scope.radius = 110;
-    $scope.currentColor = '#00FF00';
+    $scope.currentColor = '#FFFFFF';
     $scope.bgColor = '#000000';
 
-    //$scope.$watchCollection('[max, stroke, radius, currentColor, bgColor, roomValues]', function(newValue, oldValue) {
-    //    $rootScope.$broadcast('renderCircle');
-    //});
 }]);

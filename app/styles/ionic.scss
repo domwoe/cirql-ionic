@@ -1,7 +1,38 @@
 /* Your app's SASS, go crazy, make it your own */
 
+// Colors
+// -------------------------------
 $positive: #336699;
 $balanced: #669900;
+
+
+// Base
+// -------------------------------
+$font-family-sans-serif:          "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+
+$font-family-base:                $font-family-sans-serif;
+$font-size-base:                  14px;
+$font-size-large:                 18px;
+$font-size-small:                 11px;
+
+$headings-font-weight:            100;
+$base-color:                      #fff;
+$headings-line-height:            1.2;
+
+// Buttons
+// -------------------------------
+$button-border-radius:            24px;
+$button-font-size:                20px;
+
+// Bars
+// -------------------------------
+$bar-transparency:                0.2;
+$bar-light-text:                  #000;
+
+// Items
+// -------------------------------
+$item-light-bg:                   transparent;
+$item-light-border:               transparent;
 
 // Any variables you did not define will use the defaults
 //bower:scss

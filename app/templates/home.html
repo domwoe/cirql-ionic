@@ -3,11 +3,33 @@
     <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-content class="has-header">
-    <h3>{{home.name}}</h3>
     <div class="circle">
-      <div class="list list-inset">
-        <div class="item" ng-repeat="room in rooms">
-          <a ng-href="#/app/rooms/{{room.$id}}"> {{room.name}}</a>
+      <div class="rooms-table">
+        <div class="row" ng-repeat="room in rooms" ng-if="room.name">
+          <div class="left">
+            <a ui-sref="app.room({roomId: room.$id})"> {{room.name}} </a> <hr/> 
+          </div> 
+          <div class="right"> 
+            <div class="svg-container" ng-cloak>
+              <div class="progress-wrapper" ng-style="{'font-size': ((radius + stroke)/ 3)+'px'}">
+                <div room-temperature
+                    scale="0.60"
+                    min="min"
+                    max="max"
+                    roomid="room.$id"
+                    targettemp="room.virtualTarget"
+                    measuredtemp="room.temperature"
+                    mode="room.mode"
+                    color="{{ currentColor }}" 
+                    bgcolor="{{ bgColor }}" 
+                    radius="{{ radius }}" 
+                    stroke="{{ stroke }}"
+                    data-snap-ignore="false"
+                    displaytarget="false">
+                </div>
+              </div> 
+            </div>
+          </div>
         </div>
       </div>
     </div>

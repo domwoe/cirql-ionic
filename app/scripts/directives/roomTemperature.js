@@ -12,55 +12,68 @@ angular.module('cirqlApp')
                 };
             }
 
-            var updateState = function(value, total, measured, R, ring, size) {
-                if(!size){
+            var drawArc = function(arc, start, end, max, R, size, targetColor) {
+                 if (!size) {
                     return;
-                };
-
-                console.log("measured ", measured);
-                console.log("size ", size);
-
-                var value       = value >= total ? total - 0.00001 : value,
-                    type        = 279.9999,
-                    perc        = (value/total)*type,
-                    perc_end    = (measured/total)*type,
-                    x           = size/2,
-                    start       = polarToCartesian(x, x, R, perc),
-                    end         = polarToCartesian(x, x, R, measured),
-                    arcSweep    = (perc <= 180 ? "0" : "1"),
-                    d = [
-                        "M", start.x, start.y, 
-                        "A", R, R, 0, arcSweep, 0, end.x, end.y
-                    ].join(" ");
-
-                ring.attr('d', d);
-
-                
-                if (measured != 0) {
-                    var icon = d3.select("#thermoIcon");
-                    var px = start.x - 15;
-                    var py = start.y - 15;
-                    console.log("TR: ", px, py);
-                    icon.attr('transform', 'translate(' + px + ',' + py + ')');
                 }
+                var end       = end >= max ? max - 0.00001 : end,
+                    type      = 279.9999,
+                    perc      = start/max*type,
+                    perc_end  = end/max*type,
+                    x         = size/2,
+                    startCart = polarToCartesian(x, x, R, perc),
+                    endCart   = polarToCartesian(x, x, R, perc_end);
+                    
+                var d = d3.svg.arc()
+                    .innerRadius(R)
+                    .outerRadius(R)
+                    .startAngle((perc - 140)*2*Math.PI/360)
+                    .endAngle((perc_end - 140)*2*Math.PI/360);
 
-                
-                
-                if (measured === 0) {
-                    var icon = d3.select("#targetIcon");
-                    var px = start.x - 15;
-                    var py = start.y - 15;
-                    console.log("TR: ", px, py);
-                    icon.attr('transform', 'translate(' + px + ',' + py + ')');
-                }    
+                arc.attr('d', d)
+                   .attr('transform', 'translate(' + x + ',' + x + ')')
+                   .attr('stroke', targetColor);
+                return [startCart, endCart];
+            }
+
+            var updateMeasuredArc = function(arc, start, end, max, R, size, roomid) {
+                var carts = drawArc(arc, start, end, max, R, size, "#000000");
+                var endCart = carts[1];
+                var icon = d3.select("#thermoIcon" + roomid);
+                icon.attr(
+                    'transform', 'translate(' + (endCart.x - 20.5) + ',' + (endCart.y - 21) + ')'
+                );
+            };
+
+            var updateTargetArc = function(arc, start, end, mustHeat, min, max, R, size, roomid) {
+                var targetColor = mustHeat ? '#F9690E' : '#3498DB';
+                var carts = drawArc(arc, start, end, max, R, size, targetColor);
+                var targetCart = mustHeat? carts[1]: carts[0];
+
+                var bgicon = d3.select("#bgTargetIcon" + roomid);
+                bgicon.attr({
+                    'cx': targetCart.x,
+                    'cy': targetCart.y
+                    })
+                    .attr('fill',targetColor);
+          
+                var icon = d3.select("#targetIcon" + roomid); 
+                icon.attr(
+                    'transform', 
+                    'translate(' + (targetCart.x - 20.5) + ',' + (targetCart.y - 21) + ') scale(0.6)'
+                );
             };
 
             return {
-                restrict:'EA',
-                scope:{
+                restrict: 'EA',
+                scope: {
+                    displaytarget:  "=",
+                    roomid:         "=",
                     targettemp:     "=",
                     measuredtemp:   "=",
                     mode:           "=",
+                    scale:          "=",
+                    min:            "=",
                     max:            "=",
                     radius:         "@",
                     color:          "@",
@@ -68,16 +81,8 @@ angular.module('cirqlApp')
                     stroke:         "@"
                 },
                 link: function (scope, element, attrs) {
-                    var ring        = d3.select('#target_path'),
-                        measured_ring = d3.select('#measured_path'),
-                        ring_background  = element.find('circle'),
-                        thermoIcon  = d3.select('#thermoIcon'),
-                        tempDrawer = d3.select('#tempDrawer'),
-                        arcGroup = d3.select('#arcGroup'),
-                        targetIcon = d3.select('#targetIcon'),
-                        //mode = d3.select('#mode'),
-                        size,
-                        resetValue;
+                    var ring_background     = element.find('circle'),
+                        size;
 
                     var mouseDragCallback = function() {
                         function roundHalf(num) {
@@ -87,43 +92,61 @@ angular.module('cirqlApp')
 
                         var coords = [0,0];
                         coords = d3.mouse(this);
-                        var phi = Math.atan2(coords[1] - 130, coords[0] - 130);
+                        var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
                         phi = (phi*360/(2*Math.PI) + 230)%360 ;
 
-                        var target = roundHalf(phi*scope.max/(270));
+                        var target = roundHalf(phi*scope.max/270);
 
                         scope.targettemp = target;
-                        //scope.$apply();
-                        updateState(
-                                        target,
-                                        scope.max,
-                                        0,
-                                        scope.radius - 5,
-                                        ring,
-                                        size
-                                    );
                     };
 
-                    targetIcon.call(d3.behavior.drag()
-                        .on('dragstart', mouseDragCallback)
-                        .on('drag', mouseDragCallback));
+                    var heartbeat = function() {
+                        var heart = d3.select('#heart');
+                        heart.classed('heart-beat', true);
+                        setTimeout(function() {
+                             heart.classed('heart-beat', false);    
+                        }, 2000);
+                    };
 
-                    thermoIcon.on('click', function() {
-                        var visibility = tempDrawer.style("visibility");
-                        if (visibility === 'hidden') {
-                            tempDrawer.style("visibility",'visible');
-                        }
-                        else {
-                            tempDrawer.style("visibility",'hidden');
-                        }
-                    });
+                    var radius           = scope.radius,
+                        stroke           = scope.stroke;
+
+                    size = radius*2 + parseInt(stroke)*2;
 
                     var renderCircle = function() {
                         $timeout(function() {
-                            var radius       = scope.radius,
-                            stroke           = scope.stroke;
+                           
+                            var scalingContainer    = d3.select('#scaling' + scope.roomid),
+                                measured_ring       = d3.select('#measured_path' + scope.roomid),
+                                thermoIcon          = d3.select('#thermoIcon' + scope.roomid),
+                                tempDrawer          = d3.select('#tempDrawer' + scope.roomid),
+                                bgTargetIcon        = d3.select('#bgTargetIcon' + scope.roomid),
+                                ring                = d3.select('#target_path' + scope.roomid),
+                                targetIcon          = d3.select('#targetIcon' + scope.roomid);
 
-                            size = radius*2 + parseInt(stroke)*2;
+                            if (scope.displaytarget) {
+                                bgTargetIcon.call(d3.behavior.drag()
+                                    .on('dragstart', mouseDragCallback)
+                                    .on('drag', mouseDragCallback)
+                                    .on('dragend', heartbeat));
+                            } else {
+                                targetIcon.style("visibility", 'hidden');
+                                bgTargetIcon.style("visibility", 'hidden');
+                            }
+
+                            thermoIcon.on('click', function() {
+                                var visibility = tempDrawer.style("visibility");
+                                if (visibility === 'hidden') {
+                                    tempDrawer.style("visibility", 'visible');
+                                }
+                                else {
+                                    tempDrawer.style("visibility", 'hidden');
+                                }
+                            });
+
+                            scalingContainer.attr({
+                                "transform":    "scale(" + scope.scale + ")"
+                            });
 
                             element.attr({
                                 "width":        size,
@@ -131,14 +154,15 @@ angular.module('cirqlApp')
                             });
 
                             measured_ring.attr({
-                                "stroke":       scope.color,
                                 "stroke-width": stroke,
-                                "transform": ''
+                                "stroke-opacity": 0.65,
                             });
 
+                            if (!scope.displaytarget) {
+                                ring.style("visibility", 'hidden');
+                            }
                             ring.attr({
-                                "stroke":       "#0000FF",
-                                "stroke-width": stroke,
+                                "stroke-width": stroke
                             });
 
                             ring_background.attr({
@@ -155,8 +179,17 @@ angular.module('cirqlApp')
                     };
 
                     var renderState = function (newValue, oldValue) {
-
                         if (scope.targettemp) {
+                            if (!angular.isDefined(newValue)) {
+                                return false;
+                            }
+                            if (newValue > scope.max) {
+                                if (oldValue >= scope.max) {
+                                    return scope.targettemp = scope.max;
+                                } else {
+                                    return scope.targettemp = scope.min;
+                                }
+                            }
 
                             scope.temp = Math.floor(scope.targettemp);
                             if (scope.targettemp*10 == (scope.targettemp.toFixed(0))*10) {
@@ -165,92 +198,99 @@ angular.module('cirqlApp')
                                 scope.dotTemp = 5;
                             }
 
-                            if (!angular.isDefined(newValue)) {
-                                return false;
-                            };
+                            if (scope.measuredtemp >= scope.targettemp) {
+                                var startTemp = scope.targettemp;
+                                var endTemp = scope.measuredtemp;
+                                var mustHeat = false;
+                            } else {
+                                var endTemp = scope.targettemp;
+                                var startTemp = scope.measuredtemp;
+                                var mustHeat = true;
+                            }
 
-                            if (newValue < 0) {
-                                resetValue = oldValue;
-                                return scope.targettemp = 0;
-                            };
-
-                            if(newValue > scope.max){
-                                resetValue = oldValue;
-                                return scope.targettemp = scope.max;
-                            };
-
-                            var max             = scope.max,
-                            radius              = scope.radius,
-                            start               = oldValue || 0,
-                            val                 = newValue - start,
-                            currentIteration    = 0,
-                            totalIterations     = scope.max;
-
-                            (function animation() {
-                                if (currentIteration <= totalIterations) {
-                                    updateState(
-                                        scope.measuredtemp, 
-                                        max,
-                                        1, 
-                                        radius, 
-                                        measured_ring,
-                                        size
-                                    );
-                                    updateState(
-                                        newValue,
-                                        max,
-                                        0,
-                                        radius - 5,
-                                        ring,
-                                        size
-                                    );
-                                    currentIteration++;
-                                };
-                            })();  
-                        }                      
+                            if (scope.displaytarget) {
+                                var ring = d3.select('#target_path' + scope.roomid);
+                                updateTargetArc(
+                                    ring,
+                                    startTemp,
+                                    endTemp,
+                                    mustHeat,
+                                    scope.min, 
+                                    scope.max,
+                                    scope.radius - 5,
+                                    size,
+                                    scope.roomid
+                                );
+                            }
+                        }                   
                     };
 
+                    var renderThermoIcon = function () {
+                        $timeout(function() {
+                            var measured_ring = d3.select('#measured_path' + scope.roomid);
+                            if (scope.measuredtemp) {
+                                updateMeasuredArc(
+                                    measured_ring,
+                                    scope.min,
+                                    scope.measuredtemp, 
+                                    scope.max,
+                                    scope.radius - 5, 
+                                    size,
+                                    scope.roomid
+                                );
+                                renderState(scope.targettemp, scope.targettemp);
+                            }
+                        });
+                    };   
 
-                    scope.$on('renderCircle', renderCircle);
                     scope.$watch('targettemp', renderState);
+                    scope.$watch('measuredtemp', renderThermoIcon);
 
                     renderCircle();
-
+                    heartbeat();
                 },
                 replace:true,
                 template:'\
-                <svg id="room-temperature" width="180px" height="180px" viewBox="-10 -10 260 260" xmlns="http://www.w3.org/2000/svg">\
-                    <g id="label" fill="#FFF" font-weight="normal">\
-                        <circle fill="none"/>\
-                        <text font-size="64">\
-                            <tspan x="70" y="130">{{temp}}°</tspan>\
-                        </text>\
-                        <text font-size="28" fill="#FFFFFF">\
-                            <tspan x="140" y="130">.{{dotTemp}}</tspan>\
-                        </text>\
-                    </g>\
-                    <text id="mode" font-size="32" fill="#FFFFFF">\
-                        <tspan text-anchor="middle" x="115" y="160">{{mode}}</tspan>\
-                    </text>\
-                    <g id="arcGroup">\
-                        <path id="target_path" fill="none" />\
-                        <path id="measured_path" fill="none" />\
-                        <g id="thermoIcon">\
-                             <g id="tempDrawer" visibility="hidden">\
-                                <text font-family="Helvetica Neue" font-size="24" font-weight="300" fill="#000000">\
-                                    <tspan x="34" y="25">{{measuredtemp}}°</tspan>\
-                                </text>\
-                                <rect id="Rectangle-7" fill-opacity="0.4" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="79" height="35" rx="20"></rect>\
+                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">\
+                    <g id="scaling{{roomid}}">\
+                        <g id="label" fill="#FFF" font-weight="normal">\
+                            <circle fill="none"/>\
+                            <g transform="translate(30,75)">\
+                            <g id="heart" transform="scale(0.6)">\
+                                <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
                             </g>\
-                            <ellipse id="bgCircle" fill="#CDE900" cx="16.8578741" cy="16.9670933" rx="16.9702336" ry="16.9670933"></ellipse>\
-                            <g id="Thermometer" fill="#FFFFFF" transform="translate(12, 5) scale(0.75)">\
-                                <path d="M9.17602996,19.8825764 L9.17602996,3.69998611 C9.17602996,1.65603472 7.52893258,0 5.50561798,0 C3.47863296,0 1.83520599,1.65049306 1.83520599,3.69998611 L1.83520599,19.8825764 C0.708389513,20.897625 0,22.3726319 0,24.0138889 C0,27.0728889 2.46559925,29.5555556 5.50561798,29.5555556 C8.5447191,29.5555556 11.011236,27.0728889 11.011236,24.0138889 C11.011236,22.3726319 10.303764,20.897625 9.17602996,19.8825764 L9.17602996,19.8825764 Z M5.50561798,27.7083333 C3.47863296,27.7083333 1.83520599,26.0541458 1.83520599,24.0138889 C1.83520599,22.6469444 2.5738764,21.4527153 3.67041199,20.8135764 L3.67041199,3.6990625 C3.67041199,2.67570139 4.49258427,1.84722222 5.50561798,1.84722222 C6.52507491,1.84722222 7.34082397,2.67570139 7.34082397,3.6990625 L7.34082397,20.8135764 C8.43735955,21.4517917 9.17602996,22.6460208 9.17602996,24.0138889 C9.17602996,26.0541458 7.532603,27.7083333 5.50561798,27.7083333 L5.50561798,27.7083333 Z" id="Shape"></path>\
-                                <path d="M6.40853933,21.396375 C6.41863296,21.3455764 6.42322097,21.2938542 6.42322097,21.2402847 L6.42322097,12.0097153 C6.42322097,11.4980347 6.01672285,11.0833333 5.50561798,11.0833333 C4.99818352,11.0833333 4.58801498,11.5045 4.58801498,12.0097153 L4.58801498,21.2402847 C4.58801498,21.2938542 4.592603,21.3455764 4.60086142,21.396375 C3.52543071,21.7722847 2.75280899,22.8021111 2.75280899,24.0138889 C2.75280899,25.5443125 3.98514981,26.7847222 5.50561798,26.7847222 C7.02608614,26.7847222 8.25842697,25.5443125 8.25842697,24.0138889 C8.25842697,22.8021111 7.48580524,21.7722847 6.40853933,21.396375 L6.40853933,21.396375 Z" id="Shape"></path>\
+                            </g>\
+                            <text font-size="64">\
+                                <tspan text-anchor="end" x="177" y="130">{{temp}}°</tspan>\
+                            </text>\
+                            <text font-size="28" fill="#FFFFFF">\
+                                <tspan x="150" y="130">.{{dotTemp}}</tspan>\
+                            </text>\
+                        </g>\
+                        <text id="mode" font-size="32" fill="#FFFFFF">\
+                            <tspan text-anchor="middle" x="115" y="160">{{mode}}</tspan>\
+                        </text>\
+                        <g id="arcGroup">\
+                            <path id="measured_path{{roomid}}" fill="none" />\
+                            <path id="target_path{{roomid}}" fill="none" />\
+                            <g id="thermoIcon{{roomid}}">\
+                                <g id="tempDrawer{{roomid}}" visibility="hidden">\
+                                    <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\
+                                     <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#000000">\
+                                        <tspan x="34" y="25">{{measuredtemp}}°</tspan>\
+                                    </text>\
+                                </g>\
+                                <ellipse id="bgCircle" fill="#FFFFFF" fill-opacity="0.8" cx="16.8578741" cy="16.9670933" rx="16.9702336" ry="16.9670933"></ellipse>\
+                                <g id="Thermometer" fill="#000000" transform="translate(12, 5) scale(0.75)">\
+                                    <path d="M9.17602996,19.8825764 L9.17602996,3.69998611 C9.17602996,1.65603472 7.52893258,0 5.50561798,0 C3.47863296,0 1.83520599,1.65049306 1.83520599,3.69998611 L1.83520599,19.8825764 C0.708389513,20.897625 0,22.3726319 0,24.0138889 C0,27.0728889 2.46559925,29.5555556 5.50561798,29.5555556 C8.5447191,29.5555556 11.011236,27.0728889 11.011236,24.0138889 C11.011236,22.3726319 10.303764,20.897625 9.17602996,19.8825764 L9.17602996,19.8825764 Z M5.50561798,27.7083333 C3.47863296,27.7083333 1.83520599,26.0541458 1.83520599,24.0138889 C1.83520599,22.6469444 2.5738764,21.4527153 3.67041199,20.8135764 L3.67041199,3.6990625 C3.67041199,2.67570139 4.49258427,1.84722222 5.50561798,1.84722222 C6.52507491,1.84722222 7.34082397,2.67570139 7.34082397,3.6990625 L7.34082397,20.8135764 C8.43735955,21.4517917 9.17602996,22.6460208 9.17602996,24.0138889 C9.17602996,26.0541458 7.532603,27.7083333 5.50561798,27.7083333 L5.50561798,27.7083333 Z" id="Shape"></path>\
+                                    <path d="M6.40853933,21.396375 C6.41863296,21.3455764 6.42322097,21.2938542 6.42322097,21.2402847 L6.42322097,12.0097153 C6.42322097,11.4980347 6.01672285,11.0833333 5.50561798,11.0833333 C4.99818352,11.0833333 4.58801498,11.5045 4.58801498,12.0097153 L4.58801498,21.2402847 C4.58801498,21.2938542 4.592603,21.3455764 4.60086142,21.396375 C3.52543071,21.7722847 2.75280899,22.8021111 2.75280899,24.0138889 C2.75280899,25.5443125 3.98514981,26.7847222 5.50561798,26.7847222 C7.02608614,26.7847222 8.25842697,25.5443125 8.25842697,24.0138889 C8.25842697,22.8021111 7.48580524,21.7722847 6.40853933,21.396375 L6.40853933,21.396375 Z" id="Shape"></path>\
+                                </g>\
                             </g>\
                         </g>\
-                    </g>\
-                    <g id="targetIcon">\
-                        <ellipse fill="#000000" cx="16" cy="16" rx="17" ry="17"></ellipse>\
+                        <ellipse id="bgTargetIcon{{roomid}}" fill="#000000" cx="16" cy="16" rx="17" ry="17"></ellipse>\
+                        <g id="targetIcon{{roomid}}" transform="scale(0.6)">\
+                            <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
+                        </g>\
                     </g>\
                 </svg>'
             }; 

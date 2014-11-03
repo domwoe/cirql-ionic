@@ -8,11 +8,39 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', 'roomDetailService', 
-  function ($scope, user, simpleLogin, fbutil, $roomDetailService) {
-    
-    $scope.logout = simpleLogin.logout;
+.controller('HomeCtrl', ['$scope', '$rootScope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$location', 'roomDetailService', 
+  function ($scope, $rootScope, user, simpleLogin, fbutil, $timeout, $location, $roomDetailService) {
 
+    $rootScope.menu = true;
+    $scope.user = user;
+    $scope.logout = simpleLogin.logout;
+    $scope.newResident;
+    $scope.min = 0;
+    $scope.max = 30;
+    $scope.stroke = 12;
+    $scope.radius = 110;
+    $scope.currentColor = '#FFFFFF';
+    $scope.bgColor = '#000000';
+
+    $scope.addResident = function(name){
+      if(name) {
+        $scope.residents.$add({name: name});
+        console.log(name + ' added');
+        $scope.newResident = null;
+      }
+    };
+    $scope.newRoom;
+    $scope.addRoom = function(name){
+      if(name) {
+        $scope.rooms.$add({name: name});
+        console.log(name + ' added');
+        $scope.newRoom = null;
+      }
+    };
+    $scope.removeItem = function(list, item){
+      list.$remove(item);
+      console.log('removed', item.name);
+    };
     function loadHome(user) {
       if( $scope.home ) {
         $scope.home.$destroy();
@@ -47,5 +75,15 @@ angular.module('cirqlApp')
             success('Password changed');
           }, error);
       }
+    };
+
+    $scope.changeEmail = function(pass, newEmail) {
+      $scope.err = null;
+      simpleLogin.changeEmail(pass, newEmail)
+        .then(function(user) {
+          loadHome(user);
+          success('Email changed');
+        })
+        .catch(error);
     };
   }]);
