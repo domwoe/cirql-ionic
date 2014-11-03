@@ -1,14 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.0.4 (8054) - http://www.bohemiancoding.com/sketch -->
-    <title>Humidity</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-25" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Portrait-10" sketch:type="MSArtboardGroup" transform="translate(-91.000000, -853.000000)">
-            <g id="Humidity" sketch:type="MSLayerGroup" transform="translate(92.000000, 853.000000)">
-                <ellipse id="bg_Circle" fill-opacity="0" fill="#7ED321" sketch:type="MSShapeGroup" cx="34.8578741" cy="34.9836262" rx="34.9702336" ry="34.9836262"></ellipse>
-                <g id="Drop" transform="translate(22.000000, 17.000000)" fill="#FFFFFF" sketch:type="MSShapeGroup">
+<svg width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-25" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Portrait-10" transform="translate(-91.000000, -853.000000)">
+            <g id="Humidity" transform="translate(92.000000, 853.000000)">
+                <ellipse id="bg_Circle" fill-opacity="0" fill="#7ED321" cx="34.8578741" cy="34.9836262" rx="34.9702336" ry="34.9836262"></ellipse>
+                <g id="Drop" transform="translate(22.000000, 17.000000)" fill="#FFFFFF">
                     <path d="M12.6128049,0.272017544 L12.195122,-0.24622807 L11.777439,0.272017544 C11.2841463,0.884210526 -0.286585366,15.3060526 -0.286585366,22.0635088 C-0.286585366,28.9935088 5.31280488,34.632807 12.1945122,34.632807 C19.0762195,34.632807 24.6762195,28.9935088 24.6762195,22.0635088 C24.6768293,15.3042105 13.104878,0.883596491 12.6128049,0.272017544 L12.6128049,0.272017544 Z M8.56341463,29.592807 L8.40121951,29.5154386 C4.40609756,27.6002632 3.07621951,22.4251754 4.33658537,18.7925439 L4.39634146,18.6230702 L5.41219512,18.9792105 L5.35304878,19.1505263 C4.26707317,22.2741228 5.44207317,26.8965789 8.86341463,28.5391228 L9.02560976,28.6164912 L8.56341463,29.592807 L8.56341463,29.592807 Z" id="Shape"></path>
                 </g>
             </g>

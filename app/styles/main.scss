@@ -204,6 +204,25 @@ input:-ms-input-placeholder {
   overflow: auto;
 }
 
+.logo {
+  float: left;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.red-bg {
+  background-color: #D80000;
+}
+
+.green-bg {
+  background-color: #00CC33;
+}
+
+.yellow-bg {
+  background-color: #FFCC00;
+}
+
 .heart-beat {
     animation: beatBeat 800ms ease alternate infinite;
     transform-origin: center center;

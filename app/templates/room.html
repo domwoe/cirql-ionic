@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content class="has-header">
   <div class="h1 aligncenter"> {{roomValues.name}} </div>
-  <div class="container" ng-cloak>
+  <div class="svg-container" ng-cloak>
     <div class="progress-wrapper" ng-style="{'font-size': ((radius + stroke)/ 3)+'px'}">
       <div room-temperature
         scale="1.0"
@@ -18,21 +18,20 @@
         bgcolor="{{ bgColor }}" 
         radius="{{ radius }}" 
         stroke="{{ stroke }}"
-        data-snap-ignore="false"
         displaytarget="true">
       </div>
     </div> 
   </div>
   <div id="roomclimate" class="field-group">
     <div class="field">  
-      <!--<object id="air-quality" class="logo yellow-bg" type="image/svg+xml" data="../images/Icon_Airquality.svg"/>-->
+      <object id="air-quality" class="logo yellow-bg" type="image/svg+xml" data="../images/Icon_Airquality.svg"></object>
         <div class="alignleft">
           Air Quality  
         </div>
         <div class="alignright"> {{sensor.co2}}ppm </div>
     </div>
     <div class="field"> 
-      <!--<object id="humidity" class="logo green-bg" type="image/svg+xml" data="../images/Icon_Humidity.svg"/>-->
+      <object id="humidity" class="logo green-bg" type="image/svg+xml" data="../images/Icon_Humidity.svg"></object>
       <div class="alignleft"> Humidity </div>
       <div class="alignright"> {{sensor.humidity}}% </div>
     </div>
