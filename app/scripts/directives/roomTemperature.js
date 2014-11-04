@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', function($timeout) {
+    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout,$ionicSideMenuDelegate) {
 
             var polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees - 230) * Math.PI / 180.0;
@@ -126,9 +126,15 @@ angular.module('cirqlApp')
 
                             if (scope.displaytarget) {
                                 bgTargetIcon.call(d3.behavior.drag()
-                                    .on('dragstart', mouseDragCallback)
+                                    .on('dragstart', function() {
+                                        $ionicSideMenuDelegate.canDragContent(false);
+                                        mouseDragCallback();
+                                    })
                                     .on('drag', mouseDragCallback)
-                                    .on('dragend', heartbeat));
+                                    .on('dragend', function() {
+                                        $ionicSideMenuDelegate.canDragContent(true);
+                                        heartbeat();
+                                    }));
                             } else {
                                 targetIcon.style("visibility", 'hidden');
                                 bgTargetIcon.style("visibility", 'hidden');

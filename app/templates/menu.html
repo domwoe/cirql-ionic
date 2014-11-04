@@ -19,8 +19,11 @@
         <ion-item nav-clear menu-close ui-sref="app.rooms.add">
           Add Room
         </ion-item>
-        <ion-item nav-clear menu-close ui-sref="change-password">
+        <!-- <ion-item nav-clear menu-close ui-sref="change-password">
           Change Password
+        </ion-item> -->
+        <ion-item nav-clear menu-close ui-sref="app.netatmo({roomId: roomId})">
+          Netatmo
         </ion-item>
         <ion-item nav-clear menu-close ng-click="logout()">
           Log Out

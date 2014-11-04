@@ -65,7 +65,17 @@ angular.module('cirqlApp')
           controller: 'RoomCtrl'
         }
       }
+    })
+
+    .state('app.netatmo', {
+      url: '/netatmo',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/netatmo.html',
+          controller: 'NetatmoCtrl'
+        }
+      }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
-})
+});

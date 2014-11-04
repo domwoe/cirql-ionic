@@ -57,7 +57,7 @@ angular.module('cirqlApp')
 
     $scope.toggleNetatmo = function(stationId,moduleId,hasRoom) {
 
-    	var room = $routeParams.room;
+    	var room = $scope.roomId;
     	var roomUrl = 'homes/' + user.uid +'/rooms/' + room + '/sensors';
     	var roomObj = fbutil.syncObject(roomUrl);
 

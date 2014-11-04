@@ -11,8 +11,6 @@ angular.module('cirqlApp')
 .controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
   function ($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
 
-    //disable dragging of sidemenu
-    $ionicSideMenuDelegate.canDragContent(false);
     var room = $stateParams.roomId;
     var homeUrl = 'homes/' + user.uid;
     var roomUrl = homeUrl +'/rooms/' + room;
