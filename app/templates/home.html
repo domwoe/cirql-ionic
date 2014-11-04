@@ -6,8 +6,7 @@
     <div class="circle">
       <div class="rooms-table">
         <div class="row" ng-repeat="room in rooms" ng-if="room.name">
-          <div class="left">
-            <a ui-sref="app.room({roomId: room.$id})"> {{room.name}} </a> <hr/> 
+          <div class="left" ng-click="goToRoom(room.$id)">{{room.name}}<hr/> 
           </div> 
           <div class="right"> 
             <div class="svg-container" ng-cloak>

@@ -8,12 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-  .controller('NetatmoCtrl', ['$scope', '$rootScope', 'user', 'simpleLogin', 'fbutil', '$window', '$routeParams','$location',
-  function ($scope, $rootScope, user, simpleLogin, fbutil, $window, $routeParams, $location) {
-
-    $rootScope.menu = true;
-    $scope.user = user;
-    $scope.logout = simpleLogin.logout;
+  .controller('NetatmoCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$window',
+  function ($scope, user, simpleLogin, fbutil, $window) {
 
     function loadNetatmoOauth() {
       var netatmo = fbutil.syncObject('netatmo/oauth');
@@ -48,11 +44,9 @@ angular.module('cirqlApp')
       		$scope.isConnected = false;
       	}
       });
-      //netatmos.$watch(function(netatmos) {
-      //	$scope.netatmos = netatmos;
-      //});
       
     }
+    
     loadNetatmos(user);
 
     $scope.toggleNetatmo = function(stationId,moduleId,hasRoom) {
@@ -89,8 +83,6 @@ angular.module('cirqlApp')
 	    		netatmoObj.room = room;
 	    		netatmoObj.$save();
     		});
-    		// Go back to room sceen
-			$location.path('/room/'+room);
     	}
 
     	function delNetatmo() {	
