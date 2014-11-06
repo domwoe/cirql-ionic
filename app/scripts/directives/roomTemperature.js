@@ -37,7 +37,7 @@ angular.module('cirqlApp')
             }
 
             var updateMeasuredArc = function(arc, start, end, max, R, size, roomid) {
-                var carts = drawArc(arc, start, end, max, R, size, "#000000");
+                var carts = drawArc(arc, start, end, max, R, size, "#FFF");
                 var endCart = carts[1];
                 var icon = d3.select("#thermoIcon" + roomid);
                 icon.attr(
@@ -101,12 +101,14 @@ angular.module('cirqlApp')
                     };
 
                     var heartbeat = function() {
-                        var heart = d3.select('#heart');
+                        var heart = d3.select('#heart' + scope.roomid);
+                        console.log(heart);
                         heart.classed('heart-beat', true);
                         setTimeout(function() {
                              heart.classed('heart-beat', false);    
                         }, 2000);
                     };
+
 
                     var radius           = scope.radius,
                         stroke           = scope.stroke;
@@ -254,6 +256,7 @@ angular.module('cirqlApp')
 
                     renderCircle();
                     heartbeat();
+                    
                 },
                 replace:true,
                 template:'\
@@ -261,10 +264,8 @@ angular.module('cirqlApp')
                     <g id="scaling{{roomid}}">\
                         <g id="label" fill="#FFF" font-weight="normal">\
                             <circle fill="none"/>\
-                            <g transform="translate(30,75)">\
-                            <g id="heart" transform="scale(0.6)">\
+                            <g id="heart{{roomid}}" visibility="hidden" transform="translate(35,75) scale(0.6)">\
                                 <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
-                            </g>\
                             </g>\
                             <text font-size="64">\
                                 <tspan text-anchor="end" x="177" y="130">{{temp}}°</tspan>\
@@ -280,7 +281,7 @@ angular.module('cirqlApp')
                             <path id="measured_path{{roomid}}" fill="none" />\
                             <path id="target_path{{roomid}}" fill="none" />\
                             <g id="thermoIcon{{roomid}}">\
-                                <g id="tempDrawer{{roomid}}" visibility="hidden">\
+                                <g id="tempDrawer{{roomid}}" visibility="visible">\
                                     <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\
                                      <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#000000">\
                                         <tspan x="34" y="25">{{measuredtemp}}°</tspan>\

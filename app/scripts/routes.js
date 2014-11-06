@@ -67,7 +67,17 @@ angular.module('cirqlApp')
       }
     })
 
-    .state('app.netatmo', {
+     .state('app.room.addNetatmo', {
+      url: '/netatmo',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/add_netatmo.html',
+          controller: 'NetatmoCtrl'
+        }
+      }
+    })
+
+    .state('app.room.netatmo', {
       url: '/netatmo',
       views: {
         'menuContent' :{

@@ -1,0 +1,34 @@
+<ion-content>
+  <div>
+   	<button class="btn btn-default" role="button" ng-hide="isConnected" ng-click="authorizeNetatmo()">Connect to Netatmo</button>
+   </div>
+    <!-- <ion-list show-delete="shouldShowDelete" can-swipe="listCanSwipe">   
+      <ion-item ng-repeat="(key, netatmo) in netatmos">{{netatmo.name}}
+      	<ul class="list-group">
+      		<li class="list-group-item" ng-repeat="(moduleId, module) in netatmo.modules" ng-click="toggleNetatmo(netatmo.$id,moduleId, module.room)">{{module.name}} {{module.room}}</li>
+      	</ul>
+      </ion-item>
+    </ion-list> -->
+
+
+    <ion-list show-delete="shouldShowDelete" can-swipe="listCanSwipe">
+      <div ng-repeat="(key, netatmo) in netatmos">
+        <ion-item class="item-stable"
+                  ng-click="toggleGroup(netatmo)"
+                  ng-class="{active: isGroupShown(netatmo)}">
+            <i class="icon" ng-class="isGroupShown(netatmo) ? 'ion-minus' : 'ion-plus'"></i>
+          &nbsp;
+          {{netatmo.name}}
+        </ion-item>
+        <ion-item class="item-accordion"
+                  ng-repeat="(moduleId, module) in netatmo.modules"
+                  ng-show="isGroupShown(netatmo)">
+          {{module.name}}
+        </ion-item>
+      </div>
+    </ion-list>
+
+
+
+</ion-content>
+
