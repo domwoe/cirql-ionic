@@ -16,13 +16,13 @@
         <ion-item nav-clear menu-close ui-sref="app.home">
           Home
         </ion-item>
-        <ion-item nav-clear menu-close ui-sref="app.rooms.add">
+        <ion-item ng-show="isHome()" nav-clear menu-close ui-sref="app.rooms.add">
           Add Room
         </ion-item>
         <!-- <ion-item nav-clear menu-close ui-sref="change-password">
           Change Password
         </ion-item> -->
-        <ion-item nav-clear menu-close ng-click="netatmo()">
+        <ion-item ng-show="isRoom()" nav-clear menu-close ng-click="netatmo()">
           Netatmo
         </ion-item>
         <ion-item nav-clear menu-close ng-click="logout()">

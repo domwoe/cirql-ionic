@@ -35,5 +35,20 @@ angular.module('cirqlApp')
 
         };
 
+        $scope.isRoom = function() {
+           if ( $state.current.name === 'app.room' ) {
+            return true;
+           }
+           return false;
+        }
+
+        $scope.isHome = function() {
+           if ( $state.current.name === 'app.home' ) {
+            return true;
+           }
+           return false;
+        }
+
+
 
 }]);

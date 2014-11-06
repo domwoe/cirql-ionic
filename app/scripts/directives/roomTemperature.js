@@ -274,8 +274,8 @@ angular.module('cirqlApp')
                                 <tspan x="150" y="130">.{{dotTemp}}</tspan>\
                             </text>\
                         </g>\
-                        <text id="mode" font-size="32" fill="#FFFFFF">\
-                            <tspan text-anchor="middle" x="115" y="160">{{mode}}</tspan>\
+                        <text id="mode" font-size="24" fill="#FFFFFF">\
+                            <tspan text-anchor="middle" x="130" y="150">{{mode}}</tspan>\
                         </text>\
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
