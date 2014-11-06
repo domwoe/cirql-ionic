@@ -1,14 +1,14 @@
 <ion-view title="Netatmo">
 
     <ion-nav-buttons side="left">
-        <ion-nav-back-button class="button-clear" ng-click="goBack()">
-            <i class="ion-arrow-left-c"></i> Back
-        </ion-nav-back-button>
+        <button class="button-clear" ng-click="goToRoom()">
+            <i class="ion-arrow-left-c"></i> Room
+        </button>
     </ion-nav-buttons>
 
     <ion-content class="has-header" scroll="false">
 
-        <div class="list card">
+        <div class="list card transparent">
             <div class="item">
                 <p>Station: {{netatmo.station.name}}</p>
                 <p>Module: {{netatmo.module.obj.name}}</p>

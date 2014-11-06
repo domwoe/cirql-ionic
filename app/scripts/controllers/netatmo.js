@@ -37,7 +37,9 @@ angular.module('cirqlApp')
                 return $scope.shownGroup === group;
             };
 
-
+            $scope.goToRoom = function() {
+              $state.go('app.room', {roomId: room});
+            };
 
             $scope.addNetatmo = function(stationId, moduleId) {
 

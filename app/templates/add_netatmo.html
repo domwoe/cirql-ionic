@@ -1,7 +1,11 @@
-<ion-view title="Netatmo">
+<ion-view title="Add Netatmo">
+  
   <ion-nav-buttons side="left">
-    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+        <button class="button-clear" ng-click="goToRoom()">
+            <i class="ion-arrow-left-c"></i> Room
+        </button>
   </ion-nav-buttons>
+
   <ion-content class="has-header" scroll="false">
     <ion-list>
       <div ng-repeat="netatmo in netatmos">
