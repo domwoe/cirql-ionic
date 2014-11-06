@@ -260,7 +260,7 @@ angular.module('cirqlApp')
                 },
                 replace:true,
                 template:'\
-                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">\
+                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
                     <g id="scaling{{roomid}}">\
                         <g id="label" fill="#FFF" font-weight="normal">\
                             <circle fill="none"/>\
