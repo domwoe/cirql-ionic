@@ -1,18 +1,25 @@
-<div id="menu-left" snap-drawer>
-  <div ng-include="'views/menu.html'"></div>
-</div>
-<ion-content>
-  <div>
-   	<button class="btn btn-default" role="button" ng-hide="isConnected" ng-click="authorizeNetatmo()">Connect to Netatmo</button>
-   </div>
-   <div>
-    <ion-list>  
-      <io-item ng-repeat="(key, netatmo) in netatmos">{{netatmo.name}}
-      	<!-- <ul class="list-group">
-      		<li class="list-group-item" ng-repeat="(moduleId, module) in netatmo.modules" ng-click="toggleNetatmo(netatmo.$id,moduleId, module.room)">{{module.name}} {{module.room}}</li>
-      	</ul> -->
-      </ion-item>
-    </ion-list>
-  </div>
-</ion-content>
+<ion-view title="Netatmo">
 
+    <ion-nav-buttons side="left">
+        <ion-nav-back-button class="button-clear" ng-click="goBack()">
+            <i class="ion-arrow-left-c"></i> Back
+        </ion-nav-back-button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" scroll="false">
+
+        <div class="list card">
+            <div class="item">
+                <p>Station: {{netatmo.station.name}}</p>
+                <p>Module: {{netatmo.module.obj.name}}</p>
+            </div>
+
+            <div class="item item-image">
+                <button class="button button-full button-assertive" ng-click="delNetatmo()">
+                    Delete
+                </button>
+            </div>
+
+        </div>
+
+    </ion-content>

@@ -1,31 +1,23 @@
-<ion-content>
-  <div>
-   	<button class="btn btn-default" role="button" ng-hide="isConnected" ng-click="authorizeNetatmo()">Connect to Netatmo</button>
-   </div>
-    <!-- <ion-list show-delete="shouldShowDelete" can-swipe="listCanSwipe">   
-      <ion-item ng-repeat="(key, netatmo) in netatmos">{{netatmo.name}}
-      	<ul class="list-group">
-      		<li class="list-group-item" ng-repeat="(moduleId, module) in netatmo.modules" ng-click="toggleNetatmo(netatmo.$id,moduleId, module.room)">{{module.name}} {{module.room}}</li>
-      	</ul>
-      </ion-item>
-    </ion-list> -->
-
-
-    <ion-list show-delete="shouldShowDelete" can-swipe="listCanSwipe">
-      <div ng-repeat="(key, netatmo) in netatmos">
+<ion-view title="Netatmo">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" scroll="false">
+    <ion-list>
+      <div ng-repeat="netatmo in netatmos">
         <ion-item class="item-stable"
                   ng-click="toggleGroup(netatmo)"
                   ng-class="{active: isGroupShown(netatmo)}">
             <i class="icon" ng-class="isGroupShown(netatmo) ? 'ion-minus' : 'ion-plus'"></i>
-          &nbsp;
+          <!-- &nbsp; -->
           {{netatmo.name}}
         </ion-item>
         <ion-item class="item-accordion"
                   ng-repeat="(moduleId, module) in netatmo.modules"
-                  ng-show="isGroupShown(netatmo)">
+                  ng-show="isGroupShown(netatmo)"
+                  ng-click="addNetatmo(netatmo.$id,moduleId)">
           {{module.name}}
-        </ion-item>
-      </div>
+      </ion-item>
     </ion-list>
 
 

@@ -13,19 +13,27 @@ angular.module('cirqlApp')
             if ($state.params.hasOwnProperty('roomId')) {
 
                 var room = $state.params.roomId;
-                console.log(netatmoService.hasNetatmo(room))
+                
+                var promise = netatmoService.getNetatmo(room);
 
-                if (netatmoService.hasNetatmo(room)) {
-                    $state.go('app.room.netatmo');
-                } else if (netatmoService.isConnected()) {
-                    $state.go('app.room.addNetatmo');
-                } else {
-                    $window(netatmoService.authorizeUrl);
-                }
+                promise.then(function(hasNetatmo) {
+
+                    if ( hasNetatmo ) {
+                        $state.go('app.netatmo', {roomId: $state.params.roomId});
+                    }
+                    else if (netatmoService.isConnected()) {
+                        $state.go('app.addNetatmo', {roomId: $state.params.roomId});
+                    } else {
+                        // $window(netatmoService.authorizeUrl);
+                    }
+
+                });
+                
+                    
 
             }
 
-        }
+        };
 
 
 }]);

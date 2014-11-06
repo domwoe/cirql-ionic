@@ -67,21 +67,23 @@ angular.module('cirqlApp')
       }
     })
 
-     .state('app.room.addNetatmo', {
-      url: '/netatmo',
+   
+
+    .state('app.netatmo', {
+      url: '/rooms/:roomId/netatmo',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/add_netatmo.html',
+          templateUrl: 'templates/netatmo.html',
           controller: 'NetatmoCtrl'
         }
       }
     })
 
-    .state('app.room.netatmo', {
-      url: '/netatmo',
+    .state('app.addNetatmo', {
+      url: '/rooms/:roomId/netatmo/add',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/netatmo.html',
+          templateUrl: 'templates/add_netatmo.html',
           controller: 'NetatmoCtrl'
         }
       }
