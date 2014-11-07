@@ -12,23 +12,38 @@
       <h1 class="title">Menu</h1>
     </header> -->
     <ion-content>
-      <ion-list>
-        <ion-item nav-clear menu-close ui-sref="app.home">
+      <div class="list">
+        <div class="item nav-clear menu-close" ui-sref="app.home">
           Home
-        </ion-item>
-        <ion-item ng-show="isHome()" nav-clear menu-close ui-sref="app.addRoom">
+        </div>
+        <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
           Add Room
-        </ion-item>
+        </div>
+         <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="">
+          Schedule
+        </div>
         <!-- <ion-item nav-clear menu-close ui-sref="change-password">
           Change Password
         </ion-item> -->
-        <ion-item ng-show="isRoom()" nav-clear menu-close ng-click="netatmo()">
+        <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
+          Thermostats
+        </div>
+        <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
           Netatmo
-        </ion-item>
-        <ion-item nav-clear menu-close ng-click="logout()">
+        </div>
+        <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="">
+          Room Settings
+        </div>
+        <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="">
+          Home Settings
+        </div>
+          <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="">
+          User Settings
+        </div>
+        <div class="item nav-clear menu-close" ng-click="logout()">
           Log Out
-        </ion-item>
-      </ion-list>
+        </div>
+      </div>
     </ion-content>
   </ion-side-menu>
 </ion-side-menus>

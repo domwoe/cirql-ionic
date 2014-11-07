@@ -8,7 +8,7 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('CreateCtrl', ['$scope', '$rootScope', 'user', 'simpleLogin', '$location', 'fbutil', function ($scope, $rootScope, user, simpleLogin, $location, fbutil) {
+.controller('CreateCtrl', ['$scope', '$state', '$rootScope', 'user', 'simpleLogin', '$location', 'fbutil', function ($scope, $state, $rootScope, user, simpleLogin, $location, fbutil) {
     //deactivate menu
     $rootScope.menu = false;
     $scope.user = user;
