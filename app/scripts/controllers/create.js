@@ -13,6 +13,11 @@ angular.module('cirqlApp')
     $rootScope.menu = false;
     $scope.user = user;
     $scope.logout = simpleLogin.logout;
+
+    $scope.goToHome = function() {
+              $state.go('app.home');
+            };
+
     $scope.createResident = function(name){
       if(name) {
         $scope.residents.$add({name: name});

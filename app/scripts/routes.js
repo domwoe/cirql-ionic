@@ -57,6 +57,17 @@ angular.module('cirqlApp')
       }
     })
 
+
+    .state('app.addRoom', {
+      url: '/rooms/add',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/add_room.html',
+          controller: 'CreateCtrl'
+        }
+      }
+    })
+
     .state('app.room', {
       url: '/rooms/:roomId',
       views: {

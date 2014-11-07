@@ -107,7 +107,7 @@ angular.module('cirqlApp')
 			                        }
 			                    }
 			                    if ( i === netatmos.length ) {
-			                    	deferred.reject();
+			                    	deferred.resolve(false);
 			                    }
 			   
 		      
@@ -121,13 +121,17 @@ angular.module('cirqlApp')
 
                 	var netatmosObj = fbutil.syncArray('homes/' + user.uid + '/sensors/netatmo/stations');
 
+                	var deferred = $q.defer();
+
                 	netatmosObj.$loaded(function(netatmos) {
 
 	                    if (netatmos[0]) {
-	                        return true;
+	                        deferred.resolve(true);
 	                    }
-	                    return false;
-	                });    
+	                    deferred.reject();
+	                });
+
+	                return deferred.promise;    
                 }
             };
 

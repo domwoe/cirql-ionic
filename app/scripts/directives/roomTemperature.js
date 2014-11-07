@@ -109,7 +109,6 @@ angular.module('cirqlApp')
                         }, 2000);
                     };
 
-
                     var radius           = scope.radius,
                         stroke           = scope.stroke;
 
@@ -135,7 +134,7 @@ angular.module('cirqlApp')
                                     .on('drag', mouseDragCallback)
                                     .on('dragend', function() {
                                         $ionicSideMenuDelegate.canDragContent(true);
-                                        heartbeat();
+                                        //heartbeat();
                                     }));
                             } else {
                                 targetIcon.style("visibility", 'hidden');
@@ -255,7 +254,7 @@ angular.module('cirqlApp')
                     scope.$watch('measuredtemp', renderThermoIcon);
 
                     renderCircle();
-                    heartbeat();
+                    //heartbeat();
                     
                 },
                 replace:true,
