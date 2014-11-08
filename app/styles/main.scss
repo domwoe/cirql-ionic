@@ -425,7 +425,32 @@ input:-ms-input-placeholder {
   height: 30%
 }
 
+
+
+// CARDS
+// -------------------------------
+
+.card {
+  padding: 0px !important;
+}
+
+.card .item-image .button {
+  margin-bottom: 0px !important;
+}
+
 .opaque {
   background: rgba(255,255,255,0.25);
+}
+
+
+// FOOTER FOR THERMOSTATS SCREN
+// -------------------------------
+
+.bar-footer {
+  padding: 0px !important;
+}
+
+.bar-footer .button {
+  margin: 0px !important;
 }
 

@@ -9,6 +9,8 @@ angular.module('cirqlApp')
             $state.go('login');
         };
 
+        $scope.room = $state.params.roomId;
+
         $scope.netatmo = function() {
             if ($state.params.hasOwnProperty('roomId')) {
 

@@ -78,6 +78,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.thermostats', {
+      url: '/rooms/:roomId/thermostats',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/thermostats.html',
+          controller: 'ThermostatsCtrl'
+        }
+      }
+    })
+
    
 
     .state('app.netatmo', {

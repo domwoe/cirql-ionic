@@ -25,7 +25,7 @@
         <!-- <ion-item nav-clear menu-close ui-sref="change-password">
           Change Password
         </ion-item> -->
-        <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
+        <div class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room})">
           Thermostats
         </div>
         <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
