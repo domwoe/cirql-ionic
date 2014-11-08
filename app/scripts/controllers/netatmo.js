@@ -17,11 +17,11 @@ angular.module('cirqlApp')
                 room = $state.params.roomId;
             }
 
-            netatmoService.getNetatmo(room).then(function(netatmo) {
+            netatmoService.getNetatmo(room,user.uid).then(function(netatmo) {
               $scope.netatmo = netatmo;
             });
 
-            netatmoService.getAvailable().then(function(netatmos) {
+            netatmoService.getAvailable(user.uid).then(function(netatmos) {
               $scope.netatmos = netatmos;
             });
 

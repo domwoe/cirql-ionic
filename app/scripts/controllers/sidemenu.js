@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-.controller('SideMenuCtrl', ['$scope', '$state', '$window', 'simpleLogin', 'netatmoService',
-    function($scope, $state, $window, simpleLogin, netatmoService) {
+.controller('SideMenuCtrl', ['$scope', 'user', '$state', '$window', 'simpleLogin', 'netatmoService',
+    function($scope, user, $state, $window, simpleLogin, netatmoService) {
 
         $scope.logout = function() {
             simpleLogin.logout();
@@ -16,7 +16,7 @@ angular.module('cirqlApp')
 
                 var room = $state.params.roomId;
                 
-                var promise = netatmoService.getNetatmo(room);
+                var promise = netatmoService.getNetatmo(room,user.uid);
 
                 promise.then(function(hasNetatmo) {
 
@@ -26,7 +26,7 @@ angular.module('cirqlApp')
                         $state.go('app.netatmo', {roomId: $state.params.roomId});
                     }
                     else {
-                        var isConPromise = netatmoService.isConnected();
+                        var isConPromise = netatmoService.isConnected(user.uid);
                         isConPromise.then(function(isConnected) {
                             console.log('isConnected: ' + isConnected);
                             if ( isConnected ) {
@@ -35,7 +35,7 @@ angular.module('cirqlApp')
                         },
                         function(reject) {
                             console.log('reject');
-                            $window(netatmoService.authorizeUrl);
+                            $window(netatmoService.authorizeUrl(user.uid));
 
                         });
                     }    

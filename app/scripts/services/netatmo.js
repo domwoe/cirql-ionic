@@ -12,8 +12,6 @@ angular.module('cirqlApp')
     .factory('netatmoService', ['fbutil', '$q',
         function(fbutil, $q) {
 
-            var user = {};
-            user.uid = 'simplelogin:15';
 
             function loadNetatmoOauth() {
                 var netatmoOauth = fbutil.syncObject('netatmo/oauth');
@@ -23,10 +21,10 @@ angular.module('cirqlApp')
 
             var netatmo = {
 
-                authorizeUrl: function() {
+                authorizeUrl: function(user) {
 
                     var netatmoOauth = loadNetatmoOauth();
-                    var state = user.uid;
+                    var state = user;
                     netatmoOauth.$loaded(function(data) {
                         var url = data.authorize_url +
                             '?client_id=' + data.client_id +
@@ -36,9 +34,9 @@ angular.module('cirqlApp')
                     });
                 },
 
-                getAvailable: function() {
+                getAvailable: function(user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user.uid + '/sensors/netatmo/stations');
+                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
                 	var deferred = $q.defer();
 
@@ -74,9 +72,9 @@ angular.module('cirqlApp')
                  * @param  {string} room the roomId
                  * @return {[promise} returns a promise that resolves to an object containing the station and module of the room. 
                  */
-                getNetatmo: function(room) {
+                getNetatmo: function(room,user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user.uid + '/sensors/netatmo/stations');
+                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
                 	var deferred = $q.defer();
 
@@ -117,9 +115,9 @@ angular.module('cirqlApp')
 
                 },
 
-                isConnected: function() {
+                isConnected: function(user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user.uid + '/sensors/netatmo/stations');
+                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
                 	var deferred = $q.defer();
 
