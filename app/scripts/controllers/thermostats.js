@@ -15,50 +15,125 @@ angular.module('cirqlApp')
 
             if ($state.params.hasOwnProperty('roomId')) {
                 room = $state.params.roomId;
+                $scope.room = room;
             }
 
             var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
 
             var trvArray = fbutil.syncArray(trvUrl);
 
+            $scope.thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
+
             trvArray.$loaded(function(trvs) {
                 
-                if (trvs) {
+                if (trvs.length > 0) {
 
                     $scope.hasThermostat = true;
-
-                    for (var i = 0; i < trvs.length; i++) {
-
-                        getThermostat(trvs.$keyAt(i));
-                    }    
-
+                    $scope.isAddView = false;
+                    $scope.thermostatFilter = {room: room};
+  
 
                 } else {
                     $scope.hasThermostat = false;
+                    $scope.isAddView = true;
+                    $scope.thermostatFilter = {room: 'null'};
                 }
 
 
             });
 
+            $scope.pairNewThermostat = function() {
+                
+                var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway');
 
-            $scope.thermostats = [];
+                gatewayIdObj.$loaded(function(gatewayId) {
 
-            function getThermostat(id) {
+                    var gatewayId = gatewayId.$value;
 
-                var trvObj = fbutil.syncObject('homes/' + user.uid + '/thermostats/' + id);
-                trvObj.$loaded(function(trv) {
-                    console.log(trv);
+                    var gatewayObj = fbutil.syncObject('gateways/' + gatewayId);
+
+                    $scope.gateway = gatewayObj;
+
+                    gatewayObj.$loaded(function(gateway) {
+
+                        gateway.activatePairing = true;
+                        gateway.$save();
+                    
+                    });
+
                 });
-                $scope.thermostats = $scope.thermostats.concat(trvObj);
+                
+            };
 
 
-            }
+            $scope.addThermostat = function(thermostat) {
+
+                // Add room reference  to thermostat object
+                thermostat.room = room;
+
+                $scope.thermostats.$save(thermostat);
+
+                
+                // Add thermostat reference to room object
+                var roomObjPromise = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
+
+                roomObjPromise.$loaded(function(roomObj) {
+                    if (roomObj.hasOwnProperty('thermostats')) {
+                        roomObj.thermostats[thermostat.$id] = true;
+                    }
+                    else {
+                        roomObj.thermostats = {};
+                        roomObj.thermostats[thermostat.$id] = true;
+
+                    }    
+                    roomObj.$save();
+                })
+
+                $scope.isAddView = false;
+
+            };
+
+             $scope.delThermostat = function(thermostat) {
+
+                // Delete room reference from thermostat object
+                 
+                thermostat.room = 'null';
+                $scope.thermostats.$save(thermostat);
+
+                console.log(thermostat);
+                
+
+                // Delete thermostat reference from room object
+
+                var trvObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room + '/thermostats');
+
+                trvObj.$loaded(function(trvs) {
+
+                    delete trvs[thermostat.$id];
+                    trvs.$save();
+
+                    console.log(trvs);
+
+                });
 
 
+            };
 
+            
+            $scope.addThermostatView = function() {
+                $scope.isAddView = true;
+                $scope.thermostatFilter = {room: 'null'};
 
+            };
 
+            
 
+            /**
+             * Go back to room screen
+             */
+            $scope.goToRoom = function() {
+              $state.go('app.room', {roomId: room});
+            };
 
 
         }
