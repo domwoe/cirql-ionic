@@ -18,5 +18,14 @@ angular.module('cirqlApp', [
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    Discovery.identify(function(serviceData) {
+
+      console.log(serviceData);
+  
+    }, function(error) {}, {
+      clientName: "cirqlMobile" // the name the server expects to see for clients connecting
+      port: 41234 // the port the service's broadcast service is running on
+    });
   });
 });

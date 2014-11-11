@@ -58,6 +58,7 @@ angular.module('cirqlApp')
 
                         gateway.activatePairing = true;
                         gateway.$save();
+
                     
                     });
 
@@ -72,7 +73,6 @@ angular.module('cirqlApp')
                 thermostat.room = room;
 
                 $scope.thermostats.$save(thermostat);
-
                 
                 // Add thermostat reference to room object
                 var roomObjPromise = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
@@ -87,9 +87,11 @@ angular.module('cirqlApp')
 
                     }    
                     roomObj.$save();
-                })
 
-                $scope.isAddView = false;
+
+                });
+            
+                //$scope.isAddView = false;
 
             };
 
@@ -99,10 +101,7 @@ angular.module('cirqlApp')
                  
                 thermostat.room = 'null';
                 $scope.thermostats.$save(thermostat);
-
-                console.log(thermostat);
                 
-
                 // Delete thermostat reference from room object
 
                 var trvObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room + '/thermostats');
@@ -111,8 +110,6 @@ angular.module('cirqlApp')
 
                     delete trvs[thermostat.$id];
                     trvs.$save();
-
-                    console.log(trvs);
 
                 });
 
