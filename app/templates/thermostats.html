@@ -10,11 +10,70 @@
 
         <div class="list card opaque" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
-                <p>Serial No: {{thermostat.serialNo}}</p>
-                <p>Battery: {{thermostat.fhem_battery}}</p>
-                <p>Valve Position: {{thermostat.fhem_actuator}}</p>
-                <p>State: {{thermostat.state}}</p>
-                <p>Last Seen: {{thermostat.lastSeen}}</p>
+                <div class="row">
+                    <div class="col">
+                        Serial No:
+                    </div>
+                    <div class="col">
+                        {{thermostat.serialNo}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Setpoint Temperature:
+                    </div>
+                    <div class="col">
+                        {{thermostat["fhem_desired-temp"]}}°C
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Measured Temperature:
+                    </div>
+                    <div class="col">
+                        {{thermostat["fhem_measured-temp"]}}°C
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Valve Position:
+                    </div>
+                    <div class="col">
+                        {{thermostat.fhem_actuator}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        State:
+                    </div>
+                    <div class="col">
+                        {{thermostat.state}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Battery:
+                    </div>
+                    <div class="col">
+                        {{thermostat.fhem_battery}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Battery Level:
+                    </div>
+                    <div class="col">
+                        {{thermostat.fhem_batteryLevel}}V
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Last Seen:
+                    </div>
+                    <div class="col">
+                        {{thermostat.lastSeen}}
+                    </div>
+                </div>
             </div>
 
             <div ng-hide="isAddView" class="item item-image">

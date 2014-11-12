@@ -10,9 +10,30 @@
 
         <div ng-show="hasGateway" class="list card opaque">
             <div class="item">
-                <p>Id: {{gateway.gatewayId}}</p>
-                <p>isPairing: {{gateway.isPairing}}</p>
-                <p>lastSeen: {{gateway.lastSeen}}</p>
+                <div class="row">
+                    <div class="col">
+                        Id:
+                    </div>
+                    <div class="col">
+                        {{gateway.gatewayId}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        isPairing:
+                    </div>
+                    <div class="col">
+                        {{gateway.isPairing}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Last Seen:
+                    </div>
+                    <div class="col">
+                        {{gateway.lastSeen}}
+                    </div>
+                </div>
             </div>
 
             <div class="item item-image">
@@ -25,13 +46,11 @@
         <div ng-hide="hasGateway" class="centerAll">
             <div class="row row-center">
                 <div class="col col-center">
-                    Enter your Gateway id to connect it with your account
-                    
-                    {{errorMsg}}
+                    Enter your Gateway id to connect it with your account {{errorMsg}}
                 </div>
             </div>
             <div class="row">
-                <div class="col">              
+                <div class="col">
                     <div class="item item-input-inset transparent">
                         <label class="item-input-wrapper">
                             <input type="text" placeholder="gatewayId" ng-model="gatewayId">
@@ -46,5 +65,5 @@
                     </button>
                 </div>
             </div>
-        </div>   
+        </div>
     </ion-content>

@@ -10,8 +10,23 @@
 
         <div class="list card opaque">
             <div class="item">
-                <p>Station: {{netatmo.station.name}}</p>
-                <p>Module: {{netatmo.module.obj.name}}</p>
+                <div class="row">
+                    <div class="col">
+                        Station:
+                    </div>
+                    <div class="col">
+                        {{netatmo.station.name}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Module:
+                    </div>
+                    <div class="col">
+                        {{netatmo.module.obj.name}}
+                    </div>
+                </div>
+
             </div>
 
             <div class="item item-image">

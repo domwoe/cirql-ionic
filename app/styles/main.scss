@@ -434,12 +434,17 @@ input:-ms-input-placeholder {
   padding: 0px !important;
 }
 
+.card div {
+  color: #fff; 
+}
+
+
 .card .item-image .button {
   margin-bottom: 0px !important;
 }
 
 .opaque {
-  background: rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.25);
 }
 
 
