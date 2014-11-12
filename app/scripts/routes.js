@@ -57,6 +57,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.gateway', {
+      url: '/gateway',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/gateway.html',
+          controller: 'GatewayCtrl'
+        }
+      }
+    })
+
 
     .state('app.addRoom', {
       url: '/rooms/add',

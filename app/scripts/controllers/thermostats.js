@@ -56,8 +56,12 @@ angular.module('cirqlApp')
 
                     gatewayObj.$loaded(function(gateway) {
 
+                        console.log(gateway);
+
                         gateway.activatePairing = true;
                         gateway.$save();
+
+                        console.log(gateway);
 
                     
                     });

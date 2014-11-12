@@ -2,7 +2,7 @@
 
     <ion-nav-buttons side="left">
         <button class="button-clear" ng-click="goToRoom()">
-            <i class="ion-arrow-left-c"></i> Room
+            <i class="ion-chevron-left"></i> Room
         </button>
     </ion-nav-buttons>
 
@@ -10,9 +10,10 @@
 
         <div class="list card opaque" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
-                <p>Serial No: {{thermostat.fhem_D-serialNr}}</p>
+                <p>Serial No: {{thermostat.serialNo}}</p>
                 <p>Battery: {{thermostat.fhem_battery}}</p>
                 <p>Valve Position: {{thermostat.fhem_actuator}}</p>
+                <p>State: {{thermostat.state}}</p>
                 <p>Last Seen: {{thermostat.lastSeen}}</p>
             </div>
 

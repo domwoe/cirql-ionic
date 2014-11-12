@@ -19,13 +19,36 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
 
-    Discovery.identify(function(serviceData) {
+    console.log(window);
+    
+    //console.log(cordova.plugins);
 
-      console.log(serviceData);
+    console.log(navigator.Discovery);
+
+    // cordova.plugins.Discovery.identify(function(serviceData) {
+
+    //   console.log(serviceData);
   
-    }, function(error) {}, {
-      clientName: "cirqlMobile" // the name the server expects to see for clients connecting
-      port: 41234 // the port the service's broadcast service is running on
-    });
+    // }, function(error) {
+
+    //   console.log(error);
+
+    // }, {
+    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
+    //   port: 7072 // the port the service's broadcast service is running on
+    // });
+
+    // navigator.Discovery.identify(function(serviceData) {
+
+    //   console.log(serviceData);
+  
+    // }, function(error) {
+
+    //   console.log(error);
+
+    // }, {
+    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
+    //   port: 7072 // the port the service's broadcast service is running on
+    // });
   });
 });

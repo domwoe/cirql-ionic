@@ -1,0 +1,50 @@
+<ion-view title="Gateway">
+
+    <ion-nav-buttons side="left">
+        <button class="button-clear" ng-click="goToHome()">
+            <i class="ion-chevron-left"></i> Home
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" scroll="false">
+
+        <div ng-show="hasGateway" class="list card opaque">
+            <div class="item">
+                <p>Id: {{gateway.gatewayId}}</p>
+                <p>isPairing: {{gateway.isPairing}}</p>
+                <p>lastSeen: {{gateway.lastSeen}}</p>
+            </div>
+
+            <div class="item item-image">
+                <button class="button button-full button-assertive" ng-click="delGateway()">
+                    Remove
+                </button>
+            </div>
+        </div>
+
+        <div ng-hide="hasGateway" class="centerAll">
+            <div class="row row-center">
+                <div class="col col-center">
+                    Enter your Gateway id to connect it with your account
+                    
+                    {{errorMsg}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">              
+                    <div class="item item-input-inset transparent">
+                        <label class="item-input-wrapper">
+                            <input type="text" placeholder="gatewayId" ng-model="gatewayId">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button button-balanced button-block" ng-click="addGateway(gatewayId)">
+                        Add Gateway
+                    </button>
+                </div>
+            </div>
+        </div>   
+    </ion-content>

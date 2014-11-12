@@ -454,3 +454,20 @@ input:-ms-input-placeholder {
   margin: 0px !important;
 }
 
+
+// GATEWAY SCREEN
+// -------------------------------
+
+.scroll-content {
+  display: table !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.centerAll {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding-left: 10%;
+  padding-right: 10%;
+}
