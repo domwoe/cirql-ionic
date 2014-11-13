@@ -26,6 +26,16 @@
                         {{netatmo.module.obj.name}}
                     </div>
                 </div>
+                 <div class="row">
+                    <div class="col">
+                        Last Seen:
+                    </div>
+                    <div class="col">
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(netatmo.module.obj.timestamp)}}
+
+                    </div>
+                </div>
 
             </div>
 

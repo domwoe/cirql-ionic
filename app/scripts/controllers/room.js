@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
-        function($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
@@ -78,6 +78,13 @@ angular.module('cirqlApp')
             $scope.radius = 110;
             $scope.currentColor = '#FFFFFF';
             $scope.bgColor = '#000000';
+
+            /**
+             * Go back to home screen
+             */
+            $scope.goToHome = function() {
+                $state.go('app.home', null, {reload: true});
+            };
 
         }
     ]);
