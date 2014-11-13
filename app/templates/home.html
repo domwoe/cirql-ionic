@@ -5,8 +5,8 @@
   <ion-content class="has-header">
     <div class="circle">
       <div class="rooms-table">
-        <div class="row" ng-repeat="room in rooms" ng-if="room.name">
-          <div class="left" ng-click="goToRoom(room.$id)">{{room.name}}<hr/> 
+        <div class="row" ng-click="goToRoom(room.$id)" ng-repeat="room in rooms" ng-if="room.name">
+          <div class="left">{{room.name}}<hr/> 
           </div> 
           <div class="right"> 
             <div class="svg-container" ng-cloak>
