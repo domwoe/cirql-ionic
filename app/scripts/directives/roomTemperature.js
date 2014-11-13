@@ -3,6 +3,9 @@
 angular.module('cirqlApp')
     .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout,$ionicSideMenuDelegate) {
 
+            var targetTimer = null;
+            var target = null;
+
             var polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees - 230) * Math.PI / 180.0;
 
@@ -95,9 +98,13 @@ angular.module('cirqlApp')
                         var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
                         phi = (phi*360/(2*Math.PI) + 230)%360 ;
 
-                        var target = roundHalf(phi*scope.max/270);
+                        target = roundHalf(phi*scope.max/270);
 
-                        scope.targettemp = target;
+                        // draw arcs
+                        renderState(target);
+
+                        //scope.targettemp = target;
+
                     };
 
                     var heartbeat = function() {
@@ -130,10 +137,16 @@ angular.module('cirqlApp')
                                     .on('dragstart', function() {
                                         $ionicSideMenuDelegate.canDragContent(false);
                                         mouseDragCallback();
+                                        clearTimeout(targetTimer);
                                     })
                                     .on('drag', mouseDragCallback)
                                     .on('dragend', function() {
                                         $ionicSideMenuDelegate.canDragContent(true);
+                                        // Set target in scope (and firebase) 1s after
+                                        // releasing the icon
+                                        targetTimer = setTimeout( function() {
+                                            scope.targettemp = target;
+                                        },1000);   
                                         //heartbeat();
                                     }));
                             } else {
@@ -186,6 +199,7 @@ angular.module('cirqlApp')
                     };
 
                     var renderState = function (newValue, oldValue) {
+
                         if (scope.targettemp) {
                             if (!angular.isDefined(newValue)) {
                                 return false;
@@ -198,19 +212,19 @@ angular.module('cirqlApp')
                                 }
                             }
 
-                            scope.temp = Math.floor(scope.targettemp);
-                            if (scope.targettemp*10 == (scope.targettemp.toFixed(0))*10) {
+                            scope.temp = Math.floor(newValue);
+                            if (newValue*10 == (newValue.toFixed(0))*10) {
                                 scope.dotTemp = 0;
                             } else {
                                 scope.dotTemp = 5;
                             }
 
-                            if (scope.measuredtemp >= scope.targettemp) {
-                                var startTemp = scope.targettemp;
+                            if (scope.measuredtemp >= newValue) {
+                                var startTemp = newValue;
                                 var endTemp = scope.measuredtemp;
                                 var mustHeat = false;
                             } else {
-                                var endTemp = scope.targettemp;
+                                var endTemp = newValue;
                                 var startTemp = scope.measuredtemp;
                                 var mustHeat = true;
                             }
