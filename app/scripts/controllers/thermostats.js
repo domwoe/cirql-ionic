@@ -127,6 +127,34 @@ angular.module('cirqlApp')
 
             };
 
+            $scope.lastSeen = function(timeString) {
+                var timestamp = Date.parse(timeString);
+                var now = new Date;
+
+                var diff = now - timestamp;
+
+                if ( diff < 15*60*1000) {
+
+                    if ( diff > 60*1000) {
+
+                        $scope.alert = false;
+                        return Math.round(diff/60/1000) + ' minutes ago';
+                    
+                    }    
+                     
+                    else {
+
+                        $scope.alert = false;
+                        return 'Just now';
+
+                    }    
+                }
+                else {
+                    $scope.alert = true;
+                    return timeString;
+                }
+            }
+
             
 
             /**

@@ -25,21 +25,27 @@ angular.module('cirqlApp')
               $scope.netatmos = netatmos;
             });
 
-            $scope.lastSeen = function(UTCtime) {
-                var timestamp = UTCtime * 1000;
-                var now = Date.now();
+            $scope.lastSeen = function(timeString) {
+                
+                var timestamp = Date.parse(timeString);
+                var now = new Date;
 
                 var diff = now - timestamp;
 
                 if ( diff < 15*60*1000) {
 
-                    if ( diff > 2*60*1000) {
-                        $scope.alert = false;
-                        return 'Just now';
-                    }
-                    else {
+                    if ( diff > 60*1000) {
+
                         $scope.alert = false;
                         return Math.round(diff/60/1000) + ' minutes ago';
+                    
+                    }    
+                     
+                    else {
+
+                        $scope.alert = false;
+                        return 'Just now';
+
                     }    
                 }
                 else {

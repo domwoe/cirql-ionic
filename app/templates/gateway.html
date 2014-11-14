@@ -31,7 +31,8 @@
                         Last Seen:
                     </div>
                     <div class="col">
-                        {{gateway.lastSeen}}
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(gateway.lastSeen)}}
                     </div>
                 </div>
             </div>

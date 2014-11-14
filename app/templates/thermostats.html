@@ -71,7 +71,8 @@
                         Last Seen:
                     </div>
                     <div class="col">
-                        {{thermostat.lastSeen}}
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(thermostat.lastSeen)}}
                     </div>
                 </div>
             </div>
