@@ -51,6 +51,7 @@
     "https://github.com/driftyco/ionic-plugins-keyboard.git",
     "org.apache.cordova.statusbar",
     "org.apache.cordova.console",
-    "https://github.com/driftyco/cordova-plugin-discovery.git"
+    "https://github.com/driftyco/cordova-plugin-discovery.git",
+    "https://github.com/christocracy/cordova-plugin-background-geolocation.git"
   ]
 }

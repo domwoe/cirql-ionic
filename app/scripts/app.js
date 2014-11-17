@@ -4,7 +4,8 @@ angular.module('cirqlApp', [
   'ionic',
   'config',
   'simpleLogin',
-  'firebase.utils'
+  'firebase.utils',
+  'ngCordova'
 ])
 
 .run(function($ionicPlatform) {
@@ -19,11 +20,11 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
 
-    console.log(window);
+    //console.log(window);
     
     //console.log(cordova.plugins);
 
-    console.log(navigator.Discovery);
+    //console.log(navigator.Discovery);
 
     // cordova.plugins.Discovery.identify(function(serviceData) {
 
