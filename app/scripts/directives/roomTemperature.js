@@ -212,6 +212,7 @@ angular.module('cirqlApp')
                                 }
                             }
 
+                            
                             scope.temp = Math.floor(newValue);
                             if (newValue*10 == (newValue.toFixed(0))*10) {
                                 scope.dotTemp = 0;
@@ -243,6 +244,8 @@ angular.module('cirqlApp')
                                     scope.roomid
                                 );
                             }
+
+                            scope.$apply();
                         }                   
                     };
 
