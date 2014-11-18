@@ -39,28 +39,50 @@ angular.module('cirqlApp')
 
             $scope.changeMode = function(direction) {
 
-                switch ($scope.roomValues.mode) {
-                    case 'schedule':
+            //     switch ($scope.roomValues.mode) {
+            //         case 'schedule':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'manual';
+            //             } else {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             }
+            //             break;
+
+            //         case 'manual':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             } else {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             }
+            //             break;
+
+            //         case 'autoaway':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             } else {
+            //                 $scope.roomValues.mode = 'manual';
+            //             }
+            //             break;
+
+            //         default:
+            //             break;
+            //     }
+            // };
+
+            switch ($scope.roomValues.mode) {
+                    case 'manu':
                         if (direction === 'left') {
-                            $scope.roomValues.mode = 'manual';
+                            $scope.roomValues.mode = 'auto';
                         } else {
-                            $scope.roomValues.mode = 'autoaway';
+                            $scope.roomValues.mode = 'auto';
                         }
                         break;
 
-                    case 'manual':
+                    case 'auto':
                         if (direction === 'left') {
-                            $scope.roomValues.mode = 'autoaway';
+                            $scope.roomValues.mode = 'manu';
                         } else {
-                            $scope.roomValues.mode = 'schedule';
-                        }
-                        break;
-
-                    case 'autoaway':
-                        if (direction === 'left') {
-                            $scope.roomValues.mode = 'schedule';
-                        } else {
-                            $scope.roomValues.mode = 'manual';
+                            $scope.roomValues.mode = 'manu';
                         }
                         break;
 
