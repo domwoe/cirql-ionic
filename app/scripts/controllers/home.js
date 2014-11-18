@@ -51,12 +51,12 @@ angular.module('cirqlApp')
             };
 
             // `configure` calls `start` internally
-            $cordovaBackgroundGeolocation.configure(options).then(function(location) {
-                fbLocation.$add(location);
-                console.log(location);
-            }, function(err) {
-                console.error(err);
-            });
+            // $cordovaBackgroundGeolocation.configure(options).then(function(location) {
+            //     fbLocation.$add(location);
+            //     console.log(location);
+            // }, function(err) {
+            //     console.error(err);
+            // });
 
             $scope.stopBackgroundGeolocation = function() {
                 $cordovaBackgroundGeolocation.stop();

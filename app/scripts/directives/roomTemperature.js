@@ -101,7 +101,7 @@ angular.module('cirqlApp')
                         target = roundHalf(phi*scope.max/270);
 
                         // draw arcs
-                        renderState(target);
+                        renderState(target,null);
 
                         //scope.targettemp = target;
 
@@ -136,7 +136,7 @@ angular.module('cirqlApp')
                                 bgTargetIcon.call(d3.behavior.drag()
                                     .on('dragstart', function() {
                                         $ionicSideMenuDelegate.canDragContent(false);
-                                        mouseDragCallback();
+                                        //mouseDragCallback();
                                         clearTimeout(targetTimer);
                                     })
                                     .on('drag', mouseDragCallback)
@@ -204,6 +204,7 @@ angular.module('cirqlApp')
                             if (!angular.isDefined(newValue)) {
                                 return false;
                             }
+                            // Needs to be changed!
                             if (newValue > scope.max) {
                                 if (oldValue >= scope.max) {
                                     return scope.targettemp = scope.max;
@@ -212,12 +213,20 @@ angular.module('cirqlApp')
                                 }
                             }
 
+                           
+                            // This is a fix. To render the target temperature
+                            // inside the thermostat. It would be better to change it
+                            // via id instead of unsing the scope
                             scope.temp = Math.floor(newValue);
+                            
                             if (newValue*10 == (newValue.toFixed(0))*10) {
                                 scope.dotTemp = 0;
                             } else {
                                 scope.dotTemp = 5;
                             }
+
+                            
+                            scope.$apply();
 
                             if (scope.measuredtemp >= newValue) {
                                 var startTemp = newValue;
