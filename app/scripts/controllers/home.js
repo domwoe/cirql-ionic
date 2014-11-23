@@ -12,7 +12,11 @@ angular.module('cirqlApp')
   function ($scope, user, simpleLogin, fbutil, $state) {
 
 
-    $scope.user = user;
+    if(user) {
+      $scope.user = user;
+    } else {
+      $state.go('login');
+    }
 
     $scope.min = 0;
     $scope.max = 30;

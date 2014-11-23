@@ -9,7 +9,12 @@
  */
 angular.module('cirqlApp')
 .controller('LoginCtrl',
-  function($scope, $state, $ionicLoading, simpleLogin, resident) {
+  function($scope, $localStorage, $state, $ionicLoading, simpleLogin, resident) {
+
+    if($localStorage.user) {
+      $state.go('app.home');
+    }
+
     $scope.user = {
       email: '',
       password: ''
