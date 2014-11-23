@@ -14,6 +14,11 @@ angular.module('cirqlApp')
 
     if(user) {
       $scope.user = user;
+      // redirect to select resident if not set
+      if(!user.residentId) {
+        $state.go('app.resident');
+      }
+      // redirect to login if no user available
     } else {
       $state.go('login');
     }
