@@ -94,6 +94,10 @@ a {
   left: -30%;
 }
 
+.has-header {
+  top: 20%;
+}
+
 .title {
   position: relative;
   height: 3em;
@@ -170,47 +174,50 @@ input:-ms-input-placeholder {
   top: 44px;
 }
 
-.has-header {
-  top: 20%;
+.has-residents {
+  top: 24%;
 }
 
 .residents {
-  padding-top: 5%
+  padding-top: 5%;
+  text-align: center;
+  position: relative;
+  clear: both;
+  margin: 0 auto;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .away {
   height: 10%;
+  float: right;
   padding-right: 5%;
 }
 
 .at-home {
   height: 10%;
-  float: right;
-  position: relative;
-  left: -50%;
 }
 
 .resident {
+  display: inline-block;
+  float: left;
+  position: relative;
+  margin-left: -10px;
+  text-align: center;
+}
+
+.avatar {
   width: 0;
   padding: 3vh;
   border-radius: 100%;
   -moz-border-radius: 100%; 
   -webkit-border-radius: 100%; 
   border: 1px solid rgba(255, 255, 255, 0.5);
-  position: relative;
-  margin-left: -10px;
 }
 
 .away .resident {
   float: right;
-}
-
-.at-home .center {
-  position: relative;
-  left: 50%;}
-
-.at-home .center .resident {
-  float: left;
 }
 
 .rooms-table {

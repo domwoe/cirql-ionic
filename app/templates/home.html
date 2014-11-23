@@ -4,18 +4,20 @@
   </ion-nav-buttons>
   <div class="wrapper">
   <div class="residents away">
-    <div class="resident"></div>
-    <div class="resident"></div>
+    <div class="resident" ng-repeat="resident in residents | filter:{ isAway: true }">
+      <div class="avatar"></div>
+      {{resident.name}}
+    </div>
   </div>
   <div class="circle">
   </div>
   <div class="residents at-home">
-    <div class="center">
-      <div class="resident"></div>
-      <div class="resident"></div>
+    <div class="resident" ng-repeat="resident in residents | filter:{ isAway: false }">
+      <div class="avatar"></div>
+      {{resident.name}}
     </div>
   </div>
-  <ion-content class="has-header">
+  <ion-content class="has-header has-residents">
       <div class="rooms-table">
         <div class="row" ng-click="goToRoom(room.$id)" ng-repeat="room in rooms" ng-if="room.name">
           <div class="left">{{room.name}}<hr/> 

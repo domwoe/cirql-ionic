@@ -36,8 +36,8 @@ angular.module('cirqlApp')
       var rooms = fbutil.syncArray('homes/'+user.uid+'/rooms');
       $scope.rooms = rooms;
 
-      // var residents = fbutil.syncArray('homes/'+user.uid+'/residents');
-      // $scope.residents = residents;
+      var residents = fbutil.syncArray('homes/'+user.uid+'/residents');
+      $scope.residents = residents;
 
       // console.log("home data loaded for user", user.uid);
       // console.log("home", home);
