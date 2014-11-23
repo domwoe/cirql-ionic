@@ -64,6 +64,10 @@ a {
 
 // Login View
 // -------------------------------
+.login {
+  padding: 13%;
+}
+
 .divider {
   max-width:500px;
   text-align:center;
@@ -78,34 +82,30 @@ a {
 
 .circle {
   background-color: rgba(0, 0, 0, 0.2);
-  width: 160%;
+  width: 150%;
   height:0;
-  padding-top: 20%;
-  padding-bottom: 140%;
+  padding: 75%;
   border-radius: 100%;
   -moz-border-radius: 100%; 
   -webkit-border-radius: 100%; 
   border: 1px solid rgba(255, 255, 255, 0.5);
-  margin-top: 10%;
-  margin-left: -40%;
-  margin-right: 20%;
-  padding-left: 50%;
-  padding-right: 30%;
-  position: relative;
+  position: absolute;
+  top: 10%;
+  left: -30%;
 }
 
-.circle .title {
+.title {
   position: relative;
   height: 3em;
   font-size: 32px;
 }
 
-.circle .title > * {
+.title > * {
   position: absolute;
   bottom: 0px;
 }
 
-.circle .title * {
+.title * {
   margin-bottom: 0px
 }
 
@@ -162,13 +162,62 @@ input:-ms-input-placeholder {
 
 // Home View
 // -------------------------------
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 44px;
+}
+
+.has-header {
+  top: 20%;
+}
+
+.residents {
+  padding-top: 5%
+}
+
+.away {
+  height: 10%;
+  padding-right: 5%;
+}
+
+.at-home {
+  height: 10%;
+  float: right;
+  position: relative;
+  left: -50%;
+}
+
+.resident {
+  width: 0;
+  padding: 3vh;
+  border-radius: 100%;
+  -moz-border-radius: 100%; 
+  -webkit-border-radius: 100%; 
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  margin-left: -10px;
+}
+
+.away .resident {
+  float: right;
+}
+
+.at-home .center {
+  position: relative;
+  left: 50%;}
+
+.at-home .center .resident {
+  float: left;
+}
+
 .rooms-table {
   position: absolute;
   overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
-  height: 100%;
-  margin-left: -5%;
 }
 
 .rooms-table::-webkit-scrollbar { 
@@ -270,6 +319,13 @@ input:-ms-input-placeholder {
         transition-property: transform;
         transition-duration: 1s;
     }
+}
+
+// Add Room View
+// -------------------------------
+
+.add-room {
+  padding: 13%;
 }
 
 // Utility classes
