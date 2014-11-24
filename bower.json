@@ -5,7 +5,8 @@
     "ionic": "v1.0.0-beta.13",
     "angularfire": "~0.8.2",
     "d3": "~3.4.11",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "ngCordova": "~0.1.7-alpha"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.17",

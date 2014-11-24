@@ -5,7 +5,8 @@ angular.module('cirqlApp', [
   'config',
   'simpleLogin',
   'firebase.utils',
-  'ngStorage'
+  'ngStorage',
+  'ngCordova'
 ])
 
 .run(function($ionicPlatform) {
@@ -20,36 +21,6 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
 
-    console.log(window);
     
-    //console.log(cordova.plugins);
-
-    console.log(navigator.Discovery);
-
-    // cordova.plugins.Discovery.identify(function(serviceData) {
-
-    //   console.log(serviceData);
-  
-    // }, function(error) {
-
-    //   console.log(error);
-
-    // }, {
-    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-    //   port: 7072 // the port the service's broadcast service is running on
-    // });
-
-    // navigator.Discovery.identify(function(serviceData) {
-
-    //   console.log(serviceData);
-  
-    // }, function(error) {
-
-    //   console.log(error);
-
-    // }, {
-    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-    //   port: 7072 // the port the service's broadcast service is running on
-    // });
   });
 });
