@@ -8,7 +8,7 @@
  * # simpleLogin
  */
 
-angular.module('simpleLogin', ['firebase', 'firebase.utils'])
+angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
 
 // a simple wrapper on simpleLogin.getUser() that rejects the promise
 // if the user does not exists (i.e. makes user required), useful for
@@ -21,7 +21,7 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils'])
   };
 })
 
-.factory('simpleLogin', function($firebaseSimpleLogin, fbutil, $q, $rootScope, createProfile, changeEmail) {
+.factory('simpleLogin', function($firebaseSimpleLogin, fbutil, $q, $rootScope, $localStorage, createProfile, changeEmail) {
   var auth = $firebaseSimpleLogin(fbutil.ref());
   var listeners = [];
 
@@ -39,14 +39,31 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils'])
     initialized: false,
 
     getUser: function() {
-      return auth.$getCurrentUser();
+      // check for user object it local storage
+      if($localStorage.user) {
+        return $localStorage.user;
+      } else {
+        // if invalide or none exists authenticate with firebase
+        return auth.$getCurrentUser()
+        .then(function(login) {
+          $localStorage.user = login;
+          return login;
+        });
+      }
     },
 
     login: function(provider, opts) {
-      return auth.$login(provider, opts);
+      return auth.$login(provider, opts)
+      // save to localStorage if successfull
+      .then(function(login) {
+        $localStorage.user = login;
+        return login;
+      });
     },
 
     logout: function() {
+      //delet user from local storage
+      delete $localStorage.user;
       auth.$logout();
     },
 
@@ -113,18 +130,6 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils'])
         }
       });
     });
-
-    //function firstPartOfEmail(email) {
-      //return ucfirst(email.substr(0, email.indexOf('@'))||'');
-    //}
-
-    //function ucfirst (str) {
-      //// credits: http://kevin.vanzonneveld.net
-      //str += '';
-      //var f = str.charAt(0).toUpperCase();
-      //return f + str.substr(1);
-    //}
-
     return def.promise;
   };
 })

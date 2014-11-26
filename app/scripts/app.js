@@ -4,7 +4,8 @@ angular.module('cirqlApp', [
   'ionic',
   'config',
   'simpleLogin',
-  'firebase.utils'
+  'firebase.utils',
+  'ngStorage'
 ])
 
 .run(function($ionicPlatform) {
