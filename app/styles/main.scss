@@ -525,6 +525,13 @@ input:-ms-input-placeholder {
   height: 30%
 }
 
+.in-front {
+  position: relative;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+}
+
 
 
 // CARDS
