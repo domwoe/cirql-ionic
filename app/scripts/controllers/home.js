@@ -18,7 +18,7 @@ angular.module('cirqlApp')
                 loadHome(user);
 
             
-                var fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId);
+                var fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
 
                 var options = {
                     url: 'http://only.for.android.com/update_location.json', // <-- Android ONLY:  your server url to send locations to
@@ -42,9 +42,14 @@ angular.module('cirqlApp')
                 // `configure` calls `start` internally
                 $timeout(function() {
                   $cordovaBackgroundGeolocation.configure(options).then(function(location) {
-                      fbLocation['lastLocation'] = location;
+                      var date = new Date();
+                      fbLocation.date = date +'';
+                      fbLocation.lat = location.latitude
+                      fbLocation.lon = location.longitude
+                      fbLocation.timestamp = Date.now();
+                      fbLocation.speed = location.speed;
                       fbLocation.$save();
-                      console.log(location);
+
                   }, function(err) {
                       console.error(err);
                   });

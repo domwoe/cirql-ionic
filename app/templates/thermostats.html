@@ -6,7 +6,7 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-content class="has-header has-footer" scroll="true" overflow-scroll="false">
+    <ion-content>
 
         <div class="list card opaque item-text-wrap" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
@@ -97,3 +97,4 @@
         <button ng-hide="isAddView" class="button button-full button-positive" ng-click="addThermostatView()">Add Thermostat</button>
         <button ng-show="isAddView" class="button button-full button-positive" ng-click="pairNewThermostat()">Pair New Thermostat</button>
     </div>
+</ion-view>
