@@ -35,7 +35,6 @@ a {
 // SIDE MENU
 // -------------------------------
 
-
 .menu {
   background-color: #000 !important;
   background: #000 !important;
@@ -214,7 +213,6 @@ input:-ms-input-placeholder {
 // -------------------------------
 .field-group {
   font-size: 20px;
-  font-weight: 100;
   line-height: 34px;
   text-align: center;
   margin-top: 50px;
@@ -272,6 +270,15 @@ input:-ms-input-placeholder {
     }
 }
 
+// Schedule View
+// -------------------------------
+.schedule-block {
+  display: block;
+  width: 568px; 
+  height: 200px;
+  margin: 0 auto;
+}
+
 // Utility classes
 // -------------------------------
 .pull-left {
@@ -301,6 +308,10 @@ input:-ms-input-placeholder {
 
 .aligncenter {
   text-align: center;
+}
+
+.activity-label {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 
@@ -422,10 +433,8 @@ input:-ms-input-placeholder {
 }
 
 #roomclimate {
-  height: 30%
+  height: 25%
 }
-
-
 
 // CARDS
 // -------------------------------

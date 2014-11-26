@@ -67,7 +67,6 @@ angular.module('cirqlApp')
       }
     })
 
-
     .state('app.addRoom', {
       url: '/rooms/add',
       views: {
@@ -88,6 +87,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.schedule', {
+      url: '/rooms/:roomId/schedule',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/schedule.html',
+          controller: 'ScheduleCtrl'
+        }
+      }
+    })
+
     .state('app.thermostats', {
       url: '/rooms/:roomId/thermostats',
       views: {
@@ -97,8 +106,6 @@ angular.module('cirqlApp')
         }
       }
     })
-
-   
 
     .state('app.netatmo', {
       url: '/rooms/:roomId/netatmo',

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout,$ionicSideMenuDelegate) {
+    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout, $ionicSideMenuDelegate) {
 
             var polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees - 230) * Math.PI / 180.0;
