@@ -351,6 +351,10 @@ input:-ms-input-placeholder {
   float: right;
 }
 
+.container-relative {
+  position:relative;
+}
+
 .center-block {
   display: block;
   margin: 0 auto;
@@ -525,11 +529,17 @@ input:-ms-input-placeholder {
   height: 30%
 }
 
-.in-front {
-  position: relative;
-    left: 0px;
-    top: 0px;
-    z-index: 1;
+#mode {
+  position: absolute;
+  width: 100px;
+  height: 50px;
+  left: 200px;
+  top: 100;
+  z-index: 1;
+}
+
+.in-background {
+    z-index: -1;
 }
 
 
