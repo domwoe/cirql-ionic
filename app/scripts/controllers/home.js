@@ -39,12 +39,20 @@ angular.module('cirqlApp')
                     stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
                 };
 
+
+                // BackgroundGeoLocation is highly configurable.
+                //  $timeout(function() {
+                //     $cordovaBackgroundGeolocation.configure(callbackFn, failureFn, options);
+                // },1000);
+
                 // `configure` calls `start` internally
                 $timeout(function() {
                   $cordovaBackgroundGeolocation.configure(options).then(function(location) {
+                      var date = new Date();
+                      location.date = date +'';
                       fbLocation['lastLocation'] = location;
                       fbLocation.$save();
-                      console.log(location);
+                      console.log('------------' + JSON.stringify(location));
                   }, function(err) {
                       console.error(err);
                   });
