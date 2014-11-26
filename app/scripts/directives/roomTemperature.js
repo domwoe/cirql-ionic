@@ -71,6 +71,8 @@ angular.module('cirqlApp')
                 restrict: 'EA',
                 scope: {
                     displaytarget:  "=",
+                    displaymode:    "=",
+                    displayarrows:  "=",
                     roomid:         "=",
                     targettemp:     "=",
                     measuredtemp:   "=",
@@ -120,6 +122,37 @@ angular.module('cirqlApp')
                         stroke           = scope.stroke;
 
                     size = radius*2 + parseInt(stroke)*2;
+
+                    // if (scope.displaymode) {
+                        
+                    //     d3.select('#modeSvg' + scope.roomid).style(
+                    //         "visibility", 'visible'
+                    //     );
+                    // }
+                    // else {
+
+                    //     d3.select('#modeSvgx' + scope.roomid).style(
+                    //         "visibility", 'hidden'
+                    //     );
+
+                    // }
+                    if (scope.displayarrows) {
+                        
+                        d3.select('#arrowsBack')
+                        .style("visibility", 'visible');
+
+                        d3.select('#arrowsNext')
+                        .style("visibility", 'visible');
+                    }
+                    else {
+                        
+                        d3.select('#arrowsBack')
+                        .style("visibility", 'hidden');
+
+                        d3.select('#arrowsNext')
+                        .style("visibility", 'hidden');
+
+                    }
 
                     var renderCircle = function() {
                         $timeout(function() {
@@ -297,10 +330,10 @@ angular.module('cirqlApp')
                                 <tspan x="150" y="130">.{{dotTemp}}</tspan>\
                             </text>\
                         </g>\
-                        <g id="arrowsBack" transform="translate(86,140)" fill="#FFFFFF">\
+                        <g id="arrowsBack" transform="translate(90,142.7) scale(0.5)" fill="#FFFFFF">\
                             <path d="M-0.0657142857,8.42499324 C-0.0657142857,8.12030355 0.0543691382,7.81561385 0.293830995,7.58333919 L7.83723199,0.27374681 C8.31709569,-0.191257946 9.09493548,-0.191257946 9.57456419,0.27374681 C10.0541929,0.738523845 10.0541929,1.49227788 9.57456419,1.95728264 L2.89994679,8.42499324 L9.57432919,14.8927039 C10.0539579,15.3574809 10.0539579,16.1114626 9.57432919,16.5762397 C9.09470048,17.0412444 8.31686069,17.0412444 7.83699699,16.5762397 L0.293595998,9.2666473 C0.0541341413,9.03437264 -0.0657142857,8.72968294 -0.0657142857,8.42499324 L-0.0657142857,8.42499324 Z" id="Shape" sketch:type="MSShapeGroup"></path>\
                         </g>\
-                         <g id="arrowsNext" transform="translate(163,140.5)" fill="#FFFFFF">\
+                         <g id="arrowsNext" transform="translate(163,142.79) scale(0.5)" fill="#FFFFFF">\
                          <path d="M9.36247818,9.01515405 L1.81925445,16.3247464 C1.33940202,16.7897512 0.56158051,16.7897512 0.0819630755,16.3247464 C-0.397654359,15.8599694 -0.397654359,15.1059876 0.0819630755,14.6412106 L6.75642362,8.1735 L0.0821980669,1.70578939 C-0.397419367,1.24078464 -0.397419367,0.487030602 0.0821980669,0.0222535665 C0.561815501,-0.442751189 1.33963701,-0.442751189 1.81948944,0.0222535665 L9.36271317,7.33184595 C9.60240439,7.56434832 9.72225,7.8688103 9.72225,8.1735 C9.72225,8.4781897 9.6021694,8.7828794 9.36247818,9.01515405 L9.36247818,9.01515405 Z" id="Shape" sketch:type="MSShapeGroup"></path>\
                          </g>\
                         <g id="leaf" visibility="{{leafVisibility}}" transform="translate(60,105)" fill="#26A65B">\

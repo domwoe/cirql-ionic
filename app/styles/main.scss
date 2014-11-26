@@ -445,7 +445,7 @@ input:-ms-input-placeholder {
     margin-top: -30px;
     height: 30%
 }
-#mode {
+#modeSlider {
     
     position: relative;
     text-align: center;
@@ -456,13 +456,13 @@ input:-ms-input-placeholder {
     height: 75px;
     line-height: 75px;
     top: -140px;
-    left: 6px;
+    left: 5px;
     z-index: 1;
 }
-#mode #auto {
+#modeSlider #auto {
     letter-spacing: 2.2px;
 }
-#mode #manu {
+#modeSlider #manu {
     letter-spacing: 1.2px;
 }
 .in-background {

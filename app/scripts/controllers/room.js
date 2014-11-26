@@ -8,20 +8,51 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
-        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate', '$ionicSlideBoxDelegate',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate) {
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
             var roomUrl = homeUrl + '/rooms/' + room;
+            var modeUrl = homeUrl + '/rooms/' + room + '/mode';
             var sensorUrl = roomUrl + '/sensors/netatmo';
 
             var roomObj = fbutil.syncObject(roomUrl);
+            roomObj.$bindTo($scope, 'roomValues');
+
+        
+            /**
+             * Return index for mode slide box
+             * @param  {string} mode auto/manu
+             * @return {int}    index of slide
+             */
+            $scope.modeToIndex = function(mode) {
+                if (mode === 'auto' ) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            };
+
+            /**
+             * Change mode in Firebase based on mode
+             * slide box index
+             * @param  {int}  index of slide
+             */
+            $scope.changeMode = function($index) {
+                if ($index % 2 === 0) {
+                    $scope.roomValues.mode = 'auto';
+                }
+                else {
+                    $scope.roomValues.mode = 'manu';
+                }
+            }
+
+           
+
             var sensorObj = fbutil.syncObject(sensorUrl);
 
-            roomObj.$loaded().then(function() {
-                roomObj.$bindTo($scope, 'roomValues');
-            });
 
             sensorObj.$loaded()
                 .then(function() {
@@ -37,60 +68,7 @@ angular.module('cirqlApp')
                     });
                 });
 
-            $scope.changeMode = function(direction) {
-
-            //     switch ($scope.roomValues.mode) {
-            //         case 'schedule':
-            //             if (direction === 'left') {
-            //                 $scope.roomValues.mode = 'manual';
-            //             } else {
-            //                 $scope.roomValues.mode = 'autoaway';
-            //             }
-            //             break;
-
-            //         case 'manual':
-            //             if (direction === 'left') {
-            //                 $scope.roomValues.mode = 'autoaway';
-            //             } else {
-            //                 $scope.roomValues.mode = 'schedule';
-            //             }
-            //             break;
-
-            //         case 'autoaway':
-            //             if (direction === 'left') {
-            //                 $scope.roomValues.mode = 'schedule';
-            //             } else {
-            //                 $scope.roomValues.mode = 'manual';
-            //             }
-            //             break;
-
-            //         default:
-            //             break;
-            //     }
-            // };
-
-            switch ($scope.roomValues.mode) {
-                    case 'manu':
-                        if (direction === 'left') {
-                            $scope.roomValues.mode = 'auto';
-                        } else {
-                            $scope.roomValues.mode = 'auto';
-                        }
-                        break;
-
-                    case 'auto':
-                        if (direction === 'left') {
-                            $scope.roomValues.mode = 'manu';
-                        } else {
-                            $scope.roomValues.mode = 'manu';
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            };
-
+        
             $scope.roomId = room;
             $scope.user = user;
             $scope.logout = simpleLogin.logout;
