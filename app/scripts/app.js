@@ -30,8 +30,7 @@ angular.module('cirqlApp', [
             
             geo.init()
 
-            var params = ['1', '40.781552', '-73.967171', '10'];
-            geo.monitorRegion(params);
+            geo.monitorRegion();
 
             geo.startMonitoringSignificantLocationChanges();
         }
