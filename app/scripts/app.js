@@ -27,13 +27,8 @@ angular.module('cirqlApp', [
 
 
         if (window.plugins && window.plugins.DGGeofencing) {
-            geo.init().then(function(result) {
-                console.log('GeoInitCallback: ' + result);
-                var date = new Date();
-                fbLocation.date = date + '';
-                fbLocation.msg = result;
-                fbLocation.$save();
-            });
+            
+            geo.init()
 
             var params = ['1', '40.781552', '-73.967171', '10'];
             geo.monitorRegion(params);
