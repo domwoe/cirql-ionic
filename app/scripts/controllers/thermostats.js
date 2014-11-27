@@ -170,7 +170,7 @@ angular.module('cirqlApp')
             }
 
 
-            $ionicModal.fromTemplateUrl('/templates/pairing.html', {
+            $ionicModal.fromTemplateUrl('templates/pairing.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function(modal) {
