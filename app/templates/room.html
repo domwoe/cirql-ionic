@@ -7,6 +7,11 @@
         <div class="center-block">
             <div room-temperature class="center-block in-background" scale="1.0" min="min" max="max" roomid="roomId" targettemp="roomValues.virtualTarget" measuredtemp="roomValues.temperature" mode="roomValues.mode" color="{{ currentColor }}" bgcolor="{{ bgColor }}" radius="{{ radius }}" stroke="{{ stroke }}" displaytarget="true" displayarrows="true" displaymode="false">
             </div>
+            <div class="row">
+            <div class="col">
+             <i class="ion-chevron-left arrow right"></i>
+            </div>
+            <div class="col">
             <ion-slide-box
             id="modeSlider"
             active-slide="modeToIndex(roomValues.mode)"
@@ -20,6 +25,13 @@
                     manu
                 </ion-slide>
             </ion-slide-box>
+            </div>
+              <div class="col">
+              <i class="ion-chevron-right arrow arrow-right"></i>
+            </div>
+            </div>
+
+            
         </div>
 
         <div id="roomclimate" class="field-group">

@@ -20,6 +20,8 @@ angular.module('cirqlApp')
             var roomObj = fbutil.syncObject(roomUrl);
             roomObj.$bindTo($scope, 'roomValues');
 
+            var modeIndex = null;
+
         
             /**
              * Return index for mode slide box
@@ -28,10 +30,10 @@ angular.module('cirqlApp')
              */
             $scope.modeToIndex = function(mode) {
                 if (mode === 'auto' ) {
-                    return 0;
+                    return modeIndex || 0;
                 }
                 else {
-                    return 1;
+                    return modeIndex || 1;
                 }
             };
 
@@ -41,6 +43,8 @@ angular.module('cirqlApp')
              * @param  {int}  index of slide
              */
             $scope.changeMode = function($index) {
+                modeIndex = $index;
+
                 if ($index % 2 === 0) {
                     $scope.roomValues.mode = 'auto';
                 }

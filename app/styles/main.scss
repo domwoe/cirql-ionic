@@ -212,12 +212,22 @@ input:-ms-input-placeholder {
     opacity: 0.5;
 }
 .rooms-table .svg-container {
+    position: relative;
     float: right;
     max-width: 150px;
     padding: 0;
     margin: 0;
     margin-bottom: -50%;
     margin-right: -9%;
+}
+
+.home-mode {
+  position: absolute;
+  text-align: center;
+  letter-spacing: 2.5px;
+  font-size: 12px;
+  left: 58px;
+  top: 77px;
 }
 // Select Resident View
 // -------------------------------
@@ -262,6 +272,23 @@ input:-ms-input-placeholder {
 }
 .yellow-bg {
     background-color: #FFCC00;
+}
+
+.arrow {
+  position: relative;
+  font-size: 10px;
+  top: -122px;
+}
+
+.arrow-left {
+  margin-left:auto; 
+  margin-right:-10%;
+  float:right
+  // left: 340px;
+}
+
+.arrow-right {
+  left: -93px;
 }
 .heart-beat {
     animation: beatBeat 800ms ease alternate infinite;
@@ -455,7 +482,7 @@ input:-ms-input-placeholder {
     width: 65px;
     height: 75px;
     line-height: 75px;
-    top: -140px;
+    top: -145px;
     left: 5px;
     z-index: 1;
 }
