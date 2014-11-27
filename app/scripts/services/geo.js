@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('cirqlApp').service('geo', ['$q', '$log',
-    function($q, $log) {
+angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil',
+    function($q, $log, simpleLogin, fbutil) {
+
+    	var user = simpleLogin.getUser();
+        var fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
 
         var service = {
             init: function() {
@@ -9,16 +12,20 @@ angular.module('cirqlApp').service('geo', ['$q', '$log',
 
                 window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(), 
                 	function(result) {
-	                        $log.debug('Geo: init callback for monitoring');
-	                        deferred.resolve(result);
+	                        console.log('Geo: init callback for monitoring');
+	                        //deferred.resolve(result);
+	                        var date = new Date();
+                			fbLocation.date = date + '';
+                			fbLocation.msg = result;
+                			fbLocation.$save();
 	                    },
 	                    function(error) {
-	                        $log.debug("Geo: error");
+	                        console.log('Geo: error');
 	                        deferred.reject(error);
 
 	                    });
 
-	            $log.debug("Geo: return promise");
+	            console.log('Geo: return promise');
 	            return deferred.promise;  
             },
 
@@ -27,16 +34,16 @@ angular.module('cirqlApp').service('geo', ['$q', '$log',
 
                 window.plugins.DGGeofencing.startMonitoringRegion(params,
                     function(result) {
-                        $log.debug('Geo: added Location ' + params);
+                        console.log('Geo: added Location ' + params);
                         deferred.resolve(result);
                     },
                     function(error) {
-                        $log.debug("Geo: error");
+                        console.log('Geo: error');
                         deferred.reject(error);
 
                     });
 
-                $log.debug("Geo: return promise");
+                console.log('Geo: return promise');
                 return deferred.promise;
 
             },
@@ -44,55 +51,57 @@ angular.module('cirqlApp').service('geo', ['$q', '$log',
             removeRegion: function(params) {
             	var deferred = $q.defer();
 
-            	window.plugins.DGGeofencing.stoptMonitoringRegion(params,
+            	window.plugins.DGGeofencing.stopMonitoringRegion(params,
                     function(result) {
-                        $log.debug('Geo: removed Location ' + params);
+                        console.log('Geo: removed Location ' + params);
                         deferred.resolve(result);
                     },
                     function(error) {
-                        $log.debug("Geo: error");
+                        console.log('Geo: error');
                         deferred.reject(error);
 
                     });
 
-                $log.debug("Geo: return promise");
+                console.log('Geo: return promise');
                 return deferred.promise;
 
 
             },
 
             startMonitoringSignificantLocationChanges: function() {
-            	window.plugins.DGGeofencing.stoptMonitoringSignificantLocationChanges(
+            	var deferred = $q.defer();
+            	window.plugins.DGGeofencing.startMonitoringSignificantLocationChanges(
 	            	 function(result) {
-	                        $log.debug('Geo: start monitoring significant location changes');
+	                        console.log('Geo: start monitoring significant location changes');
 	                        deferred.resolve(result);
 	                    },
 	                    function(error) {
-	                        $log.debug("Geo: error");
+	                        console.log('Geo: error');
 	                        deferred.reject(error);
 
 	                    });
 
-	            $log.debug("Geo: return promise");
+	            $log.debug('Geo: return promise');
 	            return deferred.promise;  
             },
 
             stopMonitoringSignificantLocationChanges: function() {
-            	window.plugins.DGGeofencing.stoptMonitoringSignificantLocationChanges(
+            	var deferred = $q.defer();
+            	window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
 	            	 function(result) {
-	                        $log.debug('Geo: start monitoring significant location changes');
+	                        console.log('Geo: start monitoring significant location changes');
 	                        deferred.resolve(result);
 	                    },
 	                    function(error) {
-	                        $log.debug("Geo: error");
+	                        console.log('Geo: error');
 	                        deferred.reject(error);
 
 	                    });
 
-	            $log.debug("Geo: return promise");
+	            console.log('Geo: return promise');
 	            return deferred.promise;   
             }
-        }
+        };
 
     return service;
    	
