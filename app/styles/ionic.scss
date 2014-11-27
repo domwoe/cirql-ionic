@@ -27,12 +27,18 @@ $button-font-size:                20px;
 // Bars
 // -------------------------------
 $bar-transparency:                0.2;
-$bar-light-text:                  #fff;
+$bar-light-text:                  #000;
+$bar-dark-border:				  null;
 
 // Items
 // -------------------------------
 $item-light-bg:                   transparent;
 $item-light-border:               transparent;
+
+
+$modal-bg-color:                  rgba(255,255,255,0.9) !default;
+
+
 
 // Any variables you did not define will use the defaults
 //bower:scss

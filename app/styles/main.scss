@@ -508,15 +508,13 @@ input:-ms-input-placeholder {
     margin-bottom: 0px !important;
 }
 
-.item .button {
-    margin-bottom: 0px !important;
-}
 .opaque {
     background: rgba(0, 0, 0, 0.25);
 }
 // FOOTER FOR THERMOSTATS SCREN
 // -------------------------------
 .bar-footer {
+
     padding: 0px !important;
     height: 7%;
 }
@@ -541,4 +539,11 @@ input:-ms-input-placeholder {
     text-align: center;
     padding-left: 10%;
     padding-right: 10%;
+}
+
+.bar-red {
+  height: 10%;
+  margin-bottom: 0px !important;
+  font-size: 1.5em;
+  background: rgba(239,78,58,1) !important;
 }
