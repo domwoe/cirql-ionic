@@ -314,6 +314,7 @@ input:-ms-input-placeholder {
 }
 // Utility classes
 // -------------------------------
+
 .pull-left {
     float: left;
 }
@@ -506,6 +507,10 @@ input:-ms-input-placeholder {
 .card .item-image .button {
     margin-bottom: 0px !important;
 }
+
+.item .button {
+    margin-bottom: 0px !important;
+}
 .opaque {
     background: rgba(0, 0, 0, 0.25);
 }
@@ -513,7 +518,13 @@ input:-ms-input-placeholder {
 // -------------------------------
 .bar-footer {
     padding: 0px !important;
+    height: 7%;
 }
+
+.bar-footer .button {
+    font-size: 1.5em;
+}
+
 .bar-footer .button {
     margin: 0px !important;
 }
