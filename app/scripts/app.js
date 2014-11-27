@@ -8,7 +8,7 @@ angular.module('cirqlApp', [
   'ngStorage'
 ])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, geo) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,11 +20,16 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
 
-    console.log(window);
-    
-    //console.log(cordova.plugins);
+    if (window.plugins && window.plugins.DGGeofencing) {
+      geo.init().then(function(result) {
+        console.log(result);
+      });
 
-    console.log(navigator.Discovery);
+      var params = ["1", "40.781552", "-73.967171", "150"];
+      geo.monitorRegion(params).then(function(result) {
+        console.log(result)
+      });
+    }  
 
     // cordova.plugins.Discovery.identify(function(serviceData) {
 
