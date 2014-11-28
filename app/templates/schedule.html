@@ -1,8 +1,7 @@
 <ion-view title="{{roomValues.name}} Schedule">
 	<ion-content scroll="false">
   		<div class="schedule-block">
-	  	 	<room-schedule schedule="schedule" radius="radius">
+	  	 	<room-schedule roomid="roomId" schedule="schedule" radius="radius" go-back="goBack(room)">
 	  	</div>
-		<div class="aligncenter" ng-click="goToRoom(roomId)"> Done </div>
 	</ion-content>
 </ion-view>
