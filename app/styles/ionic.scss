@@ -2,8 +2,9 @@
 
 // Colors
 // -------------------------------
-$positive: #336699;
-$balanced: #669900;
+$positive:                        #336699;
+$balanced:                        #669900;
+$light:                           rgba(255, 255, 255, 0.25);
 
 
 // Base
@@ -27,6 +28,9 @@ $button-default-border:           #fff;
 $button-border-radius:            24px;
 $button-font-size:                20px;
 
+$button-light-text:               #fff;
+$button-light-active-bg:          darken($light, 40%);
+
 
 // Bars
 // -------------------------------
@@ -40,6 +44,12 @@ $bar-default-bg:                  rgba(#000, $bar-transparency);
 // -------------------------------
 $item-light-bg:                   transparent;
 $item-light-border:               transparent;
+$item-default-text:               #fff;
+
+// Forms
+// -------------------------------
+$input-label-color:               #fff;
+$input-color-placeholder:         darken(#fff, 40%);
 
 // Any variables you did not define will use the defaults
 //bower:scss
