@@ -8,8 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal',
-        function($scope, $state, user, fbutil, $ionicModal) {
+    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate'
+        function($scope, $state, user, fbutil, $ionicModal, $ionicSideMenuDelegate) {
+
+            $ionicSideMenuDelegate.canDragContent(false);
 
             var room;
 
@@ -201,6 +203,7 @@ angular.module('cirqlApp')
              * Go back to room screen
              */
             $scope.goToRoom = function() {
+                $ionicSideMenuDelegate.canDragContent(true);
                 $state.go('app.room', {
                     roomId: room
                 });
