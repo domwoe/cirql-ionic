@@ -12,6 +12,7 @@ angular.module('cirqlApp')
   function ($scope, user, simpleLogin, fbutil, $state) {
 
 
+
     if(user) {
       $scope.user = user;
       // redirect to select resident if not set
@@ -23,6 +24,7 @@ angular.module('cirqlApp')
       $state.go('login');
     }
 
+
     $scope.min = 0;
     $scope.max = 30;
     $scope.stroke = 12;
@@ -33,16 +35,15 @@ angular.module('cirqlApp')
     $scope.goToRoom = function(room) {
       $state.go('app.room',{roomId: room}, {reload: true});
     };
-
     
     function loadHome(user) {
-      if( $scope.home ) {
+      if ($scope.home) {
         $scope.home.$destroy();
       }
       // var home = fbutil.syncObject('homes/'+user.uid);
       // home.$bindTo($scope, 'home');
 
-      var rooms = fbutil.syncArray('homes/'+user.uid+'/rooms');
+      var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
       $scope.rooms = rooms;
 
       var residents = fbutil.syncArray('homes/'+user.uid+'/residents');

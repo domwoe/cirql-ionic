@@ -8,6 +8,7 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
+
     .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
         function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
 
@@ -36,6 +37,11 @@ angular.module('cirqlApp')
                         netatmoObj.$bindTo($scope, 'sensor');
                     });
                 });
+
+            $scope.goToSchedule = function(room) {
+                console.log("Render schedule for ", room);
+                $state.go('app.schedule', {roomId: room});
+            };
 
             $scope.changeMode = function(direction) {
 

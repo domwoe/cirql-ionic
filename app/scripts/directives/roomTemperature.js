@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout,$ionicSideMenuDelegate) {
+    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout, $ionicSideMenuDelegate) {
 
             var targetTimer = null;
             var target = null;
