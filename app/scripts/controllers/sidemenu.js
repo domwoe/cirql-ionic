@@ -41,7 +41,7 @@ angular.module('cirqlApp')
                         isConPromise.then(function(isConnected) {
                             console.log('isConnected: ' + isConnected);
                             if ( isConnected ) {
-                                state.go('app.addNetatmo', {roomId: $state.params.roomId});
+                                $state.go('app.addNetatmo', {roomId: $state.params.roomId});
                             }
                         },
                         function(reject) {
