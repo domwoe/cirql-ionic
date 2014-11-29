@@ -11,7 +11,6 @@ angular.module('cirqlApp')
 
         $scope.room = $state.params.roomId;
 
-        
         $scope.goToSchedule = function() {
             var cordova = cordova || null;
             if (cordova) {
@@ -19,7 +18,7 @@ angular.module('cirqlApp')
                 so.setOrientation('landscape');
             }    
             $state.go('app.schedule', {roomId: $state.params.roomId} );
-        }    
+        }; 
 
         $scope.netatmo = function() {
             if ($state.params.hasOwnProperty('roomId')) {

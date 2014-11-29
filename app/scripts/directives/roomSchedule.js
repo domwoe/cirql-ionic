@@ -63,6 +63,7 @@ angular.module('cirqlApp')
 
 				this.mouseDragCallback = function(ev, self, d) {
 
+					console.log("CALLBACK: ", ev, self, d);
 					d.px = d.x; // previous x
 		            var m = d3.mouse(ev);
 		            d.x += m[0] - d.dragstart[0];
@@ -228,17 +229,24 @@ angular.module('cirqlApp')
 						.call(d3.behavior.drag()
 							.origin(function(d) { return d; })
 			            	.on('dragstart', function(d) {
+			            		d3.event.sourceEvent.preventDefault();
+			            		d3.event.sourceEvent.stopPropagation();
+
+			            		console.log("DRAG START ", this);
 								d.dragstart = d3.mouse(this); // store this
 				                $ionicSideMenuDelegate.canDragContent(false);
 				                var parentNode = d3.select(this).node().parentNode;
 				                var secondAncestor = d3.select(parentNode).node().parentNode;
 								self.daySelector(secondAncestor);
 								self.entrySelector(parentNode);
+
 			            	})
 				            .on('drag', function(d) {
+				            	console.log("DRAGGING ", this);
 				            	self.mouseDragCallback(this, self, d);
 				            })
 				            .on('dragend', function() {
+				            	console.log("DRAG END ", this);
 				                $ionicSideMenuDelegate.canDragContent(true);
 			            	})
 		            	);
@@ -299,6 +307,7 @@ angular.module('cirqlApp')
 						'target': target,
 						'weekday': weekday
 	            	};
+	            	console.log("CREATED ", this.localSchedule[id]);
 	            }
 
 	            this.addEntryCallback = function(self) {
@@ -409,6 +418,7 @@ angular.module('cirqlApp')
 		            	} else {
 			            	self.daySelector(this);	
 			            }
+			           
 		            });
 
 		            var addButton = d3.select('#add');
@@ -442,7 +452,6 @@ angular.module('cirqlApp')
 
 			var renderState = function() {
 				if (scope.schedule && !scheduler.rendered) {
-			//		angular.copy(scope.schedule, scheduler.localSchedule);
 					scheduler.renderScheduleEntries();
 					scheduler.attachListeners();
 					scheduler.rendered = true;
