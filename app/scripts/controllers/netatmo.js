@@ -8,7 +8,7 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate'
+    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate',
         function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate) {
 
             $ionicSideMenuDelegate.canDragContent(false);
@@ -54,7 +54,7 @@ angular.module('cirqlApp')
                     $scope.alert = true;
                     return Date(timestamp).toLocaleString();
                 }
-            }
+            };
 
 
             $scope.toggleGroup = function(group) {
@@ -102,7 +102,7 @@ angular.module('cirqlApp')
                 $state.go('app.netatmo', {
                     roomId: room
                 });
-            }
+            };
 
             $scope.delNetatmo = function() {
 
@@ -125,7 +125,7 @@ angular.module('cirqlApp')
                 $state.go('app.addNetatmo', {
                     roomId: room
                 });
-            }
+            };
 
 
 

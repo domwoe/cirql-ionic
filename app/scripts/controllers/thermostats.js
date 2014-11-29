@@ -8,7 +8,7 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate'
+    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate',
         function($scope, $state, user, fbutil, $ionicModal, $ionicSideMenuDelegate) {
 
             $ionicSideMenuDelegate.canDragContent(false);
@@ -169,7 +169,7 @@ angular.module('cirqlApp')
                     $scope.alert = true;
                     return timeString;
                 }
-            }
+            };
 
 
             $ionicModal.fromTemplateUrl('templates/pairing.html', {
