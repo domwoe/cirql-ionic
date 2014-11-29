@@ -8,8 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate', '$ionicSlideBoxDelegate',
-        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate) {
+
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
+
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
@@ -72,7 +74,66 @@ angular.module('cirqlApp')
                     });
                 });
 
-        
+            $scope.goToSchedule = function(room) {
+                console.log("Render schedule for ", room);
+                $state.go('app.schedule', {roomId: room});
+            };
+
+            $scope.changeMode = function(direction) {
+
+            //     switch ($scope.roomValues.mode) {
+            //         case 'schedule':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'manual';
+            //             } else {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             }
+            //             break;
+
+            //         case 'manual':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             } else {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             }
+            //             break;
+
+            //         case 'autoaway':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             } else {
+            //                 $scope.roomValues.mode = 'manual';
+            //             }
+            //             break;
+
+            //         default:
+            //             break;
+            //     }
+            // };
+
+            switch ($scope.roomValues.mode) {
+                    case 'manu':
+                        if (direction === 'left') {
+                            $scope.roomValues.mode = 'auto';
+                        } else {
+                            $scope.roomValues.mode = 'auto';
+                        }
+                        break;
+
+                    case 'auto':
+                        if (direction === 'left') {
+                            $scope.roomValues.mode = 'manu';
+                        } else {
+                            $scope.roomValues.mode = 'manu';
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            };
+
+
             $scope.roomId = room;
             $scope.user = user;
             $scope.logout = simpleLogin.logout;

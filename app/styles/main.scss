@@ -307,10 +307,19 @@ input:-ms-input-placeholder {
         transition-duration: 1s;
     }
 }
+
 // Add Room View
 // -------------------------------
 .add-room {
     padding: 13%;
+}    
+
+// Schedule View
+// -------------------------------
+.schedule-block {
+  display: block;
+  margin: 0 auto;
+
 }
 // Utility classes
 // -------------------------------
@@ -342,6 +351,8 @@ input:-ms-input-placeholder {
 .aligncenter {
     text-align: center;
 }
+
+
 .center {
     display: -webkit-box;
     display: -moz-box;
@@ -372,6 +383,13 @@ input:-ms-input-placeholder {
     /*-ms-flex-align: center;*/
     /*align-items: center;*/
 }
+
+
+.activity-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+
 /*.container {*/
 /*margin: 0;*/
 /*padding: 0;*/
@@ -470,6 +488,7 @@ input:-ms-input-placeholder {
     height: 100%
 }
 #roomclimate {
+
     margin-top: -30px;
     height: 30%
 }
@@ -496,6 +515,7 @@ input:-ms-input-placeholder {
 .in-background {
     z-index: -1;
 }
+
 // CARDS
 // -------------------------------
 .card {
