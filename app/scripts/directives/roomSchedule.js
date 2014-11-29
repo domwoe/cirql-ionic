@@ -337,7 +337,7 @@ angular.module('cirqlApp')
 					    self.addEntry(destDay, id, xpos, ypos, target);
 
 					    // Update local schedule
-					    self.updateSchedule(id, schEntry.hour, schEntry.minute, schEntry.target, index + 1);
+					    self.updateSchedule(id, schEntry.hour, schEntry.minute, schEntry.target, factor);
 					    self.nextId++;
 	            	});
 	            	self.deselectEntry();
