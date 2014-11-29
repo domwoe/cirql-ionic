@@ -145,7 +145,7 @@ input:-ms-input-placeholder {
     top: 44px;
 }
 .has-residents {
-    top: 24%;
+    top: 30%;
 }
 .residents {
     padding-top: 5%;
@@ -222,12 +222,12 @@ input:-ms-input-placeholder {
 }
 
 .home-mode {
-  position: absolute;
-  text-align: center;
-  letter-spacing: 2.5px;
-  font-size: 12px;
-  left: 58px;
-  top: 77px;
+    position: absolute;
+    text-align: center;
+    letter-spacing: 2.5px;
+    font-size: 12px;
+    left: 58px;
+    top: 77px;
 }
 // Select Resident View
 // -------------------------------
@@ -275,20 +275,20 @@ input:-ms-input-placeholder {
 }
 
 .arrow {
-  position: relative;
-  font-size: 10px;
-  top: -122px;
+    position: relative;
+    font-size: 10px;
+    top: -122px;
 }
 
 .arrow-left {
-  margin-left:auto; 
-  margin-right:-10%;
-  float:right
-  // left: 340px;
+    margin-left:auto; 
+    margin-right:-10%;
+    float:right
+    // left: 340px;
 }
 
 .arrow-right {
-  left: -93px;
+    left: -93px;
 }
 .heart-beat {
     animation: beatBeat 800ms ease alternate infinite;
@@ -317,8 +317,8 @@ input:-ms-input-placeholder {
 // Schedule View
 // -------------------------------
 .schedule-block {
-  display: block;
-  margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 
 }
 // Utility classes
@@ -386,7 +386,7 @@ input:-ms-input-placeholder {
 
 
 .activity-label {
-  color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 
@@ -475,7 +475,7 @@ input:-ms-input-placeholder {
 }
 .list-group-item {
     /*[>background-color: transparent;<]*/
-    
+
     background-color: rgba(0, 0, 0, 0.5);
 }
 .list-group-item .btn {
@@ -493,7 +493,6 @@ input:-ms-input-placeholder {
     height: 30%
 }
 #modeSlider {
-    
     position: relative;
     text-align: center;
     vertical-align: middle;
@@ -534,7 +533,6 @@ input:-ms-input-placeholder {
 // FOOTER FOR THERMOSTATS SCREN
 // -------------------------------
 .bar-footer {
-
     padding: 0px !important;
     height: 10%;
 }
@@ -562,8 +560,8 @@ input:-ms-input-placeholder {
 }
 
 .bar-red {
-  height: 10%;
-  margin-bottom: 0px !important;
-  font-size: 1.5em;
-  background: rgba(239,78,58,1) !important;
+    height: 10%;
+    margin-bottom: 0px !important;
+    font-size: 1.5em;
+    background: rgba(239,78,58,1) !important;
 }
