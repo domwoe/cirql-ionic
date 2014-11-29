@@ -27,8 +27,8 @@ angular.module('cirqlApp')
 
             $scope.lastSeen = function(timeString) {
                 
-                var timestamp = Date.parse(timeString);
-                var now = new Date;
+                var timestamp = Date.parse(timeString)-5000;
+                var now = Date.now();
 
                 var diff = now - timestamp;
 
