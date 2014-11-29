@@ -20,6 +20,7 @@ angular.module('cirqlApp')
 	roomObj.$loaded().then(function() {
 		roomObj.$bindTo($scope, 'roomValues');
 		//console.log("ROOMVAL: ", roomObj);
+
 	});
 
 	var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
@@ -35,7 +36,7 @@ angular.module('cirqlApp')
   		if (cordova) {
 			var so = cordova.plugins.screenorientation;
         	so.setOrientation('portrait');
-        }	
+        }
 		$state.go('app.room', {roomId: room});
     };
 }]);
