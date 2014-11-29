@@ -12,8 +12,7 @@ angular.module('cirqlApp')
         $scope.room = $state.params.roomId;
 
         $scope.goToSchedule = function() {
-            var cordova = cordova || null;
-            if (cordova) {
+            if (window.cordova) {
                 var so = cordova.plugins.screenorientation;
                 so.setOrientation('landscape');
             }    

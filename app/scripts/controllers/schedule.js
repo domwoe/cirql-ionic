@@ -32,8 +32,7 @@ angular.module('cirqlApp')
 	$scope.radius = 14;
 
   	$scope.goBack = function(room) {
-  		var cordova = cordova || null;
-  		if (cordova) {
+  		if (window.cordova) {
 			var so = cordova.plugins.screenorientation;
         	so.setOrientation('portrait');
         }
