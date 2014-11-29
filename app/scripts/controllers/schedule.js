@@ -36,6 +36,7 @@ angular.module('cirqlApp')
 			var so = cordova.plugins.screenorientation;
         	so.setOrientation('portrait');
         }
+        $ionicSideMenuDelegate.canDragContent(true);
 		$state.go('app.room', {roomId: room});
     };
 }]);
