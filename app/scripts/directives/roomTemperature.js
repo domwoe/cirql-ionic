@@ -254,7 +254,7 @@ angular.module('cirqlApp')
                                 );
                             }
 
-                            scope.$apply();
+                            $timeout(function() {scope.$apply()});
                         }                   
                     };
 
