@@ -8,7 +8,7 @@
 
     <ion-content class="has-header" scroll="false">
 
-        <div ng-show="hasGateway" class="list card opaque">
+        <div ng-show="hasGateway" class="list card opaque item-text-wrap">
             <div class="item">
                 <div class="row">
                     <div class="col">
@@ -31,7 +31,8 @@
                         Last Seen:
                     </div>
                     <div class="col">
-                        {{gateway.lastSeen}}
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(gateway.lastSeen)}}
                     </div>
                 </div>
             </div>

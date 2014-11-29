@@ -11,7 +11,20 @@ angular.module('cirqlApp')
 .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', 
   function ($scope, user, simpleLogin, fbutil, $state) {
 
-    $scope.user = user;
+
+
+    if(user) {
+      $scope.user = user;
+      // redirect to select resident if not set
+      if(!user.residentId) {
+        $state.go('app.resident');
+      }
+      // redirect to login if no user available
+    } else {
+      $state.go('login');
+    }
+
+
     $scope.min = 0;
     $scope.max = 30;
     $scope.stroke = 12;
@@ -33,8 +46,8 @@ angular.module('cirqlApp')
       var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
       $scope.rooms = rooms;
 
-      // var residents = fbutil.syncArray('homes/'+user.uid+'/residents');
-      // $scope.residents = residents;
+      var residents = fbutil.syncArray('homes/'+user.uid+'/residents');
+      $scope.residents = residents;
 
       // console.log("home data loaded for user", user.uid);
       // console.log("home", home);

@@ -11,7 +11,7 @@
     <!-- <header class="bar bar-header bar-stable">
       <h1 class="title">Menu</h1>
     </header> -->
-    <ion-content>
+    <ion-content scroll="true">
       <div class="list">
         <div class="item nav-clear menu-close" ui-sref="app.home">
           Home
@@ -19,7 +19,7 @@
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
           Add Room
         </div>
-         <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.schedule({roomId: room})">
+         <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           Schedule
         </div>
         <!-- <ion-item nav-clear menu-close ui-sref="change-password">

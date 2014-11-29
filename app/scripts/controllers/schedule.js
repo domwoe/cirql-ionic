@@ -8,8 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-  .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$stateParams', '$state',
-  	function($scope, user, fbutil, $stateParams, $state) {
+  .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$stateParams', '$state','$ionicSideMenuDelegate',
+  	function($scope, user, fbutil, $stateParams, $state, $ionicSideMenuDelegate) {
+
+  	$ionicSideMenuDelegate.canDragContent(false);
 
  	var room = $stateParams.roomId;
 	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
@@ -28,6 +30,11 @@ angular.module('cirqlApp')
 	$scope.radius = 14;
 
   	$scope.goBack = function(room) {
+  		var cordova = cordova || null;
+  		if (cordova) {
+			var so = cordova.plugins.screenorientation;
+        	so.setOrientation('portrait');
+        }
 		$state.go('app.room', {roomId: room});
     };
 }]);

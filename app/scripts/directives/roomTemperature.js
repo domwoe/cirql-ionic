@@ -3,6 +3,9 @@
 angular.module('cirqlApp')
     .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout, $ionicSideMenuDelegate) {
 
+            var targetTimer = null;
+            var target = null;
+
             var polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees - 230) * Math.PI / 180.0;
 
@@ -95,9 +98,13 @@ angular.module('cirqlApp')
                         var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
                         phi = (phi*360/(2*Math.PI) + 230)%360 ;
 
-                        var target = roundHalf(phi*scope.max/270);
+                        target = roundHalf(phi*scope.max/270);
 
-                        scope.targettemp = target;
+                        // draw arcs
+                        renderState(target);
+
+                        //scope.targettemp = target;
+
                     };
 
                     var heartbeat = function() {
@@ -130,10 +137,16 @@ angular.module('cirqlApp')
                                     .on('dragstart', function() {
                                         $ionicSideMenuDelegate.canDragContent(false);
                                         mouseDragCallback();
+                                        clearTimeout(targetTimer);
                                     })
                                     .on('drag', mouseDragCallback)
                                     .on('dragend', function() {
                                         $ionicSideMenuDelegate.canDragContent(true);
+                                        // Set target in scope (and firebase) 1s after
+                                        // releasing the icon
+                                        targetTimer = setTimeout( function() {
+                                            scope.targettemp = target;
+                                        },1000);   
                                         //heartbeat();
                                     }));
                             } else {
@@ -186,6 +199,7 @@ angular.module('cirqlApp')
                     };
 
                     var renderState = function (newValue, oldValue) {
+
                         if (scope.targettemp) {
                             if (!angular.isDefined(newValue)) {
                                 return false;
@@ -198,19 +212,27 @@ angular.module('cirqlApp')
                                 }
                             }
 
-                            scope.temp = Math.floor(scope.targettemp);
-                            if (scope.targettemp*10 == (scope.targettemp.toFixed(0))*10) {
+                            if (newValue < 21) {
+                                scope.leafVisibility = 'visible';
+                            }
+                            else {
+                                scope.leafVisibility = 'hidden';
+                            }
+
+                            
+                            scope.temp = Math.floor(newValue);
+                            if (newValue*10 == (newValue.toFixed(0))*10) {
                                 scope.dotTemp = 0;
                             } else {
                                 scope.dotTemp = 5;
                             }
 
-                            if (scope.measuredtemp >= scope.targettemp) {
-                                var startTemp = scope.targettemp;
+                            if (scope.measuredtemp >= newValue) {
+                                var startTemp = newValue;
                                 var endTemp = scope.measuredtemp;
                                 var mustHeat = false;
                             } else {
-                                var endTemp = scope.targettemp;
+                                var endTemp = newValue;
                                 var startTemp = scope.measuredtemp;
                                 var mustHeat = true;
                             }
@@ -229,6 +251,8 @@ angular.module('cirqlApp')
                                     scope.roomid
                                 );
                             }
+
+                            scope.$apply();
                         }                   
                     };
 
@@ -274,8 +298,17 @@ angular.module('cirqlApp')
                             </text>\
                         </g>\
                         <text id="mode" font-size="24" fill="#FFFFFF">\
-                            <tspan text-anchor="middle" x="130" y="150">{{mode}}</tspan>\
+                            <tspan text-anchor="middle" x="130" y="154">{{mode}}</tspan>\
                         </text>\
+                        <g id="arrowsBack" transform="translate(86,140)" fill="#FFFFFF">\
+                            <path d="M-0.0657142857,8.42499324 C-0.0657142857,8.12030355 0.0543691382,7.81561385 0.293830995,7.58333919 L7.83723199,0.27374681 C8.31709569,-0.191257946 9.09493548,-0.191257946 9.57456419,0.27374681 C10.0541929,0.738523845 10.0541929,1.49227788 9.57456419,1.95728264 L2.89994679,8.42499324 L9.57432919,14.8927039 C10.0539579,15.3574809 10.0539579,16.1114626 9.57432919,16.5762397 C9.09470048,17.0412444 8.31686069,17.0412444 7.83699699,16.5762397 L0.293595998,9.2666473 C0.0541341413,9.03437264 -0.0657142857,8.72968294 -0.0657142857,8.42499324 L-0.0657142857,8.42499324 Z" id="Shape" sketch:type="MSShapeGroup"></path>\
+                        </g>\
+                         <g id="arrowsNext" transform="translate(163,140.5)" fill="#FFFFFF">\
+                         <path d="M9.36247818,9.01515405 L1.81925445,16.3247464 C1.33940202,16.7897512 0.56158051,16.7897512 0.0819630755,16.3247464 C-0.397654359,15.8599694 -0.397654359,15.1059876 0.0819630755,14.6412106 L6.75642362,8.1735 L0.0821980669,1.70578939 C-0.397419367,1.24078464 -0.397419367,0.487030602 0.0821980669,0.0222535665 C0.561815501,-0.442751189 1.33963701,-0.442751189 1.81948944,0.0222535665 L9.36271317,7.33184595 C9.60240439,7.56434832 9.72225,7.8688103 9.72225,8.1735 C9.72225,8.4781897 9.6021694,8.7828794 9.36247818,9.01515405 L9.36247818,9.01515405 Z" id="Shape" sketch:type="MSShapeGroup"></path>\
+                         </g>\
+                        <g id="leaf" visibility="{{leafVisibility}}" transform="translate(60,105)" fill="#26A65B">\
+                            <path d="M11.9412,-0.0695918367 C11.9412,-0.0695918367 10.3218,1.53346939 8.5706,2.17979592 C-4.3978,6.96632653 1.0716,16.2938776 1.25,16.3244898 C1.25,16.3244898 1.9772,15.0322449 2.9596,14.2953061 C9.1932,9.61918367 10.4602,4.23673469 10.4602,4.23673469 C10.4602,4.23673469 9.0612,10.7134694 3.5156,14.7434694 C2.2908,15.6332653 1.4614,17.8236735 1.1104,20.0128571 C1.1104,20.0128571 1.9786,19.655102 2.352,19.5579592 C2.4976,18.5885714 2.802,17.6602041 3.3166,16.8310204 C11.0674,17.7726531 13.6058,11.3997959 13.9374,9.17755102 C14.72,3.92918367 11.9412,-0.0695918367 11.9412,-0.0695918367 L11.9412,-0.0695918367 Z"></path>\
+                        </g>\
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
                             <path id="target_path{{roomid}}" fill="none" />\

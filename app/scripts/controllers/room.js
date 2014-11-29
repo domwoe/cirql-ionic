@@ -8,8 +8,9 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('RoomCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate', '$state',
-        function($scope, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate, $state) {
+
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
@@ -44,28 +45,50 @@ angular.module('cirqlApp')
 
             $scope.changeMode = function(direction) {
 
-                switch ($scope.roomValues.mode) {
-                    case 'schedule':
+            //     switch ($scope.roomValues.mode) {
+            //         case 'schedule':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'manual';
+            //             } else {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             }
+            //             break;
+
+            //         case 'manual':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'autoaway';
+            //             } else {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             }
+            //             break;
+
+            //         case 'autoaway':
+            //             if (direction === 'left') {
+            //                 $scope.roomValues.mode = 'schedule';
+            //             } else {
+            //                 $scope.roomValues.mode = 'manual';
+            //             }
+            //             break;
+
+            //         default:
+            //             break;
+            //     }
+            // };
+
+            switch ($scope.roomValues.mode) {
+                    case 'manu':
                         if (direction === 'left') {
-                            $scope.roomValues.mode = 'manual';
+                            $scope.roomValues.mode = 'auto';
                         } else {
-                            $scope.roomValues.mode = 'autoaway';
+                            $scope.roomValues.mode = 'auto';
                         }
                         break;
 
-                    case 'manual':
+                    case 'auto':
                         if (direction === 'left') {
-                            $scope.roomValues.mode = 'autoaway';
+                            $scope.roomValues.mode = 'manu';
                         } else {
-                            $scope.roomValues.mode = 'schedule';
-                        }
-                        break;
-
-                    case 'autoaway':
-                        if (direction === 'left') {
-                            $scope.roomValues.mode = 'schedule';
-                        } else {
-                            $scope.roomValues.mode = 'manual';
+                            $scope.roomValues.mode = 'manu';
                         }
                         break;
 
@@ -83,6 +106,13 @@ angular.module('cirqlApp')
             $scope.radius = 110;
             $scope.currentColor = '#FFFFFF';
             $scope.bgColor = '#000000';
+
+            /**
+             * Go back to home screen
+             */
+            $scope.goToHome = function() {
+                $state.go('app.home', null, {reload: true});
+            };
 
         }
     ]);

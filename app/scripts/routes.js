@@ -57,6 +57,26 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.user', {
+      url: '/user',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/home.html',
+          controller: 'HomeCtrl'
+        }
+      }
+    })
+
+    .state('app.resident', {
+      url: '/resident',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/resident.html',
+          controller: 'ResidentCtrl'
+        }
+      }
+    })
+
     .state('app.gateway', {
       url: '/gateway',
       views: {

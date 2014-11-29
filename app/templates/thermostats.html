@@ -6,9 +6,9 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-content class="has-header" scroll="true">
+    <ion-content class="has-header has-footer" scroll="true" overflow-scroll="false">
 
-        <div class="list card opaque" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
+        <div class="list card opaque item-text-wrap" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
                 <div class="row">
                     <div class="col">
@@ -71,7 +71,8 @@
                         Last Seen:
                     </div>
                     <div class="col">
-                        {{thermostat.lastSeen}}
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(thermostat.lastSeen)}}
                     </div>
                 </div>
             </div>
