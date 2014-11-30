@@ -8,7 +8,7 @@
 
     <ion-content class="has-header" scroll="false">
 
-        <div ng-show="hasGateway" class="list card opaque item-text-wrap">
+        <div ng-show="hasGateway" class="list card opaque item-text-wrap" ng-cloak>
             <div class="item">
                 <div class="row">
                     <div class="col">
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div ng-hide="hasGateway" class="centerAll">
+        <div ng-hide="hasGateway" class="centerAll" ng-cloak>
             <div class="row row-center">
                 <div class="col col-center">
                     Enter your Gateway id to connect it with your account {{errorMsg}}

@@ -37,7 +37,6 @@ angular.module('cirqlApp')
     };
 
     function redirectBasedOnStatus() {
-      $ionicLoading.hide();
       $state.go('app.home');
     }
 

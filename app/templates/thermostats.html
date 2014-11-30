@@ -8,11 +8,6 @@
 
     <ion-content class="has-header has-footer" scroll="true" overflow-scroll="false">
 
-        <div class="centerAll">
-            <h2 ng-show="(thermostats | filter:thermostatFilter).length==0">There are no unassigned paired thermostats available.</h2>
-            <h3 ng-show="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3>
-        </div>
-
         <div class="list card opaque item-text-wrap" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
                 <div class="row">
@@ -94,6 +89,11 @@
             </div>
 
 
+        </div>
+
+        <div class="centerAll">
+            <h2 ng-show="(thermostats | filter:thermostatFilter).length==0" ng-cloak>There are no unassigned paired thermostats available.</h2>
+            <h3 ng-show="(thermostats | filter:thermostatFilter).length==0" ng-cloak>Maybe you want to pair a new one?</h3>
         </div>
 
     </ion-content>

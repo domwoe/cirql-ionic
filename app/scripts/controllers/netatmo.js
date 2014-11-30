@@ -8,9 +8,13 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate', '$ionicPopup',
+    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate', '$ionicPopup', '$ionicLoading',
 
-        function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup) {
+        function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
+
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -26,6 +30,7 @@ angular.module('cirqlApp')
 
             netatmoService.getAvailable(user.uid).then(function(netatmos) {
                 $scope.netatmos = netatmos;
+                $ionicLoading.hide();
             });
 
             $scope.lastSeen = function(timeString) {

@@ -8,8 +8,13 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate',
-        function($scope, $state, user, fbutil, $ionicModal, $ionicSideMenuDelegate) {
+    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate', '$ionicLoading',
+        function($scope, $state, user, fbutil, $ionicModal, $ionicSideMenuDelegate, $ionicLoading) {
+
+            $scope.hasThermostat = true;
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -46,6 +51,8 @@ angular.module('cirqlApp')
                         room: 'null'
                     };
                 }
+
+                $ionicLoading.hide();
 
 
             });

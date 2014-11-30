@@ -8,8 +8,15 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil',
-        function($scope, $state, user, fbutil) {
+    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading',
+        function($scope, $state, user, fbutil, $ionicLoading) {
+
+            $scope.hasGateway = true;
+
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
 
             // Get GatewayId
             var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway')
@@ -31,18 +38,18 @@ angular.module('cirqlApp')
                         $scope.hasGateway = false;
                     }
 
+                    $ionicLoading.hide();
 
                 }
             );
 
             $scope.addGateway = function(gatewayId) {
-                
+
                 var gateway = fbutil.syncObject('gateways/' + gatewayId);
 
                 gateway.$loaded(function() {
-                    
-                    if (gateway.$value !== null)
-                    {
+
+                    if (gateway.$value !== null) {
                         gateway.homeId = user.uid;
                         gateway.$save();
 
@@ -53,15 +60,14 @@ angular.module('cirqlApp')
 
                         $scope.hasGateway = true;
 
+                    } else {
+
+                        $scope.errorMsg = 'There is no Gateway with id ' + gatewayId;
+
                     }
-                    else {
-
-                        $scope.errorMsg = 'There is no Gateway with id '+ gatewayId;
-
-                    }    
 
                 });
-                
+
 
             };
 
@@ -84,29 +90,26 @@ angular.module('cirqlApp')
             };
 
             $scope.lastSeen = function(timeString) {
-                
+
                 var timestamp = Date.parse(timeString);
                 var now = new Date;
 
                 var diff = now - timestamp;
 
-                if ( diff < 15*60*1000) {
+                if (diff < 15 * 60 * 1000) {
 
-                    if ( diff > 60*1000) {
+                    if (diff > 60 * 1000) {
 
                         $scope.alert = false;
-                        return Math.round(diff/60/1000) + ' minutes ago';
-                    
-                    }    
-                     
-                    else {
+                        return Math.round(diff / 60 / 1000) + ' minutes ago';
+
+                    } else {
 
                         $scope.alert = false;
                         return 'Just now';
 
-                    }    
-                }
-                else {
+                    }
+                } else {
                     $scope.alert = true;
                     return Date(timestamp).toLocaleString();
                 }

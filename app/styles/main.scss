@@ -14,9 +14,10 @@
 /*-o-user-select: text;*/
 /*user-select: text;*/
 /*}*/
-/*[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {*/
-/*display: none !important;*/
-/*}*/
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+display: none !important;
+}
 
 a {
     text-decoration: none !important;
@@ -37,7 +38,7 @@ a {
     width: 100%;
     list-style: none;
     margin: 0 0 0 45px;
-    height: 206px;
+    height: 100%;
     background-color: #000;
 }
 .menu .list .item {
