@@ -2,7 +2,7 @@
 
 // Colors
 // -------------------------------
-$positive:                        #336699;
+$positive:                        #111111;
 $balanced:                        #669900;
 $light:                           rgba(255, 255, 255, 0.25);
 
@@ -36,7 +36,9 @@ $button-light-active-bg:          darken($light, 40%);
 // -------------------------------
 $bar-transparency:                0.3;
 $bar-light-text:                  #000;
-$bar-dark-border:                 null;
+$bar-dark-border:                 0;
+$bar-default-border:              0;
+$bar-light-border:                0;
 $bar-light-text:                  #fff;
 $bar-default-bg:                  rgba(#000, $bar-transparency);
 

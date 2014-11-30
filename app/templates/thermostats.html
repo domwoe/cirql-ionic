@@ -91,18 +91,18 @@
 
         </div>
 
-        <div class="centerAll">
-            <h2 ng-show="(thermostats | filter:thermostatFilter).length==0" ng-cloak>There are no unassigned paired thermostats available.</h2>
-            <h3 ng-show="(thermostats | filter:thermostatFilter).length==0" ng-cloak>Maybe you want to pair a new one?</h3>
+        <div class="centerAll" ng-cloak>
+            <h2 ng-show="(thermostats | filter:thermostatFilter).length==0">There are no unassigned paired thermostats available.</h2>
+            <h3 ng-show="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3>
         </div>
 
     </ion-content>
-    <div class="bar bar-footer bar-dark">
-        <button ng-hide="isAddView" class="button button-full button-positive" ng-click="addThermostatView()">
+    <ion-footer-bar class="bar-footer">
+        <button ng-hide="isAddView" class="button button-block button-positive" ng-click="addThermostatView()">
             Add Thermostat
         </button>
-        <button ng-show="isAddView" class="button button-full button-positive" ng-click="pairNewThermostat()">
+        <button ng-show="isAddView" class="button button-block button-positive" ng-click="pairNewThermostat()">
             Pair New Thermostat
         </button>
-    </div>
+    </ion-footer-bar>
 </ion-view>    
