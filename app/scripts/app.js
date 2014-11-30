@@ -23,16 +23,20 @@ angular.module('cirqlApp', [
     
     // Find Gateway
     
-    var params = { 
-      clientName: 'cirqlApp',
-      port: 5353
-    };
+    if (window.cordova && window.Discovery)  {
+    
+      var params = { 
+        clientName: 'cirqlApp',
+        port: 5353
+      };
 
-    discovery.identify(params).then(function(result) {
-      console.log(result);
-    }, function(reason) {
-      console.log(reason);
-    });
+      discovery.identify(params).then(function(result) {
+        console.log(result);
+      }, function(reason) {
+        console.log(reason);
+      });
+
+    }  
 
     
   });

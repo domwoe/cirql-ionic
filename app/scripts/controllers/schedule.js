@@ -32,9 +32,8 @@ angular.module('cirqlApp')
 	$scope.radius = 14;
 
   	$scope.goBack = function(room) {
-  		if (window.cordova) {
-			var so = cordova.plugins.screenorientation;
-        	so.setOrientation('portrait');
+  		if (window.screen.hasOwnProperty('lockOrientation')) {
+        	window.screen.lockOrientation('portrait');
         }
         $ionicSideMenuDelegate.canDragContent(true);
 		$state.go('app.room', {roomId: room});
