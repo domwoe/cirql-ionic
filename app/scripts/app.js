@@ -8,7 +8,7 @@ angular.module('cirqlApp', [
   'ngStorage'
 ])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, discovery) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,36 +20,20 @@ angular.module('cirqlApp', [
       StatusBar.styleDefault();
     }
 
-    console.log(window);
     
-    //console.log(cordova.plugins);
+    // Find Gateway
+    
+    var params = { 
+      clientName: 'cirqlApp',
+      port: 5353
+    };
 
-    console.log(navigator.Discovery);
+    discovery.identify(params).then(function(result) {
+      console.log(result);
+    }, function(reason) {
+      console.log(reason);
+    });
 
-    // cordova.plugins.Discovery.identify(function(serviceData) {
-
-    //   console.log(serviceData);
-  
-    // }, function(error) {
-
-    //   console.log(error);
-
-    // }, {
-    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-    //   port: 7072 // the port the service's broadcast service is running on
-    // });
-
-    // navigator.Discovery.identify(function(serviceData) {
-
-    //   console.log(serviceData);
-  
-    // }, function(error) {
-
-    //   console.log(error);
-
-    // }, {
-    //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-    //   port: 7072 // the port the service's broadcast service is running on
-    // });
+    
   });
 });
