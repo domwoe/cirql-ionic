@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicModal', '$ionicSideMenuDelegate', '$ionicLoading',
-        function($scope, $state, user, fbutil, $ionicModal, $ionicSideMenuDelegate, $ionicLoading) {
+    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup',
+        function($scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup) {
 
             $scope.hasThermostat = true;
             $ionicLoading.show({
@@ -19,6 +19,7 @@ angular.module('cirqlApp')
             $ionicSideMenuDelegate.canDragContent(false);
 
             var room;
+            var pairingPopup;
 
             if ($state.params.hasOwnProperty('roomId')) {
                 room = $state.params.roomId;
@@ -59,13 +60,15 @@ angular.module('cirqlApp')
 
             $scope.pairNewThermostat = function() {
 
-                $scope.modal.show();
+                $scope.showPopup();
 
                 thermostats.$watch(function(event) {
                     console.log(event);
-                    if ( event.event === 'child_added' ) {
-                        $scope.modal.hide();
-
+                    if (event.event === 'child_added') {
+                        console.log(pairingPopup);
+                        if ( pairingPopup.hasOwnProperty('close') ) {
+                            pairingPopup.close();
+                        }
                     }
                 });
 
@@ -154,7 +157,7 @@ angular.module('cirqlApp')
             };
 
             $scope.lastSeen = function(timeString) {
-                var timestamp = Date.parse(timeString)-5000;
+                var timestamp = Date.parse(timeString) - 5000;
                 var now = Date.now();
 
                 var diff = now - timestamp;
@@ -179,30 +182,43 @@ angular.module('cirqlApp')
             };
 
 
-            $ionicModal.fromTemplateUrl('templates/pairing.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function(modal) {
-                $scope.modal = modal;
-            });
-            $scope.openModal = function() {
-                $scope.modal.show();
+            // $ionicModal.fromTemplateUrl('templates/pairing.html', {
+            //     scope: $scope,
+            //     animation: 'slide-in-up'
+            // }).then(function(modal) {
+            //     $scope.modal = modal;
+            // });
+            // $scope.openModal = function() {
+            //     $scope.modal.show();
+            // };
+            // $scope.closeModal = function() {
+            //     $scope.modal.hide();
+            // };
+            // //Cleanup the modal when we're done with it!
+            // $scope.$on('$destroy', function() {
+            //     $scope.modal.remove();
+            // });
+            // // Execute action on hide modal
+            // $scope.$on('modal.hidden', function() {
+            //     // Execute action
+            // });
+            // // Execute action on remove modal
+            // $scope.$on('modal.removed', function() {
+            //     // Execute action
+            // });
+
+            $scope.showPopup = function() {
+                pairingPopup = $ionicPopup.show({
+                    template: '<p>Insert the batteries into the thermostat and hold the <img src="images/icon-pairing.png"> button for at least 3 seconds.</p>' + '<p>The pairing mode on the thermostat is activated when a countdown begins from 30 until "AC" confirms the pairing</p>',
+                    title: 'Pairing new thermostat',
+                    subTitle: '',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'Cancel',
+                        type: 'button-block button-assertive',
+                    }]
+                });
             };
-            $scope.closeModal = function() {
-                $scope.modal.hide();
-            };
-            //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function() {
-                $scope.modal.remove();
-            });
-            // Execute action on hide modal
-            $scope.$on('modal.hidden', function() {
-                // Execute action
-            });
-            // Execute action on remove modal
-            $scope.$on('modal.removed', function() {
-                // Execute action
-            });
 
 
 

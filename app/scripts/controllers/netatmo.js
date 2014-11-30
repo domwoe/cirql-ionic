@@ -133,19 +133,26 @@ angular.module('cirqlApp')
             };
 
 
-
             $scope.showConfirm = function() {
-                var confirmPopup = $ionicPopup.confirm({
+
+                $ionicPopup.show({
+                    template: 'Are you sure you want to disconnect?',
                     title: 'Disconnect from netatmo account',
-                    template: 'Are you sure you want to disconnect?'
-                });
-                confirmPopup.then(function(res) {
-                    if (res) {
-                        netatmoService.disconnect(user.uid);
-                    } else {
-                    }
+                    subTitle: '',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'Cancel',
+                        type: 'button-block button-positive',
+                    }, {
+                        text: 'Disconnect',
+                        type: 'button-block button-assertive',
+                        onTap: function() {
+                            netatmoService.disconnect(user.uid);
+                        }
+                    }]
                 });
             };
+
 
 
 

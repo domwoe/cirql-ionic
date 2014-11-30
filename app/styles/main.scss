@@ -557,20 +557,11 @@ input:-ms-input-placeholder {
     font-weight: 600;
 }
 
-// .bar-footer .button {
-//     font-size: 1.5em;
-// }
 
-// .bar-footer .button {
-//     margin: 0px !important;
-// }
 // GATEWAY SCREEN
 // -------------------------------
-// .scroll-content {
-//     display: table !important;
-//     width: 100% !important;
-//     height: 100% !important;
-// }
+
+
 .centerAll {
     display: table-cell;
     vertical-align: middle;
@@ -579,11 +570,42 @@ input:-ms-input-placeholder {
     padding-right: 10%;
 }
 
-// .bar-red {
-//     height: 10%;
-//     margin-bottom: 0px !important;
-//     font-size: 1.5em;
-//     background: rgba(239,78,58,1) !important;
-// }
+.popup {
+  border-style: none !important;
+  color: #000;
+  //background: black !important;
+}
+
+.popup-head {
+  //color: #fff;
+  border-style: none !important;
+  font-weight: 600 !important;
+  //background: black !important;
+}
+
+.popup-body {
+  //color: #fff;
+  border-style: none !important;
+  font-weight: 600 !important;
+  //background: rgba(0,0,0,0.75) !important;
+}
+
+.popup-title {
+  font-weight: 300 !important;
+  border-style: none !important;
+  color: #000 !important;
+  font-size: 18px;
+}
+
+.popup-buttons.row {
+
+}
+
+.popup-buttons .button {
+    border-radius: 24px;
+    font-size: 14px;
+
+}
+
 
 
