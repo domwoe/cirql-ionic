@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-.controller('SideMenuCtrl', ['$scope', 'user', '$state', '$window', 'simpleLogin', 'netatmoService',
-    function($scope, user, $state, $window, simpleLogin, netatmoService) {
+.controller('SideMenuCtrl', ['$scope', 'user', '$state', 'simpleLogin', 'netatmoService',
+    function($scope, user, $state, simpleLogin, netatmoService) {
 
         $scope.logout = function() {
             simpleLogin.logout();
@@ -41,9 +41,12 @@ angular.module('cirqlApp')
                                 $state.go('app.addNetatmo', {roomId: $state.params.roomId});
                             }
                         },
+                        // No Netato account connected
                         function(reject) {
-                            console.log('reject');
-                            $window(netatmoService.authorizeUrl(user.uid));
+                            netatmoService.authorizeUrl(user.uid).then(function(url) {
+                                window.open(url);
+                            });
+                            
 
                         });
                     }    

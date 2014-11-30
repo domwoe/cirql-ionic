@@ -23,6 +23,9 @@ angular.module('cirqlApp')
 
                 authorizeUrl: function(user) {
 
+                    var deferred = $q.defer();
+
+
                     var netatmoOauth = loadNetatmoOauth();
                     var state = user;
                     netatmoOauth.$loaded(function(data) {
@@ -30,15 +33,17 @@ angular.module('cirqlApp')
                             '?client_id=' + data.client_id +
                             '&redirect_uri=' + data.redirect_uri +
                             '&state=' + state;
-                        return url;
+                        deferred.resolve(url);
                     });
+
+                    return deferred.promise;
                 },
 
                 getAvailable: function(user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
+                    var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
-                	var deferred = $q.defer();
+                    var deferred = $q.defer();
 
                     netatmosObj.$loaded(function(obj) {
 
@@ -61,7 +66,7 @@ angular.module('cirqlApp')
                             }
                         }
                         deferred.resolve(obj);
-                        
+
                     });
 
                     return deferred.promise;
@@ -70,66 +75,92 @@ angular.module('cirqlApp')
                 /**
                  * Get netatmo of a particular romm
                  * @param  {string} room the roomId
-                 * @return {[promise} returns a promise that resolves to an object containing the station and module of the room. 
+                 * @return {[promise} returns a promise that resolves to an object containing the station and module of the room.
                  */
-                getNetatmo: function(room,user) {
+                getNetatmo: function(room, user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
+                    var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
-                	var deferred = $q.defer();
+                    var deferred = $q.defer();
 
-                	netatmosObj.$loaded(function(netatmos) {
+                    netatmosObj.$loaded(function(netatmos) {
 
-		                    	for (var i = 0; i < netatmos.length; i++) {
+                        for (var i = 0; i < netatmos.length; i++) {
 
-			                        var modules = netatmos[i].modules;
+                            var modules = netatmos[i].modules;
 
-			                        for (var key in modules) {
+                            for (var key in modules) {
 
-			                            if (modules[key].hasOwnProperty('room') && modules[key].room === room) {
+                                if (modules[key].hasOwnProperty('room') && modules[key].room === room) {
 
-			                            	var data = {
-			                                    station: {
-			                                        id: netatmos.$keyAt(i),
-			                                        name: netatmos[i].name
+                                    var data = {
+                                        station: {
+                                            id: netatmos.$keyAt(i),
+                                            name: netatmos[i].name
 
-			                                    },
-			                                    module: {
-			                                        id: key,
-			                                        obj: modules[key]
-			                                    }
-			                                };
+                                        },
+                                        module: {
+                                            id: key,
+                                            obj: modules[key]
+                                        }
+                                    };
 
-			                                deferred.resolve(data);
-			                            }
-			                        }
-			                    }
-			                    if ( i === netatmos.length ) {
-			                    	deferred.resolve(false);
-			                    }
-			   
-		      
-                    		
-                    });	
-					return deferred.promise; 
+                                    deferred.resolve(data);
+                                }
+                            }
+                        }
+                        if (i === netatmos.length) {
+                            deferred.resolve(false);
+                        }
+
+
+
+                    });
+                    return deferred.promise;
+
+                },
+
+                disconnect: function(user) {
+                    var roomsObj = fbutil.syncObject('homes/' + user + '/rooms');
+
+                    roomsObj.$loaded(function(rooms) {
+
+                        // Delete netamtos from every room
+                        rooms.forEach(function(room) {
+                            if (room.hasOwnProperty('sensors') && room.sensors.hasOwnProperty('netatmo')) {
+                                room.sensors.netatmo = null;
+                            }
+                        });
+                        roomsObj.$save();
+                    });
+
+                    // Delete netatmo object
+                    var sensorsObj = fbutil.syncObject('homes/' + user + '/sensors');
+                    sensorsObj.$loaded(function(sensors) {
+                        if ( sensors.hasOwnProperty('netatmo') ) {
+                            sensors.netatmo = null;
+                        }
+                        sensorsObj.$save();
+                    });
+
 
                 },
 
                 isConnected: function(user) {
 
-                	var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
+                    var netatmosObj = fbutil.syncArray('homes/' + user + '/sensors/netatmo/stations');
 
-                	var deferred = $q.defer();
+                    var deferred = $q.defer();
 
-                	netatmosObj.$loaded(function(netatmos) {
+                    netatmosObj.$loaded(function(netatmos) {
 
-	                    if (netatmos[0]) {
-	                        deferred.resolve(true);
-	                    }
-	                    deferred.reject();
-	                });
+                        if (netatmos[0]) {
+                            deferred.resolve(true);
+                        }
+                        deferred.reject();
+                    });
 
-	                return deferred.promise;    
+                    return deferred.promise;
                 }
             };
 
