@@ -16,7 +16,7 @@
 /*}*/
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-display: none !important;
+    display: none !important;
 }
 
 a {
@@ -209,7 +209,7 @@ input:-ms-input-placeholder {
 .rooms-table {
     position: absolute;
     overflow-x: hidden;
-    overflow-y: scroll;
+    //overflow-y: scroll;
     width: 100%;
 }
 .rooms-table::-webkit-scrollbar {
@@ -315,23 +315,6 @@ input:-ms-input-placeholder {
 
 .arrow-right {
     left: -93px;
-}
-.heart-beat {
-    animation: beatBeat 800ms ease alternate infinite;
-    transform-origin: center center;
-}
-@keyframes beatBeat {
-    0% {
-        transform: translate(5350, 75) scale(0.4);
-    }
-    80% {
-        transfom: translate(35, 75) scale(0.5);
-    }
-    100% {
-        transform: translate(35, 75) scale(0.6);
-        transition-property: transform;
-        transition-duration: 1s;
-    }
 }
 
 // Add Room View
@@ -573,11 +556,11 @@ input:-ms-input-placeholder {
 }
 // GATEWAY SCREEN
 // -------------------------------
-.scroll-content {
-    display: table !important;
-    width: 100% !important;
-    height: 100% !important;
-}
+// .scroll-content {
+//     display: table !important;
+//     width: 100% !important;
+//     height: 100% !important;
+// }
 .centerAll {
     display: table-cell;
     vertical-align: middle;
