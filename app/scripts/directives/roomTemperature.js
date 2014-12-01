@@ -13,7 +13,7 @@ angular.module('cirqlApp')
                     x: centerX + (radius * Math.cos(angleInRadians)),
                     y: centerY + (radius * Math.sin(angleInRadians))
                 };
-            }
+            };
 
             var drawArc = function(arc, start, end, max, R, size, targetColor) {
                  if (!size) {
@@ -37,12 +37,12 @@ angular.module('cirqlApp')
                    .attr('transform', 'translate(' + x + ',' + x + ')')
                    .attr('stroke', targetColor);
                 return [startCart, endCart];
-            }
+            };
 
             var updateMeasuredArc = function(arc, start, end, max, R, size, roomid) {
-                var carts = drawArc(arc, start, end, max, R, size, "#FFF");
+                var carts = drawArc(arc, start, end, max, R, size, '#FFF');
                 var endCart = carts[1];
-                var icon = d3.select("#thermoIcon" + roomid);
+                var icon = d3.select('#thermoIcon' + roomid);
                 icon.attr(
                     'transform', 'translate(' + (endCart.x - 20.5) + ',' + (endCart.y - 21) + ')'
                 );
@@ -54,13 +54,13 @@ angular.module('cirqlApp')
                 var targetCart = mustHeat? carts[1]: carts[0];
 
                     
-                var bgTarget = d3.select("#bgTargetHandle" + roomid);
+                var bgTarget = d3.select('#bgTargetHandle' + roomid);
                 bgTarget.attr({
                     'cx': targetCart.x,
                     'cy': targetCart.y
                 });
 
-                var bgicon = d3.select("#bgTargetIcon" + roomid);
+                var bgicon = d3.select('#bgTargetIcon' + roomid);
                 bgicon.attr({
                     'cx': targetCart.x,
                     'cy': targetCart.y
@@ -68,7 +68,7 @@ angular.module('cirqlApp')
                     .attr('fill',targetColor);
 
           
-                var icon = d3.select("#targetIcon" + roomid); 
+                var icon = d3.select('#targetIcon' + roomid); 
                 icon.attr(
                     'transform', 
                     'translate(' + (targetCart.x - 20.5) + ',' + (targetCart.y - 21) + ') scale(0.6)'
@@ -78,20 +78,20 @@ angular.module('cirqlApp')
             return {
                 restrict: 'EA',
                 scope: {
-                    displaytarget:  "=",
-                    displaymode:    "=",
-                    displayarrows:  "=",
-                    roomid:         "=",
-                    targettemp:     "=",
-                    measuredtemp:   "=",
-                    mode:           "=",
-                    scale:          "=",
-                    min:            "=",
-                    max:            "=",
-                    radius:         "@",
-                    color:          "@",
-                    bgcolor:        "@",
-                    stroke:         "@"
+                    displaytarget:  '=',
+                    displaymode:    '=',
+                    displayarrows:  '=',
+                    roomid:         '=',
+                    targettemp:     '=',
+                    measuredtemp:   '=',
+                    mode:           '=',
+                    scale:          '=',
+                    min:            '=',
+                    max:            '=',
+                    radius:         '@',
+                    color:          '@',
+                    bgcolor:        '@',
+                    stroke:         '@'
                 },
                 link: function (scope, element, attrs) {
                     var ring_background     = element.find('circle'),
@@ -161,49 +161,49 @@ angular.module('cirqlApp')
                                         //heartbeat();
                                     }));
                             } else {
-                                targetIcon.style("visibility", 'hidden');
-                                bgTargetIcon.style("visibility", 'hidden');
-                                bgTargetHandle.style("visibility", 'hidden');
+                                targetIcon.style('visibility', 'hidden');
+                                bgTargetIcon.style('visibility', 'hidden');
+                                bgTargetHandle.style('visibility', 'hidden');
                             }
 
                             thermoIcon.on('click', function() {
-                                var visibility = tempDrawer.style("visibility");
+                                var visibility = tempDrawer.style('visibility');
                                 if (visibility === 'hidden') {
-                                    tempDrawer.style("visibility", 'visible');
+                                    tempDrawer.style('visibility', 'visible');
                                 }
                                 else {
-                                    tempDrawer.style("visibility", 'hidden');
+                                    tempDrawer.style('visibility', 'hidden');
                                 }
                             });
 
                             scalingContainer.attr({
-                                "transform":    "scale(" + scope.scale + ")"
+                                'transform':    'scale(' + scope.scale + ')'
                             });
 
                             element.attr({
-                                "width":        size,
-                                "height":       size,
+                                'width':        size,
+                                'height':       size,
                             });
 
                             measured_ring.attr({
-                                "stroke-width": stroke,
-                                "stroke-opacity": 0.65,
+                                'stroke-width': stroke,
+                                'stroke-opacity': 0.65,
                             });
 
                             if (!scope.displaytarget) {
-                                ring.style("visibility", 'hidden');
+                                ring.style('visibility', 'hidden');
                             }
                             ring.attr({
-                                "stroke-width": stroke
+                                'stroke-width': stroke
                             });
 
                             ring_background.attr({
-                                "cx":           radius,
-                                "cy":           radius,
-                                "transform":    "translate("+ stroke +", "+ stroke +")",
-                                "r":            radius,
-                                "fill":         scope.bgcolor, 
-                                "fill-opacity": 0.3
+                                'cx':           radius,
+                                'cy':           radius,
+                                'transform':    'translate('+ stroke +', '+ stroke +')',
+                                'r':            radius,
+                                'fill':         scope.bgcolor, 
+                                'fill-opacity': 0.3
                             });
 
                             renderState(scope.targettemp, scope.targettemp);
