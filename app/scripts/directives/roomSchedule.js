@@ -30,6 +30,7 @@ angular.module('cirqlApp')
 				this.entriesToCopy = null;
 				this.weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 				this.localSchedule = {};
+				this.dragging = false;
 
 				var rec = d3.select('#r1');
 				var recWidth = parseInt(rec.attr('width'));
@@ -232,22 +233,25 @@ angular.module('cirqlApp')
 			            		d3.event.sourceEvent.preventDefault();
 			            		d3.event.sourceEvent.stopPropagation();
 
-			            		console.log("DRAG START ", this);
+			            		//console.log("DRAG START ", this);
 								d.dragstart = d3.mouse(this); // store this
 				                $ionicSideMenuDelegate.canDragContent(false);
 				                var parentNode = d3.select(this).node().parentNode;
 				                var secondAncestor = d3.select(parentNode).node().parentNode;
 								self.daySelector(secondAncestor);
 								self.entrySelector(parentNode);
-
+								self.dragging = true;
 			            	})
 				            .on('drag', function(d) {
-				            	console.log("DRAGGING ", this);
-				            	self.mouseDragCallback(this, self, d);
+				            	if (self.dragging) {
+					            	//console.log("DRAGGING ", this);
+					            	self.mouseDragCallback(this, self, d);
+					            }
 				            })
 				            .on('dragend', function() {
-				            	console.log("DRAG END ", this);
+				            	//console.log("DRAG END ", this);
 				                $ionicSideMenuDelegate.canDragContent(true);
+				                self.dragging = false;
 			            	})
 		            	);
 
