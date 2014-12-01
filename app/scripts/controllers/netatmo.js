@@ -142,7 +142,7 @@ angular.module('cirqlApp')
                     scope: $scope,
                     buttons: [{
                         text: 'Cancel',
-                        type: 'button-block button-positive',
+                        type: 'button-block button-dark',
                     }, {
                         text: 'Disconnect',
                         type: 'button-block button-assertive',
