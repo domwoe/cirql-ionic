@@ -12,6 +12,9 @@ angular.module('cirqlApp')
     .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
         function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
 
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('portrait');
+            }
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;

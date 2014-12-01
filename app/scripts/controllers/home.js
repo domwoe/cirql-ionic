@@ -11,6 +11,10 @@ angular.module('cirqlApp')
     .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading',
         function($scope, user, simpleLogin, fbutil, $state, $ionicLoading) {
 
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('portrait');
+            }
+
             $ionicLoading.show({
                 template: 'Please wait...'
             });
