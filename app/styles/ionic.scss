@@ -44,15 +44,32 @@ $bar-default-bg:                  rgba(#000, $bar-transparency);
 
 // Items
 // -------------------------------
+$item-font-size:                  100%;
 $item-light-bg:                   transparent;
 $item-light-border:               transparent;
 $item-default-text:               #fff;
+$item-padding:                    10px;
 
 // Forms
 // -------------------------------
 $input-label-color:               #fff;
 $input-color-placeholder:         darken(#fff, 40%);
 
+// Toggle
+// -------------------------------
+
+$toggle-width:                    54px;
+$toggle-height:                   32px;
+$toggle-border-width:             2px;
+$toggle-border-radius:            20px;
+
+$toggle-handle-width:             $toggle-height - ($toggle-border-width * 2) !default;
+$toggle-handle-height:            $toggle-handle-width !default;
+$toggle-handle-radius:            $toggle-handle-width !default;
+$toggle-handle-dragging-bg-color: darken(#fff, 5%) !default;
+
+$toggle-off-bg-color:             $light;
+$toggle-off-border-color:         $light;
 // Any variables you did not define will use the defaults
 //bower:scss
 @import "ionic/scss/ionic.scss";
