@@ -142,10 +142,10 @@ angular.module('cirqlApp')
                     scope: $scope,
                     buttons: [{
                         text: 'Cancel',
-                        type: 'button-block button-dark',
+                        type: 'button-block button-dark transparent',
                     }, {
                         text: 'Disconnect',
-                        type: 'button-block button-assertive',
+                        type: 'button-block button-assertive transparent',
                         onTap: function() {
                             netatmoService.disconnect(user.uid);
                         }

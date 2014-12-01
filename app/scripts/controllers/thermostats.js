@@ -244,7 +244,7 @@ angular.module('cirqlApp')
                     scope: $scope,
                     buttons: [{
                         text: 'Cancel',
-                        type: 'button-block button-assertive',
+                        type: 'button-block button-assertive transparent',
                     }]
                 });
             };

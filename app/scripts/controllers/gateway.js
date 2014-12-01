@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading',
-        function($scope, $state, user, fbutil, $ionicLoading) {
+    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading', '$ionicPopup',
+        function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup) {
 
             $scope.hasGateway = true;
 
@@ -72,7 +72,7 @@ angular.module('cirqlApp')
             };
 
 
-            $scope.delGateway = function() {
+            function delGateway() {
 
                 // Delete Gateway reference from Home object
                 gatewayIdObj.$value = null;
@@ -87,6 +87,27 @@ angular.module('cirqlApp')
 
                 $scope.hasGateway = false;
 
+            }
+
+            $scope.showConfirm = function() {
+
+                $ionicPopup.show({
+                    template: '<p>Are you sure you want to remove this gateway from your account?</p>'+
+                        '<p>The system won\'t work without a gateway!</p>',
+                    title: 'Remove Gateway',
+                    subTitle: '',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'Cancel',
+                        type: 'button-block button-dark transparent',
+                    }, {
+                        text: 'Disconnect',
+                        type: 'button-block button-assertive transparent',
+                        onTap: function() {
+                            delGateway();
+                        }
+                    }]
+                });
             };
 
             $scope.lastSeen = function(timeString) {
