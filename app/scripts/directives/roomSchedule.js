@@ -234,7 +234,7 @@ angular.module('cirqlApp')
 
 			            		console.log("DRAG START ", this);
 								d.dragstart = d3.mouse(this); // store this
-				                $ionicSideMenuDelegate.canDragContent(false);
+				                //$ionicSideMenuDelegate.canDragContent(false);
 				                var parentNode = d3.select(this).node().parentNode;
 				                var secondAncestor = d3.select(parentNode).node().parentNode;
 								self.daySelector(secondAncestor);
@@ -247,7 +247,7 @@ angular.module('cirqlApp')
 				            })
 				            .on('dragend', function() {
 				            	console.log("DRAG END ", this);
-				                $ionicSideMenuDelegate.canDragContent(true);
+				                //$ionicSideMenuDelegate.canDragContent(true);
 			            	})
 		            	);
 
