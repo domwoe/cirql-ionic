@@ -29,6 +29,10 @@ angular.module('cirqlApp')
                 var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
                 $scope.residents = residents;
 
+                var templates = fbutil.syncArray('templates');
+
+                $scope.categories = templates;
+
                 rooms.$loaded().then(function() {
                   $ionicLoading.hide();
                 });  

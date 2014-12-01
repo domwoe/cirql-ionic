@@ -118,7 +118,7 @@ angular.module('cirqlApp')
       views: {
         'menuContent' :{
           templateUrl: 'templates/add_room.html',
-          controller: 'RoomCtrl'
+          controller: 'WizardCtrl'
         }
       }
     })
