@@ -16,14 +16,13 @@ angular.module('cirqlApp')
             if (cordova) {
                 var so = cordova.plugins.screenorientation;
                 so.setOrientation('landscape');
-            }
+            }    
             $state.go('app.schedule', {roomId: $state.params.roomId} );
-        }    
+        }; 
 
         $scope.netatmo = function() {
             if ($state.params.hasOwnProperty('roomId')) {
 
-                console.log()
 
                 var room = $state.params.roomId;
                 
@@ -41,7 +40,7 @@ angular.module('cirqlApp')
                         isConPromise.then(function(isConnected) {
                             console.log('isConnected: ' + isConnected);
                             if ( isConnected ) {
-                                state.go('app.addNetatmo', {roomId: $state.params.roomId});
+                                $state.go('app.addNetatmo', {roomId: $state.params.roomId});
                             }
                         },
                         function(reject) {

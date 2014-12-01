@@ -9,20 +9,56 @@
  */
 angular.module('cirqlApp')
 
-    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate',
-        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate) {
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
+
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
             var roomUrl = homeUrl + '/rooms/' + room;
+            var modeUrl = homeUrl + '/rooms/' + room + '/mode';
             var sensorUrl = roomUrl + '/sensors/netatmo';
 
             var roomObj = fbutil.syncObject(roomUrl);
+            roomObj.$bindTo($scope, 'roomValues');
+
+            var modeIndex = null;
+
+        
+            /**
+             * Return index for mode slide box
+             * @param  {string} mode auto/manu
+             * @return {int}    index of slide
+             */
+            $scope.modeToIndex = function(mode) {
+                if (mode === 'auto' ) {
+                    return modeIndex || 0;
+                }
+                else {
+                    return modeIndex || 1;
+                }
+            };
+
+            /**
+             * Change mode in Firebase based on mode
+             * slide box index
+             * @param  {int}  index of slide
+             */
+            $scope.changeMode = function($index) {
+                modeIndex = $index;
+
+                if ($index % 2 === 0) {
+                    $scope.roomValues.mode = 'auto';
+                }
+                else {
+                    $scope.roomValues.mode = 'manu';
+                }
+            }
+
+           
+
             var sensorObj = fbutil.syncObject(sensorUrl);
 
-            roomObj.$loaded().then(function() {
-                roomObj.$bindTo($scope, 'roomValues');
-            });
 
             sensorObj.$loaded()
                 .then(function() {
@@ -96,6 +132,7 @@ angular.module('cirqlApp')
                         break;
                 }
             };
+
 
             $scope.roomId = room;
             $scope.user = user;

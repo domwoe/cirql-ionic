@@ -23,7 +23,10 @@
           <div class="left">{{room.name}}<hr/> 
           </div> 
           <div class="right"> 
+
+
             <div class="svg-container" ng-cloak>
+            <div class="home-mode">{{room.mode}}</div> 
               <div class="progress-wrapper" ng-style="{'font-size': ((radius + stroke)/ 3)+'px'}">
                 <div room-temperature
                     scale="0.60"
@@ -37,9 +40,13 @@
                     bgcolor="{{ bgColor }}" 
                     radius="{{ radius }}" 
                     stroke="{{ stroke }}"
-                    displaytarget="false">
+                    displaytarget="false" 
+                    displayarrows="false" 
+                    displaymode="true">
                 </div>
-              </div> 
+
+              </div>
+
             </div>
           </div>
         </div>
