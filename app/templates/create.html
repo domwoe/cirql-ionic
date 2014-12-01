@@ -1,29 +1,68 @@
-<div id="content" class="scrollable">
-  <div class="circle circle-wizard">
-    <div class="step step-1 step-active">1</div>
-    <div class="step step-2">2</div>
-    <div class="step step-3">3</div>
-    <div class="step step-4">4</div>
-    <div class="title">
-      <h1>Create your account</h1>
+<ion-view>
+  <ion-header-bar class="bar-transparent">
+    <h1 class="title">Create Account</h1>
+  </ion-header-bar>
+  <div class="wrapper">
+    <div class="circle">
+      <div class="step step-1 step-active">1</div>
+      <div class="step step-2">2</div>
+      <div class="step step-3">3</div>
+      <div class="step step-4">4</div>
     </div>
-    <p class="error">{{err}}</p>
-    <form role="form">
-      <div class="form-group">
-        <input type="email" ng-model="email" class="form-control" id="InputEmail1" placeholder="Email">
+  <ion-content class="has-header" scroll="false">
+  <div class="create">
+      <div class="title">
+        <h1>Create your account</h1>
       </div>
-      <div class="form-group">
-        <input type="password" ng-model="pass" class="form-control" id="InputPassword1" placeholder="Password">
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
       </div>
-      <div ng-cloak class="form-group">
-        <input type="password" ng-model="confirm" class="form-control" id="InputPassword1" placeholder="Retype Password">
+      <div class="list">
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="email" ng-model="user.email" placeholder="Email">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="password" ng-model="user.password" placeholder="Password">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+        <input type="password" ng-model="user.confirm" placeholder="Retype Password">
+          </label>
+        </div>
+        <button ng-click="createAccount()" class="button button-stable button-balanced button-block">Next</button>
+        <button class="button button-stable button-positive button-block" ui-sref="login">
+         Cancel
+        </button>
       </div>
-      <div ng-cloak class="form-group">
-        <button ng-click="createAccount(email, pass, confirm)" class="btn btn-success btn-block">Next</button>
-      </div>
-      <div ng-cloak class="form-group">
-        <a ng-href="/" class="btn btn-default btn-block">Cancel</a>
-      </div>
-    </form>
+      <!--<button class="button button-stable button-block" ui-sref="reset-password">-->
+      <!--Can't remember my password-->
+      <!--</button>-->
   </div>
-</div>
+  </ion-content>
+  </div>
+</ion-view>
+<!--<div id="content" class="scrollable">-->
+  <!--<div class="circle circle-wizard">-->
+    <!--<div class="title">-->
+      <!--<h1>Create your account</h1>-->
+    <!--</div>-->
+    <!--<form role="form">-->
+      <!--<div class="form-group">-->
+        <!--<input type="email" ng-model="email" class="form-control" id="InputEmail1" placeholder="Email">-->
+      <!--</div>-->
+      <!--<div class="form-group">-->
+      <!--</div>-->
+      <!--<div ng-cloak class="form-group">-->
+        <!--<input type="password" ng-model="confirm" class="form-control" id="InputPassword1" placeholder="Retype Password">-->
+      <!--</div>-->
+      <!--<div ng-cloak class="form-group">-->
+      <!--</div>-->
+      <!--<div ng-cloak class="form-group">-->
+        <!--<a ng-href="/" class="btn btn-default btn-block">Cancel</a>-->
+      <!--</div>-->
+    <!--</form>-->
+  <!--</div>-->
+<!--</div>-->

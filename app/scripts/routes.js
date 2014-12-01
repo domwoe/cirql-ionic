@@ -18,16 +18,42 @@ angular.module('cirqlApp')
     .state('create', {
       url: '/create',
       templateUrl: 'templates/create.html',
-      controller: 'CreateCtrl'
+      controller: 'LoginCtrl'
     })
 
-    .state('create.user', {
-      url: '/user',
-      views: {
-        'menuContent' :{
-          templateUrl: 'templates/create_user.html'
-        }
+    .state('wizard', {
+      url: '/wizard',
+      abstract: true,
+      template: '<ion-nav-view/>',
+      controller: 'WizardCtrl',
+      resolve: {
+        // controller will not be invoked until getCurrentUser resolves
+        'user': ['simpleLogin', function(simpleLogin) {
+          // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
+          // since $getCurrentUser returns a promise resolved when auth is initialized,
+          // we can simple return that here to ensure the controller waits for auth before
+          // loading
+          return simpleLogin.getUser();
+        }]
       }
+    })
+
+    .state('wizard.resident', {
+      url: '/resident',
+      templateUrl: 'templates/wizard_resident.html',
+      controller: 'WizardCtrl'
+    })
+
+    .state('wizard.home', {
+      url: '/home',
+      templateUrl: 'templates/wizard_home.html',
+      controller: 'WizardCtrl'
+    })
+
+    .state('wizard.room', {
+      url: '/room',
+      templateUrl: 'templates/wizard_room.html',
+      controller: 'WizardCtrl'
     })
 
     .state('app', {
@@ -92,7 +118,7 @@ angular.module('cirqlApp')
       views: {
         'menuContent' :{
           templateUrl: 'templates/add_room.html',
-          controller: 'CreateCtrl'
+          controller: 'RoomCtrl'
         }
       }
     })
