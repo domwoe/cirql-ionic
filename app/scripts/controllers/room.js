@@ -86,8 +86,8 @@ angular.module('cirqlApp')
             $scope.roomId = room;
             $scope.user = user;
             $scope.logout = simpleLogin.logout;
-            $scope.min = 0;
-            $scope.max = 30;
+            $scope.min = 10;
+            $scope.max = 28;
             $scope.stroke = 12;
             $scope.radius = 110;
             $scope.currentColor = '#FFFFFF';

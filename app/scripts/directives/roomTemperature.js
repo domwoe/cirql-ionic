@@ -15,14 +15,14 @@ angular.module('cirqlApp')
                 };
             };
 
-            var drawArc = function(arc, start, end, max, R, size, targetColor) {
+            var drawArc = function(arc, start, end, min, max, R, size, targetColor) {
                  if (!size) {
                     return;
                 }
                 var end       = end >= max ? max - 0.00001 : end,
                     type      = 279.9999,
-                    perc      = start/max*type,
-                    perc_end  = end/max*type,
+                    perc      = (start-min)/(max-min)*type,
+                    perc_end  = (end-min)/(max-min)*type,
                     x         = size/2,
                     startCart = polarToCartesian(x, x, R, perc),
                     endCart   = polarToCartesian(x, x, R, perc_end);
@@ -39,8 +39,8 @@ angular.module('cirqlApp')
                 return [startCart, endCart];
             };
 
-            var updateMeasuredArc = function(arc, start, end, max, R, size, roomid) {
-                var carts = drawArc(arc, start, end, max, R, size, '#FFF');
+            var updateMeasuredArc = function(arc, start, end, min, max, R, size, roomid) {
+                var carts = drawArc(arc, start, end, min, max, R, size, '#FFF');
                 var endCart = carts[1];
                 var icon = d3.select('#thermoIcon' + roomid);
                 icon.attr(
@@ -50,7 +50,7 @@ angular.module('cirqlApp')
 
             var updateTargetArc = function(arc, start, end, mustHeat, min, max, R, size, roomid) {
                 var targetColor = mustHeat ? '#F9690E' : '#3498DB';
-                var carts = drawArc(arc, start, end, max, R, size, targetColor);
+                var carts = drawArc(arc, start, end, min, max, R, size, targetColor);
                 var targetCart = mustHeat? carts[1]: carts[0];
 
                     
@@ -108,10 +108,10 @@ angular.module('cirqlApp')
                         var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
                         phi = (phi*360/(2*Math.PI) + 230)%360 ;
 
-                        target = roundHalf(phi*scope.max/270);
+                        target = roundHalf(phi*(scope.max-scope.min)/270)+scope.min;
 
                         // draw arcs
-                        renderState(target);
+                        renderState(target,null);
 
                         //scope.targettemp = target;
 
@@ -224,6 +224,15 @@ angular.module('cirqlApp')
                                 }
                             }
 
+                              if (newValue < scope.min) {
+                                if (oldValue >= scope.max) {
+                                    return scope.targettemp = scope.max;
+                                } else {
+                                    return scope.targettemp = scope.min;
+                                }
+                            }
+
+
                             if (newValue < 21) {
                                 scope.leafVisibility = 'visible';
                             }
@@ -275,7 +284,8 @@ angular.module('cirqlApp')
                                 updateMeasuredArc(
                                     measured_ring,
                                     scope.min,
-                                    scope.measuredtemp, 
+                                    scope.measuredtemp,
+                                    scope.min, 
                                     scope.max,
                                     scope.radius - 5, 
                                     size,
