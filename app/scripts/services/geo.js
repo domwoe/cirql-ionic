@@ -104,11 +104,20 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                 var lat = '41.1';
                 var lng = '-73.2';
-                var radius = '200';
+                var radius = '750';
 
-                if ( fbHome.hasOwnProperty('lat') && fbHome.hasOwnProperty('lng') ) {
-                	lat = fbHome.lat + '';
-                	lng = fbHome.lng + '';
+                console.log('isLat: ' + fbHome.hasOwnProperty('lat') );
+
+                fbHome.$loaded(function(data) {
+
+                if ( data.hasOwnProperty('lat') && data.hasOwnProperty('lng') ) {
+                	lat = data.lat + '';
+                	lng = data.lng + '';
+                    console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
+                }
+                else {
+                    console.log('HomeRegion not set with lat ' + data.lat);
+                   // console.log('HomeRegion not set with lat ' + fbHome.hasOwnProperty('lat'););
                 }
 
                 var params = ['1',lat,lng,radius];
@@ -123,6 +132,8 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                         deferred.reject(error);
 
                     });
+
+                });
 
                 console.log('Geo: return promise');
                 return deferred.promise;
