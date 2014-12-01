@@ -53,12 +53,20 @@ angular.module('cirqlApp')
                 var carts = drawArc(arc, start, end, max, R, size, targetColor);
                 var targetCart = mustHeat? carts[1]: carts[0];
 
+                    
+                var bgTarget = d3.select("#bgTargetHandle" + roomid);
+                bgTarget.attr({
+                    'cx': targetCart.x,
+                    'cy': targetCart.y
+                });
+
                 var bgicon = d3.select("#bgTargetIcon" + roomid);
                 bgicon.attr({
                     'cx': targetCart.x,
                     'cy': targetCart.y
                     })
                     .attr('fill',targetColor);
+
           
                 var icon = d3.select("#targetIcon" + roomid); 
                 icon.attr(
@@ -109,14 +117,14 @@ angular.module('cirqlApp')
 
                     };
 
-                    var heartbeat = function() {
-                        var heart = d3.select('#heart' + scope.roomid);
-                        console.log(heart);
-                        heart.classed('heart-beat', true);
-                        setTimeout(function() {
-                             heart.classed('heart-beat', false);    
-                        }, 2000);
-                    };
+                    // var heartbeat = function() {
+                    //     var heart = d3.select('#heart' + scope.roomid);
+                    //     console.log(heart);
+                    //     heart.classed('heart-beat', true);
+                    //     setTimeout(function() {
+                    //          heart.classed('heart-beat', false);    
+                    //     }, 2000);
+                    // };
 
                     var radius           = scope.radius,
                         stroke           = scope.stroke;
@@ -130,12 +138,13 @@ angular.module('cirqlApp')
                                 measured_ring       = d3.select('#measured_path' + scope.roomid),
                                 thermoIcon          = d3.select('#thermoIcon' + scope.roomid),
                                 tempDrawer          = d3.select('#tempDrawer' + scope.roomid),
+                                bgTargetHandle      = d3.select('#bgTargetHandle' + scope.roomid),
                                 bgTargetIcon        = d3.select('#bgTargetIcon' + scope.roomid),
                                 ring                = d3.select('#target_path' + scope.roomid),
                                 targetIcon          = d3.select('#targetIcon' + scope.roomid);
 
                             if (scope.displaytarget) {
-                                bgTargetIcon.call(d3.behavior.drag()
+                                bgTargetHandle.call(d3.behavior.drag()
                                     .on('dragstart', function() {
                                         $ionicSideMenuDelegate.canDragContent(false);
                                         mouseDragCallback();
@@ -154,6 +163,7 @@ angular.module('cirqlApp')
                             } else {
                                 targetIcon.style("visibility", 'hidden');
                                 bgTargetIcon.style("visibility", 'hidden');
+                                bgTargetHandle.style("visibility", 'hidden');
                             }
 
                             thermoIcon.on('click', function() {
@@ -323,6 +333,7 @@ angular.module('cirqlApp')
                         <g id="targetIcon{{roomid}}" transform="scale(0.6)">\
                             <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
                         </g>\
+                        <ellipse id="bgTargetHandle{{roomid}}" fill="#000000" fill-opacity="0" cx="16" cy="16" rx="30" ry="30"></ellipse>\
                     </g>\
                 </svg>'
             }; 
