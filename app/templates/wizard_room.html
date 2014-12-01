@@ -27,10 +27,9 @@
             Category
           </div>
           <select ng-model="room.category" id="roomCategory">
-            <option value="bathroom">Bathroom</option>
-            <option value="bedroom">Bedroom</option>
-            <option value="livingroom">Livingroom</option>
-            <option value="office">Office</option>
+            <option ng-repeat="category in categories" value="{{category.$id}}">
+              {{category.$id}}
+            </option>
           </select>
         </label>
         <button ui-sref="app.thermostats" class="button button-light button-block transparent">Thermostats</button>

@@ -1,7 +1,7 @@
 <ion-view title="Add Room">
   <ion-nav-buttons side="left">
   <button class="button-clear" ng-click="goToHome()">
-    <i class="ion-arrow-left-c"></i> Home
+    <i class="ion-chevron-left"></i> Home
   </button>
   </ion-nav-buttons>
   <div class="wrapper">
@@ -24,10 +24,9 @@
             Category
           </div>
           <select ng-model="room.category" id="roomCategory">
-            <option value="bathroom">Bathroom</option>
-            <option value="bedroom">Bedroom</option>
-            <option value="livingroom">Livingroom</option>
-            <option value="office">Office</option>
+            <option ng-repeat="category in categories" value="{{category.$id}}">
+              {{category.$id}}
+            </option>
           </select>
         </label>
         <button ui-sref="app.thermostats" class="button button-light button-block transparent">Thermostats</button>
