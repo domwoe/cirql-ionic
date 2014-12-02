@@ -79,5 +79,12 @@ angular.module('cirqlApp')
                 }
             };
 
+            /**
+             * Go back to home screen
+             */
+            $scope.goToHome = function() {
+                $state.go('app.home');
+            };
+
         }
     ]);
