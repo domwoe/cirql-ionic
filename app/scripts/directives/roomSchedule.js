@@ -564,7 +564,7 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
-		<svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 320" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+		<svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
 		    <g id="weekdays"> \
 		    	<g id="monday" class="parent"> \
 				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
@@ -621,25 +621,18 @@ angular.module('cirqlApp')
                     <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
                 </text> \
     		</g> \
-    		<g id="add"> \
-				<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="75" height="25" x="510" y="230" /> \
-				<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="545" y="250"> Add </tspan> \
-                </text> \
-    		</g> \
-    		<g id="copy"> \
-				<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="75" height="25" x="590" y="230" /> \
-				<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="625" y="250"> Copy </tspan> \
-                </text> \
-    		</g> \
-    		<g id="delete"> \
-				<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="75" height="25" x="670" y="230" /> \
-				<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="705" y="250"> Delete </tspan> \
-                </text> \
-    		</g> \
 		</svg> \
+        <div class="row">\
+        <div class="col col-offset-66">\
+        <button id="add" class="button button-light button-block transparent padding">Add</button> \
+         </div>\
+         <div class="col">\
+         <button id="copy" class="button button-light button-block transparent padding ">Copy</button> \
+         </div>\
+         <div class="col">\
+         <button id="delete" class="button button-light button-block transparent padding">Delete</button> \
+         </div>\
+          </div>\
         </ion-content> \
     <ion-footer-bar> \
     <div class="row">\
