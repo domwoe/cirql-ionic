@@ -61,10 +61,15 @@ angular.module('cirqlApp')
            
 
             var sensorObj = fbutil.syncObject(sensorUrl);
+            $scope.hasRoomclimate = false;
 
 
             sensorObj.$loaded()
                 .then(function() {
+                    console.log(sensorObj)
+                    if (sensorObj.hasOwnProperty('station')) {
+                        $scope.hasRoomclimate = true;
+                    }
                     var sensorStation = sensorObj.station;
                     var sensorModule = sensorObj.module;
                     var netatmoUrl = homeUrl + '/sensors/netatmo/stations/' +

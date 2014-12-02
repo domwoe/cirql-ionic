@@ -34,7 +34,7 @@
             
         </div>
 
-        <div id="roomclimate" class="field-group">
+        <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
         <div class="field">
             <climateindicator class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2"></climateindicator>
                 <div class="alignleft">Air Quality</div>
