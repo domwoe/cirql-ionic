@@ -358,22 +358,6 @@ input:-ms-input-placeholder {
     background-color: #FFCC00;
 }
 
-.arrow {
-    position: relative;
-    font-size: 10px;
-    top: -122px;
-}
-
-.arrow-left {
-    margin-left:auto; 
-    margin-right:-10%;
-    float:right
-    // left: 340px;
-}
-
-.arrow-right {
-    left: -93px;
-}
 
 // Add Room View
 // -------------------------------
@@ -491,8 +475,8 @@ input:-ms-input-placeholder {
     width: 65px;
     height: 75px;
     line-height: 75px;
-    top: -145px;
-    left: 5px;
+    top: -215px;
+    left: 0px;
     z-index: 1;
 }
 #modeSlider #auto {
@@ -503,6 +487,31 @@ input:-ms-input-placeholder {
 }
 .in-background {
     z-index: -1;
+}
+
+.arrow {
+
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+.arrow-left {
+    font-size: 12px;
+    position: relative;
+    left: -39px;
+    top: 77px;
+}
+
+.arrow-right {
+    font-size: 12px;
+    position: relative;
+    left: 39px;
+    top: -76px;
+}
+
+.fixed {
+    position: relative;
 }
 
 // CARDS
