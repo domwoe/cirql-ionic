@@ -104,7 +104,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                 var lat = '41.1';
                 var lng = '-73.2';
-                var radius = 750;
+                var radius = 350;
 
                 console.log('isLat: ' + fbHome.hasOwnProperty('lat') );
 
