@@ -44,7 +44,7 @@ angular.module('cirqlApp')
                         // No Netato account connected
                         function(reject) {
                             netatmoService.authorizeUrl(user.uid).then(function(url) {
-                                window.open(url);
+                                window.open(url, '_blank', 'location=yes');
                             });
                             
 
