@@ -64,7 +64,7 @@ angular.module('cirqlApp')
 
 				this.mouseDragCallback = function(ev, self, d) {
 
-					console.log("CALLBACK: ", ev, self, d);
+				//	console.log("CALLBACK: ", ev, self, d);
 					d.px = d.x; // previous x
 		            var m = d3.mouse(ev);
 		            d.x += m[0] - d.dragstart[0];
@@ -188,6 +188,7 @@ angular.module('cirqlApp')
 	            	var self = this;
 					var entryGroup = dayGroup.append('g')
 						.attr('id', id)
+						.attr('class', 'entry')
 						.data([{x: 0, y: 0, px: 0}]);
 						
 	            	var circle = entryGroup.append('circle')
@@ -333,6 +334,17 @@ angular.module('cirqlApp')
 
 	            this.copySchedule = function(self, dest) {
 	            	var destDay = d3.select(dest);
+
+	            	// First remove everything from destination day and local schedule
+	            	var destDayEntries = destDay.selectAll('g.entry');
+	            	destDayEntries.remove();
+
+	            	if (destDayEntries[0]) {
+		            	for (var i = 0; i < destDayEntries[0].length; i++) {
+		            		var idToDel = d3.select(destDayEntries[0][i]).attr('id');
+		            		delete self.localSchedule[idToDel];
+		            	}
+		            }
 	            	
 	            	self.entriesToCopy.each(function() {
 
@@ -350,7 +362,7 @@ angular.module('cirqlApp')
 					    self.addEntry(destDay, id, xpos, ypos, target);
 
 					    // Update local schedule
-					    self.updateSchedule(id, schEntry.hour, schEntry.minute, schEntry.target, factor);
+					    self.updateSchedule(id, schEntry.hour, schEntry.minute, schEntry.target, factor + 1);
 					    self.nextId++;
 	            	});
 	            	self.deselectEntry();
