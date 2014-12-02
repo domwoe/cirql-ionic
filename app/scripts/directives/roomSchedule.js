@@ -622,6 +622,8 @@ angular.module('cirqlApp')
                 </text> \
     		</g> \
 		</svg> \
+         </ion-content> \
+    <ion-footer-bar class="bar-subfooter"> \
         <div class="row">\
         <div class="col col-offset-66">\
         <button id="add" class="button button-light button-block transparent padding">Add</button> \
@@ -633,7 +635,7 @@ angular.module('cirqlApp')
          <button id="delete" class="button button-light button-block transparent padding">Delete</button> \
          </div>\
           </div>\
-        </ion-content> \
+    </ion-footer-bar> \
     <ion-footer-bar> \
     <div class="row">\
   <div class="col">\
