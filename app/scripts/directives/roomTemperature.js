@@ -279,8 +279,6 @@ angular.module('cirqlApp')
 
                     var renderThermoIcon = function (temp) {
 
-                        console.log(temp);
-
                         if (temp) {
                             d3.select('#thermoIcon' + scope.roomid)
                                 .style('visibility', 'visible');

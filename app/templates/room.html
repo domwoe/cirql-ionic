@@ -4,42 +4,33 @@
     </ion-nav-buttons>
     <ion-content class="has-header" scroll="false">
         <div class="h1 aligncenter"></div>
-        <div class="center-block">
+        <div class="center-block padding">
             <div room-temperature class="center-block in-background" scale="1.0" min="min" max="max" roomid="roomId" targettemp="roomValues.virtualTarget" measuredtemp="roomValues.temperature" mode="roomValues.mode" color="{{ currentColor }}" bgcolor="{{ bgColor }}" radius="{{ radius }}" stroke="{{ stroke }}" displaytarget="true" ng-cloak>
             </div>
             <div id="modeSlider">
-             <i class="ion-chevron-left arrow-left"></i>
-            <ion-slide-box
-            active-slide="modeToIndex(roomValues.mode)"
-            on-slide-changed="changeMode($index)"
-            does-continue="true" 
-            show-pager="false">
-                <ion-slide id="auto">
-                    auto
-                </ion-slide>
-                <ion-slide id="manu">
-                    manu
-                </ion-slide>
-            </ion-slide-box>
-   
-          
-              <i class="ion-chevron-right arrow-right"></i>
-        
-
-            
-        </div>
-
-        <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
-        <div class="field">
-            <climateindicator class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2"></climateindicator>
-                <div class="alignleft">Air Quality</div>
-                <div class="alignright">{{sensor.co2}}ppm</div>
+                <i class="ion-chevron-left arrow-left"></i>
+                <ion-slide-box active-slide="modeToIndex(roomValues.mode)" on-slide-changed="changeMode($index)" does-continue="true" show-pager="false">
+                    <ion-slide id="auto">
+                        auto
+                    </ion-slide>
+                    <ion-slide id="manu">
+                        manu
+                    </ion-slide>
+                </ion-slide-box>
+                <i class="ion-chevron-right arrow-right"></i>
             </div>
-            <div class="field">
-                <climateindicator class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity"></climateindicator>
-                <div class="alignleft">Humidity</div>
-                <div class="alignright">{{sensor.humidity}}%</div>
+
+            <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
+                <div class="field">
+                    <climateindicator class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2"></climateindicator>
+                    <div class="alignleft">Air Quality</div>
+                    <div class="alignright">{{sensor.co2}}ppm</div>
+                </div>
+                <div class="field">
+                    <climateindicator class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity"></climateindicator>
+                    <div class="alignleft">Humidity</div>
+                    <div class="alignright">{{sensor.humidity}}%</div>
+                </div>
             </div>
-        </div>
     </ion-content>
 </ion-view>
