@@ -32,6 +32,8 @@ angular.module('cirqlApp')
                         this.localSchedule = {};
                         this.dragging = false;
 
+                        scope.sync = this.localSchedule;
+
                         var rec = d3.select('#r1');
                         var recWidth = parseInt(rec.attr('width'));
                         var recHeight = parseInt(rec.attr('height'));
@@ -524,6 +526,7 @@ angular.module('cirqlApp')
 
                             var saveButton = d3.select('#save');
                             saveButton.on('click', function() {
+                                console.log('save')
                                 self.save(self);
                             });
 
@@ -537,12 +540,15 @@ angular.module('cirqlApp')
 
                     var scheduler = new Schedule();
 
+                    
+
                     var renderState = function() {
                         if (scope.schedule && !scheduler.rendered) {
                             scheduler.renderScheduleEntries();
                             scheduler.attachListeners();
                             scheduler.rendered = true;
                         }
+
                     };
 
                     var sync = function() {
@@ -554,8 +560,10 @@ angular.module('cirqlApp')
                     scope.$watch('schedule', renderState);
 
                 },
-                replace: 'true',
+                replace: false,
                 template: '\
+                <ion-content scroll="false"> \
+                    <div class="schedule-block"> \
 		<svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 320" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
 		    <g id="weekdays"> \
 		    	<g id="monday" class="parent"> \
@@ -631,17 +639,18 @@ angular.module('cirqlApp')
                     <tspan text-anchor="middle" x="705" y="250"> Delete </tspan> \
                 </text> \
     		</g> \
-    		<g id="save"> \
-				<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="250" y="250"> Save </tspan> \
-                </text> \
-    		</g> \
-    		<g id="cancel"> \
-				<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="400" y="250"> Cancel </tspan> \
-                </text> \
-    		</g> \
-		</svg>'
+		</svg> \
+        </ion-content> \
+    <ion-footer-bar> \
+    <div class="row">\
+  <div class="col">\
+    <button id="cancel" class="button button-assertive button-block transparent">Cancel</button> \
+  </div>\
+  <div class="col">\
+    <button id="save" class="button button-balanced button-block transparent">Save</button> \
+  </div>\
+</div>\
+    </ion-footer-bar>'
             };
 
         }

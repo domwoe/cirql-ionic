@@ -13,6 +13,11 @@ angular.module('cirqlApp')
 
   	$ionicSideMenuDelegate.canDragContent(false);
 
+
+  	$scope.save = function(obj) {
+  		console.log(obj);
+  	}
+
  	var room = $stateParams.roomId;
 	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
 	var roomObj = fbutil.syncObject(roomUrl);
