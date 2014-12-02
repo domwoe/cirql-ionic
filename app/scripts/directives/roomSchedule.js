@@ -625,7 +625,7 @@ angular.module('cirqlApp')
          </ion-content> \
     <ion-footer-bar class="bar-subfooter"> \
         <div class="row">\
-        <div class="col col-offset-66">\
+        <div class="col col-offset-50">\
         <button id="add" class="button button-light button-block transparent padding">Add</button> \
          </div>\
          <div class="col">\
