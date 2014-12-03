@@ -260,7 +260,7 @@ angular.module('cirqlApp')
                 });
             };
 
-
+            // not used at the moment
             $scope.goBack = function() {
                 $ionicNavBarDelegate.back();
             };
@@ -269,12 +269,12 @@ angular.module('cirqlApp')
             /**
              * Go back to room screen
              */
-            // $scope.goToRoom = function() {
-            //     $ionicSideMenuDelegate.canDragContent(true);
-            //     $state.go('app.room', {
-            //         roomId: room
-            //     });
-            // };
+            $scope.goToRoom = function() {
+                $ionicSideMenuDelegate.canDragContent(true);
+                $state.go('app.room', {
+                    roomId: room
+                });
+            };
 
 
         }
