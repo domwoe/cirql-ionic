@@ -17,6 +17,8 @@ angular.module('cirqlApp')
                 },
                 link: function(scope, element, attrs) {
 
+                    var bgColor = '#ecf0f1';
+
                     var Schedule = function() {
 
                         this.rendered = false;
@@ -76,7 +78,10 @@ angular.module('cirqlApp')
                             var circle = d3.select(ev);
                             var group = d3.select(circle.node().parentNode);
 
-                            var currentX = parseInt(circle.attr('cx'));
+                            var coords = d3.transform(group.attr('transform')).translate;
+
+                            var currentX = coords[0];
+                            var currentY = coords[1];
                             var newpos = d.x + currentX;
 
                             if (newpos < this.leftBound) {
@@ -87,7 +92,7 @@ angular.module('cirqlApp')
                                 d.x = newpos - currentX;
                             }
 
-                            group.attr('transform', 'translate(' + d.x + ', 0)');
+                            group.attr('transform', 'translate(' + d.x + ','+currentY+') scale(7,1)     translate(0,0)');
 
                             var time = self.pixelOffsetToTime(newpos);
                             scope.hour = this.pad(time[0], 2);
@@ -111,18 +116,35 @@ angular.module('cirqlApp')
                             var rectangles = dayGroup.selectAll('rect')[0];
                             var rec1 = d3.select(rectangles[0]);
                             var rec2 = d3.select(rectangles[1]);
-                            rec1.attr('fill-opacity', 1);
-                            rec2.attr('fill-opacity', 1);
+                            //rec1.attr('fill-opacity', 0.8);
+                            rec2.attr('fill','#bdc3c7');    
                             // Move to front
                             dayGroup.moveToFront();
-                        }
+                            var coords = d3.transform(dayGroup.attr('transform')).translate;
+                            dayGroup.attr('transform','translate('+coords[0]+','+coords[1]+') scale(1,7) translate(0,0)');
+                            //dayGroup.attr('transform', 'translate(0,-200) scale(1,3)');
+                            var items = dayGroup.selectAll('g.entry');
+                            console.log(items);
+                            items.each(function(d,i) {
+                                var item = d3.select(this);
+                                var coords = d3.transform(item.attr('transform')).translate;
+                                console.log(coords);
+                                item.attr('transform','translate('+(coords[0])+','+(coords[1])+') scale(3,0.43) translate(0,0)');
+                            })
+                            var scale = 1/7;
+                            dayGroup.select('text').attr('transform','translate('+(coords[0])+','+(coords[1])+') scale(1,'+scale+') translate(0,0)');
+                            dayGroup.select('rect').attr('fill-opacity', 1)
+                                .attr('fill', '#bdc3c7');
+                        };    
+                        
+
 
                         this.deselectDay = function() {
                             var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                             var previousRec1 = d3.select(previousRec[0]);
                             var previousRec2 = d3.select(previousRec[1]);
-                            previousRec1.attr('fill-opacity', 0.6);
-                            previousRec2.attr('fill-opacity', 0.6);
+                            previousRec1.attr('fill-opacity', 1);
+                            previousRec2.attr('fill','#ecf0f1');
                         }
 
                         this.daySelector = function(day) {
@@ -154,7 +176,7 @@ angular.module('cirqlApp')
                             this.deselectEntry();
                             var selection = group.select('circle')
                                 .attr('fill', 'black')
-                                .attr('r', this.radius + 15);
+                                //.attr('r', this.radius + 15);
 
                             group.selectAll('path')
                                 .style('visibility', 'visible');
@@ -234,6 +256,7 @@ angular.module('cirqlApp')
                             var entryGroup = dayGroup.append('g')
                                 .attr('id', id)
                                 .attr('class', 'entry')
+                                .attr('transform','translate('+xpos+','+ypos+')')
                                 .data([{
                                     x: 0,
                                     y: 0,
@@ -241,8 +264,8 @@ angular.module('cirqlApp')
                                 }]);
 
                             var circle = entryGroup.append('circle')
-                                .attr('cx', xpos)
-                                .attr('cy', ypos)
+                                .attr('cx', 0)
+                                .attr('cy', 0)
                                 .attr('r', this.radius)
                                 .attr('fill', 'red');
 
@@ -254,8 +277,8 @@ angular.module('cirqlApp')
 
                             var tspan = text.append('tspan')
                                 .attr('text-anchor', 'middle')
-                                .attr('x', xpos - 3)
-                                .attr('y', ypos + (this.radius / 2) * 0.8)
+                                .attr('x', -3)
+                                .attr('y', (this.radius / 2) * 0.8)
                                 .text(Math.floor(numTarget));
 
                             var entryGroup2 = entryGroup.append('g');
@@ -268,8 +291,8 @@ angular.module('cirqlApp')
 
                             var tspan2 = text2.append('tspan')
                                 .attr('text-anchor', 'middle')
-                                .attr('x', xpos + 8)
-                                .attr('y', ypos + (this.radius / 2) * 0.8)
+                                .attr('x', 8)
+                                .attr('y', (this.radius / 2) * 0.8)
                                 .text(dotTarget);
 
                             var pathDecr = entryGroup.append('path')
@@ -289,8 +312,8 @@ angular.module('cirqlApp')
                                 .style('visibility', 'hidden');
 
                             var back = entryGroup.append('circle')
-                                .attr('cx', xpos)
-                                .attr('cy', ypos)
+                                .attr('cx', 0)
+                                .attr('cy', 0)
                                 .attr('r', this.radius)
                                 .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
@@ -322,8 +345,8 @@ angular.module('cirqlApp')
                                 );
 
                             var recIncr = entryGroup.append('rect')
-                                .attr('x', xpos - 3*this.radius)
-                                .attr('y', ypos - 4.9*this.radius)
+                                .attr('x', 0 - 3*this.radius)
+                                .attr('y', 0 - 4.9*this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
                                 .attr('fill-opacity', 0.25)
@@ -333,8 +356,8 @@ angular.module('cirqlApp')
                                 });
 
                             var recDecr = entryGroup.append('rect')
-                                .attr('x', xpos - 3*this.radius)
-                                .attr('y', ypos + this.radius)
+                                .attr('x', 0 - 3*this.radius)
+                                .attr('y', 0 + this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
                                 .attr('fill-opacity',0.25)
@@ -564,53 +587,53 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
-		<svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+		<svg id="room-schedule" overflow="visible" width="102%" height="95%" viewBox="2 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
 		    <g id="weekdays"> \
 		    	<g id="monday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                     </text> \
-				    <rect id="r1" fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+				    <rect id="r1" fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
 				</g> \
-				<g id="tuesday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+				<g id="tuesday" class="parent" transform="translate(0,30)"> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                        <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
+                        <tspan text-anchor="middle" x="47.5" y="25">Tuesday</tspan> \
                     </text> \
 				</g> \
-				<g id="wednesday" class="parent"> \
-			    	<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
-			    	<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+				<g id="wednesday" class="parent" transform="translate(0,60)"> \
+			    	<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+			    	<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
 			    	<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                     </text> \
 			    </g> \
 			    <g id="thursday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="90" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="90" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                     </text> \
 				</g> \
 				<g id="friday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="120" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="120" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                     </text> \
 				</g> \
 				<g id="saturday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="150" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="150" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                     </text> \
 			    </g> \
 			    <g id="sunday" class="parent"> \
-	    			<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-	    			<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+	    			<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+	    			<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="180" /> \
 	    			<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                     </text> \

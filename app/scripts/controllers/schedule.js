@@ -34,7 +34,7 @@ angular.module('cirqlApp')
 	});
 
 	$scope.roomId = room;
-	$scope.radius = 14;
+	$scope.radius = 12;
 
   	$scope.goBack = function(room) {
   		if (window.screen.hasOwnProperty('lockOrientation')) {
