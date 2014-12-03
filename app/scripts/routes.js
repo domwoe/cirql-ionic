@@ -104,7 +104,7 @@ angular.module('cirqlApp')
     })
 
     .state('app.gateway', {
-      url: '/gateway',
+      url: '/gateway/:home',
       views: {
         'menuContent' :{
           templateUrl: 'templates/gateway.html',

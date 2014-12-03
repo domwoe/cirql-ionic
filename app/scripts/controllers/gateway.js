@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading', '$ionicPopup',
-        function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup) {
+    .controller('GatewayCtrl', ['$scope', '$state', '$stateParams', 'user', 'fbutil', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
+        function($scope, $state, $stateParams, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
 
             $scope.hasGateway = true;
 
@@ -17,9 +17,12 @@ angular.module('cirqlApp')
                 template: 'Loading...'
             });
 
+            console.log($state.params);
+            console.log($stateParams);
+
 
             // Get GatewayId
-            var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway')
+            var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway');
             gatewayIdObj.$loaded(
                 function() {
 
@@ -134,19 +137,24 @@ angular.module('cirqlApp')
                     $scope.alert = true;
                     return Date(timestamp).toLocaleString();
                 }
-            }
+            };
 
 
-
+             $scope.goBack = function() {
+                
+                // Coming from home via sidemenu
+                // 
+                console.log($state.params.home)
+                if ($state.params.home == 'true') {
+                    $state.go('app.home');
+                }
+                $ionicNavBarDelegate.back();
+            };
 
 
             /**
              * Go back to home screen
              */
-            $scope.goToHome = function() {
-                $state.go('app.home');
-            };
-
-
+            // $scope.goToHome = function() {//     $state.go('app.home'); // }; 
         }
     ]);

@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup',
-        function($scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup) {
+    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
+        function($scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
 
             $scope.hasThermostat = true;
             $ionicLoading.show({
@@ -58,9 +58,10 @@ angular.module('cirqlApp')
 
             });
 
+           
+
             $scope.pairNewThermostat = function() {
 
-                $scope.showPopup();
 
                 thermostats.$watch(function(event) {
                     console.log(event);
@@ -76,23 +77,33 @@ angular.module('cirqlApp')
 
                 gatewayIdObj.$loaded(function(gatewayId) {
 
-                    var gatewayId = gatewayId.$value;
+                     if (!gatewayId.$valuel) {
 
-                    var gatewayObj = fbutil.syncObject('gateways/' + gatewayId);
+                         $state.go('app.gateway');
+                    } 
+                    else {
 
-                    $scope.gateway = gatewayObj;
+                        $scope.showPopup();
 
-                    gatewayObj.$loaded(function(gateway) {
+                        var gatewayId = gatewayId.$value;
 
-                        console.log(gateway);
+                    
+                        var gatewayObj = fbutil.syncObject('gateways/' + gatewayId);
 
-                        gateway.activatePairing = true;
-                        gateway.$save();
+                        $scope.gateway = gatewayObj;
 
-                        console.log(gateway);
+                        gatewayObj.$loaded(function(gateway) {
 
+                            console.log(gateway);
 
-                    });
+                            gateway.activatePairing = true;
+                            gateway.$save();
+
+                            console.log(gateway);
+
+                         });
+                    }        
+
 
                 });
 
@@ -250,16 +261,20 @@ angular.module('cirqlApp')
             };
 
 
+            $scope.goBack = function() {
+                $ionicNavBarDelegate.back();
+            };
+
 
             /**
              * Go back to room screen
              */
-            $scope.goToRoom = function() {
-                $ionicSideMenuDelegate.canDragContent(true);
-                $state.go('app.room', {
-                    roomId: room
-                });
-            };
+            // $scope.goToRoom = function() {
+            //     $ionicSideMenuDelegate.canDragContent(true);
+            //     $state.go('app.room', {
+            //         roomId: room
+            //     });
+            // };
 
 
         }
