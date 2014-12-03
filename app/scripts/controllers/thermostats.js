@@ -77,7 +77,7 @@ angular.module('cirqlApp')
 
                 gatewayIdObj.$loaded(function(gatewayId) {
 
-                     if (!gatewayId.$valuel) {
+                     if (!gatewayId.$value) {
 
                          $state.go('app.gateway');
                     } 

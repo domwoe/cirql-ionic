@@ -8,17 +8,14 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('GatewayCtrl', ['$scope', '$state', '$stateParams', 'user', 'fbutil', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
-        function($scope, $state, $stateParams, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
+    .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
+        function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
 
             $scope.hasGateway = true;
 
             $ionicLoading.show({
                 template: 'Loading...'
             });
-
-            console.log($state.params);
-            console.log($stateParams);
 
 
             // Get GatewayId
@@ -144,7 +141,6 @@ angular.module('cirqlApp')
                 
                 // Coming from home via sidemenu
                 // 
-                console.log($state.params.home)
                 if ($state.params.home == 'true') {
                     $state.go('app.home');
                 }
