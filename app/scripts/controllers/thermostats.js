@@ -62,11 +62,12 @@ angular.module('cirqlApp')
 
             $scope.pairNewThermostat = function() {
 
-
+                // Watch for new paired thermostats
                 thermostats.$watch(function(event) {
                     console.log(event);
                     if (event.event === 'child_added') {
-                        console.log(pairingPopup);
+                        // Add thermostat to room
+                        $scope.addThermostat($scope.thermostats.$getRecord(event.key));
                         if (pairingPopup.hasOwnProperty('close')) {
                             pairingPopup.close();
                         }
