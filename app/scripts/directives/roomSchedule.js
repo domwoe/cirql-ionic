@@ -17,7 +17,17 @@ angular.module('cirqlApp')
                 },
                 link: function(scope, element, attrs) {
 
-                    var bgColor = '#ecf0f1';
+   
+                    // Height of day bars
+                    var height = 35;
+
+                    // Set height
+                    var days = d3.selectAll('g.parent').each(function(d, i) {
+                        d3.select(this).attr('transform', 'translate(0,' + i * height + ')');
+                    });
+
+                    days.selectAll('rect').attr('height', height);
+
 
                     var Schedule = function() {
 
@@ -46,6 +56,8 @@ angular.module('cirqlApp')
                         this.width = this.rightBound - this.leftBound;
                         this.height = recHeight;
                         this.self = this;
+
+
 
                         this.pad = function(num, size) {
                             var s = num + "";
@@ -92,7 +104,7 @@ angular.module('cirqlApp')
                                 d.x = newpos - currentX;
                             }
 
-                            group.attr('transform', 'translate(' + d.x + ','+currentY+') scale(7,1)     translate(0,0)');
+                            group.attr('transform', 'translate(' + d.x + ',' + currentY + ') scale(7,1)     translate(0,0)');
 
                             var time = self.pixelOffsetToTime(newpos);
                             scope.hour = this.pad(time[0], 2);
@@ -103,13 +115,13 @@ angular.module('cirqlApp')
                             var entry = this.localSchedule[circleIndex];
                             entry.hour = time[0];
                             entry.minute = time[1];
-                        }
+                        };
 
                         d3.selection.prototype.moveToFront = function() {
                             return this.each(function() {
                                 this.parentNode.appendChild(this);
                             });
-                        }
+                        };
 
                         this.selectDay = function(day) {
                             var dayGroup = d3.select(day);
@@ -117,26 +129,33 @@ angular.module('cirqlApp')
                             var rec1 = d3.select(rectangles[0]);
                             var rec2 = d3.select(rectangles[1]);
                             //rec1.attr('fill-opacity', 0.8);
-                            rec2.attr('fill','#bdc3c7');    
+                            rec2.attr('fill', '#bdc3c7');
                             // Move to front
                             dayGroup.moveToFront();
+
+
+                            // Get coords
                             var coords = d3.transform(dayGroup.attr('transform')).translate;
-                            dayGroup.attr('transform','translate('+coords[0]+','+coords[1]+') scale(1,7) translate(0,0)');
-                            //dayGroup.attr('transform', 'translate(0,-200) scale(1,3)');
+                            // Make day as big as whole schedule (all 7 days)
+                            dayGroup.attr('transform', 'scale(1,7) translate(0,0)');
+
+                            // Select all entries of day
                             var items = dayGroup.selectAll('g.entry');
-                            console.log(items);
-                            items.each(function(d,i) {
+
+                            // Scale them properly (  scale(3,3/7) )
+                            items.each(function(d, i) {
                                 var item = d3.select(this);
                                 var coords = d3.transform(item.attr('transform')).translate;
-                                console.log(coords);
-                                item.attr('transform','translate('+(coords[0])+','+(coords[1])+') scale(3,0.43) translate(0,0)');
-                            })
-                            var scale = 1/7;
-                            dayGroup.select('text').attr('transform','translate('+(coords[0])+','+(coords[1])+') scale(1,'+scale+') translate(0,0)');
+                                item.attr('transform', 'translate(' + (coords[0]) + ',' + (coords[1]) + ') scale(3,0.43) translate(0,0)');
+                            });
+
+                            // Scale day name and box around properly
+                            var scale = 1 / 7;
+                            dayGroup.select('text').attr('transform', 'scale(1,' + scale + ') translate(0,0)');
                             dayGroup.select('rect').attr('fill-opacity', 1)
                                 .attr('fill', '#bdc3c7');
-                        };    
-                        
+                        };
+
 
 
                         this.deselectDay = function() {
@@ -144,8 +163,8 @@ angular.module('cirqlApp')
                             var previousRec1 = d3.select(previousRec[0]);
                             var previousRec2 = d3.select(previousRec[1]);
                             previousRec1.attr('fill-opacity', 1);
-                            previousRec2.attr('fill','#ecf0f1');
-                        }
+                            previousRec2.attr('fill', '#ecf0f1');
+                        };
 
                         this.daySelector = function(day) {
                             if (this.selectedDay != null) {
@@ -156,7 +175,7 @@ angular.module('cirqlApp')
                             }
                             this.selectDay(day);
                             this.selectedDay = day;
-                        }
+                        };
 
                         this.deselectEntry = function() {
                             if (this.selectedEntry != null) {
@@ -169,7 +188,7 @@ angular.module('cirqlApp')
                                     .style('visibility', 'hidden');
                                 this.selectedEntry = null;
                             }
-                        }
+                        };
 
                         this.entrySelector = function(entry) {
                             var group = d3.select(entry);
@@ -182,9 +201,9 @@ angular.module('cirqlApp')
                                 .style('visibility', 'visible');
 
                             group.selectAll('rect')
-                                .style('visibility','visible');
+                                .style('visibility', 'visible');
                             this.selectedEntry = group;
-                        }
+                        };
 
                         // true for increase, false for decrease
                         this.updateTemp = function(obj, increaseOrDecrease) {
@@ -199,12 +218,12 @@ angular.module('cirqlApp')
                             var currentDotTemp = parseInt(dotTargetTspan.text());
                             var newTemp = 0;
                             var newDotTemp;
-                           
+
                             if (increaseOrDecrease) {
                                 if (currentDotTemp === 5) {
                                     newTemp = currentTemp + 1;
                                     newDotTemp = 0;
-                                } else if (currentDotTemp === 0){
+                                } else if (currentDotTemp === 0) {
                                     newDotTemp = 5;
                                     newTemp = currentTemp;
                                 }
@@ -231,15 +250,15 @@ angular.module('cirqlApp')
                                 var index = parentNode.attr('id');
                                 this.localSchedule[index].target = newTemp;
                             }
-                        }
+                        };
 
                         this.decrementTemp = function(obj) {
                             this.updateTemp(obj, false);
-                        }
+                        };
 
                         this.incrementTemp = function(obj) {
                             this.updateTemp(obj, true);
-                        }
+                        };
 
                         this.addEntry = function(dayGroup, id, xpos, ypos, target) {
 
@@ -256,7 +275,7 @@ angular.module('cirqlApp')
                             var entryGroup = dayGroup.append('g')
                                 .attr('id', id)
                                 .attr('class', 'entry')
-                                .attr('transform','translate('+xpos+','+ypos+')')
+                                .attr('transform', 'translate(' + xpos + ',' + ypos + ')')
                                 .data([{
                                     x: 0,
                                     y: 0,
@@ -305,7 +324,7 @@ angular.module('cirqlApp')
 
                             var pathIncr = entryGroup.append('path')
                                 .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius+3) + ') scale(0.2)')
+                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius + 3) + ') scale(0.2)')
                                 .attr('d', 'M53.696,30.254l32.099,32.1c2.042,2.042,2.042,5.352,0,7.393c-2.041,2.041-5.352,2.041-7.393,0L50,41.344L21.598,69.746 \
 						c-2.042,2.041-5.352,2.041-7.393,0c-2.042-2.041-2.042-5.351,0-7.393l32.099-32.1c1.021-1.02,2.358-1.53,3.696-1.53 \
 						S52.676,29.234,53.696,30.254z')
@@ -345,8 +364,8 @@ angular.module('cirqlApp')
                                 );
 
                             var recIncr = entryGroup.append('rect')
-                                .attr('x', 0 - 3*this.radius)
-                                .attr('y', 0 - 4.9*this.radius)
+                                .attr('x', 0 - 3 * this.radius)
+                                .attr('y', 0 - 4.9 * this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
                                 .attr('fill-opacity', 0.25)
@@ -356,11 +375,11 @@ angular.module('cirqlApp')
                                 });
 
                             var recDecr = entryGroup.append('rect')
-                                .attr('x', 0 - 3*this.radius)
+                                .attr('x', 0 - 3 * this.radius)
                                 .attr('y', 0 + this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
-                                .attr('fill-opacity',0.25)
+                                .attr('fill-opacity', 0.25)
                                 .style('visibility', 'hidden')
                                 .on('click', function() {
                                     self.decrementTemp(this);
@@ -380,7 +399,7 @@ angular.module('cirqlApp')
                                     deepCopy.target,
                                     deepCopy.weekday
                                 );
-                            }
+                            };
 
                             for (var index in this.localSchedule) {
                                 if (!this.localSchedule.hasOwnProperty(index)) {
@@ -403,7 +422,7 @@ angular.module('cirqlApp')
                                 'weekday': weekday
                             };
                             console.log("CREATED ", this.localSchedule[id]);
-                        }
+                        };
 
                         this.addEntryCallback = function(self) {
                             if (self.selectedDay != null) {
@@ -420,7 +439,7 @@ angular.module('cirqlApp')
 
                                 self.nextId++;
                             }
-                        }
+                        };
 
                         this.copySchedule = function(self, dest) {
                             var destDay = d3.select(dest);
@@ -457,13 +476,13 @@ angular.module('cirqlApp')
                             });
                             self.deselectEntry();
                             destDay.moveToFront();
-                        }
+                        };
 
                         this.copyScheduleCallback = function(self) {
                             if (self.selectedDay != null) {
                                 self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
                             }
-                        }
+                        };
 
                         this.deleteEntryCallback = function(self) {
                             if (self.selectedEntry != null) {
@@ -472,7 +491,7 @@ angular.module('cirqlApp')
                                 this.selectedEntry.remove();
                                 self.selectedEntry = null;
                             }
-                        }
+                        };
 
                         this.syncFirebase = function() {
 
@@ -503,20 +522,20 @@ angular.module('cirqlApp')
                             }
 
                             scope.$apply();
-                        }
+                        };
 
                         this.save = function(self) {
                             self.syncFirebase();
                             scope.goBack({
                                 room: scope.roomid
                             });
-                        }
+                        };
 
                         this.cancel = function() {
                             scope.goBack({
                                 room: scope.roomid
                             });
-                        }
+                        };
 
                         this.attachListeners = function() {
                             var self = this;
@@ -525,7 +544,10 @@ angular.module('cirqlApp')
                                 if (self.entriesToCopy != null && this !== self.selectedDay) {
                                     self.copySchedule(self, this);
                                     self.entriesToCopy = null;
-                                } else {
+                                } else if (this === self.selectedDay) {
+                                    self.deselectDay();
+                                }
+                                else {
                                     self.daySelector(this);
                                 }
 
@@ -558,12 +580,12 @@ angular.module('cirqlApp')
                                 console.log('clicked on cancel');
                                 self.cancel();
                             });
-                        }
-                    }
+                        };
+                    };
 
                     var scheduler = new Schedule();
 
-                    
+
 
                     var renderState = function() {
                         if (scope.schedule && !scheduler.rendered) {
@@ -582,58 +604,58 @@ angular.module('cirqlApp')
 
                     scope.$watch('schedule', renderState);
 
+
                 },
                 replace: false,
                 template: '\
                 <ion-content scroll="false"> \
-                    <div class="schedule-block"> \
-		<svg id="room-schedule" overflow="visible" width="102%" height="95%" viewBox="2 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+		<svg id="room-schedule" overflow="visible" width="102%" height="100%" viewBox="2 0 752 320" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
 		    <g id="weekdays"> \
 		    	<g id="monday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                     </text> \
-				    <rect id="r1" fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+				    <rect id="r1" fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 				</g> \
-				<g id="tuesday" class="parent" transform="translate(0,30)"> \
-				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
-				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+				<g id="tuesday" class="parent"> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="25">Tuesday</tspan> \
                     </text> \
 				</g> \
-				<g id="wednesday" class="parent" transform="translate(0,60)"> \
-			    	<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="0" /> \
-			    	<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+				<g id="wednesday" class="parent"> \
+			    	<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+			    	<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 			    	<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                     </text> \
 			    </g> \
 			    <g id="thursday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="90" /> \
-				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                     </text> \
 				</g> \
 				<g id="friday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="120" /> \
-				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                     </text> \
 				</g> \
 				<g id="saturday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="150" /> \
-				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+				    <rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+				    <rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                     </text> \
 			    </g> \
 			    <g id="sunday" class="parent"> \
-	    			<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-	    			<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+	    			<rect fill="#483e37" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="95" height="" x="0" y="0" /> \
+	    			<rect fill="#ecf0f1" fill-opacity="1" stroke="#bdc3c7" stroke-width="1" width="650" height="" x="95" y="0" /> \
 	    			<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                     </text> \

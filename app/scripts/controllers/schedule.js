@@ -13,6 +13,8 @@ angular.module('cirqlApp')
 
   	$ionicSideMenuDelegate.canDragContent(false);
 
+  	$scope.vSize = 30;
+
 
   	$scope.save = function(obj) {
   		console.log(obj);
