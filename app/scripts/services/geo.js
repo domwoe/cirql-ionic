@@ -13,9 +13,12 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                 window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
                     function(result) {
+                        console.log('RESULTS: ' + JSON.stringify(result));
                         console.log('Geo: init callback for monitoring');
 
                         var callbacktype = result.callbacktype;
+                        var regionId = result.regionId;
+                        var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
 
                         var date = new Date();
                         date = date + '';
@@ -40,14 +43,16 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                 'type': 'locationupdate',
                                 'date': date
                             };
+                            fbLocation.$save();
 
-                        } else if (callbacktype ==='monitorremoved') { // monitor for region with id fid removed
+                        } else if (callbacktype === 'monitorremoved') { // monitor for region with id fid removed
 
                             console.log('monitorfail');
                             fbLocation.lastMsg = {
                                 'type': 'monitorremoved',
                                 'date': date
                             };
+                            fbLocation.$save();
 
                         } else if (callbacktype === 'monitorfail') { // monitor for region with id fid failed
 
@@ -56,6 +61,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                 'type': 'monitorfail',
                                 'date': date
                             };
+                            fbLocation.$save();
 
                         } else if (callbacktype === 'monitorstart') { // monitor for region with id fid succeeded
 
@@ -64,30 +70,42 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                 'type': 'monitorstart',
                                 'date': date
                             };
+                            fbLocation.$save();
 
                         } else if (callbacktype === 'enter') {
 
-                        	console.log('enter');
+                            
+                            console.log('enter region ' + regionId);
                             fbLocation.lastMsg = {
                                 'type': 'enter',
+                                'regionId': regionId,
                                 'date': date
                             };
-
-                            fbLocation.homeregion = true;
+                            if(regionId === "1") {
+                                fbLocation.homeregion = true;
+                            }
+                            else {
+                                fbLocation['region'+radius[regionId-1]] = true;
+                            }
+                            fbLocation.$save();
 
                         } else if (callbacktype === 'exit') {
 
-                        	console.log('exit');
+                            console.log('exit region ' + regionId);
                             fbLocation.lastMsg = {
                                 'type': 'exit',
+                                'regionId': regionId,
                                 'date': date
                             };
-
-                            fbLocation.homeregion = false;
-
+                            if(regionId === 1) {
+                                fbLocation.homeregion = false;
+                            }
+                            else {
+                                    fbLocation['region'+radius[regionId-1]] = false;                            
+                            }
+                            fbLocation.$save();
                         }
 
-                        fbLocation.$save();
                     },
                     function(error) {
                         console.log('Geo: error');
@@ -104,34 +122,34 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                 var lat = '41.1';
                 var lng = '-73.2';
-                var radius = 350;
+                var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
 
-                console.log('isLat: ' + fbHome.hasOwnProperty('lat') );
+                console.log('isLat: ' + fbHome.hasOwnProperty('lat'));
 
                 fbHome.$loaded(function(data) {
 
-                if ( data.hasOwnProperty('lat') && data.hasOwnProperty('lng') ) {
-                	lat = data.lat + '';
-                	lng = data.lng + '';
-                    console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
-                }
-                else {
-                    console.log('HomeRegion not set with lat ' + data.lat);
-                }
+                    if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
+                        lat = data.lat + '';
+                        lng = data.lng + '';
+                        console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
+                    } else {
+                        console.log('HomeRegion not set with lat ' + data.lat);
+                    }
+                    console.log('length: ' + radius.length);
+                    for (var i = 1; i <= radius.length; i++) {
 
-                var params = ['1',lat,lng,radius];
+                        var params = ['' + i, lat, lng, radius[i-1]];
 
-                window.plugins.DGGeofencing.startMonitoringRegion(params,
-                    function(result) {
-                        console.log('Geo: added Location ' + params);
-                        deferred.resolve(result);
-                    },
-                    function(error) {
-                        console.log('Geo: error');
-                        deferred.reject(error);
-
-                    });
-
+                        window.plugins.DGGeofencing.startMonitoringRegion(params,
+                            function(result) {
+                                console.log('Geo: added new region ' + params);
+                                deferred.resolve(result);
+                            },
+                            function(error) {
+                                console.log('Geo: error with ' + params);
+                                deferred.reject(error);
+                            });
+                    }
                 });
 
                 console.log('Geo: return promise');
