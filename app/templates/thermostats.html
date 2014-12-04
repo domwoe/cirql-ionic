@@ -92,8 +92,8 @@
         </div>
 
         <div class="centerAll" ng-cloak>
-            <h2 ng-show="(thermostats | filter:thermostatFilter).length==0">There are no unassigned paired thermostats available.</h2>
-            <h3 ng-show="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3>
+            <h2 ng-if="(thermostats | filter:thermostatFilter).length==0">There are no unassigned paired thermostats available.</h2>
+            <h3 ng-if="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3>
         </div>
 
     </ion-content>

@@ -13,7 +13,7 @@
   </div>
   <div class="circle">
   </div>
-  <div class="residents at-home center">
+  <div class="residents at-home center" ng-class="{noaway: (residents | filter:{ isAway: true}).length==0}">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: false }">
       <div class="avatar"></div>
       {{resident.name}}

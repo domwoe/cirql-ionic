@@ -238,13 +238,18 @@ input:-ms-input-placeholder {
     clear: both;
 }
 .away {
-    top: 10px;
+    top: 0px;
     float: right;
     padding-right: 5%;
 }
 .at-home {
-    top: 10px;
+    top: 0px;
 }
+
+.noaway {
+    top: 60px;
+}
+
 .resident {
     display: inline-block;
     float: left;
