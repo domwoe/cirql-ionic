@@ -26,6 +26,8 @@ angular.module('cirqlApp')
                 $scope.room = room;
             }
 
+            $scope.roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
+
             var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
 
             var trvArray = fbutil.syncArray(trvUrl);
@@ -119,7 +121,7 @@ angular.module('cirqlApp')
                 $scope.thermostats.$save(thermostat);
 
                 // Add thermostat reference to room object
-                var roomObjPromise = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
+                var roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
 
                 roomObjPromise.$loaded(function(roomObj) {
                     if (roomObj.hasOwnProperty('thermostats')) {

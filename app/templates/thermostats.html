@@ -78,13 +78,13 @@
 
             <div ng-hide="isAddView" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="delThermostat(thermostat)">
-                    Remove
+                    Remove from {{roomObj.name}}
                 </button>
             </div>
 
             <div ng-show="isAddView" class="item item-image">
                 <button class="button button-full button-balanced" ng-click="addThermostat(thermostat)">
-                    Add
+                    Add to {{roomObj.name}}
                 </button>
             </div>
 

@@ -21,9 +21,29 @@ angular.module('cirqlApp')
             var roomUrl = homeUrl + '/rooms/' + room;
             var modeUrl = homeUrl + '/rooms/' + room + '/mode';
             var sensorUrl = roomUrl + '/sensors/netatmo';
+            var trvUrl = roomUrl + '/thermostats';
 
             var roomObj = fbutil.syncObject(roomUrl);
             roomObj.$bindTo($scope, 'roomValues');
+
+            var trvObj = fbutil.syncObject(trvUrl);
+
+            $scope.hasThermostats = null;
+
+            trvObj.$loaded(function(trvs) {
+                console.log(trvs);
+                if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
+                    $scope.hasThermostats = false;
+                    console.log($scope.hasThermostats);
+                }
+                else {
+
+                    $scope.hasThermostats = true;
+                    console.log($scope.hasThermostats);
+
+                }
+            });
+
 
             var modeIndex = null;
 
