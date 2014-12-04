@@ -2,7 +2,9 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <div class="wrapper">
+  
+  <div>
+  <ion-content scroll="false">
   <div class="residents away">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: true }">
       <div class="avatar"></div>
@@ -11,14 +13,14 @@
   </div>
   <div class="circle">
   </div>
-  <div class="residents at-home center">
+  <div class="residents at-home center" ng-class="{noaway: (residents | filter:{ isAway: true}).length==0}">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: false }">
       <div class="avatar"></div>
       {{resident.name}}
     </div>
   </div>
-  <ion-content class="has-header has-residents">
-      <div class="rooms-table">
+  <ion-content class="has-residents">
+      <div class="rooms-table padding">
         <div class="row" ng-click="goToRoom(room.$id)" ng-repeat="room in rooms" ng-if="room.name">
           <div class="left">{{room.name}}<hr/> 
           </div> 
@@ -51,6 +53,8 @@
           </div>
         </div>
       </div>
-  </ion-content>
+</ion-content>
+</ion-content>
   </div>
+    
 </ion-view>

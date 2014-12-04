@@ -16,8 +16,9 @@ angular.module('cirqlApp')
     }
 
     $scope.user = {
-      email: '',
-      password: ''
+      email: 'test',
+      password: '',
+      confirm: ''
     };
     $scope.errorMessage = null;
 
@@ -32,16 +33,31 @@ angular.module('cirqlApp')
         email: $scope.user.email,
         password: $scope.user.password
       })
-      .then(redirectBasedOnStatus)
-      .catch(handleError);
+      .then(function() {$state.go('app.home');})
+      .catch(handleLoginError);
     };
 
-    function redirectBasedOnStatus() {
-      $ionicLoading.hide();
-      $state.go('app.home');
-    }
+    $scope.createAccount = function() {
+      $scope.errorMessage = null;
+      if(!$scope.user.email || !$scope.user.password) {
+        $scope.errorMessage = 'Please enter email and password';
+      } else if($scope.user.password !== $scope.user.confirm) {
+        $scope.errorMessage = 'Passwords do not match';
+      } else {
+        $ionicLoading.show({
+          template: 'Please wait...'
+        });
 
-    function handleError(error) {
+        simpleLogin.createAccount(
+          $scope.user.email,
+          $scope.user.password
+        )
+        .then(function() {$state.go('wizard.resident');})
+        .catch(handleCreationError);
+      }
+    };
+
+    function handleLoginError(error) {
       switch (error.code) {
         case 'INVALID_EMAIL':
         case 'INVALID_PASSWORD':
@@ -51,7 +67,24 @@ angular.module('cirqlApp')
         default:
           $scope.errorMessage = 'Error: [' + error.code + ']';
       }
+      $ionicLoading.hide();
+    }
 
+    function handleCreationError(error) {
+      console.log(error.code);
+      switch (error.code) {
+        case 'EMAIL_TAKEN':
+          $scope.errorMessage = 'Email is already taken';
+          break;
+        case 'INVALID_EMAIL':
+          $scope.errorMessage = 'Email is incorrect';
+          break;
+        case 'INVALID_PASSWORD':
+          $scope.errorMessage = 'Password is incorrect';
+          break;
+        default:
+          $scope.errorMessage = 'Error: [' + error.code + ']';
+      }
       $ionicLoading.hide();
     }
   });

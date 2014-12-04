@@ -8,8 +8,16 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state',
-        function($scope, user, simpleLogin, fbutil, $state) {
+    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading',
+        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading) {
+
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('portrait');
+            }
+
+            $ionicLoading.show({
+                template: 'Please wait...'
+            });
 
             if (user) {
                 $scope.user = user;
@@ -21,6 +29,7 @@ angular.module('cirqlApp')
             } else {
                 $state.go('login');
             }
+
 
             $scope.min = 0;
             $scope.max = 30;
@@ -37,7 +46,6 @@ angular.module('cirqlApp')
                 });
             };
 
-
             function loadHome(user) {
                 if ($scope.home) {
                     $scope.home.$destroy();
@@ -50,6 +58,10 @@ angular.module('cirqlApp')
 
                 var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
                 $scope.residents = residents;
+
+                rooms.$loaded().then(function() {
+                  $ionicLoading.hide();
+                });  
 
                 // console.log("home data loaded for user", user.uid);
                 // console.log("home", home);

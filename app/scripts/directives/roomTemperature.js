@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate', function($timeout,$ionicSideMenuDelegate) {
+    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate',
+        function($timeout, $ionicSideMenuDelegate) {
 
             var targetTimer = null;
             var target = null;
@@ -13,36 +14,36 @@ angular.module('cirqlApp')
                     x: centerX + (radius * Math.cos(angleInRadians)),
                     y: centerY + (radius * Math.sin(angleInRadians))
                 };
-            }
+            };
 
-            var drawArc = function(arc, start, end, max, R, size, targetColor) {
-                 if (!size) {
+            var drawArc = function(arc, start, end, min, max, R, size, targetColor) {
+                if (!size) {
                     return;
                 }
-                var end       = end >= max ? max - 0.00001 : end,
-                    type      = 279.9999,
-                    perc      = start/max*type,
-                    perc_end  = end/max*type,
-                    x         = size/2,
+                var end = end >= max ? max - 0.00001 : end,
+                    type = 279.9999,
+                    perc = (start - min) / (max - min) * type,
+                    perc_end = (end - min) / (max - min) * type,
+                    x = size / 2,
                     startCart = polarToCartesian(x, x, R, perc),
-                    endCart   = polarToCartesian(x, x, R, perc_end);
-                    
+                    endCart = polarToCartesian(x, x, R, perc_end);
+
                 var d = d3.svg.arc()
                     .innerRadius(R)
                     .outerRadius(R)
-                    .startAngle((perc - 140)*2*Math.PI/360)
-                    .endAngle((perc_end - 140)*2*Math.PI/360);
+                    .startAngle((perc - 140) * 2 * Math.PI / 360)
+                    .endAngle((perc_end - 140) * 2 * Math.PI / 360);
 
                 arc.attr('d', d)
-                   .attr('transform', 'translate(' + x + ',' + x + ')')
-                   .attr('stroke', targetColor);
+                    .attr('transform', 'translate(' + x + ',' + x + ')')
+                    .attr('stroke', targetColor);
                 return [startCart, endCart];
-            }
+            };
 
-            var updateMeasuredArc = function(arc, start, end, max, R, size, roomid) {
-                var carts = drawArc(arc, start, end, max, R, size, "#FFF");
+            var updateMeasuredArc = function(arc, start, end, min, max, R, size, roomid) {
+                var carts = drawArc(arc, start, end, min, max, R, size, '#FFF');
                 var endCart = carts[1];
-                var icon = d3.select("#thermoIcon" + roomid);
+                var icon = d3.select('#thermoIcon' + roomid);
                 icon.attr(
                     'transform', 'translate(' + (endCart.x - 20.5) + ',' + (endCart.y - 21) + ')'
                 );
@@ -50,19 +51,27 @@ angular.module('cirqlApp')
 
             var updateTargetArc = function(arc, start, end, mustHeat, min, max, R, size, roomid) {
                 var targetColor = mustHeat ? '#F9690E' : '#3498DB';
-                var carts = drawArc(arc, start, end, max, R, size, targetColor);
-                var targetCart = mustHeat? carts[1]: carts[0];
+                var carts = drawArc(arc, start, end, min, max, R, size, targetColor);
+                var targetCart = mustHeat ? carts[1] : carts[0];
 
-                var bgicon = d3.select("#bgTargetIcon" + roomid);
+
+                var bgTarget = d3.select('#bgTargetHandle' + roomid);
+                bgTarget.attr({
+                    'cx': targetCart.x,
+                    'cy': targetCart.y
+                });
+
+                var bgicon = d3.select('#bgTargetIcon' + roomid);
                 bgicon.attr({
                     'cx': targetCart.x,
                     'cy': targetCart.y
-                    })
-                    .attr('fill',targetColor);
-          
-                var icon = d3.select("#targetIcon" + roomid); 
+                })
+                    .attr('fill', targetColor);
+
+
+                var icon = d3.select('#targetIcon' + roomid);
                 icon.attr(
-                    'transform', 
+                    'transform',
                     'translate(' + (targetCart.x - 20.5) + ',' + (targetCart.y - 21) + ') scale(0.6)'
                 );
             };
@@ -70,72 +79,73 @@ angular.module('cirqlApp')
             return {
                 restrict: 'EA',
                 scope: {
-                    displaytarget:  "=",
-                    displaymode:    "=",
-                    displayarrows:  "=",
-                    roomid:         "=",
-                    targettemp:     "=",
-                    measuredtemp:   "=",
-                    mode:           "=",
-                    scale:          "=",
-                    min:            "=",
-                    max:            "=",
-                    radius:         "@",
-                    color:          "@",
-                    bgcolor:        "@",
-                    stroke:         "@"
+                    displaytarget: '=',
+                    hasthermostats: '=',
+                    displaymode: '=',
+                    roomid: '=',
+                    targettemp: '=',
+                    measuredtemp: '=',
+                    mode: '=',
+                    scale: '=',
+                    min: '=',
+                    max: '=',
+                    radius: '@',
+                    color: '@',
+                    bgcolor: '@',
+                    stroke: '@'
                 },
-                link: function (scope, element, attrs) {
-                    var ring_background     = element.find('circle'),
+                link: function(scope, element, attrs) {
+                    var ring_background = element.find('circle'),
                         size;
 
                     var mouseDragCallback = function() {
                         function roundHalf(num) {
-                            num = Math.round(num*2)/2;
+                            num = Math.round(num * 2) / 2;
                             return num;
                         }
 
-                        var coords = [0,0];
+                        var coords = [0, 0];
                         coords = d3.mouse(this);
                         var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
-                        phi = (phi*360/(2*Math.PI) + 230)%360 ;
+                        phi = (phi * 360 / (2 * Math.PI) + 230) % 360;
 
-                        target = roundHalf(phi*scope.max/270);
+                        target = roundHalf(phi * (scope.max - scope.min) / 270) + scope.min;
 
                         // draw arcs
-                        renderState(target);
+                        renderState(target, null);
 
                         //scope.targettemp = target;
 
                     };
 
-                    var heartbeat = function() {
-                        var heart = d3.select('#heart' + scope.roomid);
-                        console.log(heart);
-                        heart.classed('heart-beat', true);
-                        setTimeout(function() {
-                             heart.classed('heart-beat', false);    
-                        }, 2000);
-                    };
+                    // var heartbeat = function() {
+                    //     var heart = d3.select('#heart' + scope.roomid);
+                    //     console.log(heart);
+                    //     heart.classed('heart-beat', true);
+                    //     setTimeout(function() {
+                    //          heart.classed('heart-beat', false);    
+                    //     }, 2000);
+                    // };
 
-                    var radius           = scope.radius,
-                        stroke           = scope.stroke;
+                    var radius = scope.radius,
+                        stroke = scope.stroke;
 
-                    size = radius*2 + parseInt(stroke)*2;
+                    size = radius * 2 + parseInt(stroke) * 2;
 
                     var renderCircle = function() {
                         $timeout(function() {
-                           
-                            var scalingContainer    = d3.select('#scaling' + scope.roomid),
-                                measured_ring       = d3.select('#measured_path' + scope.roomid),
-                                thermoIcon          = d3.select('#thermoIcon' + scope.roomid),
-                                tempDrawer          = d3.select('#tempDrawer' + scope.roomid),
-                                bgTargetIcon        = d3.select('#bgTargetIcon' + scope.roomid),
-                                ring                = d3.select('#target_path' + scope.roomid),
-                                targetIcon          = d3.select('#targetIcon' + scope.roomid);
+
+                            var scalingContainer = d3.select('#scaling' + scope.roomid),
+                                measured_ring = d3.select('#measured_path' + scope.roomid),
+                                thermoIcon = d3.select('#thermoIcon' + scope.roomid),
+                                tempDrawer = d3.select('#tempDrawer' + scope.roomid),
+                                bgTargetHandle = d3.select('#bgTargetHandle' + scope.roomid),
+                                bgTargetIcon = d3.select('#bgTargetIcon' + scope.roomid),
+                                ring = d3.select('#target_path' + scope.roomid),
+                                targetIcon = d3.select('#targetIcon' + scope.roomid);
 
                             if (scope.displaytarget) {
-                                bgTargetIcon.call(d3.behavior.drag()
+                                bgTargetHandle.call(d3.behavior.drag()
                                     .on('dragstart', function() {
                                         $ionicSideMenuDelegate.canDragContent(false);
                                         mouseDragCallback();
@@ -146,61 +156,61 @@ angular.module('cirqlApp')
                                         $ionicSideMenuDelegate.canDragContent(true);
                                         // Set target in scope (and firebase) 1s after
                                         // releasing the icon
-                                        targetTimer = setTimeout( function() {
+                                        targetTimer = setTimeout(function() {
                                             scope.targettemp = target;
-                                        },1000);   
+                                        }, 1000);
                                         //heartbeat();
                                     }));
                             } else {
-                                targetIcon.style("visibility", 'hidden');
-                                bgTargetIcon.style("visibility", 'hidden');
+                                targetIcon.style('visibility', 'hidden');
+                                bgTargetIcon.style('visibility', 'hidden');
+                                bgTargetHandle.style('visibility', 'hidden');
                             }
 
                             thermoIcon.on('click', function() {
-                                var visibility = tempDrawer.style("visibility");
+                                var visibility = tempDrawer.style('visibility');
                                 if (visibility === 'hidden') {
-                                    tempDrawer.style("visibility", 'visible');
-                                }
-                                else {
-                                    tempDrawer.style("visibility", 'hidden');
+                                    tempDrawer.style('visibility', 'visible');
+                                } else {
+                                    tempDrawer.style('visibility', 'hidden');
                                 }
                             });
 
                             scalingContainer.attr({
-                                "transform":    "scale(" + scope.scale + ")"
+                                'transform': 'scale(' + scope.scale + ')'
                             });
 
                             element.attr({
-                                "width":        size,
-                                "height":       size,
+                                'width': size,
+                                'height': size,
                             });
 
                             measured_ring.attr({
-                                "stroke-width": stroke,
-                                "stroke-opacity": 0.65,
+                                'stroke-width': stroke,
+                                'stroke-opacity': 0.65,
                             });
 
                             if (!scope.displaytarget) {
-                                ring.style("visibility", 'hidden');
+                                ring.style('visibility', 'hidden');
                             }
                             ring.attr({
-                                "stroke-width": stroke
+                                'stroke-width': stroke
                             });
 
                             ring_background.attr({
-                                "cx":           radius,
-                                "cy":           radius,
-                                "transform":    "translate("+ stroke +", "+ stroke +")",
-                                "r":            radius,
-                                "fill":         scope.bgcolor, 
-                                "fill-opacity": 0.3
+                                'cx': radius,
+                                'cy': radius,
+                                'transform': 'translate(' + stroke + ', ' + stroke + ')',
+                                'r': radius,
+                                'fill': scope.bgcolor,
+                                'fill-opacity': 0.3
                             });
 
                             renderState(scope.targettemp, scope.targettemp);
                         });
                     };
 
-                    var renderState = function (newValue, oldValue) {
+                    var renderState = function(newValue, oldValue) {
 
                         if (scope.targettemp) {
                             if (!angular.isDefined(newValue)) {
@@ -214,16 +224,24 @@ angular.module('cirqlApp')
                                 }
                             }
 
+                            if (newValue < scope.min) {
+                                if (oldValue >= scope.max) {
+                                    return scope.targettemp = scope.max;
+                                } else {
+                                    return scope.targettemp = scope.min;
+                                }
+                            }
+
+
                             if (newValue < 21) {
                                 scope.leafVisibility = 'visible';
-                            }
-                            else {
+                            } else {
                                 scope.leafVisibility = 'hidden';
                             }
 
-                            
+
                             scope.temp = Math.floor(newValue);
-                            if (newValue*10 == (newValue.toFixed(0))*10) {
+                            if (newValue * 10 == (newValue.toFixed(0)) * 10) {
                                 scope.dotTemp = 0;
                             } else {
                                 scope.dotTemp = 5;
@@ -246,7 +264,7 @@ angular.module('cirqlApp')
                                     startTemp,
                                     endTemp,
                                     mustHeat,
-                                    scope.min, 
+                                    scope.min,
                                     scope.max,
                                     scope.radius - 5,
                                     size,
@@ -254,37 +272,76 @@ angular.module('cirqlApp')
                                 );
                             }
 
-                            scope.$apply();
-                        }                   
+                            $timeout(function() {
+                                scope.$apply()
+                            });
+                        }
                     };
 
-                    var renderThermoIcon = function () {
+                    var renderThermoIcon = function(temp) {
+
+                        if (temp) {
+                            d3.select('#thermoIcon' + scope.roomid)
+                                .style('visibility', 'visible');
+                        } else {
+                            d3.select('#tempDrawer' + scope.roomid)
+                                .style('visibility', 'hidden');
+                        }
+
                         $timeout(function() {
                             var measured_ring = d3.select('#measured_path' + scope.roomid);
                             if (scope.measuredtemp) {
                                 updateMeasuredArc(
                                     measured_ring,
                                     scope.min,
-                                    scope.measuredtemp, 
+                                    scope.measuredtemp,
+                                    scope.min,
                                     scope.max,
-                                    scope.radius - 5, 
+                                    scope.radius - 5,
                                     size,
                                     scope.roomid
                                 );
                                 renderState(scope.targettemp, scope.targettemp);
                             }
                         });
-                    };   
+                    };
+
+                    function showWarning(msg) {
+
+                        d3.select('#scaling' + scope.roomid)
+                            .append('text')
+                            .attr('class','warning')
+                            .attr('fill','#FFF')
+                            .attr('font-weight','600')
+                            .append('tspan')
+                            .attr('x', '125')
+                            .attr('y', '180')
+                            .attr('text-anchor', 'middle')
+                            .text(msg)
+
+                        $timeout(scope.$apply());
+
+                    }
 
                     scope.$watch('targettemp', renderState);
                     scope.$watch('measuredtemp', renderThermoIcon);
+                    scope.$watch('hasthermostats',
+                        function(hasThermostats) {
+                             console.log(hasThermostats);
+                            if (hasThermostats === false) {
+                                showWarning('No Thermostats!');
+                            }
+                            else if (hasThermostats === true) {
+                                d3.select('#scaling' + scope.roomid+ '.warning').remove();
+                            }
+                        });
 
                     renderCircle();
                     //heartbeat();
-                    
+
                 },
-                replace:true,
-                template:'\
+                replace: true,
+                template: '\
                 <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
                     <g id="scaling{{roomid}}">\
                         <g id="label" fill="#FFF" font-weight="normal">\
@@ -305,7 +362,7 @@ angular.module('cirqlApp')
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
                             <path id="target_path{{roomid}}" fill="none" />\
-                            <g id="thermoIcon{{roomid}}">\
+                            <g id="thermoIcon{{roomid}}" visibility="hidden">\
                                 <g id="tempDrawer{{roomid}}" visibility="visible">\
                                     <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\
                                      <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#000000">\
@@ -323,7 +380,9 @@ angular.module('cirqlApp')
                         <g id="targetIcon{{roomid}}" transform="scale(0.6)">\
                             <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
                         </g>\
+                        <ellipse id="bgTargetHandle{{roomid}}" fill="#000000" fill-opacity="0" cx="16" cy="16" rx="30" ry="30"></ellipse>\
                     </g>\
                 </svg>'
-            }; 
-    }]);
+            };
+        }
+    ]);

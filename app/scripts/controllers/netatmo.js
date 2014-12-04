@@ -8,8 +8,15 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService',
-        function($scope, $state, user, fbutil, netatmoService) {
+    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate', '$ionicPopup', '$ionicLoading',
+
+        function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
+
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
+            $ionicSideMenuDelegate.canDragContent(false);
 
             var room;
 
@@ -17,42 +24,40 @@ angular.module('cirqlApp')
                 room = $state.params.roomId;
             }
 
-            netatmoService.getNetatmo(room,user.uid).then(function(netatmo) {
-              $scope.netatmo = netatmo;
+            netatmoService.getNetatmo(room, user.uid).then(function(netatmo) {
+                $scope.netatmo = netatmo;
             });
 
             netatmoService.getAvailable(user.uid).then(function(netatmos) {
-              $scope.netatmos = netatmos;
+                $scope.netatmos = netatmos;
+                $ionicLoading.hide();
             });
 
             $scope.lastSeen = function(timeString) {
-                
-                var timestamp = Date.parse(timeString);
-                var now = new Date;
+
+                var timestamp = Date.parse(timeString) - 5000;
+                var now = Date.now();
 
                 var diff = now - timestamp;
 
-                if ( diff < 15*60*1000) {
+                if (diff < 15 * 60 * 1000) {
 
-                    if ( diff > 60*1000) {
+                    if (diff > 60 * 1000) {
 
                         $scope.alert = false;
-                        return Math.round(diff/60/1000) + ' minutes ago';
-                    
-                    }    
-                     
-                    else {
+                        return Math.round(diff / 60 / 1000) + ' minutes ago';
+
+                    } else {
 
                         $scope.alert = false;
                         return 'Just now';
 
-                    }    
-                }
-                else {
+                    }
+                } else {
                     $scope.alert = true;
                     return Date(timestamp).toLocaleString();
                 }
-            }
+            };
 
 
             $scope.toggleGroup = function(group) {
@@ -67,7 +72,10 @@ angular.module('cirqlApp')
             };
 
             $scope.goToRoom = function() {
-              $state.go('app.room', {roomId: room});
+                $ionicSideMenuDelegate.canDragContent(true);
+                $state.go('app.room', {
+                    roomId: room
+                });
             };
 
             $scope.addNetatmo = function(stationId, moduleId) {
@@ -99,7 +107,7 @@ angular.module('cirqlApp')
                 $state.go('app.netatmo', {
                     roomId: room
                 });
-            }
+            };
 
             $scope.delNetatmo = function() {
 
@@ -122,7 +130,29 @@ angular.module('cirqlApp')
                 $state.go('app.addNetatmo', {
                     roomId: room
                 });
-            }
+            };
+
+
+            $scope.showConfirm = function() {
+
+                $ionicPopup.show({
+                    template: 'Are you sure you want to disconnect?',
+                    title: 'Disconnect from netatmo account',
+                    subTitle: '',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'Cancel',
+                        type: 'button-block button-dark transparent',
+                    }, {
+                        text: 'Disconnect',
+                        type: 'button-block button-assertive transparent',
+                        onTap: function() {
+                            netatmoService.disconnect(user.uid);
+                        }
+                    }]
+                });
+            };
+
 
 
 

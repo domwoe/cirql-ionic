@@ -14,9 +14,10 @@
 /*-o-user-select: text;*/
 /*user-select: text;*/
 /*}*/
-/*[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {*/
-/*display: none !important;*/
-/*}*/
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
 
 a {
     text-decoration: none !important;
@@ -37,7 +38,7 @@ a {
     width: 100%;
     list-style: none;
     margin: 0 0 0 45px;
-    height: 206px;
+    height: 100%;
     background-color: #000;
 }
 .menu .list .item {
@@ -77,7 +78,7 @@ a {
     left: -30%;
 }
 .has-header {
-    top: 20%;
+    top: 12%;
 }
 .title {
     position: relative;
@@ -97,14 +98,14 @@ a {
 }
 .transparent .item-input-wrapper input {
     color: #fff;
-    font-size: 4vh; //20px;
+    font-size: 3vh; //20px;
     line-height: 5vh; //24px;
     height: inherit;
     padding: 0px;
 }
 .transparent .item-input-wrapper {
     min-height: 7vh;
-    font-size: 4vh;
+    font-size: 3vh;
     line-height: 7vh;
     padding-left: 15px;
     padding-right: 15px;
@@ -112,8 +113,9 @@ a {
     border-radius: 46px;
 }
 .button {
+    font-weight: 600;
     min-height: 7vh;
-    font-size: 4vh;
+    font-size: 3vh;
     line-height: 7vh;
 }
 .item-input-inset {
@@ -136,31 +138,118 @@ input:-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.80);
     font-weight: 400;
 }
+
+.item-select {
+    padding: 0px 15px 0px 15px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 46px;
+}
+
+.item-select .input-label {
+    padding: 0;
+    color: rgba(255, 255, 255, 0.80);
+    font-weight: 400;
+    min-height: 7vh;
+    font-size: 3vh;
+    line-height: 7vh;
+}
+
+.item-select select {
+    padding: 0px 35px 0px 0px;
+    color: #fff;
+    font-weight: 400;
+    min-height: 7vh;
+    font-size: 3vh;
+    line-height: 7vh;
+}
+
+// Wizard View
+// -------------------------------
+.create {
+    padding: 5% 13% 0% 13%;
+}
+
+.step {
+    font-size: 5vw;
+    color: #fff;
+    width: 10vw;
+    height: 10vw;
+    line-height: 2;
+    border-radius: 100%;
+    -moz-border-radius: 100%; 
+    -webkit-border-radius: 100%; 
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: absolute;
+}
+.step,
+.step:focus,
+.step:hover {
+    color: #fff;
+    text-decoration: none;
+}
+.step-active {
+    background-color: #336699;
+}
+.step-done {
+    background-color: #669900;
+}
+.step-1 {
+    top: 0%;
+    left: 30%;
+}
+.step-2 {
+    top: -3%;
+    left: 45%;
+}
+.step-3 {
+    top: -0.8%;
+    left: 62%;
+}
+.step-4 {
+    top: 6%;
+    left: 75%;
+}
+
+.item-toggle .toggle {
+    right: 0px;
+}
+
+.item-toggle, {
+    padding-right: 16px;
+}
+
+
 // Home View
 // -------------------------------
 .wrapper {
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 44px;
+    top: 54px;
 }
 .has-residents {
-    top: 24%;
+    top: 120px;
 }
 .residents {
-    padding-top: 5%;
+    padding-top: 0px;
     text-align: center;
     position: relative;
     clear: both;
 }
 .away {
-    height: 10%;
+    top: 0px;
     float: right;
     padding-right: 5%;
 }
 .at-home {
-    height: 10%;
+    top: 0px;
 }
+
+.noaway {
+    top: 60px;
+}
+
 .resident {
     display: inline-block;
     float: left;
@@ -170,8 +259,8 @@ input:-ms-input-placeholder {
     text-align: center;
 }
 .avatar {
-    width: 0;
-    padding: 22px;
+    width: 0; 
+    padding: 16px;
     border-radius: 100%;
     -moz-border-radius: 100%;
     -webkit-border-radius: 100%;
@@ -183,7 +272,7 @@ input:-ms-input-placeholder {
 .rooms-table {
     position: absolute;
     overflow-x: hidden;
-    overflow-y: scroll;
+    //overflow-y: scroll;
     width: 100%;
 }
 .rooms-table::-webkit-scrollbar {
@@ -222,12 +311,12 @@ input:-ms-input-placeholder {
 }
 
 .home-mode {
-  position: absolute;
-  text-align: center;
-  letter-spacing: 2.5px;
-  font-size: 12px;
-  left: 58px;
-  top: 77px;
+    position: absolute;
+    text-align: center;
+    letter-spacing: 2.5px;
+    font-size: 12px;
+    left: 58px;
+    top: 77px;
 }
 // Select Resident View
 // -------------------------------
@@ -268,52 +357,30 @@ input:-ms-input-placeholder {
     background-color: #D80000;
 }
 .green-bg {
-    background-color: #00CC33;
+    background-color: #26A65B;
 }
 .yellow-bg {
     background-color: #FFCC00;
 }
 
-.arrow {
-  position: relative;
-  font-size: 10px;
-  top: -122px;
-}
 
-.arrow-left {
-  margin-left:auto; 
-  margin-right:-10%;
-  float:right
-  // left: 340px;
-}
-
-.arrow-right {
-  left: -93px;
-}
-.heart-beat {
-    animation: beatBeat 800ms ease alternate infinite;
-    transform-origin: center center;
-}
-@keyframes beatBeat {
-    0% {
-        transform: translate(5350, 75) scale(0.4);
-    }
-    80% {
-        transfom: translate(35, 75) scale(0.5);
-    }
-    100% {
-        transform: translate(35, 75) scale(0.6);
-        transition-property: transform;
-        transition-duration: 1s;
-    }
-}
 // Add Room View
 // -------------------------------
 .add-room {
-    padding: 13%;
+    padding-left: 13%;
+    padding-right: 13%;
+}    
+
+// Schedule View
+// -------------------------------
+.schedule-block {
+    display: block;
+    margin: 0 auto;
+
 }
 // Utility classes
 // -------------------------------
+
 .pull-left {
     float: left;
 }
@@ -341,6 +408,8 @@ input:-ms-input-placeholder {
 .aligncenter {
     text-align: center;
 }
+
+
 .center {
     display: -webkit-box;
     display: -moz-box;
@@ -365,88 +434,17 @@ input:-ms-input-placeholder {
     -webkit-align-content: stretch;
     -ms-flex-line-pack: stretch;
     align-content: stretch;
-    /*-webkit-box-align: center;*/
-    /*-moz-box-align: center;*/
-    /*-webkit-align-items: center;*/
-    /*-ms-flex-align: center;*/
-    /*align-items: center;*/
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
-/*.container {*/
-/*margin: 0;*/
-/*padding: 0;*/
-/*vertical-align: middle;*/
-/*}*/
-/*.btn-success {*/
-/*background-color: #669900;*/
-/*border-color: transparent;*/
-/*}*/
-/*.btn-primary {*/
-/*background-color: #336699;*/
-/*border-color: transparent;*/
-/*}*/
-/*.step {*/
-/*font-size: 5vw;*/
-/*color: #fff;*/
-/*width: 10vw;*/
-/*height: 10vw;*/
-/*line-height: 2;*/
-/*border-radius: 100%;*/
-/*-moz-border-radius: 100%; */
-/*-webkit-border-radius: 100%; */
-/*background-color: rgba(0, 0, 0, 0.5);*/
-/*text-align: center;*/
-/*position: absolute;*/
-/*}*/
-/*.step,*/
-/*.step:focus,*/
-/*.step:hover {*/
-/*color: #fff;*/
-/*text-decoration: none;*/
-/*}*/
-/*.step-active {*/
-/*background-color: #336699;*/
-/*}*/
-/*.step-done {*/
-/*background-color: #669900;*/
-/*}*/
-/*.step-1 {*/
-/*top: 0%;*/
-/*left: 30%;*/
-/*}*/
-/*.step-2 {*/
-/*top: -3%;*/
-/*left: 45%;*/
-/*}*/
-/*.step-3 {*/
-/*top: -0.8%;*/
-/*left: 62%;*/
-/*}*/
-/*.step-4 {*/
-/*top: 6%;*/
-/*left: 75%;*/
-/*}*/
-/*/**/
-/*.step-1 {*/
-/*margin-top: -22%;*/
-/*padding-bottom: 22%;*/
-/*margin-left: 15%;*/
-/*}*/
-/*.step-2 {*/
-/*margin-top: -15%;*/
-/*padding-bottom: 15%;*/
-/*margin-left: 23%;*/
-/*}*/
-/*.step-3 {*/
-/*margin-top: -15%;*/
-/*padding-bottom: 15%;*/
-/*margin-left: 52%;*/
-/*}*/
-/*.step-4 {*/
-/*margin-top: -15%;*/
-/*padding-bottom: 15%;*/
-/*margin-left: 76%;*/
-/*}*/
-/**/
+
+
+.activity-label {
+    color: rgba(255, 255, 255, 0.5);
+}
 
 .panel {
     background-color: rgba(255, 255, 255, 0.3);
@@ -456,7 +454,7 @@ input:-ms-input-placeholder {
 }
 .list-group-item {
     /*[>background-color: transparent;<]*/
-    
+
     background-color: rgba(0, 0, 0, 0.5);
 }
 .list-group-item .btn {
@@ -469,11 +467,11 @@ input:-ms-input-placeholder {
     height: 100%
 }
 #roomclimate {
+
     margin-top: -30px;
     height: 30%
 }
 #modeSlider {
-    
     position: relative;
     text-align: center;
     vertical-align: middle;
@@ -482,8 +480,8 @@ input:-ms-input-placeholder {
     width: 65px;
     height: 75px;
     line-height: 75px;
-    top: -145px;
-    left: 5px;
+    top: -215px;
+    left: 0px;
     z-index: 1;
 }
 #modeSlider #auto {
@@ -495,6 +493,28 @@ input:-ms-input-placeholder {
 .in-background {
     z-index: -1;
 }
+
+.arrow {
+
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+.arrow-left {
+    font-size: 12px;
+    position: relative;
+    left: -39px;
+    top: 77px;
+}
+
+.arrow-right {
+    font-size: 12px;
+    position: relative;
+    left: 39px;
+    top: -76px;
+}
+
 // CARDS
 // -------------------------------
 .card {
@@ -506,24 +526,31 @@ input:-ms-input-placeholder {
 .card .item-image .button {
     margin-bottom: 0px !important;
 }
+
 .opaque {
     background: rgba(0, 0, 0, 0.25);
 }
 // FOOTER FOR THERMOSTATS SCREN
 // -------------------------------
 .bar-footer {
-    padding: 0px !important;
+    border: 0px !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    padding-top: 0px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    height: 65px !important;
 }
+
 .bar-footer .button {
-    margin: 0px !important;
+    font-weight: 600;
 }
+
+
 // GATEWAY SCREEN
 // -------------------------------
-.scroll-content {
-    display: table !important;
-    width: 100% !important;
-    height: 100% !important;
-}
+
+
 .centerAll {
     display: table-cell;
     vertical-align: middle;
@@ -531,3 +558,43 @@ input:-ms-input-placeholder {
     padding-left: 10%;
     padding-right: 10%;
 }
+
+.popup {
+  border-style: none !important;
+  color: #000;
+  //background: black !important;
+}
+
+.popup-head {
+  //color: #fff;
+  border-style: none !important;
+  font-weight: 600 !important;
+  //background: black !important;
+}
+
+.popup-body {
+  //color: #fff;
+  border-style: none !important;
+  font-weight: 600 !important;
+  //background: rgba(0,0,0,0.75) !important;
+}
+
+.popup-title {
+  font-weight: 300 !important;
+  border-style: none !important;
+  color: #000 !important;
+  font-size: 18px;
+}
+
+.popup-buttons.row {
+
+}
+
+.popup-buttons .button {
+    border-radius: 24px;
+    font-size: 14px;
+
+}
+
+
+

@@ -8,8 +8,12 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-.controller('ResidentCtrl', ['$scope', '$localStorage', 'user', 'fbutil', '$state', 
-  function ($scope, $localStorage, user, fbutil, $state) {
+.controller('ResidentCtrl', ['$scope', '$localStorage', 'user', 'fbutil', '$state', '$ionicLoading',
+  function ($scope, $localStorage, user, fbutil, $state, $ionicLoading) {
+
+    // hide Loading in case one arrives at this state
+    // with a loading screen
+    $ionicLoading.hide();
 
     if(user) {
       $scope.user = user;

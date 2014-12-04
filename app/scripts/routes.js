@@ -18,16 +18,42 @@ angular.module('cirqlApp')
     .state('create', {
       url: '/create',
       templateUrl: 'templates/create.html',
-      controller: 'CreateCtrl'
+      controller: 'LoginCtrl'
     })
 
-    .state('create.user', {
-      url: '/user',
-      views: {
-        'menuContent' :{
-          templateUrl: 'templates/create_user.html'
-        }
+    .state('wizard', {
+      url: '/wizard',
+      abstract: true,
+      template: '<ion-nav-view/>',
+      controller: 'WizardCtrl',
+      resolve: {
+        // controller will not be invoked until getCurrentUser resolves
+        'user': ['simpleLogin', function(simpleLogin) {
+          // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
+          // since $getCurrentUser returns a promise resolved when auth is initialized,
+          // we can simple return that here to ensure the controller waits for auth before
+          // loading
+          return simpleLogin.getUser();
+        }]
       }
+    })
+
+    .state('wizard.resident', {
+      url: '/resident',
+      templateUrl: 'templates/wizard_resident.html',
+      controller: 'WizardCtrl'
+    })
+
+    .state('wizard.home', {
+      url: '/home',
+      templateUrl: 'templates/wizard_home.html',
+      controller: 'WizardCtrl'
+    })
+
+    .state('wizard.room', {
+      url: '/room',
+      templateUrl: 'templates/wizard_room.html',
+      controller: 'WizardCtrl'
     })
 
     .state('app', {
@@ -78,7 +104,7 @@ angular.module('cirqlApp')
     })
 
     .state('app.gateway', {
-      url: '/gateway',
+      url: '/gateway/:home',
       views: {
         'menuContent' :{
           templateUrl: 'templates/gateway.html',
@@ -87,13 +113,12 @@ angular.module('cirqlApp')
       }
     })
 
-
     .state('app.addRoom', {
       url: '/rooms/add',
       views: {
         'menuContent' :{
           templateUrl: 'templates/add_room.html',
-          controller: 'CreateCtrl'
+          controller: 'WizardCtrl'
         }
       }
     })
@@ -108,8 +133,18 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.schedule', {
+      url: '/rooms/:roomId/schedule',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/schedule.html',
+          controller: 'ScheduleCtrl'
+        }
+      }
+    })
+
     .state('app.thermostats', {
-      url: '/rooms/:roomId/thermostats',
+      url: '/rooms/:roomId/thermostats:/fromRoom',
       views: {
         'menuContent' :{
           templateUrl: 'templates/thermostats.html',
@@ -117,8 +152,6 @@ angular.module('cirqlApp')
         }
       }
     })
-
-   
 
     .state('app.netatmo', {
       url: '/rooms/:roomId/netatmo',

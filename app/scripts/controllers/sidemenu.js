@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-.controller('SideMenuCtrl', ['$scope', 'user', '$state', '$window', 'simpleLogin', 'netatmoService',
-    function($scope, user, $state, $window, simpleLogin, netatmoService) {
+.controller('SideMenuCtrl', ['$scope', 'user', '$state', 'simpleLogin', 'netatmoService',
+    function($scope, user, $state, simpleLogin, netatmoService) {
 
         $scope.logout = function() {
             simpleLogin.logout();
@@ -11,10 +11,16 @@ angular.module('cirqlApp')
 
         $scope.room = $state.params.roomId;
 
+        $scope.goToSchedule = function() {
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('landscape');
+            }   
+            $state.go('app.schedule', {roomId: $state.params.roomId} );
+        }; 
+
         $scope.netatmo = function() {
             if ($state.params.hasOwnProperty('roomId')) {
 
-                console.log()
 
                 var room = $state.params.roomId;
                 
@@ -32,12 +38,15 @@ angular.module('cirqlApp')
                         isConPromise.then(function(isConnected) {
                             console.log('isConnected: ' + isConnected);
                             if ( isConnected ) {
-                                 $state.go('app.addNetatmo', {roomId: $state.params.roomId});
+                                $state.go('app.addNetatmo', {roomId: $state.params.roomId});
                             }
                         },
+                        // No Netato account connected
                         function(reject) {
-                            console.log('reject');
-                            $window(netatmoService.authorizeUrl(user.uid));
+                            netatmoService.authorizeUrl(user.uid).then(function(url) {
+                                window.open(url, '_blank', 'location=yes');
+                            });
+                            
 
                         });
                     }    

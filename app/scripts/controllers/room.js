@@ -8,17 +8,42 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope', '$ionicSideMenuDelegate', '$ionicSlideBoxDelegate',
-        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope, $ionicSideMenuDelegate, $ionicSlideBoxDelegate) {
+
+    .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$rootScope',
+        function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $rootScope) {
+
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('portrait');
+            }
 
             var room = $stateParams.roomId;
             var homeUrl = 'homes/' + user.uid;
             var roomUrl = homeUrl + '/rooms/' + room;
             var modeUrl = homeUrl + '/rooms/' + room + '/mode';
             var sensorUrl = roomUrl + '/sensors/netatmo';
+            var trvUrl = roomUrl + '/thermostats';
 
             var roomObj = fbutil.syncObject(roomUrl);
             roomObj.$bindTo($scope, 'roomValues');
+
+            var trvObj = fbutil.syncObject(trvUrl);
+
+            $scope.hasThermostats = null;
+
+            trvObj.$loaded(function(trvs) {
+                console.log(trvs);
+                if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
+                    $scope.hasThermostats = false;
+                    console.log($scope.hasThermostats);
+                }
+                else {
+
+                    $scope.hasThermostats = true;
+                    console.log($scope.hasThermostats);
+
+                }
+            });
+
 
             var modeIndex = null;
 
@@ -56,10 +81,15 @@ angular.module('cirqlApp')
            
 
             var sensorObj = fbutil.syncObject(sensorUrl);
+            $scope.hasRoomclimate = false;
 
 
             sensorObj.$loaded()
                 .then(function() {
+                    console.log(sensorObj)
+                    if (sensorObj.hasOwnProperty('station')) {
+                        $scope.hasRoomclimate = true;
+                    }
                     var sensorStation = sensorObj.station;
                     var sensorModule = sensorObj.module;
                     var netatmoUrl = homeUrl + '/sensors/netatmo/stations/' +
@@ -72,12 +102,17 @@ angular.module('cirqlApp')
                     });
                 });
 
-        
+            $scope.goToSchedule = function(room) {
+                console.log("Render schedule for ", room);
+                $state.go('app.schedule', {roomId: room});
+            };
+
+
             $scope.roomId = room;
             $scope.user = user;
             $scope.logout = simpleLogin.logout;
-            $scope.min = 0;
-            $scope.max = 30;
+            $scope.min = 10;
+            $scope.max = 28;
             $scope.stroke = 12;
             $scope.radius = 110;
             $scope.currentColor = '#FFFFFF';
