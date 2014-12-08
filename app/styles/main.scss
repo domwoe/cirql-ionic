@@ -98,15 +98,15 @@ a {
 }
 .transparent .item-input-wrapper input {
     color: #fff;
-    font-size: 3vh; //20px;
-    line-height: 5vh; //24px;
+    font-size: 20px;
+    line-height: 32px;
     height: inherit;
     padding: 0px;
 }
 .transparent .item-input-wrapper {
-    min-height: 7vh;
-    font-size: 3vh;
-    line-height: 7vh;
+    min-height: 32px;
+    font-size: 20px;
+    line-height: 32px;
     padding-left: 15px;
     padding-right: 15px;
     background-color: rgba(255, 255, 255, 0.25);
@@ -114,9 +114,9 @@ a {
 }
 .button {
     font-weight: 600;
-    min-height: 7vh;
-    font-size: 3vh;
-    line-height: 7vh;
+    min-height: 32px;
+    font-size: 20px;
+    line-height: 32px;
 }
 .item-input-inset {
     padding-left: 0px;
@@ -149,18 +149,18 @@ input:-ms-input-placeholder {
     padding: 0;
     color: rgba(255, 255, 255, 0.80);
     font-weight: 400;
-    min-height: 7vh;
-    font-size: 3vh;
-    line-height: 7vh;
+    min-height: 32px;
+    font-size: 20px;
+    line-height: 32px;
 }
 
 .item-select select {
     padding: 0px 35px 0px 0px;
     color: #fff;
     font-weight: 400;
-    min-height: 7vh;
-    font-size: 3vh;
-    line-height: 7vh;
+    min-height: 32px;
+    font-size: 20px;
+    line-height: 32px;
 }
 
 // Wizard View
