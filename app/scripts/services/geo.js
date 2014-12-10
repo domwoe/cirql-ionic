@@ -6,6 +6,8 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
         var user = simpleLogin.getUser();
         var fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
         var fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+        var fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
+        var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
 
         var service = {
             init: function() {
@@ -18,7 +20,6 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                         var callbacktype = result.callbacktype;
                         var regionId = result.regionId;
-                        var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
 
                         var date = new Date();
                         date = date + '';
@@ -39,71 +40,66 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                             fbLocation.altitude = result.new_altitude;
                             fbLocation.lat = result.new_latitude;
                             fbLocation.lng = result.new_longitude;
-                            fbLocation.lastMsg = {
-                                'type': 'locationupdate',
-                                'date': date
-                            };
                             fbLocation.$save();
 
                         } else if (callbacktype === 'monitorremoved') { // monitor for region with id fid removed
 
                             console.log('monitorfail');
-                            fbLocation.lastMsg = {
-                                'type': 'monitorremoved',
-                                'date': date
-                            };
-                            fbLocation.$save();
+                            // fbRegions.lastMsg = {
+                            //     'type': 'monitorremoved',
+                            //     'date': date
+                            // };
+                            // fbRegions.$save();
 
                         } else if (callbacktype === 'monitorfail') { // monitor for region with id fid failed
 
                             console.log('monitorfail');
-                            fbLocation.lastMsg = {
-                                'type': 'monitorfail',
-                                'date': date
-                            };
-                            fbLocation.$save();
+                            // fbRegions.lastMsg = {
+                            //     'type': 'monitorfail',
+                            //     'date': date
+                            // };
+                            // fbRegions.$save();
 
                         } else if (callbacktype === 'monitorstart') { // monitor for region with id fid succeeded
 
                             console.log('monitorstart');
-                            fbLocation.lastMsg = {
-                                'type': 'monitorstart',
-                                'date': date
-                            };
-                            fbLocation.$save();
+                            // fbRegions.lastMsg = {
+                            //     'type': 'monitorstart',
+                            //     'date': date
+                            // };
+                            // fbRegions.$save();
 
                         } else if (callbacktype === 'enter') {
-
-                            
                             console.log('enter region ' + regionId);
-                            fbLocation.lastMsg = {
-                                'type': 'enter',
-                                'regionId': regionId,
-                                'date': date
-                            };
-                            if(regionId === "1") {
-                                fbLocation.homeregion = true;
+                            if (regionId) {
+                                if (radius[regionId - 1]) {
+                                    fbRegions['reg' + regionId] = {
+                                        'isInside': true,
+                                        'radius': radius[regionId - 1],
+                                        'date': date
+                                    };
+
+                                    fbRegions.$save();
+                                } else {
+                                    console.log('something wrong here1');
+                                }
                             }
-                            else {
-                                fbLocation['region'+radius[regionId-1]] = true;
-                            }
-                            fbLocation.$save();
 
                         } else if (callbacktype === 'exit') {
-
                             console.log('exit region ' + regionId);
-                            fbLocation.lastMsg = {
-                                'type': 'exit',
-                                'regionId': regionId,
-                                'date': date
-                            };
-                            if(regionId === 1) {
-                                fbLocation.homeregion = false;
+                            if (regionId) {
+                                if (radius[regionId - 1]) {
+                                    fbRegions['reg' + regionId] = {
+                                        'isInside': false,
+                                        'radius': radius[regionId - 1],
+                                        'date': date
+                                    };
+
+                                    fbRegions.$save();
+                                } else {
+                                    console.log('something wrong here2');
+                                }
                             }
-                            else {
-                                    fbLocation['region'+radius[regionId-1]] = false;                            
-                            }
-                            fbLocation.$save();
                         }
 
                     },
@@ -122,7 +118,6 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                 var lat = '41.1';
                 var lng = '-73.2';
-                var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
 
                 console.log('isLat: ' + fbHome.hasOwnProperty('lat'));
 
@@ -138,7 +133,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                     console.log('length: ' + radius.length);
                     for (var i = 1; i <= radius.length; i++) {
 
-                        var params = ['' + i, lat, lng, radius[i-1]];
+                        var params = ['' + i, lat, lng, radius[i - 1]];
 
                         window.plugins.DGGeofencing.startMonitoringRegion(params,
                             function(result) {

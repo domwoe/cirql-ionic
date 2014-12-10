@@ -8,7 +8,7 @@ angular.module('cirqlApp', [
   'ngStorage'
 ])
 
-.run(function($ionicPlatform, discovery) {
+.run(function($ionicPlatform, geo) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,30 +21,32 @@ angular.module('cirqlApp', [
     }
 
     
-    // Find Gateway
-    
-    if (window.cordova && window.Discovery)  {
-    
-      var params = { 
-        clientName: 'cirqlApp',
-        port: 5353
-      };
-
-      discovery.identify(params).then(function(result) {
-        console.log(result);
-      }, function(reason) {
-        console.log(reason);
-      });
-
-    }  
-        if (window.plugins && window.plugins.DGGeofencing) {
+     if (window.plugins && window.plugins.DGGeofencing) {
             
             geo.init()
 
             geo.monitorRegion();
 
             geo.startMonitoringSignificantLocationChanges();
-        }
+      }
+
+    // Find Gateway
+    
+    // if (window.cordova && window.Discovery)  {
+    
+    //   var params = { 
+    //     clientName: 'cirqlApp',
+    //     port: 5353
+    //   };
+
+    //   discovery.identify(params).then(function(result) {
+    //     console.log(result);
+    //   }, function(reason) {
+    //     console.log(reason);
+    //   });
+
+    // }  
+       
 
 
 
