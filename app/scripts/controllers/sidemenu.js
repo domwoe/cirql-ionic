@@ -14,7 +14,9 @@ angular.module('cirqlApp')
         if ($scope.room) {
             var usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
             usesAutoAway.$bindTo($scope, 'usesAutoAway');
-            setTimeout(function() {console.log($scope.usesAutoAway)},5000);
+        
+            var mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
+            mode.$bindTo($scope, 'mode');
         }
 
         $scope.goToSchedule = function() {

@@ -20,7 +20,7 @@
           Add Room
         </div>
         
-          <ion-toggle ng-show="isRoom()"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
+          <ion-toggle ng-show="isRoom() && mode.$value === 'auto'"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
       
          <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           Schedule
