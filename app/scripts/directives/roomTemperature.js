@@ -82,10 +82,12 @@ angular.module('cirqlApp')
                     displaytarget: '=',
                     hasthermostats: '=',
                     displaymode: '=',
+                    isaway: '=',
+                    mode: '=',
+                    usesautoaway: '=',
                     roomid: '=',
                     targettemp: '=',
                     measuredtemp: '=',
-                    mode: '=',
                     scale: '=',
                     min: '=',
                     max: '=',
@@ -208,7 +210,7 @@ angular.module('cirqlApp')
                             });
 
                             // Show UI info
-                            d3.select('#room-temperature').on('click', function() {
+                            ring_background.on('click', function() {
                                 d3.selectAll('.info').remove();
                                 var x = bgTargetIcon.attr('cx');
                                 var y = bgTargetIcon.attr('cy');
@@ -350,8 +352,20 @@ angular.module('cirqlApp')
                             .attr('text-anchor', 'middle')
                             .text(msg)
 
-                        $timeout(scope.$apply());
+                        $timeout(scope.$apply);
 
+                    }
+
+                    function showAwayOrTarget() {
+                        if (scope.isaway && scope.mode === 'auto' && scope.usesautoaway) {
+                            d3.selectAll('.target'+scope.roomid).style('visibility', 'hidden');
+                            d3.select('#labelaway'+scope.roomid).style('visibility', 'visible');
+                            
+                        }
+                        else {
+                            d3.selectAll('.target'+scope.roomid).style('visibility', 'visible');
+                            d3.select('#labelaway'+scope.roomid).style('visibility', 'hidden');
+                        }
                     }
 
                     scope.$watch('targettemp', renderState);
@@ -365,7 +379,12 @@ angular.module('cirqlApp')
                             else if (hasThermostats === true) {
                                 d3.select('#scaling' + scope.roomid+ '.warning').remove();
                             }
-                        });
+                        }
+                    );
+
+                    scope.$watch('isaway', showAwayOrTarget);
+                    scope.$watch('mode', showAwayOrTarget);
+                    scope.$watch('usesautoaway', showAwayOrTarget);
 
                     renderCircle();
                     //heartbeat();
@@ -375,16 +394,16 @@ angular.module('cirqlApp')
                 template: '\
                 <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
                     <g id="scaling{{roomid}}">\
+                        <circle fill="none"/>\
                         <g id="label" fill="#FFF" font-weight="normal">\
-                            <circle fill="none"/>\
-                            <g id="heart{{roomid}}" visibility="hidden" transform="translate(35,75) scale(0.6)">\
-                                <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
-                            </g>\
-                            <text font-size="64">\
+                            <text id="labelaway{{roomid}}" font-size="48">\
+                                <tspan text-anchor="middle" x="132" y="130">AWAY</tspan>\
+                            </text>\
+                            <text class="target{{roomid}}" font-size="64">\
                                 <tspan text-anchor="end" x="177" y="130">{{temp}}°</tspan>\
                             </text>\
-                            <text font-size="28" fill="#FFFFFF">\
-                                <tspan x="150" y="130">.{{dotTemp}}</tspan>\
+                            <text class="target{{roomid}}" font-size="28" fill="#FFFFFF">\
+                                <tspan  x="150" y="130">.{{dotTemp}}</tspan>\
                             </text>\
                         </g>\
                         <g id="leaf" visibility="{{leafVisibility}}" transform="translate(60,105)" fill="#26A65B">\
@@ -392,7 +411,7 @@ angular.module('cirqlApp')
                         </g>\
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
-                            <path id="target_path{{roomid}}" fill="none" />\
+                            <path id="target_path{{roomid}}" class="target{{roomid}}" fill="none" />\
                             <g id="thermoIcon{{roomid}}" visibility="hidden">\
                                 <g id="tempDrawer{{roomid}}" visibility="visible">\
                                     <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\
@@ -407,11 +426,11 @@ angular.module('cirqlApp')
                                 </g>\
                             </g>\
                         </g>\
-                        <ellipse id="bgTargetIcon{{roomid}}" fill="#000000" cx="16" cy="16" rx="17" ry="17"></ellipse>\
-                        <g id="targetIcon{{roomid}}" transform="scale(0.6)">\
+                        <ellipse id="bgTargetIcon{{roomid}}" class="target{{roomid}}" fill="#000000" cx="16" cy="16" rx="17" ry="17"></ellipse>\
+                        <g id="targetIcon{{roomid}}" class="target{{roomid}}" transform="scale(0.6)">\
                             <path d="M34.17748,48.2729852 L34,48.43866 L33.82048,48.2729852 C25.738646,40.7478615 20.4,35.7777919 20.4,30.7424988 C20.4,27.2602413 22.957463,24.6386905 26.35,24.6386905 C28.963546,24.6386905 31.51528,26.3826357 32.41288,28.7530933 L35.58508,28.7530933 C36.48268,26.3826357 39.03438,24.6386905 41.65,24.6386905 C45.05,24.6386905 47.6,27.2602413 47.6,30.7424988 C47.6,35.7777919 42.25928,40.7478615 34.17748,48.2729852 L34.17748,48.2729852 Z M41.65,21.1508 C38.68928,21.1508 35.85368,22.5550945 34,24.785583 C32.14428,22.5550945 29.308663,21.1508 26.35,21.1508 C21.106129,21.1508 17,25.3611198 17,30.7424988 C17,37.3229274 22.78238,42.706312 31.53568,50.8559425 L34,53.1508 L36.46228,50.8559425 C45.21558,42.706312 51,37.3229274 51,30.7424988 C51,25.3611198 46.89178,21.1508 41.65,21.1508 L41.65,21.1508 Z" fill="#FFFFFF"></path>\
                         </g>\
-                        <ellipse id="bgTargetHandle{{roomid}}" fill="#000000" fill-opacity="0" cx="16" cy="16" rx="30" ry="30"></ellipse>\
+                        <ellipse id="bgTargetHandle{{roomid}}" class="target{{roomid}}" fill="#000000" fill-opacity="0" cx="16" cy="16" rx="30" ry="30"></ellipse>\
                     </g>\
                 </svg>'
             };
