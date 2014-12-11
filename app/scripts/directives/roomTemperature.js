@@ -147,6 +147,7 @@ angular.module('cirqlApp')
                             if (scope.displaytarget) {
                                 bgTargetHandle.call(d3.behavior.drag()
                                     .on('dragstart', function() {
+                                        d3.selectAll('.info').remove();
                                         $ionicSideMenuDelegate.canDragContent(false);
                                         mouseDragCallback();
                                         clearTimeout(targetTimer);
@@ -204,6 +205,36 @@ angular.module('cirqlApp')
                                 'r': radius,
                                 'fill': scope.bgcolor,
                                 'fill-opacity': 0.3
+                            });
+
+                            // Show UI info
+                            d3.select('#room-temperature').on('click', function() {
+                                d3.selectAll('.info').remove();
+                                var x = bgTargetIcon.attr('cx');
+                                var y = bgTargetIcon.attr('cy');
+                                scalingContainer.append('text')
+                                    .text('Move me!')
+                                    .attr('font-weight', 600)
+                                    .attr('fill', '#ffffff')
+                                    .attr('class', 'info')
+                                    .attr('x', x)
+                                    .attr('y', y-20)
+                                    .attr('text-anchor', 'middle');
+                                scalingContainer.append('text')
+                                    .text('Swipe me!')
+                                    .attr('font-weight', 600)
+                                    .attr('fill', '#ffffff')
+                                    .attr('class', 'info')
+                                    .attr('x', 125)
+                                    .attr('y', 170)
+                                    .attr('text-anchor', 'middle');
+                                    
+                                    d3.selectAll('.info')
+                                        .transition()
+                                        .style("opacity",0)
+                                        .duration(1000)
+                                        .delay(1500);
+                  
                             });
 
                             renderState(scope.targettemp, scope.targettemp);

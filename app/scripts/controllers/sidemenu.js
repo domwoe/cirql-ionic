@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-.controller('SideMenuCtrl', ['$scope', 'user', '$state', 'simpleLogin', 'netatmoService',
-    function($scope, user, $state, simpleLogin, netatmoService) {
+.controller('SideMenuCtrl', ['$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil',
+    function($scope, user, $state, simpleLogin, netatmoService, fbutil) {
 
         $scope.logout = function() {
             simpleLogin.logout();
@@ -10,6 +10,12 @@ angular.module('cirqlApp')
         };
 
         $scope.room = $state.params.roomId;
+
+        if ($scope.room) {
+            var usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
+            usesAutoAway.$bindTo($scope, 'usesAutoAway');
+            setTimeout(function() {console.log($scope.usesAutoAway)},5000);
+        }
 
         $scope.goToSchedule = function() {
             if (window.screen.hasOwnProperty('lockOrientation')) {

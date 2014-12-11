@@ -19,6 +19,9 @@
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
           Add Room
         </div>
+        
+          <ion-toggle ng-show="isRoom()"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
+      
          <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           Schedule
         </div>

@@ -22,15 +22,31 @@
 
             <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
                 <div class="field">
-                    <climateindicator class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2"></climateindicator>
+                    <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2"></climateindicator>
                     <div class="alignleft">Air Quality</div>
                     <div class="alignright">{{sensor.co2}}ppm</div>
                 </div>
                 <div class="field">
-                    <climateindicator class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity"></climateindicator>
+                    <climateindicator ng-click="openHumidityPopover($event)" class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity"></climateindicator>
                     <div class="alignleft">Humidity</div>
                     <div class="alignright">{{sensor.humidity}}%</div>
                 </div>
             </div>
     </ion-content>
 </ion-view>
+
+<script id="airquality.html" type="text/ng-template">
+  <ion-popover-view class="rc-popup">
+    <ion-content>
+      This is an airquality popup
+    </ion-content>
+  </ion-popover-view>
+</script>
+
+<script id="humidity.html" type="text/ng-template">
+  <ion-popover-view>
+    <ion-content>
+      This is an humidity popup
+    </ion-content>
+  </ion-popover-view>
+</script>
