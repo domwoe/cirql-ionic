@@ -214,14 +214,17 @@ angular.module('cirqlApp')
                                 d3.selectAll('.info').remove();
                                 var x = bgTargetIcon.attr('cx');
                                 var y = bgTargetIcon.attr('cy');
+                                // Show only if not currently away
+                                if (!(scope.isaway && scope.mode === 'auto' && scope.usesautoaway)) {
                                 scalingContainer.append('text')
                                     .text('Move me!')
                                     .attr('font-weight', 600)
                                     .attr('fill', '#ffffff')
-                                    .attr('class', 'info')
+                                    .attr('class', 'info target')
                                     .attr('x', x)
                                     .attr('y', y-20)
                                     .attr('text-anchor', 'middle');
+                                }    
                                 scalingContainer.append('text')
                                     .text('Swipe me!')
                                     .attr('font-weight', 600)
