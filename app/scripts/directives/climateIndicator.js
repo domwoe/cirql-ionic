@@ -67,8 +67,7 @@ angular.module('cirqlApp')
                       findState(newValue, scope.thresholds,function(state) {
                         var cssClass = state+'-bg';
 
-
-                          element.addClass(cssClass);
+                        element.addClass(cssClass);
                       });
                      
                     })
