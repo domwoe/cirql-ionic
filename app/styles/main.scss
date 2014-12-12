@@ -28,6 +28,7 @@ a {
     background: url(../images/background.png) no-repeat 0 0 fixed;
     background-size: 100% 100%;
 }
+
 // SIDE MENU
 // -------------------------------
 .menu {
@@ -363,16 +364,22 @@ input:-ms-input-placeholder {
     background-color: #FFCC00;
 }
 
+.small-font {
+    font-weight: 600;
+    font-size: 14px;
+}
+
 .rc-popup {
     text-align: center;
-    min-height: 32px;
+    //min-height: 32px;
     max-height: 64px;
+    width: 240px;
     font-size: 14px;
     line-height: 32px;
     padding-left: 25px;
     padding-right: 25px;
-    background-color: rgba(0, 0, 0, 0.75);
-    border-radius: 46px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
 }
 
 

@@ -36,17 +36,17 @@
 </ion-view>
 
 <script id="airquality.html" type="text/ng-template">
-  <ion-popover-view class="rc-popup">
+  <ion-popover-view class="rc-popup small-font">
     <ion-content>
-      This is an airquality popup
+      {{roomValues.airQualityMsg}}
     </ion-content>
   </ion-popover-view>
 </script>
 
 <script id="humidity.html" type="text/ng-template">
-  <ion-popover-view>
+  <ion-popover-view class="rc-popup small-font">
     <ion-content>
-      This is an humidity popup
+      {{roomValues.humidityMsg}}
     </ion-content>
   </ion-popover-view>
 </script>

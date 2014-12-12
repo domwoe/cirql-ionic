@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading',
-        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading) {
+    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'datePicker', '$ionicNavBarDelegate',
+        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, datePicker, $ionicNavBarDelegate) {
 
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
@@ -60,8 +60,8 @@ angular.module('cirqlApp')
                 $scope.residents = residents;
 
                 rooms.$loaded().then(function() {
-                  $ionicLoading.hide();
-                });  
+                    $ionicLoading.hide();
+                });
 
                 // console.log("home data loaded for user", user.uid);
                 // console.log("home", home);
@@ -93,5 +93,23 @@ angular.module('cirqlApp')
                     })
                     .catch(error);
             };
+
+            $scope.showDatePicker = function() {
+                var options = {
+                    date: new Date(),
+                    mode: 'date'
+                };
+                //var options = {date: new Date(), mode: 'time'}; for time
+                //
+                datePicker.show(options).then(function(date) {
+                    alert(date);
+                });
+            };
+
+            $scope.goBack = function() {
+                $ionicNavBarDelegate.back();
+            };
+
+
         }
     ]);
