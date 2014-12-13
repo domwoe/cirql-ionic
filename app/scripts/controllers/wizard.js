@@ -25,6 +25,14 @@ angular.module('cirqlApp')
             if ($scope.home && $scope.home.$destroy) {
                 $scope.home.$destroy();
             }
+            
+
+            // If you got to add new room after being in room view $scope.room is populated and can't
+            // be edited. This leads to a non responding input field
+            if ($scope.room) {
+                $scope.room = null;
+            }
+
             var home = fbutil.syncObject('homes/' + user.uid);
             home.$bindTo($scope, 'home');
 
