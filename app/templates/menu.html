@@ -19,24 +19,19 @@
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
           Add Room
         </div>
-        
-          <ion-toggle ng-show="isRoom() && mode.$value === 'auto'"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
-      
-         <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
+        <ion-toggle ng-show="isRoom() && mode.$value === 'auto'"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
+        <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.schedule({roomId: room})">
           Schedule
         </div>
-        <!-- <ion-item nav-clear menu-close ui-sref="change-password">
-          Change Password
-        </ion-item> -->
         <div class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           Thermostats
         </div>
         <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
           Netatmo
         </div>
-        <!-- <div class="item nav-clear menu-close"  ng-show="isRoom()">
+        <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.room_settings({roomId: room})">
           Room Settings
-        </div> -->
+        </div>
         <!-- <div class="item nav-clear menu-close"  ng-show="isHome()">
           Home Settings
         </div> -->

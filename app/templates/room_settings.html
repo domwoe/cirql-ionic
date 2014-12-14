@@ -1,0 +1,31 @@
+<ion-view title="{{roomValues.name}}">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-header" scroll="false">
+      <div class="create">
+      <div class="list">
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="roomValues.name" class="form-control" id="roomName" placeholder="Give your room a name">
+          </label>
+        </div>
+        <label class="item item-input item-select transparent">
+          <div class="input-label">
+            Category
+          </div>
+          <select ng-model="roomValues.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
+        </label>
+        <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
+        <div ng-cloak class="residents residents-select center">
+          <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
+          <div class="avatar"  ng-click="toggleBoundResident(resident)"></div>
+            {{resident.name}}
+          </div>
+        </div>
+        <button ui-sref="app.room({roomId: room})" class="button button-balanced button-block">Save</button>
+        <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
+      </div>
+    </div>
+    </ion-content>
+</ion-view>

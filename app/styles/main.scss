@@ -267,6 +267,9 @@ input:-ms-input-placeholder {
     -webkit-border-radius: 100%;
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
+.unselected {
+    opacity: 0.4;
+}
 .away .resident {
     float: right;
 }

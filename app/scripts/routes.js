@@ -143,6 +143,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.room_settings', {
+      url: '/rooms/:roomId/settings',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/room_settings.html',
+          controller: 'RoomCtrl'
+        }
+      }
+    })
+
     .state('app.schedule', {
       url: '/rooms/:roomId/schedule',
       views: {

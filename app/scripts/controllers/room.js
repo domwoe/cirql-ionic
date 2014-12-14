@@ -26,6 +26,12 @@ angular.module('cirqlApp')
         var roomObj = fbutil.syncObject(roomUrl);
         roomObj.$bindTo($scope, 'roomValues');
 
+        var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+        $scope.residents = residents;
+
+        var templates = fbutil.syncArray('templates');
+        $scope.categories = templates;
+
         var trvObj = fbutil.syncObject(trvUrl);
 
         $scope.hasThermostats = null;
@@ -131,16 +137,6 @@ angular.module('cirqlApp')
             $scope.humidityPopover.remove();
         });
 
-
-
-        $scope.goToSchedule = function(room) {
-            console.log("Render schedule for ", room);
-            $state.go('app.schedule', {
-                roomId: room
-            });
-        };
-
-
         $scope.roomId = room;
         $scope.user = user;
         $scope.logout = simpleLogin.logout;
@@ -159,6 +155,29 @@ angular.module('cirqlApp')
                 reload: true
             });
         };
+
+        $scope.isBoundResident = function(resident) {
+          return resident.rooms[room]
+        }
+
+        $scope.toggleBoundResident = function(resident) {
+          if(roomObj.residents === undefined) {
+            roomObj.residents = {};
+          }
+          if(resident.rooms != undefined) {
+            if(resident.rooms[room] != undefined) {
+              resident.rooms[room] = !resident.rooms[room]; 
+            } else {
+              resident.rooms[room] = true;
+            }
+          }else {
+            resident['rooms'] = {};
+            resident.rooms[room] = true;
+          }
+          residents.$save(resident);
+          roomObj.residents[resident.$id] = resident.rooms[room];
+          roomObj.$save();
+        }
 
     }
 ]);

@@ -19,6 +19,7 @@ angular.module('cirqlApp')
             $scope.resident = {
                 name: ''
             };
+            $scope.boundResidents = {};
             $scope.logout = simpleLogin.logout;
 
 
@@ -77,18 +78,40 @@ angular.module('cirqlApp')
                 $state.go('wizard.room');
             };
 
-            $scope.createRoom = function(name, category) {
+            $scope.toggleBoundResident = function(resident) {
+              if($scope.boundResidents[resident.$id] != undefined) {
+                $scope.boundResidents[resident.$id] = !$scope.boundResidents[resident.$id];
+              } else {
+                $scope.boundResidents[resident.$id] = true;
+              }
+              console.log($scope.boundResidents);
+
+            }
+
+            $scope.createRoom = function(name, category, boundResidents) {
                 $scope.errorMessage = null;
                 if (!name) {
                     $scope.errorMessage = 'Please enter a name';
                 } else if (!category) {
                     $scope.errorMessage = 'Please select a category';
                 } else {
-                    var index = $scope.rooms.$add({
+                    $scope.rooms.$add({
                         name: name,
-                        category: category
+                        category: category,
+                        residents: boundResidents
+                    }).then(function(ref) {
+                      // save bound room in resident object
+                      console.log(ref);
+                      console.log(ref.name());
+                      for (var residentId in boundResidents) {
+                        var resident = residents.$getRecord(residentId);
+                        if(resident.rooms === undefined) {
+                          resident.rooms = {};
+                        }
+                        resident.rooms[ref.name()] = boundResidents[residentId]; 
+                        residents.$save(resident);
+                      }
                     });
-                    $scope.rooms.$save(index);
                     console.log(name + ' added');
                     $state.go('app.home');
                 }

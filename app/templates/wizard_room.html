@@ -26,20 +26,24 @@
           <div class="input-label">
             Category
           </div>
-          <select ng-model="room.category" id="roomCategory">
-            <option ng-repeat="category in categories" value="{{category.$id}}">
-              {{category.$id}}
-            </option>
+          <select ng-model="room.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
+            <option value=""></option>
           </select>
         </label>
         <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
         <div ng-cloak class="residents residents-select center">
-          <div class="resident" ng-repeat="resident in residents">
-            <div class="avatar" ng-click="select(resident)"></div>
+          <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
+          <div class="avatar"  ng-click="toggleBoundResident(resident)"></div>
             {{resident.name}}
           </div>
         </div>
-        <button ng-click="createRoom(room.name, room.category)" class="button button-balanced button-block">Add room</button>
+        <!--<div ng-cloak class="residents residents-select center">-->
+          <!--<div class="resident" ng-repeat="resident in residents">-->
+            <!--<div class="avatar" ng-class="{resident-selected: selected(resident)" ng-click="select(resident)"></div>-->
+            <!--{{resident.name}}-->
+          <!--</div>-->
+        <!--</div>-->
+        <button ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">Add room</button>
         <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
       </div>
     </div>
