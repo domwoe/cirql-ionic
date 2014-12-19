@@ -16,7 +16,7 @@ angular.module('cirqlApp')
             }
 
             $ionicLoading.show({
-                template: 'Please wait...'
+                template: '<div class="loader"></div>'
             });
 
             if (user) {
