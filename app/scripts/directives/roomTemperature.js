@@ -308,12 +308,13 @@ angular.module('cirqlApp')
                     };
 
                     var renderThermoIcon = function(temp) {
-
+                        console.log('temp: '+temp)
                         if (temp) {
                             d3.select('#thermoIcon' + scope.roomid)
                                 .style('visibility', 'visible');
                         } else {
-                            d3.select('#tempDrawer' + scope.roomid)
+                            console.log('im here')
+                            d3.select('#thermoIcon' + scope.roomid)
                                 .style('visibility', 'hidden');
                         }
 
@@ -416,8 +417,8 @@ angular.module('cirqlApp')
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
                             <path id="target_path{{roomid}}" class="target{{roomid}}" fill="none" />\
-                            <g id="thermoIcon{{roomid}}" visibility="hidden">\
-                                <g id="tempDrawer{{roomid}}" visibility="visible">\
+                            <g id="thermoIcon{{roomid}}">\
+                                <g id="tempDrawer{{roomid}}">\
                                     <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\
                                      <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#000000">\
                                         <tspan x="34" y="25">{{measuredtemp}}°</tspan>\
