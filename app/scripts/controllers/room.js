@@ -49,6 +49,12 @@ angular.module('cirqlApp')
             }
         });
 
+        $scope.showNextTarget = function() {
+
+            return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
+
+        }
+
 
         var modeIndex = null;
 
@@ -157,26 +163,26 @@ angular.module('cirqlApp')
         };
 
         $scope.isBoundResident = function(resident) {
-          return resident.rooms[room]
+            return resident.rooms[room]
         }
 
         $scope.toggleBoundResident = function(resident) {
-          if(roomObj.residents === undefined) {
-            roomObj.residents = {};
-          }
-          if(resident.rooms != undefined) {
-            if(resident.rooms[room] != undefined) {
-              resident.rooms[room] = !resident.rooms[room]; 
-            } else {
-              resident.rooms[room] = true;
+            if (roomObj.residents === undefined) {
+                roomObj.residents = {};
             }
-          }else {
-            resident['rooms'] = {};
-            resident.rooms[room] = true;
-          }
-          residents.$save(resident);
-          roomObj.residents[resident.$id] = resident.rooms[room];
-          roomObj.$save();
+            if (resident.rooms != undefined) {
+                if (resident.rooms[room] != undefined) {
+                    resident.rooms[room] = !resident.rooms[room];
+                } else {
+                    resident.rooms[room] = true;
+                }
+            } else {
+                resident['rooms'] = {};
+                resident.rooms[room] = true;
+            }
+            residents.$save(resident);
+            roomObj.residents[resident.$id] = resident.rooms[room];
+            roomObj.$save();
         }
 
     }
