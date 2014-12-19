@@ -125,6 +125,8 @@ angular.module('cirqlApp')
 
                     size = radius * 2 + parseInt(stroke) * 2;
 
+                    var isAutoAway = null;
+
                     var renderCircle = function() {
                         $timeout(function() {
 
@@ -260,7 +262,7 @@ angular.module('cirqlApp')
                             }
 
 
-                            if (newValue < 21) {
+                            if (newValue < 21 && !isAutoAway) {
                                 scope.leafVisibility = 'visible';
                             } else {
                                 scope.leafVisibility = 'hidden';
@@ -354,11 +356,19 @@ angular.module('cirqlApp')
                         if (scope.isaway && scope.mode === 'auto' && scope.usesautoaway) {
                             d3.selectAll('.target'+scope.roomid).style('visibility', 'hidden');
                             d3.select('#labelaway'+scope.roomid).style('visibility', 'visible');
+                            isAutoAway = true;
                             
                         }
                         else {
                             d3.selectAll('.target'+scope.roomid).style('visibility', 'visible');
                             d3.select('#labelaway'+scope.roomid).style('visibility', 'hidden');
+                            isAutoAway = false;
+                            if (scope.targettemp < 21) {
+                                scope.leafVisibility = 'visible';
+                            }
+                            else {
+                                 scope.leafVisibility = 'hidden';
+                            }
                         }
                     }
 
@@ -400,8 +410,8 @@ angular.module('cirqlApp')
                                 <tspan  x="150" y="130">.{{dotTemp}}</tspan>\
                             </text>\
                         </g>\
-                        <g id="leaf" visibility="{{leafVisibility}}" transform="translate(60,105)" fill="#26A65B">\
-                            <path class="target{{roomid}}" d="M11.9412,-0.0695918367 C11.9412,-0.0695918367 10.3218,1.53346939 8.5706,2.17979592 C-4.3978,6.96632653 1.0716,16.2938776 1.25,16.3244898 C1.25,16.3244898 1.9772,15.0322449 2.9596,14.2953061 C9.1932,9.61918367 10.4602,4.23673469 10.4602,4.23673469 C10.4602,4.23673469 9.0612,10.7134694 3.5156,14.7434694 C2.2908,15.6332653 1.4614,17.8236735 1.1104,20.0128571 C1.1104,20.0128571 1.9786,19.655102 2.352,19.5579592 C2.4976,18.5885714 2.802,17.6602041 3.3166,16.8310204 C11.0674,17.7726531 13.6058,11.3997959 13.9374,9.17755102 C14.72,3.92918367 11.9412,-0.0695918367 11.9412,-0.0695918367 L11.9412,-0.0695918367 Z"></path>\
+                        <g id="leaf" visibility={{leafVisibility}} transform="translate(60,105)" fill="#26A65B">\
+                            <path d="M11.9412,-0.0695918367 C11.9412,-0.0695918367 10.3218,1.53346939 8.5706,2.17979592 C-4.3978,6.96632653 1.0716,16.2938776 1.25,16.3244898 C1.25,16.3244898 1.9772,15.0322449 2.9596,14.2953061 C9.1932,9.61918367 10.4602,4.23673469 10.4602,4.23673469 C10.4602,4.23673469 9.0612,10.7134694 3.5156,14.7434694 C2.2908,15.6332653 1.4614,17.8236735 1.1104,20.0128571 C1.1104,20.0128571 1.9786,19.655102 2.352,19.5579592 C2.4976,18.5885714 2.802,17.6602041 3.3166,16.8310204 C11.0674,17.7726531 13.6058,11.3997959 13.9374,9.17755102 C14.72,3.92918367 11.9412,-0.0695918367 11.9412,-0.0695918367 L11.9412,-0.0695918367 Z"></path>\
                         </g>\
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
