@@ -26,6 +26,10 @@ angular.module('cirqlApp')
         var roomObj = fbutil.syncObject(roomUrl);
         roomObj.$bindTo($scope, 'roomValues');
 
+        $scope.nextTargetDate = function(dateString) {
+            return new Date(dateString);
+        };    
+
         var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
         $scope.residents = residents;
 

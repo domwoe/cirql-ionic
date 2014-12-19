@@ -22,7 +22,7 @@
             <div ng-show="showNextTarget()" id="nextTarget">
                 Next
                 <br>{{roomValues.nextTarget}}°
-                <br>4:00
+                <br>{{nextTargetDate(roomValues.nextTargetDate) | date:'H:mm'}}
             </div>
         </div>
 
