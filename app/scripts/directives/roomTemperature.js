@@ -120,15 +120,6 @@ angular.module('cirqlApp')
 
                     };
 
-                    // var heartbeat = function() {
-                    //     var heart = d3.select('#heart' + scope.roomid);
-                    //     console.log(heart);
-                    //     heart.classed('heart-beat', true);
-                    //     setTimeout(function() {
-                    //          heart.classed('heart-beat', false);    
-                    //     }, 2000);
-                    // };
-
                     var radius = scope.radius,
                         stroke = scope.stroke;
 
@@ -395,7 +386,7 @@ angular.module('cirqlApp')
                 },
                 replace: true,
                 template: '\
-                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg" >\
                     <g id="scaling{{roomid}}">\
                         <circle fill="none"/>\
                         <g id="label" fill="#FFF" font-weight="normal">\
