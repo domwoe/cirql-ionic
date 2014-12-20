@@ -20,7 +20,7 @@
           Add Room
         </div>
         <ion-toggle ng-show="isRoom() && mode.$value === 'auto'"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
-        <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.schedule({roomId: room})">
+        <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           Schedule
         </div>
         <div class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
