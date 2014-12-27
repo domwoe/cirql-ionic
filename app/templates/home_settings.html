@@ -1,0 +1,44 @@
+<ion-view title="Home Settings">
+  <ion-nav-buttons side="left">
+  <button class="button-clear" ui-sref="app.home">
+    <i class="ion-chevron-left"></i> Home
+  </button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" scroll="false">
+    <div class="create">
+      <div class="title">
+        <h1></h1>
+      </div>
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
+      </div>
+      <div class="list">
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="home.name" placeholder="Give your home a name">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="home.address" placeholder="Address">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="home.city" placeholder="City">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="home.postcode" placeholder="Postcode">
+          </label>
+        </div>
+        <div class="item item-input-inset transparent">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="home.country" placeholder="Country">
+          </label>
+        </div>
+        <button ng-click="saveHome(home)" type="submit" class="button button-stable button-balanced button-block">Save</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
