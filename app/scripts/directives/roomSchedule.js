@@ -107,12 +107,35 @@ angular.module('cirqlApp')
                         }
 
                         this.selectDay = function(day) {
+                            var weekdays = d3.select('#weekdays');
+                            weekdays.append('rect')
+                                .attr('id', 'week_column')
+                                .attr('fill', '#483e37')
+                                .attr('fill-opacity', 1)
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 1)
+                                .attr('x', 0)
+                                .attr('y', 0)
+                                .attr('height', 210)
+                                .attr('width', 95);
+                            weekdays.append('rect')
+                                .attr('id', 'schedule_column')
+                                .attr('fill', '#b3b3b3')
+                                .attr('fill-opacity', 1)
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 1)
+                                .attr('x', 95)
+                                .attr('y', 0)
+                                .attr('height', 210)
+                                .attr('width', 650);
+
                             var dayGroup = d3.select(day);
                             var rectangles = dayGroup.selectAll('rect')[0];
                             var rec1 = d3.select(rectangles[0]);
                             var rec2 = d3.select(rectangles[1]);
                             rec1.attr('fill-opacity', 1);
                             rec2.attr('fill-opacity', 1);
+                            rec2.attr('stroke-width', 0);
                             // Move to front
                             dayGroup.moveToFront();
                         }
@@ -388,7 +411,9 @@ angular.module('cirqlApp')
                         }
 
                         this.addEntryCallback = function(self) {
+                            console.log("CLICK ON ADD");
                             if (self.selectedDay != null) {
+                                console.log("Adding entry callback");
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
                                 var groupId = this.weekDays[index];
@@ -399,7 +424,6 @@ angular.module('cirqlApp')
 
                                 // Update local schedule
                                 self.updateSchedule(id, 0, 0, self.defaultTemperature, index + 1);
-
                                 self.nextId++;
                             }
                         }
@@ -501,6 +525,7 @@ angular.module('cirqlApp')
                         }
 
                         this.attachListeners = function() {
+                            console.log("Attaching listeners");
                             var self = this;
                             var allDays = d3.selectAll('g.parent');
                             allDays.on('click', function() {
@@ -514,6 +539,7 @@ angular.module('cirqlApp')
                             });
 
                             var addButton = d3.select('#add');
+                            console.log("Add button: ", addButton);
                             addButton.on('click', function() {
                                 self.addEntryCallback(self);
                             });
@@ -545,15 +571,12 @@ angular.module('cirqlApp')
 
                     var scheduler = new Schedule();
 
-                    
-
                     var renderState = function() {
                         if (scope.schedule && !scheduler.rendered) {
                             scheduler.renderScheduleEntries();
                             scheduler.attachListeners();
                             scheduler.rendered = true;
                         }
-
                     };
 
                     var sync = function() {
@@ -569,89 +592,89 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
-		<svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
-		    <g id="weekdays"> \
-		    	<g id="monday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
-				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                        <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
-                    </text> \
-				    <rect id="r1" fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
-				</g> \
-				<g id="tuesday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
-				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                        <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
-                    </text> \
-				</g> \
-				<g id="wednesday" class="parent"> \
-			    	<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
-			    	<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
-			    	<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                        <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
-                    </text> \
-			    </g> \
-			    <g id="thursday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
-				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                        <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
-                    </text> \
-				</g> \
-				<g id="friday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
-				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                        <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
-                    </text> \
-				</g> \
-				<g id="saturday" class="parent"> \
-				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
-				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
-				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                        <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
-                    </text> \
-			    </g> \
-			    <g id="sunday" class="parent"> \
-	    			<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-	    			<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
-	    			<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                        <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
-                    </text> \
-                </g> \
-    		</g> \
-    		<g id="label" visibility="hidden"> \
-    			<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                    <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
-                </text> \
-    		</g> \
-		</svg> \
-         </ion-content> \
-    <ion-footer-bar class="bar-subfooter"> \
-        <div class="row">\
-        <div class="col col-offset-50">\
-        <button id="add" class="button button-light button-block transparent padding">Add</button> \
-         </div>\
-         <div class="col">\
-         <button id="copy" class="button button-light button-block transparent padding ">Copy</button> \
-         </div>\
-         <div class="col">\
-         <button id="delete" class="button button-light button-block transparent padding">Delete</button> \
-         </div>\
-          </div>\
-    </ion-footer-bar> \
-    <ion-footer-bar> \
-    <div class="row">\
-  <div class="col">\
-    <button id="cancel" class="button button-assertive button-block transparent">Cancel</button> \
-  </div>\
-  <div class="col">\
-    <button id="save" class="button button-balanced button-block transparent">Save</button> \
-  </div>\
-</div>\
-    </ion-footer-bar>'
+                		<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="-3 -100 752 330" preserveAspectRatio="xMaxYMax" xmlns="http://www.w3.org/2000/svg">\
+                		    <g id="weekdays"> \
+                		    	<g id="monday" class="parent"> \
+                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                        <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
+                                    </text> \
+                				    <rect id="r1" fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                				</g> \
+                				<g id="tuesday" class="parent"> \
+                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
+                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                        <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
+                                    </text> \
+                				</g> \
+                				<g id="wednesday" class="parent"> \
+                			    	<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
+                			    	<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                			    	<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                        <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
+                                    </text> \
+                			    </g> \
+                			    <g id="thursday" class="parent"> \
+                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
+                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                        <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
+                                    </text> \
+                				</g> \
+                				<g id="friday" class="parent"> \
+                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
+                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                        <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
+                                    </text> \
+                				</g> \
+                				<g id="saturday" class="parent"> \
+                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
+                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                        <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
+                                    </text> \
+                			    </g> \
+                			    <g id="sunday" class="parent"> \
+                	    			<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                	    			<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                	    			<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                        <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
+                                    </text> \
+                                </g> \
+                    		</g> \
+                    		<g id="label" visibility="hidden"> \
+                    			<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
+                                    <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
+                                </text> \
+                    		</g> \
+                		</svg> \
+                    </div> \
+                </ion-content> \
+                <ion-footer-bar class="bar-subfooter"> \
+                    <div class="row">\
+                        <div class="col col-offset-50">\
+                            <button id="add" class="button button-light button-block transparent padding">Add</button> \
+                        </div>\
+                        <div class="col">\
+                            <button id="copy" class="button button-light button-block transparent padding ">Copy</button> \
+                        </div>\
+                        <div class="col">\
+                            <button id="delete" class="button button-light button-block transparent padding">Delete</button> \
+                        </div>\
+                    </div>\
+                </ion-footer-bar> \
+                <ion-footer-bar> \
+                    <div class="row">\
+                        <div class="col">\
+                            <button id="cancel" class="button button-assertive button-block transparent">Cancel</button> \
+                        </div>\
+                        <div class="col">\
+                            <button id="save" class="button button-balanced button-block transparent">Save</button> \
+                        </div>\
+                    </div>\
+                </ion-footer-bar>'
             };
-
         }
     ]);
