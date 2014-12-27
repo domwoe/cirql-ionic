@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -168,7 +168,7 @@ angular.module('cirqlApp')
 
         $scope.isBoundResident = function(resident) {
             return resident.rooms[room]
-        }
+        };
 
         $scope.toggleBoundResident = function(resident) {
             if (roomObj.residents === undefined) {
@@ -187,7 +187,49 @@ angular.module('cirqlApp')
             residents.$save(resident);
             roomObj.residents[resident.$id] = resident.rooms[room];
             roomObj.$save();
-        }
+        };
 
+        $scope.showConfirm = function() {
+            $ionicPopup.show({
+                template: '<p>Are you sure you want to remove this room from your account?</p>',
+                title: 'Remove Room',
+                subTitle: '',
+                scope: $scope,
+                buttons: [{
+                    text: 'Cancel',
+                    type: 'button-block button-dark transparent',
+                }, {
+                    text: 'Remove',
+                    type: 'button-block button-assertive transparent',
+                    onTap: function() {
+                        deleteRoom();
+                    }
+                }]
+            });
+        };
+
+        /**
+         * deleteRoom
+         * @description
+         * deletes room and all references in residents
+         * @return {undefined}
+         */
+        function deleteRoom() {
+            //delete all room references in residents
+            var roomId = roomObj.$id;
+            angular.forEach(residents, function(resident) {
+                if(resident.rooms != undefined && resident.rooms[roomId] != undefined) {
+                    resident.rooms[roomId] = null;
+                    residents.$save(resident);
+                }
+            });
+            //TODO: clean up Netatmo and Thermostats references
+            //
+            //delete room
+            fbutil.ref(roomUrl).remove();
+            //TODO change code to below after update to angularfire v0.9.0
+            //roomObj.$remove();
+            $state.go('app.home');
+        };
     }
 ]);
