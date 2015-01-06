@@ -542,13 +542,13 @@ input:-ms-input-placeholder {
     font-size: 12px;
     font-weight: 600;
     line-height: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,1);
     margin: 0 auto;
     width: 100px;
     height: 75px;
     top: -230px;
-    left: 104px;
-    z-index: 1;
+    left: 100px;
+    z-index: -1;
 }
 
 // CARDS
