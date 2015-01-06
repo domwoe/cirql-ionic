@@ -55,7 +55,7 @@
     "net.yoik.cordova.plugins.screenorientation",
     "org.apache.cordova.inappbrowser",
     "https://github.com/nicholasareed/cordova-plugin-datepicker",
-    "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git"
+    "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
     "https://github.com/radshag/PhoneGap-Geofencing.git"
   ]
 }
