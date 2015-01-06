@@ -378,6 +378,7 @@ angular.module('cirqlApp')
                             d3.selectAll('.target'+scope.roomid).style('visibility', 'hidden');
                             d3.select('#labelaway'+scope.roomid).style('visibility', 'visible');
                             isAutoAway = true;
+                            scope.leafVisibility = 'hidden';
                             
                         }
                         else {
