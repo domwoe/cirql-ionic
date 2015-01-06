@@ -146,15 +146,22 @@ angular.module('cirqlApp')
                                 this.selectedEntry.selectAll('rect')
                                     .style('visibility', 'hidden');
                                 this.selectedEntry = null;
+                                d3.select('#label').style('visibility', 'hidden');
                             }
                         }
 
-                        this.entrySelector = function(entry) {
+                        this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
                             this.deselectEntry();
                             var selection = group.select('circle')
                                 .attr('fill', 'black')
                                 .attr('r', this.radius + 15);
+
+                            var circleIndex = group.attr('id');
+                            var entry = self.localSchedule[circleIndex];
+
+                            scope.hour = self.pad(entry.hour, 2);
+                            scope.minute = self.pad(entry.minute, 2);
 
                             group.selectAll('path')
                                 .style('visibility', 'visible');
@@ -162,6 +169,8 @@ angular.module('cirqlApp')
                             group.selectAll('rect')
                                 .style('visibility','visible');
                             this.selectedEntry = group;
+
+                            d3.select('#label').style('visibility', 'visible');
                         }
 
                         // true for increase, false for decrease
@@ -171,7 +180,6 @@ angular.module('cirqlApp')
                             var targetTspan = parentNode.select('tspan');
 
                             var dotTargetTspan = parentNode.select('g').select('tspan');
-
 
                             var currentTemp = parseInt(targetTspan.text());
                             var currentDotTemp = parseInt(dotTargetTspan.text());
@@ -197,8 +205,6 @@ angular.module('cirqlApp')
 
                             }
 
-
-
                             newTemp = newTemp + 0.1 * newDotTemp;
 
                             console.log(newTemp);
@@ -220,7 +226,6 @@ angular.module('cirqlApp')
                         }
 
                         this.addEntry = function(dayGroup, id, xpos, ypos, target) {
-
                             var numTarget = parseFloat(target);
                             var dotTarget;
 
@@ -306,7 +311,7 @@ angular.module('cirqlApp')
                                         var parentNode = d3.select(this).node().parentNode;
                                         var secondAncestor = d3.select(parentNode).node().parentNode;
                                         self.daySelector(secondAncestor);
-                                        self.entrySelector(parentNode);
+                                        self.entrySelector(self, parentNode);
                                         self.dragging = true;
                                     })
                                     .on('drag', function(d) {
@@ -379,7 +384,7 @@ angular.module('cirqlApp')
                                 'target': target,
                                 'weekday': weekday
                             };
-                            console.log("CREATED ", this.localSchedule[id]);
+                           // console.log("CREATED ", this.localSchedule[id]);
                         }
 
                         this.addEntryCallback = function(self) {
@@ -526,7 +531,7 @@ angular.module('cirqlApp')
 
                             var saveButton = d3.select('#save');
                             saveButton.on('click', function() {
-                                console.log('save')
+                                console.log('save');
                                 self.save(self);
                             });
 
@@ -616,7 +621,7 @@ angular.module('cirqlApp')
                     </text> \
                 </g> \
     		</g> \
-    		<g id="label"> \
+    		<g id="label" visibility="hidden"> \
     			<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
                     <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
                 </text> \

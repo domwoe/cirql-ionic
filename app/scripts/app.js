@@ -1,24 +1,25 @@
 'use strict';
 
 angular.module('cirqlApp', [
-  'ionic',
-  'config',
-  'simpleLogin',
-  'firebase.utils',
-  'ngStorage'
+    'ionic',
+    'config',
+    'simpleLogin',
+    'firebase.utils',
+    'ngStorage',
+    'pascalprecht.translate'
 ])
 
-.run(function($ionicPlatform, geo) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
+.run(function($ionicPlatform, $translate, discovery, geo) {
+    $ionicPlatform.ready(function() {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        if (window.cordova && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        }
+        if (window.StatusBar) {
+            // org.apache.cordova.statusbar required
+            StatusBar.styleDefault();
+        }
 
     
      if (window.plugins && window.plugins.DGGeofencing) {
@@ -30,56 +31,16 @@ angular.module('cirqlApp', [
             geo.startMonitoringSignificantLocationChanges();
       }
 
-    // Find Gateway
-    
-    // if (window.cordova && window.Discovery)  {
-    
-    //   var params = { 
-    //     clientName: 'cirqlApp',
-    //     port: 5353
-    //   };
-
-    //   discovery.identify(params).then(function(result) {
-    //     console.log(result);
-    //   }, function(reason) {
-    //     console.log(reason);
-    //   });
-
-    // }  
-       
+        if (typeof navigator.globalization !== 'undefined') {
+            navigator.globalization.getPreferredLanguage(function(language) {
+                $translate.use((language.value).split('-')[0]).then(function(data) {
+                    console.log('SUCCESS -> ' + data);
+                }, function(error) {
+                    console.log('ERROR -> ' + error);
+                });
+            }, null);
+        }
 
 
-
-
-
-
-
-
-
-        // cordova.plugins.Discovery.identify(function(serviceData) {
-
-        //   console.log(serviceData);
-
-        // }, function(error) {
-
-        //   console.log(error);
-
-        // }, {
-        //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-        //   port: 7072 // the port the service's broadcast service is running on
-        // });
-
-        // navigator.Discovery.identify(function(serviceData) {
-
-        //   console.log(serviceData);
-
-        // }, function(error) {
-
-        //   console.log(error);
-
-        // }, {
-        //   clientName: 'cirqlMobile', // the name the server expects to see for clients connecting
-        //   port: 7072 // the port the service's broadcast service is running on
-        // });
     });
 });

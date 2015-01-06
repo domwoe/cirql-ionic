@@ -28,6 +28,7 @@ a {
     background: url(../images/background.png) no-repeat 0 0 fixed;
     background-size: 100% 100%;
 }
+
 // SIDE MENU
 // -------------------------------
 .menu {
@@ -266,6 +267,9 @@ input:-ms-input-placeholder {
     -webkit-border-radius: 100%;
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
+.unselected {
+    opacity: 0.4;
+}
 .away .resident {
     float: right;
 }
@@ -338,7 +342,7 @@ input:-ms-input-placeholder {
 }
 .field {
     border-radius: 24px;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.25);
     border-color: transparent;
     margin-top: 10px;
     text-align: left;
@@ -363,16 +367,22 @@ input:-ms-input-placeholder {
     background-color: #FFCC00;
 }
 
+.small-font {
+    font-weight: 600;
+    font-size: 14px;
+}
+
 .rc-popup {
     text-align: center;
-    min-height: 32px;
+    //min-height: 32px;
     max-height: 64px;
+    width: 240px;
     font-size: 14px;
     line-height: 32px;
     padding-left: 25px;
     padding-right: 25px;
-    background-color: rgba(0, 0, 0, 0.75);
-    border-radius: 46px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
 }
 
 
@@ -527,6 +537,20 @@ input:-ms-input-placeholder {
     top: -76px;
 }
 
+#nextTarget {
+    position: relative;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 13px;
+    color: rgba(255,255,255,0.5);
+    margin: 0 auto;
+    width: 100px;
+    height: 75px;
+    top: -230px;
+    left: 104px;
+    z-index: 1;
+}
+
 // CARDS
 // -------------------------------
 .card {
@@ -607,6 +631,59 @@ input:-ms-input-placeholder {
     font-size: 14px;
 
 }
+
+
+// Loader
+// -------------------------------
+.loader {
+  margin: auto auto;
+  font-size: 8px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-left: 1.1em solid #ffffff;
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.loading{
+    background-color: inherit;
+    //width: 100% !important;
+    //height: 100% !important; 
+    border-width: 2px !important;
+    border-color: black !important;
+    border-style: solid !important;
+}
+
+
 
 
 

@@ -19,12 +19,21 @@ angular.module('cirqlApp')
             $scope.resident = {
                 name: ''
             };
+            $scope.boundResidents = {};
             $scope.logout = simpleLogin.logout;
 
 
             if ($scope.home && $scope.home.$destroy) {
                 $scope.home.$destroy();
             }
+            
+
+            // If you got to add new room after being in room view $scope.room is populated and can't
+            // be edited. This leads to a non responding input field
+            if ($scope.room) {
+                $scope.room = null;
+            }
+
             var home = fbutil.syncObject('homes/' + user.uid);
             home.$bindTo($scope, 'home');
 
@@ -69,18 +78,40 @@ angular.module('cirqlApp')
                 $state.go('wizard.room');
             };
 
-            $scope.createRoom = function(name, category) {
+            $scope.toggleBoundResident = function(resident) {
+              if($scope.boundResidents[resident.$id] != undefined) {
+                $scope.boundResidents[resident.$id] = !$scope.boundResidents[resident.$id];
+              } else {
+                $scope.boundResidents[resident.$id] = true;
+              }
+              console.log($scope.boundResidents);
+
+            }
+
+            $scope.createRoom = function(name, category, boundResidents) {
                 $scope.errorMessage = null;
                 if (!name) {
                     $scope.errorMessage = 'Please enter a name';
                 } else if (!category) {
                     $scope.errorMessage = 'Please select a category';
                 } else {
-                    var index = $scope.rooms.$add({
+                    $scope.rooms.$add({
                         name: name,
-                        category: category
+                        category: category,
+                        residents: boundResidents
+                    }).then(function(ref) {
+                      // save bound room in resident object
+                      console.log(ref);
+                      console.log(ref.name());
+                      for (var residentId in boundResidents) {
+                        var resident = residents.$getRecord(residentId);
+                        if(resident.rooms === undefined) {
+                          resident.rooms = {};
+                        }
+                        resident.rooms[ref.name()] = boundResidents[residentId]; 
+                        residents.$save(resident);
+                      }
                     });
-                    $scope.rooms.$save(index);
                     console.log(name + ' added');
                     $state.go('app.home');
                 }
