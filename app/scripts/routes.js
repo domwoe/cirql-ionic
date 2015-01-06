@@ -257,7 +257,7 @@ angular.module('cirqlApp')
     RETYPE_PASSWORD: 'Wiederhole Passwort',
     ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
     ADD_GATEWAY: 'Füge Gateway hinzu',
-    CIRQL_HEADER: 'Deine intelligentes Raumklima',
+    CIRQL_HEADER: 'Dein intelligentes Raumklima',
     OR: 'ODER',
     CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
     NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wählen deinen Nutzer aus',

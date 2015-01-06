@@ -139,7 +139,7 @@ angular.module('cirqlApp')
                                 bgTargetIcon = d3.select('#bgTargetIcon' + scope.roomid),
                                 ring = d3.select('#target_path' + scope.roomid),
                                 targetIcon = d3.select('#targetIcon' + scope.roomid),
-                                flame = d3.select('#flame' + scope.roomid).select('rect');
+                                flame = d3.select('#flame' + scope.roomid);
 
                             if (scope.displaytarget) {
                                 bgTargetHandle.call(d3.behavior.drag()
@@ -231,12 +231,12 @@ angular.module('cirqlApp')
                                     
                                     d3.selectAll('.info')
                                         .transition()
-                                        .style("opacity",0)
+                                        .style('opacity',0)
                                         .duration(1000)
                                         .delay(1500);
                   
                             });
-                            console.log(ring_background);
+
                             console.log(flame);
 
                             flame.on('click', function() {
@@ -250,7 +250,7 @@ angular.module('cirqlApp')
 
                                 d3.selectAll('.info')
                                         .transition()
-                                        .style("opacity",0)
+                                        .style('opacity',0)
                                         .duration(1000)
                                         .delay(1500);
                             });
@@ -322,18 +322,16 @@ angular.module('cirqlApp')
                             }
 
                             $timeout(function() {
-                                scope.$apply()
+                                scope.$apply();
                             });
                         }
                     };
 
                     var renderThermoIcon = function(temp) {
-                        console.log('temp: '+temp)
                         if (temp) {
                             d3.select('#thermoIcon' + scope.roomid)
                                 .style('visibility', 'visible');
                         } else {
-                            console.log('im here')
                             d3.select('#thermoIcon' + scope.roomid)
                                 .style('visibility', 'hidden');
                         }
@@ -490,7 +488,7 @@ angular.module('cirqlApp')
                             <path d="M10.167,10.778 C10.084,9.648 9.624,8.635 8.924,7.849 C7.806,6.589 7.345,5.281 7.345,2.904 C6.668,3.675 6.407,4.399 6.182,5.133 C6.213,6.231 6.298,7.33 6.527,8.404 C6.676,9.1 6.854,9.79 7.099,10.457 C7.346,11.133 7.73,11.804 7.858,12.518 C8.098,13.861 7.498,14.892 6.767,15.884 C6.971,15.817 7.16,15.735 7.325,15.635 C8.53,14.913 10.326,12.893 10.167,10.778 L10.167,10.778 Z" id="high"></path>\
                             <path d="M6.212,16.019 C6.517,15.627 6.815,15.231 7.069,14.806 C7.836,13.518 7.479,12.474 6.968,11.161 C6.157,9.075 5.867,6.944 5.805,4.74 C5.453,3.013 4.779,1.413 3.848,0 C3.912,0.331 3.956,1.074 3.984,1.416 C4.145,3.588 3.719,5.136 2.321,7.035 C2.924,8.962 3.945,10.563 4.397,12.554 C4.666,13.739 4.724,14.908 4.64,16.073 C5.164,16.128 5.712,16.11 6.212,16.019 L6.212,16.019 Z" id="medium"></path>\
                             <path d="M3.885,12.071 C3.385,10.405 1.647,6.621 1.103,4.988 C1.103,6.288 0.972,7.376 0.846,7.899 C0.545,9.154 0.265,10.457 0.265,11.518 C0.265,13.362 2.005,15.003 3.084,15.622 C3.411,15.81 3.829,15.943 4.282,16.022 C4.376,14.704 4.281,13.386 3.885,12.071 L3.885,12.071 Z" id="low"></path>\
-                            <rect x="-5" y="-3" width="20" height="24" fill-opacity="0.0">\
+                            <rect x="-5" y="-3" width="20" height="24" fill-opacity="1.0">\
                         </g>\
                         <g id="arcGroup">\
                             <path id="measured_path{{roomid}}" fill="none" />\
