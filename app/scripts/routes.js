@@ -7,7 +7,7 @@
  */
 angular.module('cirqlApp')
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider,$translateProvider) {
   $stateProvider
     .state('login', {
       url: '/login',
@@ -194,4 +194,29 @@ angular.module('cirqlApp')
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+
+  $translateProvider.translations('en', {
+    ROOM: 'Room',
+    BACK: 'Back',
+    REMOVE_FROM: 'Remove from',
+    ADD_TO: 'Add to',
+    NO_THERMOSTATS: 'There are no unassigned paired thermostats available',
+    ADD_THERMOSTAT: 'Add Thermostat',
+    PAIR_THERMOSTAT: 'Pair new Thermostat',
+    AIR_QUALITY: 'Air Quality',
+    HUMIDITY: 'Humidity'
+  });
+  $translateProvider.translations('de', {
+    ROOM: 'Raum',
+    BACK: 'Zurück',
+    REMOVE_FROM: 'Entferne aus',
+    ADD_TO: 'Hinzufügen zu',
+    NO_THERMOSTATS: 'Es sind keine nicht-verbundene Thermostate verfügbar',
+    ADD_THERMOSTAT: 'Thermostat hinzufügen',
+    PAIR_THERMOSTAT: 'Neues Thermostat verbinden',
+    AIR_QUALITY: 'Luftqualität',
+    HUMIDITY: 'Luftfeuchtigkeit'
+  });
+  $translateProvider.preferredLanguage('de');
+  $translateProvider.fallbackLanguage('de');
 });
