@@ -1,7 +1,7 @@
-<ion-view title="Add Room">
+<ion-view title="{{'ADD_ROOM_TITLE' | translate}}">
   <ion-nav-buttons side="left">
   <button class="button-clear" ui-sref="app.home">
-    <i class="ion-chevron-left"></i> Home
+    <i class="ion-chevron-left"></i><a translate>HOME</a>
   </button>
   </ion-nav-buttons>
   <div class="wrapper">
@@ -10,18 +10,18 @@
     <ion-content class="has-header" scroll="false">
     <div class="add-room">
       <div class="title">
-        <h1>Add a room to your home</h1>
+        <h1 translate>ADD_ROOM_HEADER</h1>
       </div>
       <p class="error">{{err}}</p>
       <div class="list">
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-            <input type="text" ng-model="room.name" class="form-control" id="roomName" placeholder="Give your room a name">
+            <input type="text" ng-model="room.name" class="form-control" id="roomName" placeholder="{{'GIVE_ROOM_NAME' | translate}}">
           </label>
         </div>
         <label class="item item-input item-select transparent">
-          <div class="input-label">
-            Category
+          <div translate class="input-label">
+            CATEGORY
           </div>
           <select ng-model="room.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
             <option value=""></option>
@@ -34,7 +34,9 @@
             {{resident.name}}
           </div>
         </div>
-        <button ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">Add room</button>
+        <button ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">
+          <a translate>ADD_ROOM</a>
+        </button>
         <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
       </div>
     </div>

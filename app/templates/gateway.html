@@ -2,7 +2,7 @@
 
     <ion-nav-buttons side="left">
         <button class="button-clear" ng-click="goBack()">
-            <i class="ion-chevron-left"></i> Back
+            <i class="ion-chevron-left"></i><a translate>BACK</a>
         </button>
     </ion-nav-buttons>
 
@@ -39,7 +39,7 @@
 
             <div class="item item-image">
                 <button class="button button-full button-assertive" ng-click="showConfirm()">
-                    Remove
+                    <a translate>REMOVE Gateway</a>
                 </button>
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div ng-hide="hasGateway" class="centerAll" ng-cloak>
             <div class="row row-center">
                 <div class="col col-center">
-                    <h3>Enter your Gateway id to connect it with your account<h3> 
+                    <h3 translate>ENTER_GATEWAY_ID<h3> 
                     <p>{{errorMsg}}</p>
                 </div>
             </div>
@@ -63,7 +63,7 @@
             <div class="row">
                 <div class="col">
                     <button class="button button-balanced button-block transparent" ng-click="addGateway(gatewayId)">
-                        Add Gateway
+                        <a translate>ADD_GATEWAY</a>
                     </button>
                 </div>
             </div>
