@@ -54,6 +54,7 @@
     "https://github.com/driftyco/cordova-plugin-discovery.git",
     "net.yoik.cordova.plugins.screenorientation",
     "org.apache.cordova.inappbrowser",
-    "https://github.com/nicholasareed/cordova-plugin-datepicker"
+    "https://github.com/nicholasareed/cordova-plugin-datepicker",
+    "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git"
   ]
 }

@@ -218,5 +218,5 @@ angular.module('cirqlApp')
     HUMIDITY: 'Luftfeuchtigkeit'
   });
   $translateProvider.preferredLanguage('de');
-  $translateProvider.fallbackLanguage('de');
+  $translateProvider.fallbackLanguage('en');
 });
