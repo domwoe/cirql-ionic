@@ -1,46 +1,49 @@
 <ion-view title="{{'ADD_ROOM_TITLE' | translate}}">
-  <ion-nav-buttons side="left">
-  <button class="button-clear" ui-sref="app.home">
-    <i class="ion-chevron-left"></i>
-    <span translate>HOME</span>
-  </button>
-  </ion-nav-buttons>
-  <div class="wrapper">
-    <div class="circle">
-    </div>
-    <ion-content class="has-header" scroll="false">
-    <div class="add-room">
-      <div class="title">
-        <h1 translate>ADD_ROOM_HEADER</h1>
-      </div>
-      <p class="error">{{err}}</p>
-      <div class="list">
-        <div class="item item-input-inset transparent">
-          <label class="item-input-wrapper">
-            <input type="text" ng-model="room.name" class="form-control" id="roomName" placeholder="{{'GIVE_ROOM_NAME' | translate}}">
-          </label>
-        </div>
-        <label class="item item-input item-select transparent">
-          <div translate class="input-label">
-            CATEGORY
-          </div>
-          <select ng-model="room.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
-            <option value=""></option>
-          </select>
-        </label>
-        <!-- <button ui-sref="app.thermostats" class="button button-light button-block transparent">Thermostats</button> -->
-        <div ng-cloak class="residents residents-select center">
-          <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
-          <div class="avatar"  ng-click="toggleBoundResident(resident)"></div>
-            {{resident.name}}
-          </div>
-        </div>
-        <button translate ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">
-        ADD_ROOM
+    <ion-nav-buttons side="left">
+        <button class="button-clear" ui-sref="app.home">
+            <i class="ion-chevron-left"></i>
+            <span translate>HOME</span>
         </button>
-        <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
-      </div>
+    </ion-nav-buttons>
+    <div class="wrapper">
+        <div class="circle">
+        </div>
+        <ion-content class="has-header" scroll="false">
+            <div class="add-room">
+                <div class="title">
+                    <h1 translate>ADD_ROOM_HEADER</h1>
+                </div>
+                <p class="error">{{err}}</p>
+                <div class="list">
+                    <div class="item item-input-inset transparent">
+                        <label class="item-input-wrapper">
+                            <input type="text" ng-model="room.name" class="form-control" id="roomName" placeholder="{{'GIVE_ROOM_NAME' | translate}}">
+                        </label>
+                    </div>
+                    <label class="item item-input item-select transparent">
+                        <div translate class="input-label">
+                            CATEGORY
+                        </div>
+                        <select ng-model="room.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
+                        <option value=""></option>
+                        </select>
+                    </label>
+                    <!-- <button ui-sref="app.thermostats" class="button button-light button-block transparent">Thermostats</button> -->
+                    <div class="padding">
+                        <p translate>RESIDENT_BINDING_MSG</p>
+                        <div ng-cloak class="residents residents-select center">
+                            <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
+                                <div class="avatar" ng-click="toggleBoundResident(resident)"></div>
+                                {{resident.name}}
+                            </div>
+                        </div>
+                    </div>
+                    <button translate ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block transparent">
+                        ADD_ROOM
+                    </button>
+                    <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
+                </div>
+            </div>
+        </ion-content>
     </div>
-    </ion-content>
-  </div>
 </ion-view>
