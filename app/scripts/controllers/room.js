@@ -167,7 +167,7 @@ angular.module('cirqlApp')
         };
 
         $scope.isBoundResident = function(resident) {
-            return resident.rooms[room]
+            return resident.rooms[room] && resident.allowsGeolocation;
         };
 
         $scope.toggleBoundResident = function(resident) {
