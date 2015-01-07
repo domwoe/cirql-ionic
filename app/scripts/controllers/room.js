@@ -28,7 +28,7 @@ angular.module('cirqlApp')
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);
-        };    
+        };
 
         var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
         $scope.residents = residents;
@@ -173,20 +173,41 @@ angular.module('cirqlApp')
         $scope.toggleBoundResident = function(resident) {
             if (roomObj.residents === undefined) {
                 roomObj.residents = {};
-            }
-            if (resident.rooms != undefined) {
-                if (resident.rooms[room] != undefined) {
-                    resident.rooms[room] = !resident.rooms[room];
-                } else {
-                    resident.rooms[room] = true;
-                }
             } else {
-                resident['rooms'] = {};
-                resident.rooms[room] = true;
+
+                if (resident.rooms != undefined) {
+
+                    if (!resident.allowsGeolocation && !resident.rooms[room]) {
+
+                        $ionicPopup.alert({
+                            template: resident.name + ' {{"NO_GEO_ALERT" | translate}}'
+                        });
+
+                    }
+
+                    else {
+
+                        if (resident.rooms[room] != undefined) {
+                            resident.rooms[room] = !resident.rooms[room];
+                        } else {
+                            resident.rooms[room] = true;
+                        }
+
+                    }
+
+                    
+                } else {
+                    if (resident.allowsGeolocation) {
+                        resident['rooms'] = {};
+                        resident.rooms[room] = true;
+                    }    
+                }
+                residents.$save(resident);
+                roomObj.residents[resident.$id] = resident.rooms[room];
+                roomObj.$save();
+
             }
-            residents.$save(resident);
-            roomObj.residents[resident.$id] = resident.rooms[room];
-            roomObj.$save();
+
         };
 
         $scope.showConfirm = function() {
@@ -218,7 +239,7 @@ angular.module('cirqlApp')
             //delete all room references in residents
             var roomId = roomObj.$id;
             angular.forEach(residents, function(resident) {
-                if(resident.rooms != undefined && resident.rooms[roomId] != undefined) {
+                if (resident.rooms != undefined && resident.rooms[roomId] != undefined) {
                     resident.rooms[roomId] = null;
                     residents.$save(resident);
                 }
@@ -231,5 +252,13 @@ angular.module('cirqlApp')
             //roomObj.$remove();
             $state.go('app.home');
         };
+
+        $scope.goToRoom = function() {
+            $ionicSideMenuDelegate.canDragContent(true);
+            $state.go('app.room', {
+                roomId: room
+            });
+        };
+
     }
 ]);

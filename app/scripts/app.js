@@ -60,8 +60,6 @@ angular.module('cirqlApp', [
         document.addEventListener('offline', showOffline, false);
         document.addEventListener('online', hideOffline, false);
 
-        console.log(JSON.stringify(document));
-
         $ionicPlatform.on('offline', showOffline);
 
 

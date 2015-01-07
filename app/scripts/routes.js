@@ -231,7 +231,11 @@ angular.module('cirqlApp')
     SCHEDULE: 'Schedule',
     THERMOSTATS: 'Thermostats',
     LOGOUT: 'Log Out',
-    ROOM_SETTINGS: 'Room Settings'
+    ROOM_SETTINGS: 'Room Settings',
+    REMOVE_ROOM: 'Remove Room',
+    RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
+    SORRY: 'Sorry',
+    NO_GEO_ALERT: "doesn't share the location."
 
   });
   $translateProvider.translations('de', {
@@ -270,7 +274,11 @@ angular.module('cirqlApp')
     SCHEDULE: 'Zeitplan',
     THERMOSTATS: 'Thermostate',
     LOGOUT: 'Abmelden',
-    ROOM_SETTINGS: 'Raumeinstellungen'
+    ROOM_SETTINGS: 'Raumeinstellungen',
+    REMOVE_ROOM: 'Raum löschen',
+    RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
+    SORRY: 'Entschuldige',
+    NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.'
   });
 
   $translateProvider.preferredLanguage('de');
