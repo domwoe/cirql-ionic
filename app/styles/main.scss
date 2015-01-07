@@ -37,18 +37,18 @@ a {
     background: #000 !important;
 }
 .menu .list {
-    width: 100%;
+    width: 245px;
     list-style: none;
-    margin: -20px 0 0 40px;
+    margin-left: 20px;
     height: 100%;
     background-color: #000;
 }
 .menu .list .item {
     font-weight: 200;
-    font-size: 22px;
+    font-size: 20px;
     color: #fff;
-    line-height: 19px;
-    margin-bottom: 28px;
+    line-height: 18px;
+    margin-bottom: 14px;
     background-color: #000;
 }
 // Login View
@@ -413,6 +413,10 @@ input:-ms-input-placeholder {
 .container-relative {
     position: relative;
 }
+
+.container-absolute {
+    position: absolute;
+}
 .center-block {
     display: block;
     margin: 0 auto;
@@ -431,7 +435,6 @@ input:-ms-input-placeholder {
 .aligncenter {
     text-align: center;
 }
-
 
 .center {
     display: -webkit-box;

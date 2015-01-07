@@ -1,7 +1,8 @@
 <ion-view title="{{'ADD_ROOM_TITLE' | translate}}">
   <ion-nav-buttons side="left">
   <button class="button-clear" ui-sref="app.home">
-    <i class="ion-chevron-left"></i><a translate>HOME</a>
+    <i class="ion-chevron-left"></i>
+    <span translate>HOME</span>
   </button>
   </ion-nav-buttons>
   <div class="wrapper">
@@ -34,8 +35,8 @@
             {{resident.name}}
           </div>
         </div>
-        <button ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">
-          <a translate>ADD_ROOM</a>
+        <button translate ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">
+        ADD_ROOM
         </button>
         <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
       </div>
