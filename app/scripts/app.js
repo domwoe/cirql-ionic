@@ -9,7 +9,7 @@ angular.module('cirqlApp', [
     'pascalprecht.translate'
 ])
 
-.run(function($ionicPlatform, $translate, discovery) {
+.run(function($ionicPlatform, discovery, $ionicLoading, $translate) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -31,7 +31,45 @@ angular.module('cirqlApp', [
             }, null);
         }
 
+        function showOffline() {
+            console.log('Offline');
+            $ionicLoading.show({
+                template: '{{"OFFLINE" | translate}}...<div class="sk-spinner sk-spinner-circle">' +
+                    '<div class="sk-circle1 sk-circle"></div>' +
+                    '<div class="sk-circle2 sk-circle"></div>' +
+                    '<div class="sk-circle3 sk-circle"></div>' +
+                    '<div class="sk-circle4 sk-circle"></div>' +
+                    '<div class="sk-circle5 sk-circle"></div>' +
+                    '<div class="sk-circle6 sk-circle"></div>' +
+                    '<div class="sk-circle7 sk-circle"></div>' +
+                    '<div class="sk-circle8 sk-circle"></div>' +
+                    '<div class="sk-circle9 sk-circle"></div>' +
+                    '<div class="sk-circle10 sk-circle"></div>' +
+                    '<div class="sk-circle11 sk-circle"></div>' +
+                    '<div class="sk-circle12 sk-circle"></div>' +
+                    '</div>'
+            });
+        }
+
+        function hideOffline() {
+            console.log('Online');
+            $ionicLoading.hide();
+        }
+
+
+        document.addEventListener('offline', showOffline, false);
+        document.addEventListener('online', hideOffline, false);
+
+        console.log(JSON.stringify(document));
+
+        $ionicPlatform.on('offline', showOffline);
+
+
+        $ionicPlatform.on('online', hideOffline);
+
+
         // Find Gateway
+
 
         if (window.cordova && window.Discovery) {
 
