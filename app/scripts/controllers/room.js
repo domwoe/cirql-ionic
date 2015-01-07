@@ -120,8 +120,12 @@ angular.module('cirqlApp')
         }).then(function(popover) {
             $scope.airQualityPopover = popover;
         });
+
         $scope.openAirQualityPopover = function($event) {
-            $scope.airQualityPopover.show($event);
+            //$scope.airQualityPopover.show($event);
+            $ionicPopup.alert({
+                template: $scope.roomValues.airQualityMsg
+            });
         };
         $scope.closeAirQualityPopover = function() {
             $scope.airQualityPopover.hide();
@@ -137,7 +141,10 @@ angular.module('cirqlApp')
             $scope.humidityPopover = popover;
         });
         $scope.openHumidityPopover = function($event) {
-            $scope.humidityPopover.show($event);
+            //$scope.humidityPopover.show($event);
+            $ionicPopup.alert({
+                template: $scope.roomValues.humidityMsg
+            });
         };
         $scope.closeHumidityPopover = function() {
             $scope.humidityPopover.hide();
