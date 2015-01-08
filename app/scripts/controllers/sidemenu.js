@@ -47,10 +47,6 @@ angular.module('cirqlApp')
                     }
                 }
 
-                if (!hasBoundResidents) {
-                    disableAutoAway()
-                }
-
                 return hasBoundResidents;
             }
 
@@ -84,6 +80,10 @@ angular.module('cirqlApp')
                             resident['rooms'] = {};
                             resident.rooms[$scope.room] = true;
                         }
+                    }
+
+                    if (!$scope.hasBoundResidents()) {
+                        disableAutoAway();
                     }
                     residents.$save(resident);
                     boundResidents[resident.$id] = resident.rooms[$scope.room];
