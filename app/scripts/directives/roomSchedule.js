@@ -13,7 +13,8 @@ angular.module('cirqlApp')
                     roomid: "=",
                     hour: "@",
                     minute: "@",
-                    goBack: "&"
+                    goBack: "&",
+                    roomname: "@"
                 },
                 link: function(scope, element, attrs) {
 
@@ -767,6 +768,11 @@ angular.module('cirqlApp')
                 },
                 replace: false,
                 template: '\
+                <ion-nav-buttons side="left">\
+                    <button id="save" class="button-clear">\
+                        <i class="ion-chevron-left"></i> {{roomname}}\
+                    </button>\
+                </ion-nav-buttons>\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
                         <svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
@@ -828,26 +834,16 @@ angular.module('cirqlApp')
                             </g> \
                         </svg> \
                 </ion-content> \
-                <ion-footer-bar class="bar-subfooter"> \
+                <ion-footer-bar class="bar-footer"> \
                     <div class="row">\
-                        <div class="col col-offset-50">\
-                            <button id="add" class="button button-light button-block transparent padding">Add</button> \
-                        </div>\
                         <div class="col">\
-                            <button id="copy" class="button button-light button-block transparent padding ">Copy</button> \
+                            <button id="week" class="button button-light button-block transparent padding ">Week</button> \
+                        </div>\
+                        <div class="col col-offset-50">\
+                            <button id="add" class="button  button-light button-block transparent padding">Add</button> \
                         </div>\
                         <div class="col">\
                             <button id="delete" class="button button-light button-block transparent padding">Delete</button> \
-                        </div>\
-                    </div>\
-                </ion-footer-bar> \
-                <ion-footer-bar> \
-                    <div class="row">\
-                        <div class="col">\
-                            <button id="cancel" class="button button-assertive button-block transparent">Cancel</button> \
-                        </div>\
-                        <div class="col">\
-                            <button id="save" class="button button-balanced button-block transparent">Save</button> \
                         </div>\
                     </div>\
                 </ion-footer-bar>'
