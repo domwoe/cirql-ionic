@@ -5,14 +5,12 @@
             <span translate>HOME</span>
         </button>
     </ion-nav-buttons>
-    <div class="wrapper">
-        <div class="circle">
-        </div>
-        <ion-content class="has-header" scroll="false">
+    
+        <ion-content class="has-header center" scroll="false">
             <div class="add-room">
-                <div class="title">
+                <!-- <div class="title">
                     <h1 translate>ADD_ROOM_HEADER</h1>
-                </div>
+                </div> -->
                 <p class="error">{{err}}</p>
                 <div class="list">
                     <div class="item item-input-inset transparent">
@@ -29,7 +27,7 @@
                         </select>
                     </label>
                     <!-- <button ui-sref="app.thermostats" class="button button-light button-block transparent">Thermostats</button> -->
-                    <div class="padding">
+                    <div class="padding-top">
                         <p translate>RESIDENT_BINDING_MSG</p>
                         <div ng-cloak class="residents residents-select center">
                             <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
@@ -45,5 +43,5 @@
                 </div>
             </div>
         </ion-content>
-    </div>
+
 </ion-view>

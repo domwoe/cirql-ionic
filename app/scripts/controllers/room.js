@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup', '$filter',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup, $filter) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -41,21 +41,21 @@ angular.module('cirqlApp')
         $scope.hasThermostats = null;
 
         trvObj.$loaded(function(trvs) {
-            console.log(trvs);
             if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
                 $scope.hasThermostats = false;
                 console.log($scope.hasThermostats);
             } else {
 
                 $scope.hasThermostats = true;
-                console.log($scope.hasThermostats);
-
             }
         });
 
         $scope.showNextTarget = function() {
-
-            return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
+            if ($scope.roomValues) {
+                return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
+            } else {
+                return false;
+            }
 
         }
 
@@ -121,9 +121,12 @@ angular.module('cirqlApp')
             $scope.airQualityPopover = popover;
         });
 
+        var $translate = $filter('translate');
+
         $scope.openAirQualityPopover = function($event) {
             //$scope.airQualityPopover.show($event);
             $ionicPopup.alert({
+                title: $translate('AIR_QUALITY'),
                 template: $scope.roomValues.airQualityMsg
             });
         };
@@ -143,6 +146,7 @@ angular.module('cirqlApp')
         $scope.openHumidityPopover = function($event) {
             //$scope.humidityPopover.show($event);
             $ionicPopup.alert({
+                title: $translate('HUMIDITY'),
                 template: $scope.roomValues.humidityMsg
             });
         };

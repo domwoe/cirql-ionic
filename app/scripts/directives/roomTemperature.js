@@ -440,7 +440,7 @@ angular.module('cirqlApp')
                     scope.$watch('measuredtemp', renderThermoIcon);
                     scope.$watch('hasthermostats',
                         function(hasThermostats) {
-                            console.log(hasThermostats);
+                            //console.log(hasThermostats);
                             if (hasThermostats === false) {
                                 showWarning('No Thermostats!');
                             } else if (hasThermostats === true) {
