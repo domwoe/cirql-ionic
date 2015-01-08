@@ -8,10 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('WizardCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading',
-        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading) {
+    .controller('WizardCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$ionicPopup',
+        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, $ionicPopup) {
 
-        
+
             var newRoomId;
 
             $scope.user = user;
@@ -26,7 +26,7 @@ angular.module('cirqlApp')
             if ($scope.home && $scope.home.$destroy) {
                 $scope.home.$destroy();
             }
-            
+
 
             // If you got to add new room after being in room view $scope.room is populated and can't
             // be edited. This leads to a non responding input field
@@ -52,13 +52,6 @@ angular.module('cirqlApp')
 
             });
 
-            console.log("home data loaded for user", user.uid);
-            console.log("home", home);
-            console.log("rooms", rooms);
-            console.log("residents", residents);
-
-
-
             $scope.createResident = function() {
                 var name = $scope.resident.name;
                 console.log('creating Resident ' + name);
@@ -79,12 +72,19 @@ angular.module('cirqlApp')
             };
 
             $scope.toggleBoundResident = function(resident) {
-              if($scope.boundResidents[resident.$id] != undefined) {
-                $scope.boundResidents[resident.$id] = !$scope.boundResidents[resident.$id];
-              } else {
-                $scope.boundResidents[resident.$id] = true;
-              }
-              console.log($scope.boundResidents);
+                if (!resident.allowsGeolocation) {
+
+                    $ionicPopup.alert({
+                        template: resident.name + ' {{"NO_GEO_ALERT" | translate}}'
+                    });
+
+                } else {
+                    if ($scope.boundResidents[resident.$id] != undefined) {
+                        $scope.boundResidents[resident.$id] = !$scope.boundResidents[resident.$id];
+                    } else {
+                        $scope.boundResidents[resident.$id] = true;
+                    }
+                }
 
             }
 
@@ -100,17 +100,17 @@ angular.module('cirqlApp')
                         category: category,
                         residents: boundResidents
                     }).then(function(ref) {
-                      // save bound room in resident object
-                      console.log(ref);
-                      console.log(ref.name());
-                      for (var residentId in boundResidents) {
-                        var resident = residents.$getRecord(residentId);
-                        if(resident.rooms === undefined) {
-                          resident.rooms = {};
+                        // save bound room in resident object
+                        console.log(ref);
+                        console.log(ref.name());
+                        for (var residentId in boundResidents) {
+                            var resident = residents.$getRecord(residentId);
+                            if (resident.rooms === undefined) {
+                                resident.rooms = {};
+                            }
+                            resident.rooms[ref.name()] = boundResidents[residentId];
+                            residents.$save(resident);
                         }
-                        resident.rooms[ref.name()] = boundResidents[residentId]; 
-                        residents.$save(resident);
-                      }
                     });
                     console.log(name + ' added');
                     $state.go('app.home');
@@ -128,7 +128,7 @@ angular.module('cirqlApp')
             //             $state.go('app.thermostats', {roomId: newRoomId});
             //         });
 
-            
+
             // };
             /**
              * Go back to home screen

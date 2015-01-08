@@ -20,7 +20,7 @@
         </div>
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-            <input type="password" placeholder="{{'PASSWORD | translate'}}" ng-model="user.password">
+            <input type="password" placeholder="{{'PASSWORD' | translate}}" ng-model="user.password">
           </label>
         </div>
         <button class="button button-balanced button-block" ng-click="login()">Login</button>
@@ -29,8 +29,8 @@
             <hr translate class="pull-left"/>OR<hr class="pull-right" />
           </div>
         </div>
-        <button class="button button-stable button-positive button-block" ui-sref="create">
-          <a translate>CREATE_NEW_ACCOUNT</a>
+        <button translate class="button button-stable button-positive button-block" ui-sref="create">
+          CREATE_NEW_ACCOUNT
         </button>
       </div>
       <!--<button class="button button-stable button-block" ui-sref="reset-password">-->

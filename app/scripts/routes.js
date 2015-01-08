@@ -201,6 +201,8 @@ angular.module('cirqlApp')
     NEXT: 'Next',
     CANCEL: 'Cancel',
     HOME: 'Home',
+    LOADING: 'Loading',
+    OFFLINE: "You're not connected to the Internet!",
     REMOVE: 'Remove',
     REMOVE_FROM: 'Remove from',
     ADD_TO: 'Add to',
@@ -229,7 +231,11 @@ angular.module('cirqlApp')
     SCHEDULE: 'Schedule',
     THERMOSTATS: 'Thermostats',
     LOGOUT: 'Log Out',
-    ROOM_SETTINGS: 'Room Settings'
+    ROOM_SETTINGS: 'Room Settings',
+    REMOVE_ROOM: 'Remove Room',
+    RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
+    SORRY: 'Sorry',
+    NO_GEO_ALERT: "doesn't share the location."
 
   });
   $translateProvider.translations('de', {
@@ -238,6 +244,8 @@ angular.module('cirqlApp')
     NEXT: 'Weiter',
     CANCEL: 'Abbruch',
     HOME: 'Übersicht',
+    LOADING: 'Lädt',
+    OFFLINE: "Du bist leider nicht mit dem Internet verbunden!",
     REMOVE: 'Entferne',
     REMOVE_FROM: 'Entferne aus',
     ADD_TO: 'Hinzufügen zu',
@@ -257,7 +265,7 @@ angular.module('cirqlApp')
     RETYPE_PASSWORD: 'Wiederhole Passwort',
     ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
     ADD_GATEWAY: 'Füge Gateway hinzu',
-    CIRQL_HEADER: 'Deine intelligentes Raumklima',
+    CIRQL_HEADER: 'Dein intelligentes Raumklima',
     OR: 'ODER',
     CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
     NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wählen deinen Nutzer aus',
@@ -266,7 +274,11 @@ angular.module('cirqlApp')
     SCHEDULE: 'Zeitplan',
     THERMOSTATS: 'Thermostate',
     LOGOUT: 'Abmelden',
-    ROOM_SETTINGS: 'Raumeinstellungen'
+    ROOM_SETTINGS: 'Raumeinstellungen',
+    REMOVE_ROOM: 'Raum löschen',
+    RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
+    SORRY: 'Entschuldige',
+    NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.'
   });
 
   $translateProvider.preferredLanguage('de');

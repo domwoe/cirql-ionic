@@ -2,6 +2,7 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
+    
     <ion-content class="has-header" scroll="false" ng-click="goToHome()">
         <div class="h1 aligncenter"></div>
         <div class="center-block padding">
@@ -27,12 +28,12 @@
         </div>
 
         <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
-            <div class="field" stop-event="click">
+            <div class="field" ng-click="openAirQualityPopover($event)" stop-event="click">
                 <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>
                 <div translate class="alignleft">AIR_QUALITY</div>
                 <div class="alignright">{{sensor.co2}}ppm</div>
             </div>
-            <div class="field" stop-event="click">
+            <div class="field" ng-click="openHumidityPopover($event)" stop-event="click">
                 <climateindicator ng-click="openHumidityPopover($event)" class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity" stop-event="click"></climateindicator>
                 <div translate class="alignleft">HUMIDITY</div>
                 <div class="alignright">{{sensor.humidity}}%</div>
