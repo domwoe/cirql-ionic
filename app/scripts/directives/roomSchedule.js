@@ -31,6 +31,8 @@ angular.module('cirqlApp')
                         this.weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
                         this.localSchedule = {};
                         this.dragging = false;
+                        this.lockVerticalDrag = false;
+                        this.lockHorizontalDrag = false;
 
                         scope.sync = this.localSchedule;
 
@@ -64,40 +66,106 @@ angular.module('cirqlApp')
                             ];
                         }
 
-                        this.mouseDragCallback = function(ev, self, d) {
+                        this.tempToPixelOffset = function(temp, height) {
+                            return this.radius + 1 + 
+                                   (temp - this.minTemp)*(height - 2*(this.radius + 1)) / 
+                                   (this.maxTemp - this.minTemp);
+                        }
 
-                            //	console.log("CALLBACK: ", ev, self, d);
-                            d.px = d.x; // previous x
+                        this.isPointWithinBounds = function(recPath, pX, pY) {
+                            var x = parseInt(recPath.attr('x'));
+                            var y = parseInt(recPath.attr('y'));
+                            var width = parseInt(recPath.attr('width'));
+                            var height = parseInt(recPath.attr('height'));
+                            console.log("X: ", x);
+                            console.log("Y: ", y);
+                            console.log("W: ", width);
+                            console.log("H: ", height);
+
+                            return (
+                                pX >= x &&
+                                x <= pX + width &&
+                                pY >= y &&
+                                y <= pY + height
+                            );
+                        }
+
+                        this.mouseDragCallback = function(ev, d) {
+
                             var m = d3.mouse(ev);
-                            d.x += m[0] - d.dragstart[0];
-                            d.y += m[1] - d.dragstart[1];
 
-                            var m = d3.mouse(ev);
-                            var circle = d3.select(ev);
-                            var group = d3.select(circle.node().parentNode);
+                            if (!this.lockVerticalDrag && !this.lockHorizontalDrag) {
+                                if (Math.abs(m[0] - d.dragstart[0]) > Math.abs(m[1] - d.dragstart[1])) {
+                                    this.lockVerticalDrag = true;
+                                } else {
+                                    this.lockHorizontalDrag = true;
+                                }
+                            } else {
 
-                            var currentX = parseInt(circle.attr('cx'));
-                            var newpos = d.x + currentX;
+                                d.x += m[0] - d.dragstart[0];
+                                d.y += m[1] - d.dragstart[1];
 
-                            if (newpos < this.leftBound) {
-                                newpos = this.leftBound;
-                                d.x = newpos - currentX;
-                            } else if (newpos > this.rightBound) {
-                                newpos = this.rightBound;
-                                d.x = newpos - currentX;
+                                var circle = d3.select(ev);
+                                var group = d3.select(circle.node().parentNode);
+
+                                var currentX = parseInt(circle.attr('cx'));
+                                var currentY = parseInt(circle.attr('cy'));
+                                var newposX = d.x + currentX;
+                                var newposY = d.y + currentY;
+/*
+                                if (this.lockVerticalDrag) {
+
+                                    if (newposX < this.leftBound) {
+                                        newposX = this.leftBound;
+                                        d.x = newposX - currentX;
+                                    } else if (newposX > this.rightBound) {
+                                        newposX = this.rightBound;
+                                        d.x = newposX - currentX;
+                                    }
+                                }
+
+                                if (this.lockHorizontalDrag) {
+                                    
+                                    if (newposY - this.radius < 0) {
+                                        newposY = this.radius;
+                                        d.y = newposY - currentY;
+                                    } else if (newposY > 7*this.height - this.radius) {
+                                        newposY = 7*this.height - this.radius;
+                                        d.y = newposY - currentY;
+                                    }
+                                }
+*/
+                                console.log("MX: ", m[0]);
+                                console.log("MY: ", m[1]);
+                                console.log("DX: ", d.x);
+                                console.log("DY: ", d.y);
+                                console.log("NX: ", newposX);
+                                console.log("NY: ", newposY);
+
+                                if (this.lockVerticalDrag) {
+                                    console.log("Move horizontally");
+                                    var getY = d3.transform(group.attr("transform")).translate[1];
+                                    group.attr('transform', 'translate(' + d.x + ', ' + getY + ')');
+                                } else if (this.lockHorizontalDrag) {
+                                    console.log("Move vertically");
+                                    var getX = d3.transform(group.attr("transform")).translate[0];
+                                    group.attr('transform', 'translate(' + getX + ', ' + d.y + ')');
+                                }
+
+                                if (this.lockVerticalDrag) {
+                                    var time = this.pixelOffsetToTime(newposX);
+                                    scope.hour = this.pad(time[0], 2);
+                                    scope.minute = this.pad(time[1], 2);
+
+                                    // Update the times in the local schedule
+                                    var circleIndex = group.attr('id');
+                                    var entry = this.localSchedule[circleIndex];
+                                    entry.hour = time[0];
+                                    entry.minute = time[1];
+                                } else if (this.lockHorizontalDrag) {
+                                    // Update temperature
+                                }
                             }
-
-                            group.attr('transform', 'translate(' + d.x + ', 0)');
-
-                            var time = self.pixelOffsetToTime(newpos);
-                            scope.hour = this.pad(time[0], 2);
-                            scope.minute = this.pad(time[1], 2);
-
-                            // Update the times in the local schedule
-                            var circleIndex = group.attr('id');
-                            var entry = this.localSchedule[circleIndex];
-                            entry.hour = time[0];
-                            entry.minute = time[1];
                         }
 
                         d3.selection.prototype.moveToFront = function() {
@@ -108,7 +176,7 @@ angular.module('cirqlApp')
 
                         this.selectDay = function(day) {
                             var weekdays = d3.select('#weekdays');
-                            weekdays.append('rect')
+                            var weekCol = weekdays.append('rect')
                                 .attr('id', 'week_column')
                                 .attr('fill', '#483e37')
                                 .attr('fill-opacity', 1)
@@ -118,7 +186,7 @@ angular.module('cirqlApp')
                                 .attr('y', 0)
                                 .attr('height', 210)
                                 .attr('width', 95);
-                            weekdays.append('rect')
+                            var scheduleCol = weekdays.append('rect')
                                 .attr('id', 'schedule_column')
                                 .attr('fill', '#b3b3b3')
                                 .attr('fill-opacity', 1)
@@ -136,6 +204,27 @@ angular.module('cirqlApp')
                             rec1.attr('fill-opacity', 1);
                             rec2.attr('fill-opacity', 1);
                             rec2.attr('stroke-width', 0);
+
+                            var scheduleEntries = dayGroup.selectAll('g.entry');
+                            if (scheduleEntries[0]) {
+                                for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                    var currEntry = d3.select(scheduleEntries[0][i]);
+                                    var index = currEntry.attr('id');
+                                    console.log("INDEX: ", index);
+                                    console.log("SCH: ", this.localSchedule);
+                                    var circle = currEntry.select('circle');
+
+                                    var tempOffset = this.tempToPixelOffset(
+                                        this.localSchedule[index].target,
+                                        weekCol.attr('height')
+                                    );
+                                    var xOffset = tempOffset - circle.attr('cy');
+                                    currEntry.attr('transform', 'translate(0, ' + xOffset + ')');
+//                                    .transition()
+  //                                           .duration(1000)
+                                }
+                            }
+
                             // Move to front
                             dayGroup.moveToFront();
                         }
@@ -155,8 +244,10 @@ angular.module('cirqlApp')
                                 }
                                 this.deselectDay();
                             }
-                            this.selectDay(day);
-                            this.selectedDay = day;
+                            if (this.selectedDay !== day) {
+                                this.selectDay(day);
+                                this.selectedDay = day;
+                            }
                         }
 
                         this.deselectEntry = function() {
@@ -169,12 +260,13 @@ angular.module('cirqlApp')
                                 this.selectedEntry.selectAll('rect')
                                     .style('visibility', 'hidden');
                                 this.selectedEntry = null;
-                                d3.select('#label').style('visibility', 'hidden');
+                                d3.select('#label').style('visibility', 'hidden');                              
                             }
                         }
 
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
+
                             this.deselectEntry();
                             var selection = group.select('circle')
                                 .attr('fill', 'black')
@@ -194,6 +286,28 @@ angular.module('cirqlApp')
                             this.selectedEntry = group;
 
                             d3.select('#label').style('visibility', 'visible');
+
+                            var trX = d3.transform(group.attr("transform")).translate[0];
+                            var trY = d3.transform(group.attr("transform")).translate[1];
+
+                            var xpos = parseInt(selection.attr('cx')) + trX;
+                            var ypos = parseInt(selection.attr('cy')) + trY;
+
+                            var dayGroup = d3.select(this.selectedDay);
+                            dayGroup.insert('rect', 'g.entry')
+                                .attr('id', 'vpath')
+                                .attr('x', xpos - this.radius)
+                                .attr('y', 0)
+                                .attr('width', 2*this.radius)
+                                .attr('height', 7*this.height)
+                                .attr('fill-opacity', 0.5);
+                            dayGroup.insert('rect', 'g.entry')
+                                .attr('id', 'hpath')
+                                .attr('x', 95)
+                                .attr('y', ypos - this.radius)
+                                .attr('width', 650)
+                                .attr('height', 2*this.radius)
+                                .attr('fill-opacity', 0.5);
                         }
 
                         // true for increase, false for decrease
@@ -265,7 +379,8 @@ angular.module('cirqlApp')
                                 .data([{
                                     x: 0,
                                     y: 0,
-                                    px: 0
+                                    px: 0,
+                                    py: 0
                                 }]);
 
                             var circle = entryGroup.append('circle')
@@ -322,33 +437,35 @@ angular.module('cirqlApp')
                                 .attr('r', this.radius)
                                 .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
-                                    .origin(function(d) {
-                                        return d;
-                                    })
                                     .on('dragstart', function(d) {
                                         d3.event.sourceEvent.preventDefault();
                                         d3.event.sourceEvent.stopPropagation();
 
-                                        //console.log("DRAG START ", this);
                                         d.dragstart = d3.mouse(this); // store this
                                         var parentNode = d3.select(this).node().parentNode;
                                         var secondAncestor = d3.select(parentNode).node().parentNode;
                                         self.daySelector(secondAncestor);
                                         self.entrySelector(self, parentNode);
                                         self.dragging = true;
+                                        
                                     })
                                     .on('drag', function(d) {
                                         if (self.dragging) {
                                             //console.log("DRAGGING ", this);
-                                            self.mouseDragCallback(this, self, d);
+                                            self.mouseDragCallback(this, d);
                                         }
                                     })
-                                    .on('dragend', function() {
+                                    .on('dragend', function(d) {
                                         //console.log("DRAG END ", this);
                                         self.dragging = false;
+                                        self.lockHorizontalDrag = false;
+                                        self.lockVerticalDrag = false;
+                                        // Remove path rectangles
+                                        d3.select('#vpath').remove();
+                                        d3.select('#hpath').remove();
                                     })
                                 );
-
+/*
                             var recIncr = entryGroup.append('rect')
                                 .attr('x', xpos - 3*this.radius)
                                 .attr('y', ypos - 4.9*this.radius)
@@ -370,7 +487,7 @@ angular.module('cirqlApp')
                                 .on('click', function() {
                                     self.decrementTemp(this);
                                 });
-
+*/
                         }
 
                         this.renderScheduleEntries = function() {
@@ -411,20 +528,21 @@ angular.module('cirqlApp')
                         }
 
                         this.addEntryCallback = function(self) {
-                            console.log("CLICK ON ADD");
+                         //   console.log("CLICK ON ADD");
                             if (self.selectedDay != null) {
-                                console.log("Adding entry callback");
+                            //    console.log("Adding entry callback");
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
                                 var groupId = this.weekDays[index];
                                 var ypos = self.height * index + self.height / 2;
                                 var id = 'c' + self.nextId;
-                                self.addEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
-                                self.entrySelector('#' + id);
 
                                 // Update local schedule
                                 self.updateSchedule(id, 0, 0, self.defaultTemperature, index + 1);
                                 self.nextId++;
+
+                                self.addEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
+                                self.entrySelector(self, '#' + id);
                             }
                         }
 
@@ -592,65 +710,64 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
-                		<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="-3 -100 752 330" preserveAspectRatio="xMaxYMax" xmlns="http://www.w3.org/2000/svg">\
-                		    <g id="weekdays"> \
-                		    	<g id="monday" class="parent"> \
-                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
-                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                        <svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+                            <g id="weekdays"> \
+                                <g id="monday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                                     </text> \
-                				    <rect id="r1" fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
-                				</g> \
-                				<g id="tuesday" class="parent"> \
-                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
-                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
-                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                    <rect id="r1" fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                                </g> \
+                                <g id="tuesday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
                                     </text> \
-                				</g> \
-                				<g id="wednesday" class="parent"> \
-                			    	<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
-                			    	<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
-                			    	<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                </g> \
+                                <g id="wednesday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                                     </text> \
-                			    </g> \
-                			    <g id="thursday" class="parent"> \
-                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
-                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
-                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
+                                </g> \
+                                <g id="thursday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                                     </text> \
-                				</g> \
-                				<g id="friday" class="parent"> \
-                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
-                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
-                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                </g> \
+                                <g id="friday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                                     </text> \
-                				</g> \
-                				<g id="saturday" class="parent"> \
-                				    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
-                				    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
-                				    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                </g> \
+                                <g id="saturday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                                     </text> \
-                			    </g> \
-                			    <g id="sunday" class="parent"> \
-                	    			<rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-                	    			<rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
-                	    			<text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
+                                </g> \
+                                <g id="sunday" class="parent"> \
+                                    <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect fill="#b3b3b3" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                                    <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
                                 </g> \
-                    		</g> \
-                    		<g id="label" visibility="hidden"> \
-                    			<text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
+                            </g> \
+                            <g id="label" visibility="hidden"> \
+                                <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
                                     <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
                                 </text> \
-                    		</g> \
-                		</svg> \
-                    </div> \
+                            </g> \
+                        </svg> \
                 </ion-content> \
                 <ion-footer-bar class="bar-subfooter"> \
                     <div class="row">\
