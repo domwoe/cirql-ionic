@@ -1,0 +1,19 @@
+<ion-view title="{{ACTIVITY | translate}}">
+
+    <ion-nav-buttons side="left">
+        <button class="button-clear" ng-click="goToRoom()">
+            <i class="ion-chevron-left"></i>
+            <span translate>BACK</span>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header">
+    <ion-list>
+        <ion-item ng-repeat="activity in activities">
+          {{activity.date | customTime }} {{activity.msg}}
+        </ion-item>
+       </ion-list>
+        
+    </ion-content>
+   
+</ion-view>    

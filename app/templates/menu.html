@@ -31,6 +31,9 @@
         <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           SCHEDULE
         </div>
+        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.activity({roomId: room})">
+          ACTIVITY
+        </div>
         <div translate class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           THERMOSTATS
         </div>

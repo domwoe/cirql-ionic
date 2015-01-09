@@ -143,6 +143,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.activity', {
+      url: '/rooms/:roomId/activity',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/activity.html',
+          controller: 'ActivityCtrl'
+        }
+      }
+    })
+
     .state('app.room_settings', {
       url: '/rooms/:roomId/settings',
       views: {
@@ -235,7 +245,8 @@ angular.module('cirqlApp')
     REMOVE_ROOM: 'Remove Room',
     RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
     SORRY: 'Sorry',
-    NO_GEO_ALERT: "doesn't share the location."
+    NO_GEO_ALERT: "doesn't share the location.",
+     ACTIVITY: 'Activity'
 
   });
   $translateProvider.translations('de', {
@@ -278,7 +289,8 @@ angular.module('cirqlApp')
     REMOVE_ROOM: 'Raum löschen',
     RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
     SORRY: 'Entschuldige',
-    NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.'
+    NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.',
+    ACTIVITY: 'Aktivitäten'
   });
 
   $translateProvider.preferredLanguage('de');
