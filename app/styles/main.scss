@@ -518,8 +518,8 @@ input:-ms-input-placeholder {
     margin: 0 auto;
     width: 65px;
     height: 75px;
-    line-height: 75px;
-    top: -215px;
+    //line-height: 60px;
+    top: -135px;
     left: 0px;
     z-index: 1;
 }
@@ -544,14 +544,14 @@ input:-ms-input-placeholder {
     font-size: 12px;
     position: relative;
     left: -39px;
-    top: 77px;
+    top: 23px;
 }
 
 .arrow-right {
     font-size: 12px;
     position: relative;
     left: 39px;
-    top: -76px;
+    top: -21px;
 }
 
 #nextTarget {

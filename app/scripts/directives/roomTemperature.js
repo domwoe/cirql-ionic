@@ -264,10 +264,13 @@ angular.module('cirqlApp')
 
                             flame.select('rect')
                                 .on('click', function() {
+                                    event.stopPropagation();
+                                    event.preventDefault();
                                     console.log('click on flame');
                                     d3.selectAll('.info').remove();
                                     flame.append('text')
                                         .text(scope.valve + '%')
+                                        .attr('font-size', '12px')
                                         .attr('font-weight', 600)
                                         .attr('fill', '#fff')
                                         .attr('class', 'info valve');
