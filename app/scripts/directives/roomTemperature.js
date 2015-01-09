@@ -40,13 +40,38 @@ angular.module('cirqlApp')
                 return [startCart, endCart];
             };
 
+
+            function colorForTemperature(temperature) {
+                if (temperature < 16) {
+                    return 'rgb(42,160,163)';
+                } 
+                else if ( temperature < 19) {
+                    return 'rgb(45,143,120)';
+                }
+                else if (temperature < 22) {
+                    return 'rgb(245,143,39)';
+                }
+                else if (temperature < 25) {
+                    return 'rgb(237,73,23)';
+                }
+                else if (temperature < 30) {
+                    return 'rgb(234,0,27)';
+                }
+                else {
+                     return '#FFF';
+                }
+            }
+
             var updateMeasuredArc = function(arc, start, end, min, max, R, size, roomid) {
-                var carts = drawArc(arc, start, end, min, max, R, size, '#FFF');
+
+                var color = colorForTemperature(end);
+                color = '#000';
+                var carts = drawArc(arc, start, end, min, max, R, size, color);
                 var endCart = carts[1];
                 var icon = d3.select('#thermoIcon' + roomid);
                 icon.attr(
-                    'transform', 'translate(' + (endCart.x - 20.5) + ',' + (endCart.y - 21) + ')'
-                );
+                    'transform', 'translate(' + (endCart.x - 20.5) + ',' + (endCart.y - 21) + ')');
+                //icon.select('#bgCircle').attr('fill',color);
             };
 
             var updateTargetArc = function(arc, start, end, mustHeat, min, max, R, size, roomid) {
@@ -185,7 +210,7 @@ angular.module('cirqlApp')
 
                             measured_ring.attr({
                                 'stroke-width': stroke,
-                                'stroke-opacity': 0.65,
+                                'stroke-opacity': 1,
                             });
 
                             if (!scope.displaytarget) {
@@ -314,7 +339,7 @@ angular.module('cirqlApp')
                                     mustHeat,
                                     scope.min,
                                     scope.max,
-                                    scope.radius - 5,
+                                    scope.radius-5,
                                     size,
                                     scope.roomid
                                 );
@@ -460,7 +485,7 @@ angular.module('cirqlApp')
                 },
                 replace: true,
                 template: '\
-                <svg id="room-temperature" overflow="visible" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg" >\
+                <svg id="room-temperature" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg" >\
                     <g id="scaling{{roomid}}">\
                         <circle fill="none"/>\
                         <g id="label" fill="#FFF" font-weight="normal">\
@@ -484,8 +509,8 @@ angular.module('cirqlApp')
                             <rect x="-5" y="-3" width="20" height="24" fill-opacity="0">\
                         </g>\
                         <g id="arcGroup">\
-                            <path id="measured_path{{roomid}}" fill="none" />\
-                            <path id="target_path{{roomid}}" class="target{{roomid}}" fill="none" />\
+                            <path id="measured_path{{roomid}}"/>\
+                            <path id="target_path{{roomid}}" class="target{{roomid}}"/>\
                             <g id="thermoIcon{{roomid}}">\
                                 <g id="tempDrawer{{roomid}}">\
                                     <rect id="Rectangle-7" fill-opacity="0.75" fill="#FFFFFF" x="0" y="0" width="90" height="35" rx="20"></rect>\

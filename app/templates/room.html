@@ -29,12 +29,12 @@
 
         <div id="roomclimate" class="field-group" ng-show="hasRoomclimate" ng-cloak>
             <div class="field" ng-click="openAirQualityPopover($event)" stop-event="click">
-                <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" value="sensor.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>
+                <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" cssclass="logo" value="sensor.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>
                 <div translate class="alignleft">AIR_QUALITY</div>
                 <div class="alignright">{{sensor.co2}}ppm</div>
             </div>
             <div class="field" ng-click="openHumidityPopover($event)" stop-event="click">
-                <climateindicator ng-click="openHumidityPopover($event)" class="logo" type="humidity" value="sensor.humidity" thresholds="roomValues.thresholds.humidity" stop-event="click"></climateindicator>
+                <climateindicator ng-click="openHumidityPopover($event)" class="logo" type="humidity" cssclass="logo" value="sensor.humidity" thresholds="roomValues.thresholds.humidity" stop-event="click"></climateindicator>
                 <div translate class="alignleft">HUMIDITY</div>
                 <div class="alignright">{{sensor.humidity}}%</div>
             </div>
