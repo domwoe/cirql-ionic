@@ -41,7 +41,12 @@ angular.module('cirqlApp')
 
 
             // Get activities of room from Firebase
-            $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/rooms/' + $scope.room + '/' + language);
+            if(language === 'de') {
+                $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/de');
+            }
+            else {
+                $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/en');
+            }
 
             // Hide Loading
             $scope.activities.$loaded(function() {
