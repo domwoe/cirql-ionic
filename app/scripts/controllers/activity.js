@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('ActivityCtrl', ['$scope', 'user', 'fbutil', '$state', '$ionicLoading',
-        function($scope, user, fbutil, $state, $ionicLoading) {
+    .controller('ActivityCtrl', ['$scope', 'user', 'fbutil', '$state', '$ionicLoading','$translate',
+        function($scope, user, fbutil, $state, $ionicLoading, $translate) {
 
+        	var language = $translate.use();
+     
             // Get roomId
             if ($state.params.hasOwnProperty('roomId')) {
                 $scope.room = $state.params.roomId;
@@ -39,7 +41,7 @@ angular.module('cirqlApp')
 
 
             // Get activities of room from Firebase
-            $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/rooms/' + $scope.room);
+            $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/rooms/' + $scope.room + '/' + language);
 
             // Hide Loading
             $scope.activities.$loaded(function() {
