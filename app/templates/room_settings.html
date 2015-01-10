@@ -7,14 +7,14 @@
             <div class="list">
                 <div class="item item-input-inset transparent">
                     <label class="item-input-wrapper">
-                        <input type="text" ng-model="roomValues.name" class="form-control" id="roomName" placeholder="Give your room a name">
+                        <input type="text" ng-model="roomValues.name" class="form-control" id="roomName" placeholder="{{'GIVE_ROOM_NAME' | translate}}">
                     </label>
                 </div>
                 <label class="item item-input item-select transparent">
                     <div translate class="input-label">
                         CATEGORY
                     </div>
-                    <select ng-model="roomValues.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
+                    <select ng-model="roomValues.category" ng-options="category.$id as category.name | translate for category in categories" id="roomCategory"></select>
                 </label>
                 <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
 

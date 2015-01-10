@@ -1,4 +1,4 @@
-<ion-view title="Select User">
+<ion-view title="{{'SELECT_USER' | translate}}">
   <div class="wrapper">
     <div class="circle">
     </div>
@@ -6,8 +6,9 @@
   <ion-content class="has-header" scroll="false">
   <div class="select-resident">
       <div class="title">
-        <h1>Please select your user</h1>
+        <h1>Hi!</h1>
       </div>
+      <p translate>NEW_DEVICE_MSG</p>
       <div class="list">
         <div ng-cloak class="residents residents-select center">
           <div class="resident" ng-repeat="resident in residents">
@@ -17,16 +18,16 @@
         </div>
         <div class="center-block">
           <div class="divider">
-            <hr class="pull-left"/>OR<hr class="pull-right" />
+            <hr class="pull-left"/>{{'OR' | translate}}<hr class="pull-right" />
           </div>
         </div>
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-            <input type="text" placeholder="Name" ng-model="name">
+            <input type="text" placeholder="{{'ENTER_NAME' | translate}}" ng-model="name">
           </label>
         </div>
-        <button class="button button-stable button-positive button-block" ng-click="create(name)">
-          Create New User
+        <button translate class="button button-stable button-positive button-block" ng-click="create(name)">
+          CREATE_NEW_USER
         </button>
       </div>
       <!--<button class="button button-stable button-block" ui-sref="reset-password">-->
