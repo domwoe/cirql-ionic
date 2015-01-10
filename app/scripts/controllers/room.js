@@ -183,15 +183,15 @@ angular.module('cirqlApp')
 
         $scope.showConfirm = function() {
             $ionicPopup.show({
-                template: '<p>Are you sure you want to remove this room from your account?</p>',
-                title: 'Remove Room',
+                template: '<p>' + $translate('REMOVE_ROOM_CONFIRM_TEXT') + '</p>',
+                title: $translate('REMOVE_ROOM'),
                 subTitle: '',
                 scope: $scope,
                 buttons: [{
-                    text: 'Cancel',
+                    text: $translate('CANCEL'),
                     type: 'button-block button-dark transparent',
                 }, {
-                    text: 'Remove',
+                    text: $translate('REMOVE_ROOM'),
                     type: 'button-block button-assertive transparent',
                     onTap: function() {
                         deleteRoom();
@@ -215,8 +215,30 @@ angular.module('cirqlApp')
                     residents.$save(resident);
                 }
             });
-            //TODO: clean up Netatmo and Thermostats references
-            //
+            var thermostats = fbutil.syncArray(homeUrl + '/thermostats');
+            //set room reference in thermostats to 'null'
+            thermostats.$loaded().then(function() {
+                angular.forEach(thermostats, function(thermostat) {
+                    if(thermostat.room != undefined && thermostat.room == roomId) {
+                        thermostat.room = 'null';
+                        thermostats.$save(thermostat);
+                    }
+                });
+            });
+
+            var sensors = fbutil.syncObject(homeUrl + '/sensors');
+            //delete room reference in netatm
+            sensors.$loaded().then(function() {
+                for( var station in sensors.netatmo.stations) {
+                    for (module in station.modules) {
+                        if(module.room != undefined && module.room == roomId) {
+                            module.room = null;
+                        }
+                    }
+                }
+                sensors.$save();
+            });
+
             //delete room
             fbutil.ref(roomUrl).remove();
             //TODO change code to below after update to angularfire v0.9.0

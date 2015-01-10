@@ -22,7 +22,7 @@
                         <div translate class="input-label">
                             CATEGORY
                         </div>
-                        <select ng-model="room.category" ng-options="category.$id as category.name for category in categories" id="roomCategory"></select>
+                        <select ng-model="room.category" ng-options="category.$id as category.name | translate for category in categories" id="roomCategory"></select>
                         <option value=""></option>
                         </select>
                     </label>

@@ -219,6 +219,7 @@ angular.module('cirqlApp')
     ROOM: 'Room',
     BACK: 'Back',
     NEXT: 'Next',
+    SAVE: 'Save',
     CANCEL: 'Cancel',
     HOME: 'Home',
     LOADING: 'Loading',
@@ -240,11 +241,19 @@ angular.module('cirqlApp')
     CREATE_ACCOUNT_HEADER: 'Create your account',
     PASSWORD: 'Password',
     RETYPE_PASSWORD: 'Retype Password',
+    ABOUT_YOUR_HOME: 'Tell us about your home', 
+    GIVE_HOME_NAME: 'Give your home a name',
+    HOME_ADDRESS: 'Address',
+    HOME_CITY: 'City',
+    HOME_POSTCODE: 'Postcode',
+    HOME_COUNTRY: 'Country',
+    HOME_SETTINGS: 'Home Settings',
     ENTER_GATEWAY_ID: 'Enter your Gateway id to connect it with your account',
     ADD_GATEWAY: 'Add Gateway',
     CIRQL_HEADER: 'Connected intelligent room climate',
     OR: 'OR',
     CREATE_NEW_ACCOUNT: 'Create New Account',
+    SELECT_USER: 'Select User',
     NEW_DEVICE_MSG: 'It seems you logged in from a new device. Please select your user',
     CREATE_NEW_USER: 'Create a new user',
     ENTER_NAME: 'Enter your name',
@@ -253,16 +262,23 @@ angular.module('cirqlApp')
     LOGOUT: 'Log Out',
     ROOM_SETTINGS: 'Room Settings',
     REMOVE_ROOM: 'Remove Room',
+    REMOVE_ROOM_CONFIRM_TEXT: 'Are you sure you want to remove this room from your account?',
     RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
     SORRY: 'Sorry',
     NO_GEO_ALERT: "doesn't share the location.",
-     ACTIVITY: 'Activity'
+    ACTIVITY: 'Activity'
+    BATH_ROOM: 'bath room',
+    BEDROOM: 'bedroom',
+    LIVINGROOM: 'livingroom',
+    OFFICE: 'office'
+
 
   });
   $translateProvider.translations('de', {
     ROOM: 'Raum',
     BACK: 'Zurück',
     NEXT: 'Weiter',
+    SAVE: 'Speichern',
     CANCEL: 'Abbruch',
     HOME: 'Übersicht',
     LOADING: 'Lädt',
@@ -284,11 +300,19 @@ angular.module('cirqlApp')
     CREATE_ACCOUNT_HEADER: 'Lege ein neues Konto an',
     PASSWORD: 'Passwort',
     RETYPE_PASSWORD: 'Wiederhole Passwort',
+    ABOUT_YOUR_HOME: 'Wo bist du zuhause?',
+    GIVE_HOME_NAME: 'Gib deinem Zuhause einen Namen',
+    HOME_ADDRESS: 'Strasse und Hausnummer',
+    HOME_CITY: 'Ort',
+    HOME_POSTCODE: 'PLZ',
+    HOME_COUNTRY: 'Land',
+    HOME_SETTINGS: 'Zuhause einstellen',
     ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
     ADD_GATEWAY: 'Füge Gateway hinzu',
     CIRQL_HEADER: 'Dein intelligentes Raumklima',
     OR: 'ODER',
     CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
+    SELECT_USER: 'Benutzer auswählen',
     NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wählen deinen Nutzer aus',
     CREATE_NEW_USER: 'Neuen Nutzer anlegen',
     ENTER_NAME: 'Gib deinen Namen ein',
@@ -297,10 +321,15 @@ angular.module('cirqlApp')
     LOGOUT: 'Abmelden',
     ROOM_SETTINGS: 'Raumeinstellungen',
     REMOVE_ROOM: 'Raum löschen',
+    REMOVE_ROOM_CONFIRM_TEXT: 'Bist du sicher, dass du diesen Raum löschen möchtest?',
     RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
     SORRY: 'Entschuldige',
     NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.',
     ACTIVITY: 'Aktivitäten'
+    BATH_ROOM: 'Badezimmer',
+    BEDROOM: 'Schlafzimmer',
+    LIVINGROOM: 'Wohnzimmer',
+    OFFICE: 'Büro'
   });
 
   $translateProvider.preferredLanguage('de');

@@ -1,6 +1,6 @@
 <ion-view>
   <ion-header-bar class="bar-transparent">
-    <h1 class="title">Create Account</h1>
+    <h1 translate class="title">CREATE_ACCOUNT_TITLE</h1>
   </ion-header-bar>
   <div class="wrapper">
     <div class="circle">
@@ -12,37 +12,37 @@
     <ion-content class="has-header" scroll="false">
       <div class="create">
         <div class="title">
-          <h1>Tell us about your home</h1>
+          <h1 translate>ABOUT_YOUR_HOME</h1>
         </div>
         <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
         </div>
         <div class="list">
           <div class="item item-input-inset transparent">
             <label class="item-input-wrapper">
-              <input type="text" ng-model="home.name" placeholder="Give your home a name">
+              <input type="text" ng-model="home.name" placeholder="{{'GIVE_HOME_NAME' | translate}}">
             </label>
           </div>
           <div class="item item-input-inset transparent">
             <label class="item-input-wrapper">
-              <input type="text" ng-model="home.address" placeholder="Address">
+                <input type="text" ng-model="home.address" placeholder="{{'HOME_ADDRESS' | translate}}">
             </label>
           </div>
           <div class="item item-input-inset transparent">
             <label class="item-input-wrapper">
-              <input type="text" ng-model="home.city" placeholder="City">
+                <input type="text" ng-model="home.city" placeholder="{{'HOME_CITY' | translate}}">
             </label>
           </div>
           <div class="item item-input-inset transparent">
             <label class="item-input-wrapper">
-              <input type="text" ng-model="home.postcode" placeholder="Postcode">
+                <input type="text" ng-model="home.postcode" placeholder="{{'HOME_POSTCODE' | translate}}">
             </label>
           </div>
           <div class="item item-input-inset transparent">
             <label class="item-input-wrapper">
-              <input type="text" ng-model="home.country" placeholder="Country">
+                <input type="text" ng-model="home.country" placeholder="{{'HOME_COUNTRY' | translate}}">
             </label>
           </div>
-          <button ng-click="createHome()" type="submit" class="button button-stable button-balanced button-block">Next</button>
+          <button translate ng-click="createHome()" type="submit" class="button button-stable button-balanced button-block">NEXT</button>
         </div>
       </div>
     </ion-content>
