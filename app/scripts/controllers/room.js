@@ -255,8 +255,30 @@ angular.module('cirqlApp')
                     residents.$save(resident);
                 }
             });
-            //TODO: clean up Netatmo and Thermostats references
-            //
+            var thermostats = fbutil.syncArray(homeUrl + '/thermostats');
+            //set room reference in thermostats to 'null'
+            thermostats.$loaded().then(function() {
+                angular.forEach(thermostats, function(thermostat) {
+                    if(thermostat.room != undefined && thermostat.room == roomId) {
+                        thermostat.room = 'null';
+                        thermostats.$save(thermostat);
+                    }
+                });
+            });
+
+            var sensors = fbutil.syncObject(homeUrl + '/sensors');
+            //delete room reference in netatm
+            sensors.$loaded().then(function() {
+                for( var station in sensors.netatmo.stations) {
+                    for (module in station.modules) {
+                        if(module.room != undefined && module.room == roomId) {
+                            module.room = null;
+                        }
+                    }
+                }
+                sensors.$save();
+            });
+
             //delete room
             fbutil.ref(roomUrl).remove();
             //TODO change code to below after update to angularfire v0.9.0
