@@ -7,7 +7,7 @@
   <ion-content scroll="false">
   <div class="residents away">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: true }">
-      <img class="avatar" src="/images/avatar{{resident.avatar || '00'}}.png"/>
+      <img class="avatar" src="/images/avatar{{resident.avatar || '0'}}.png"/>
       <br />
       {{resident.name}}
     </div>
