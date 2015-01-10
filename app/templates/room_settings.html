@@ -1,7 +1,4 @@
-<ion-view title="{{roomValues.name}}">
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
+<ion-view title="{{roomValues.name}} {{'SETTINGS' | translate}}">
     <ion-content class="has-header center" scroll="false">
         <div class="create">
             <div class="list">
@@ -23,7 +20,8 @@
 
                     <div ng-cloak class="residents residents-select center">
                         <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
-                            <div class="avatar" ng-click="toggleBoundResident(resident)"></div>
+                            <img class="avatar" ng-click="toggleBoundResident(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+                            <br />
                             {{resident.name}}
                         </div>
                     </div>

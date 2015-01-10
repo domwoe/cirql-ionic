@@ -17,7 +17,9 @@ angular.module('cirqlApp')
             $scope.user = user;
             $scope.name = '';
             $scope.resident = {
-                name: ''
+                name: '',
+                avatar: '0',
+                allowsGeolocation: false
             };
             $scope.boundResidents = {};
             $scope.logout = simpleLogin.logout;
@@ -52,13 +54,17 @@ angular.module('cirqlApp')
 
             });
 
+            $scope.selectAvatar = function(avatar) {
+              $scope.resident.avatar = avatar;
+            };
+
+            $scope.isSelected = function(avatar) {
+              return $scope.resident.avatar == avatar;
+            };
+
             $scope.createResident = function() {
-                var name = $scope.resident.name;
-                console.log('creating Resident ' + name);
-                if (name) {
-                    $scope.residents.$add({
-                        name: name
-                    });
+                if ($scope.resident.name) {
+                    $scope.residents.$add($scope.resident);
                     $scope.user.name = name;
                     console.log(name + ' added');
                     $state.go('wizard.home');

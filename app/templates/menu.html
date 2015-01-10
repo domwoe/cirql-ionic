@@ -21,11 +21,12 @@
         </div>
         <div>
           <div ng-if="isRoom()" ng-cloak class="residents residents-select">
-                          <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
-                              <div class="avatar" ng-click="toggleBoundResident(resident)"></div>
-                              {{resident.name}}
-                          </div>
-                      </div>
+            <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
+              <img class="avatar" ng-click="toggleBoundResident(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+              <br />
+              {{resident.name}}
+            </div>
+          </div>
           <span><ion-toggle style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
         </div>
         <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
@@ -51,6 +52,9 @@
         </div> -->
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.gateway({home: true})">
           Gateway
+        </div>
+        <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.resident_settings">
+          RESIDENT_SETTINGS
         </div>
         <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.home_settings">
           HOME_SETTINGS
