@@ -60,11 +60,8 @@ angular.module('cirqlApp')
             };
 
             function loadHome(user) {
-                if ($scope.home) {
-                    $scope.home.$destroy();
-                }
-                // var home = fbutil.syncObject('homes/'+user.uid);
-                // home.$bindTo($scope, 'home');
+                var home = fbutil.syncObject('homes/' + user.uid);
+                $scope.home = home;
 
                 var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
                 $scope.rooms = rooms;
@@ -123,6 +120,9 @@ angular.module('cirqlApp')
                 $ionicNavBarDelegate.back();
             };
 
-
+            $scope.saveHome = function(home) {
+              home.$save();
+              $state.go('app.home');
+            };
         }
     ]);

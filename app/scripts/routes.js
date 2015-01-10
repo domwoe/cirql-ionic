@@ -83,6 +83,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.home_settings', {
+      url: '/settings',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/home_settings.html',
+          controller: 'HomeCtrl'
+        }
+      }
+    })
+
     .state('app.holiday', {
       url: '/holiday',
       views: {
