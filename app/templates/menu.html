@@ -22,7 +22,7 @@
         <div>
           <div ng-if="isRoom()" ng-cloak class="residents residents-select">
             <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
-              <img class="avatar" ng-click="toggleBoundResident(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+              <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
               <br />
               {{resident.name}}
             </div>
