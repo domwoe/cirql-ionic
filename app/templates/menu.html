@@ -26,7 +26,7 @@
                               {{resident.name}}
                           </div>
                       </div>
-          <span><ion-toggle style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
+          <span><ion-toggle style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="addRawActivity()">AutoAway</ion-toggle>
         </div>
         <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           SCHEDULE

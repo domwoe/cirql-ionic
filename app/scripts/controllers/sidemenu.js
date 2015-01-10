@@ -23,6 +23,8 @@ angular.module('cirqlApp')
 
                 var boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
                 $scope.boundResidents = boundResidents;
+
+                 var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/raw');
             }
 
             function disableAutoAway() {
@@ -91,6 +93,21 @@ angular.module('cirqlApp')
 
                 }
 
+            };
+
+            $scope.addRawActivity = function() {
+
+                var date = new Date();
+               
+                var activity = {
+                    date: date.toString(),
+                    type: 'auto-away',
+                    value: $scope.usesAutoAway.$value,
+                    name: $scope.residents.$getRecord(user.residentId).name
+                };
+
+                activities.$add(activity);
+                console.log('Activity added:' +JSON.stringify(activity));
             };
 
             $scope.goToSchedule = function() {
