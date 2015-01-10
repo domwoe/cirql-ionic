@@ -103,21 +103,21 @@ angular.module('cirqlApp')
       }
     })
 
-    .state('app.user', {
-      url: '/user',
-      views: {
-        'menuContent' :{
-          templateUrl: 'templates/home.html',
-          controller: 'HomeCtrl'
-        }
-      }
-    })
-
     .state('app.resident', {
       url: '/resident',
       views: {
         'menuContent' :{
           templateUrl: 'templates/resident.html',
+          controller: 'ResidentCtrl'
+        }
+      }
+    })
+
+    .state('app.resident_settings', {
+      url: '/user',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/resident_settings.html',
           controller: 'ResidentCtrl'
         }
       }
@@ -261,6 +261,7 @@ angular.module('cirqlApp')
     THERMOSTATS: 'Thermostats',
     LOGOUT: 'Log Out',
     ROOM_SETTINGS: 'Room Settings',
+    SETTINGS: 'Settings',
     REMOVE_ROOM: 'Remove Room',
     REMOVE_ROOM_CONFIRM_TEXT: 'Are you sure you want to remove this room from your account?',
     RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
@@ -270,7 +271,11 @@ angular.module('cirqlApp')
     BATH_ROOM: 'bath room',
     BEDROOM: 'bedroom',
     LIVINGROOM: 'livingroom',
-    OFFICE: 'office'
+    OFFICE: 'office',
+    RESIDENT_SETTINGS: 'User Settings',
+    RESIDENT_SETTINGS_HEADER: 'Your User',
+    SELECT_AVATAR: 'select your avatar',
+    ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy'
 
 
   });
@@ -320,6 +325,7 @@ angular.module('cirqlApp')
     THERMOSTATS: 'Thermostate',
     LOGOUT: 'Abmelden',
     ROOM_SETTINGS: 'Raumeinstellungen',
+    SETTINGS: 'Einstellungen',
     REMOVE_ROOM: 'Raum löschen',
     REMOVE_ROOM_CONFIRM_TEXT: 'Bist du sicher, dass du diesen Raum löschen möchtest?',
     RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
@@ -329,7 +335,11 @@ angular.module('cirqlApp')
     BATH_ROOM: 'Badezimmer',
     BEDROOM: 'Schlafzimmer',
     LIVINGROOM: 'Wohnzimmer',
-    OFFICE: 'Büro'
+    OFFICE: 'Büro',
+    RESIDENT_SETTINGS: 'Benutzereinstellungen',
+    RESIDENT_SETTINGS_HEADER: 'Dein Benutzer',
+    SELECT_AVATAR: 'Wähle dein Avatar',
+    ALLOW_GEO_TEXT: 'Erlaube Cirql festzustellen wenn du nicht zuhause bist und spare Energie'
   });
 
   $translateProvider.preferredLanguage('de');

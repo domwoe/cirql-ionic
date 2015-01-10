@@ -76,11 +76,11 @@ a {
     -webkit-border-radius: 100%;
     border: 1px solid rgba(255, 255, 255, 0.5);
     position: absolute;
-    top: 10%;
+    top: 7%;
     left: -30%;
 }
 .has-header {
-    top: 12%;
+    top: 10%;
 }
 .title {
     position: relative;
@@ -261,12 +261,8 @@ input:-ms-input-placeholder {
     text-align: center;
 }
 .avatar {
-    width: 0; 
-    padding: 16px;
-    border-radius: 100%;
-    -moz-border-radius: 100%;
-    -webkit-border-radius: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    width: 35px;
+    height: 35px;
 }
 .unselected {
     opacity: 0.4;

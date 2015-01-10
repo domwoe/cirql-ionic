@@ -9,7 +9,7 @@
       <div class="step step-3">3</div>
       <div class="step step-4">4</div>
     </div>
-    <ion-content class="has-header" scroll="false">
+    <ion-content scroll="false" has-header="false">
       <div class="create">
         <div class="title">
           <h1 translate>CREATE_NEW_USER</h1>
@@ -22,15 +22,32 @@
               <input type="text" ng-model="resident.name" placeholder="{{'ENTER_NAME' | translate}}">
             </label>
           </div>
-          <li class="item item-toggle">
-            Let Cirql detect if you are <br> away and save energy
-            <label class="toggle toggle-balanced">
-              <input type="checkbox">
-              <div class="track">
-                <div class="handle"></div>
-              </div>
-            </label>
-          </li>
+          <h3 translate>SELECT_AVATAR</h3>
+          <div class="row">
+            <div class="col" ng-repeat="avatar in [0,1,2,3,4]">
+              <img class="avatar" ng-class="{unselected: !isSelected(avatar)}" ng-click="selectAvatar(avatar)" src="/images/avatar{{avatar}}.png"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col" ng-repeat="avatar in [5,6,7,8,9]">
+              <img class="avatar" ng-class="{unselected: !isSelected(avatar)}" ng-click="selectAvatar(avatar)" src="/images/avatar{{avatar}}.png"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-67">
+              <p translate >ALLOW_GEO_TEXT</p>
+            </div>
+            <div class="col">
+              <li class="item item-toggle" style="height:43px">
+                <label class="toggle toggle-balanced">
+                  <input type="checkbox" ng-model="resident.allowsGeolocation">
+                  <div class="track">
+                    <div class="handle"></div>
+                  </div>
+                </label>
+              </li>
+            </div>
+          </div>
           <button translate ng-click="createResident()" class="button button-stable button-balanced button-block">NEXT</button>
         </div>
       </div>
