@@ -32,7 +32,7 @@ angular.module('cirqlApp')
             }
 
             $scope.isBoundResident = function(resident) {
-                return resident.rooms[$scope.room] && resident.allowsGeolocation;
+                return resident.rooms && resident.rooms[$scope.room] && resident.allowsGeolocation;
             };
 
             $scope.hasBoundResidents = function() {
