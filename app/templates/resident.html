@@ -12,7 +12,7 @@
       <div class="list">
         <div ng-cloak class="residents residents-select center">
           <div class="resident" ng-repeat="resident in residents">
-            <img class="avatar" ng-click="select(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+            <img class="avatar" ng-click="select(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
             <br />
             {{resident.name}}
           </div>
