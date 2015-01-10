@@ -7,7 +7,7 @@
  */
 angular.module('cirqlApp')
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider,$translateProvider) {
   $stateProvider
     .state('login', {
       url: '/login',
@@ -204,4 +204,93 @@ angular.module('cirqlApp')
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+
+  $translateProvider.translations('en', {
+    ROOM: 'Room',
+    BACK: 'Back',
+    NEXT: 'Next',
+    CANCEL: 'Cancel',
+    HOME: 'Home',
+    LOADING: 'Loading',
+    OFFLINE: "You're not connected to the Internet!",
+    REMOVE: 'Remove',
+    REMOVE_FROM: 'Remove from',
+    ADD_TO: 'Add to',
+    NO_THERMOSTATS: 'There are no unassigned paired thermostats available',
+    ADD_THERMOSTAT: 'Add Thermostat',
+    PAIR_THERMOSTAT: 'Pair new Thermostat',
+    AIR_QUALITY: 'Air Quality',
+    HUMIDITY: 'Humidity',
+    ADD_ROOM_TITLE: 'Add Room',
+    ADD_ROOM_HEADER: 'Add a room to your home',
+    GIVE_ROOM_NAME: 'Room name',
+    CATEGORY: 'Category',
+    ADD_ROOM: 'Add Room',
+    CREATE_ACCOUNT_TITLE: 'Create account',
+    CREATE_ACCOUNT_HEADER: 'Create your account',
+    PASSWORD: 'Password',
+    RETYPE_PASSWORD: 'Retype Password',
+    ENTER_GATEWAY_ID: 'Enter your Gateway id to connect it with your account',
+    ADD_GATEWAY: 'Add Gateway',
+    CIRQL_HEADER: 'Connected intelligent room climate',
+    OR: 'OR',
+    CREATE_NEW_ACCOUNT: 'Create New Account',
+    NEW_DEVICE_MSG: 'It seems you logged in from a new device. Please select your user',
+    CREATE_NEW_USER: 'Create a new user',
+    ENTER_NAME: 'Enter your name',
+    SCHEDULE: 'Schedule',
+    THERMOSTATS: 'Thermostats',
+    LOGOUT: 'Log Out',
+    ROOM_SETTINGS: 'Room Settings',
+    REMOVE_ROOM: 'Remove Room',
+    RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
+    SORRY: 'Sorry',
+    NO_GEO_ALERT: "doesn't share the location."
+
+  });
+  $translateProvider.translations('de', {
+    ROOM: 'Raum',
+    BACK: 'Zurück',
+    NEXT: 'Weiter',
+    CANCEL: 'Abbruch',
+    HOME: 'Übersicht',
+    LOADING: 'Lädt',
+    OFFLINE: "Du bist leider nicht mit dem Internet verbunden!",
+    REMOVE: 'Entferne',
+    REMOVE_FROM: 'Entferne aus',
+    ADD_TO: 'Hinzufügen zu',
+    NO_THERMOSTATS: 'Es sind keine nicht-verbundene Thermostate verfügbar',
+    ADD_THERMOSTAT: 'Thermostat hinzufügen',
+    PAIR_THERMOSTAT: 'Neues Thermostat verbinden',
+    AIR_QUALITY: 'Luftqualität',
+    HUMIDITY: 'Luftfeuchtigkeit',
+    ADD_ROOM_TITLE: 'Raum anlegen',
+    ADD_ROOM_HEADER: 'Lege einen neuen Raum an',
+    GIVE_ROOM_NAME: 'Raumname',
+    CATEGORY: 'Kategorie',
+    ADD_ROOM: 'Raum anlegen',
+    CREATE_ACCOUNT_TITLE: 'Neues Konto',
+    CREATE_ACCOUNT_HEADER: 'Lege ein neues Konto an',
+    PASSWORD: 'Passwort',
+    RETYPE_PASSWORD: 'Wiederhole Passwort',
+    ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
+    ADD_GATEWAY: 'Füge Gateway hinzu',
+    CIRQL_HEADER: 'Dein intelligentes Raumklima',
+    OR: 'ODER',
+    CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
+    NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wählen deinen Nutzer aus',
+    CREATE_NEW_USER: 'Neuen Nutzer anlegen',
+    ENTER_NAME: 'Gib deinen Namen ein',
+    SCHEDULE: 'Zeitplan',
+    THERMOSTATS: 'Thermostate',
+    LOGOUT: 'Abmelden',
+    ROOM_SETTINGS: 'Raumeinstellungen',
+    REMOVE_ROOM: 'Raum löschen',
+    RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
+    SORRY: 'Entschuldige',
+    NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.'
+  });
+
+  $translateProvider.preferredLanguage('de');
+  $translateProvider.fallbackLanguage('en');
 });

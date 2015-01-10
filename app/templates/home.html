@@ -22,7 +22,9 @@
   <ion-content class="has-residents">
       <div class="rooms-table padding">
         <div class="row" ng-click="goToRoom(room.$id)" ng-repeat="room in rooms" ng-if="room.name">
-          <div class="left">{{room.name}}<hr/> 
+          <div class="left">{{room.name}}<hr/>
+          <climateindicator ng-if="room.co2" ng-click="openAirQualityPopover($event)" class="logo-home logo-margin" type="airquality" cssclass="logo-home" value="room.co2" thresholds="room.thresholds.co2" stop-event="click"></climateindicator>
+          <climateindicator ng-if="room.humidity" ng-click="openAirQualityPopover($event)" class="logo-home logo-margin" type="humidity" cssclass="logo-home" value="room.humidity" thresholds="room.thresholds.humidity" stop-event="click"></climateindicator>
           </div> 
           <div class="right"> 
 
@@ -37,7 +39,8 @@
                     roomid="room.$id"
                     targettemp="room.virtualTarget"
                     measuredtemp="room.temperature"
-                    mode="room.mode" 
+                    mode="room.mode"
+                    valve="room.valve"
                     isaway="room.isAway"
                     usesautoaway="room.usesAutoAway"
                     color="{{ currentColor }}" 

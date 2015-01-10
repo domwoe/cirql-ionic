@@ -1,6 +1,6 @@
 <ion-view>
   <ion-header-bar class="bar-transparent">
-    <h1 class="title">Create Account</h1>
+    <h1 translate class="title">CREATE_ACCOUNT_TITLE</h1>
   </ion-header-bar>
   <div class="wrapper">
     <div class="circle">
@@ -12,7 +12,7 @@
   <ion-content class="has-header" scroll="false">
   <div class="create">
       <div class="title">
-        <h1>Create your account</h1>
+        <h1 translate>CREATE_ACCOUNT_HEADER</h1>
       </div>
       <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
       </div>
@@ -24,17 +24,19 @@
         </div>
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-            <input type="password" ng-model="user.password" placeholder="Password">
+            <input type="password" ng-model="user.password" placeholder="{{'PASSWORD' | translate}}">
           </label>
         </div>
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-        <input type="password" ng-model="user.confirm" placeholder="Retype Password">
+        <input type="password" ng-model="user.confirm" placeholder="{{'RETYPE_PASSWORD' | translate}}">
           </label>
         </div>
-        <button ng-click="createAccount()" class="button button-stable button-balanced button-block">Next</button>
-        <button class="button button-stable button-positive button-block" ui-sref="login">
-         Cancel
+        <button translate ng-click="createAccount()" class="button button-stable button-balanced button-block">
+         NEXT
+        </button>
+        <button translate class="button button-stable button-positive button-block" ui-sref="login">
+         CANCEL
         </button>
       </div>
       <!--<button class="button button-stable button-block" ui-sref="reset-password">-->

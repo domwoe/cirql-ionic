@@ -2,7 +2,8 @@
 
     <ion-nav-buttons side="left">
         <button class="button-clear" ng-click="goToRoom()">
-            <i class="ion-chevron-left"></i> Back
+            <i class="ion-chevron-left"></i>
+            <span translate>BACK</span>
         </button>
     </ion-nav-buttons>
 
@@ -78,13 +79,13 @@
 
             <div ng-hide="isAddView" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="delThermostat(thermostat)">
-                    Remove from {{roomObj.name}}
+                <span translate>REMOVE_FROM</span> {{roomObj.name}}
                 </button>
             </div>
 
             <div ng-show="isAddView" class="item item-image">
                 <button class="button button-full button-balanced" ng-click="addThermostat(thermostat)">
-                    Add to {{roomObj.name}}
+                    <span translate>ADD_TO</span> {{roomObj.name}}
                 </button>
             </div>
 
@@ -92,17 +93,17 @@
         </div>
 
         <div class="centerAll" ng-cloak>
-            <h2 ng-if="(thermostats | filter:thermostatFilter).length==0">There are no unassigned paired thermostats available.</h2>
-            <h3 ng-if="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3>
+            <h2 translate ng-if="(thermostats | filter:thermostatFilter).length==0">NO_THERMOSTATS</h2>
+            <!-- <h3 translate ng-if="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3> -->
         </div>
 
     </ion-content>
     <ion-footer-bar class="bar-footer">
-        <button ng-hide="isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
-            Add Thermostat
+        <button translate ng-hide="isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
+            ADD_THERMOSTAT
         </button>
-        <button ng-show="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
-            Pair New Thermostat
+        <button translate ng-show="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+            PAIR_THERMOSTAT
         </button>
     </ion-footer-bar>
 </ion-view>    

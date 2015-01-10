@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup', '$filter',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup, $filter) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -28,7 +28,7 @@ angular.module('cirqlApp')
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);
-        };    
+        };
 
         var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
         $scope.residents = residents;
@@ -41,21 +41,21 @@ angular.module('cirqlApp')
         $scope.hasThermostats = null;
 
         trvObj.$loaded(function(trvs) {
-            console.log(trvs);
             if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
                 $scope.hasThermostats = false;
                 console.log($scope.hasThermostats);
             } else {
 
                 $scope.hasThermostats = true;
-                console.log($scope.hasThermostats);
-
             }
         });
 
         $scope.showNextTarget = function() {
-
-            return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
+            if ($scope.roomValues) {
+                return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
+            } else {
+                return false;
+            }
 
         }
 
@@ -120,8 +120,15 @@ angular.module('cirqlApp')
         }).then(function(popover) {
             $scope.airQualityPopover = popover;
         });
+
+        var $translate = $filter('translate');
+
         $scope.openAirQualityPopover = function($event) {
-            $scope.airQualityPopover.show($event);
+            //$scope.airQualityPopover.show($event);
+            $ionicPopup.alert({
+                title: $translate('AIR_QUALITY'),
+                template: $scope.roomValues.airQualityMsg
+            });
         };
         $scope.closeAirQualityPopover = function() {
             $scope.airQualityPopover.hide();
@@ -137,7 +144,11 @@ angular.module('cirqlApp')
             $scope.humidityPopover = popover;
         });
         $scope.openHumidityPopover = function($event) {
-            $scope.humidityPopover.show($event);
+            //$scope.humidityPopover.show($event);
+            $ionicPopup.alert({
+                title: $translate('HUMIDITY'),
+                template: $scope.roomValues.humidityMsg
+            });
         };
         $scope.closeHumidityPopover = function() {
             $scope.humidityPopover.hide();
@@ -167,26 +178,47 @@ angular.module('cirqlApp')
         };
 
         $scope.isBoundResident = function(resident) {
-            return resident.rooms[room]
+            return resident.rooms[room] && resident.allowsGeolocation;
         };
 
         $scope.toggleBoundResident = function(resident) {
             if (roomObj.residents === undefined) {
                 roomObj.residents = {};
-            }
-            if (resident.rooms != undefined) {
-                if (resident.rooms[room] != undefined) {
-                    resident.rooms[room] = !resident.rooms[room];
-                } else {
-                    resident.rooms[room] = true;
-                }
             } else {
-                resident['rooms'] = {};
-                resident.rooms[room] = true;
+
+                if (resident.rooms != undefined) {
+
+                    if (!resident.allowsGeolocation && !resident.rooms[room]) {
+
+                        $ionicPopup.alert({
+                            template: resident.name + ' {{"NO_GEO_ALERT" | translate}}'
+                        });
+
+                    }
+
+                    else {
+
+                        if (resident.rooms[room] != undefined) {
+                            resident.rooms[room] = !resident.rooms[room];
+                        } else {
+                            resident.rooms[room] = true;
+                        }
+
+                    }
+
+                    
+                } else {
+                    if (resident.allowsGeolocation) {
+                        resident['rooms'] = {};
+                        resident.rooms[room] = true;
+                    }    
+                }
+                residents.$save(resident);
+                roomObj.residents[resident.$id] = resident.rooms[room];
+                roomObj.$save();
+
             }
-            residents.$save(resident);
-            roomObj.residents[resident.$id] = resident.rooms[room];
-            roomObj.$save();
+
         };
 
         $scope.showConfirm = function() {
@@ -218,7 +250,7 @@ angular.module('cirqlApp')
             //delete all room references in residents
             var roomId = roomObj.$id;
             angular.forEach(residents, function(resident) {
-                if(resident.rooms != undefined && resident.rooms[roomId] != undefined) {
+                if (resident.rooms != undefined && resident.rooms[roomId] != undefined) {
                     resident.rooms[roomId] = null;
                     residents.$save(resident);
                 }
@@ -231,5 +263,13 @@ angular.module('cirqlApp')
             //roomObj.$remove();
             $state.go('app.home');
         };
+
+        $scope.goToRoom = function() {
+            $ionicSideMenuDelegate.canDragContent(true);
+            $state.go('app.room', {
+                roomId: room
+            });
+        };
+
     }
 ]);

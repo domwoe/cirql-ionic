@@ -8,7 +8,7 @@
   <ion-content class="has-header" scroll="false">
   <div class="login">
       <div class="title">
-        <h1>Connected intelligent room climate</h1>
+        <h1 translate>CIRQL_HEADER</h1>
       </div>
       <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
       </div>
@@ -20,17 +20,17 @@
         </div>
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
-            <input type="password" placeholder="Password" ng-model="user.password">
+            <input type="password" placeholder="{{'PASSWORD' | translate}}" ng-model="user.password">
           </label>
         </div>
         <button class="button button-balanced button-block" ng-click="login()">Login</button>
         <div class="center-block">
           <div class="divider">
-            <hr class="pull-left"/>OR<hr class="pull-right" />
+            <hr translate class="pull-left"/>OR<hr class="pull-right" />
           </div>
         </div>
-        <button class="button button-stable button-positive button-block" ui-sref="create">
-          Create New Account
+        <button translate class="button button-stable button-positive button-block" ui-sref="create">
+          CREATE_NEW_ACCOUNT
         </button>
       </div>
       <!--<button class="button button-stable button-block" ui-sref="reset-password">-->

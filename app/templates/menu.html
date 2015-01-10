@@ -13,24 +13,32 @@
     </header> -->
     <ion-content scroll="true" class="center">
       <div class="list">
-        <div class="item nav-clear menu-close" ui-sref="app.home">
-          Home
+        <div translate class="item nav-clear menu-close" ui-sref="app.home">
+          HOME
         </div>
-        <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
-          Add Room
+        <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
+          ADD_ROOM
         </div>
-        <ion-toggle ng-show="isRoom() && mode.$value === 'auto'"  ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
-        <div class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
-          Schedule
+        <div>
+          <div ng-if="isRoom()" ng-cloak class="residents residents-select">
+                          <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
+                              <div class="avatar" ng-click="toggleBoundResident(resident)"></div>
+                              {{resident.name}}
+                          </div>
+                      </div>
+          <span><ion-toggle style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced">AutoAway</ion-toggle>
         </div>
-        <div class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
-          Thermostats
+        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
+          SCHEDULE
+        </div>
+        <div translate class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
+          THERMOSTATS
         </div>
         <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
           Netatmo
         </div>
-        <div class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.room_settings({roomId: room})">
-          Room Settings
+        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.room_settings({roomId: room})">
+          ROOM_SETTINGS
         </div>
         <!-- <div class="item nav-clear menu-close"  ng-show="isHome()">
           Home Settings
@@ -47,8 +55,8 @@
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.home_settings">
           Home Settings
         </div>
-        <div class="item nav-clear menu-close" ng-click="logout()">
-          Log Out
+        <div translate class="item nav-clear menu-close" ng-click="logout()">
+          LOGOUT
         </div>
       </div>
     </ion-content>
