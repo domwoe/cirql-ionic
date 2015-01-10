@@ -120,7 +120,8 @@ angular.module('cirqlApp')
                     radius: '@',
                     color: '@',
                     bgcolor: '@',
-                    stroke: '@'
+                    stroke: '@',
+                    addactivityfn: '&'
                 },
                 link: function(scope, element, attrs) {
                     var ring_background = element.find('circle'),
@@ -181,7 +182,8 @@ angular.module('cirqlApp')
                                         // releasing the icon
                                         targetTimer = setTimeout(function() {
                                             scope.targettemp = target;
-                                        }, 1000);
+                                            scope.addactivityfn( { activity: {type: 'set-target', target: target} } );
+                                        }, 500);
                                         //heartbeat();
                                     }));
                             } else {
@@ -488,7 +490,7 @@ angular.module('cirqlApp')
                 },
                 replace: true,
                 template: '\
-                <svg id="room-temperature" width="100%" height="100%" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg" >\
+                <svg id="room-temperature" width="100%" height="100%" overflow:"visible" viewBox="0 0 250 250" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg" >\
                     <g id="scaling{{roomid}}">\
                         <circle fill="none"/>\
                         <g id="label" fill="#FFF" font-weight="normal">\

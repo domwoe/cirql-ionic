@@ -153,6 +153,16 @@ angular.module('cirqlApp')
       }
     })
 
+    .state('app.activity', {
+      url: '/rooms/:roomId/activity',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/activity.html',
+          controller: 'ActivityCtrl'
+        }
+      }
+    })
+
     .state('app.room_settings', {
       url: '/rooms/:roomId/settings',
       views: {
@@ -257,6 +267,7 @@ angular.module('cirqlApp')
     RESIDENT_BINDING_MSG: 'Select users whose location should be considered in AutoAway mode',
     SORRY: 'Sorry',
     NO_GEO_ALERT: "doesn't share the location.",
+    ACTIVITY: 'Activity',
     BATH_ROOM: 'bath room',
     BEDROOM: 'bedroom',
     LIVINGROOM: 'livingroom',
@@ -265,6 +276,7 @@ angular.module('cirqlApp')
     RESIDENT_SETTINGS_HEADER: 'Your User',
     SELECT_AVATAR: 'select your avatar',
     ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy'
+
 
   });
   $translateProvider.translations('de', {
@@ -319,6 +331,7 @@ angular.module('cirqlApp')
     RESIDENT_BINDING_MSG: 'Wähle aus, von welchen Nutzern die Anwesenheitsdaten einbezogen werden, wenn AutoAway aktiviert ist',
     SORRY: 'Entschuldige',
     NO_GEO_ALERT: 'hat die Anwesenheitsdaten leider nicht verfügbar gemacht.',
+    ACTIVITY: 'Aktivitäten',
     BATH_ROOM: 'Badezimmer',
     BEDROOM: 'Schlafzimmer',
     LIVINGROOM: 'Wohnzimmer',

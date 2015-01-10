@@ -60,8 +60,8 @@ angular.module('cirqlApp')
             };
 
             function loadHome(user) {
-                var home = fbutil.syncObject('homes/' + user.uid);
-                $scope.home = home;
+                // var home = fbutil.syncObject('homes/' + user.uid);
+                // $scope.home = home;
 
                 var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
                 $scope.rooms = rooms;
@@ -104,17 +104,17 @@ angular.module('cirqlApp')
                     .catch(error);
             };
 
-            $scope.showDatePicker = function() {
-                var options = {
-                    date: new Date(),
-                    mode: 'date'
-                };
-                //var options = {date: new Date(), mode: 'time'}; for time
-                //
-                datePicker.show(options).then(function(date) {
-                    alert(date);
-                });
-            };
+            // $scope.showDatePicker = function() {
+            //     var options = {
+            //         date: new Date(),
+            //         mode: 'date'
+            //     };
+            //     //var options = {date: new Date(), mode: 'time'}; for time
+            //     //
+            //     datePicker.show(options).then(function(date) {
+            //         alert(date);
+            //     });
+            // };
 
             $scope.goBack = function() {
                 $ionicNavBarDelegate.back();

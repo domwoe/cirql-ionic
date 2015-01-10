@@ -331,11 +331,12 @@ input:-ms-input-placeholder {
 // -------------------------------
 .field-group {
     font-size: 16px;
-    font-weight: 100;
+    font-weight:bold;
     line-height: 34px;
     text-align: center;
     margin-top: 50px;
     margin-left: 0px;
+
 }
 .field {
     border-radius: 24px;
@@ -347,6 +348,7 @@ input:-ms-input-placeholder {
     vertical-align: middle;
     width: 280px;
     overflow: auto;
+
 }
 .logo {
     float: left;
@@ -431,15 +433,17 @@ input:-ms-input-placeholder {
     margin: 0 auto;
 }
 .alignleft {
+    margin-top: 3px;
     margin-left: 5px;
     float: left;
     width: 135px;
 }
 .alignright {
+    margin-top: 3px;
     text-align: right;
     float: right;
     width: 90px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 .aligncenter {
     text-align: center;
@@ -489,7 +493,6 @@ input:-ms-input-placeholder {
 }
 .list-group-item {
     /*[>background-color: transparent;<]*/
-
     background-color: rgba(0, 0, 0, 0.5);
 }
 .list-group-item .btn {
@@ -572,6 +575,7 @@ input:-ms-input-placeholder {
 }
 .card div {
     color: #fff;
+    font-weight: 600;
 }
 .card .item-image .button {
     margin-bottom: 0px !important;
@@ -775,8 +779,6 @@ input:-ms-input-placeholder {
     border-color: black !important;
     //border-style: solid !important;
 }
-
-
 
 
 

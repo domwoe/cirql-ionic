@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopover', '$ionicPopup', '$filter',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopover, $ionicPopup, $filter) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -20,7 +20,7 @@ angular.module('cirqlApp')
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
         var modeUrl = homeUrl + '/rooms/' + room + '/mode';
-        var sensorUrl = roomUrl + '/sensors/netatmo';
+        //var sensorUrl = roomUrl + '/sensors/netatmo';
         var trvUrl = roomUrl + '/thermostats';
 
         var roomObj = fbutil.syncObject(roomUrl);
@@ -35,6 +35,8 @@ angular.module('cirqlApp')
 
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
+
+        var activities = fbutil.syncArray(homeUrl + '/activity/' + room + '/raw');
 
         var trvObj = fbutil.syncObject(trvUrl);
 
@@ -89,37 +91,10 @@ angular.module('cirqlApp')
             } else {
                 $scope.roomValues.mode = 'manu';
             }
+
+            $scope.addRawActivity({type: 'change-mode'});
         }
 
-
-
-        var sensorObj = fbutil.syncObject(sensorUrl);
-        $scope.hasRoomclimate = false;
-
-
-        sensorObj.$loaded()
-            .then(function() {
-                if (sensorObj.hasOwnProperty('station')) {
-                    $scope.hasRoomclimate = true;
-                }
-                var sensorStation = sensorObj.station;
-                var sensorModule = sensorObj.module;
-                var netatmoUrl = homeUrl + '/sensors/netatmo/stations/' +
-                    sensorStation + '/modules/' + sensorModule;
-                var netatmoObj = fbutil.syncObject(netatmoUrl);
-                return netatmoObj;
-            }).then(function(netatmoObj) {
-                netatmoObj.$loaded().then(function() {
-                    netatmoObj.$bindTo($scope, 'sensor');
-                });
-            });
-
-
-        $ionicPopover.fromTemplateUrl('airquality.html', {
-            scope: $scope,
-        }).then(function(popover) {
-            $scope.airQualityPopover = popover;
-        });
 
         var $translate = $filter('translate');
 
@@ -130,19 +105,7 @@ angular.module('cirqlApp')
                 template: $scope.roomValues.airQualityMsg
             });
         };
-        $scope.closeAirQualityPopover = function() {
-            $scope.airQualityPopover.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-            $scope.airQualityPopover.remove();
-        });
-
-        $ionicPopover.fromTemplateUrl('humidity.html', {
-            scope: $scope,
-        }).then(function(popover) {
-            $scope.humidityPopover = popover;
-        });
+        
         $scope.openHumidityPopover = function($event) {
             //$scope.humidityPopover.show($event);
             $ionicPopup.alert({
@@ -150,13 +113,6 @@ angular.module('cirqlApp')
                 template: $scope.roomValues.humidityMsg
             });
         };
-        $scope.closeHumidityPopover = function() {
-            $scope.humidityPopover.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-            $scope.humidityPopover.remove();
-        });
 
         $scope.roomId = room;
         $scope.user = user;
@@ -172,6 +128,10 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
+            roomObj.$destroy();
+            templates.$destroy();
+            trvObj.$destroy();
+            activities.$destroy();
             $state.go('app.home', null, {
                 reload: true
             });
@@ -286,9 +246,38 @@ angular.module('cirqlApp')
             $state.go('app.home');
         };
 
+
+        $scope.addRawActivity = function(obj) {
+            if (obj.type === 'set-target') {
+
+                if ($scope.roomValues.mode === 'manu') {
+                    obj.type = 'manual-target';
+                }
+                else {
+                    obj.type = 'schedule-override';
+                }
+
+
+            } 
+            else if (obj.type === 'change-mode') {
+                obj.value = $scope.roomValues.mode;
+            } 
+            var date = new Date();
+            obj.date = date.toString();
+            obj.name = $scope.residents.$getRecord(user.residentId).name;
+            activities.$add(obj);
+            console.log('Activity added:' +JSON.stringify(obj));
+        }
+
         $scope.goToRoom = function() {
             $ionicSideMenuDelegate.canDragContent(true);
             $state.go('app.room', {
+                roomId: room
+            });
+        };
+
+        $scope.goToActivity = function() {
+            $state.go('app.activity', {
                 roomId: room
             });
         };
