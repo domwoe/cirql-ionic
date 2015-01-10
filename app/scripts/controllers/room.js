@@ -271,5 +271,11 @@ angular.module('cirqlApp')
             });
         };
 
+        $scope.goToActivity = function() {
+            $state.go('app.activity', {
+                roomId: room
+            });
+        };
+
     }
 ]);

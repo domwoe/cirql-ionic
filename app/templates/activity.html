@@ -8,12 +8,14 @@
     </ion-nav-buttons>
 
     <ion-content class="has-header">
-    <ion-list>
-        <ion-item ng-repeat="activity in activities">
-          {{activity.date | customTime }} {{activity.msg}}
-        </ion-item>
-       </ion-list>
-        
+    <div class="activity">
+        <div class="list card opaque item-text-wrap" ng-repeat="activity in activities">
+            <div class="item">
+                {{activity.date | customTime }} {{activity.msg}}
+            </div>
+        </div>
+     </div>   
+
     </ion-content>
-   
-</ion-view>    
+
+</ion-view>
