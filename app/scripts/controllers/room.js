@@ -9,11 +9,17 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toastr',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toastr','$translate',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
+        }
+
+        var language = $translate.use();
+
+        if (language !== 'de') {
+            language = 'en';
         }
 
         var room = $stateParams.roomId;
@@ -109,19 +115,19 @@ angular.module('cirqlApp')
         };
 
 
-        var $translate = $filter('translate');
+        var translate = $filter('translate');
 
         $scope.openAirQualityPopover = function() {
             $ionicPopup.alert({
-                title: $translate('AIR_QUALITY'),
-                template: $scope.roomValues.airQualityMsg
+                title: translate('AIR_QUALITY'),
+                template: $scope.roomValues.msg[language].airQualityMsg
             });
         };
 
         $scope.openHumidityPopover = function() {
             $ionicPopup.alert({
-                title: $translate('HUMIDITY'),
-                template: $scope.roomValues.humidityMsg
+                title: translate('HUMIDITY'),
+                template: $scope.roomValues.msg[language].humidityMsg
             });
         };
 
