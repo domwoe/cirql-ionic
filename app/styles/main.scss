@@ -74,7 +74,7 @@ a {
     border-radius: 100%;
     -moz-border-radius: 100%;
     -webkit-border-radius: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    //border: 1px solid rgba(255, 255, 255, 0.5);
     position: absolute;
     top: 7%;
     left: -30%;
@@ -240,7 +240,7 @@ input:-ms-input-placeholder {
     clear: both;
 }
 .away {
-    top: 0px;
+    top: 5px;
     float: right;
     padding-right: 5%;
 }
@@ -259,6 +259,12 @@ input:-ms-input-placeholder {
     margin-left: 5px;
     margin-right: 5px;
     text-align: center;
+}
+
+.resident-name {
+    margin-top: -6px;
+    font-size: 12px;
+    font-weight: 600;
 }
 .avatar {
     width: 35px;
@@ -778,6 +784,11 @@ input:-ms-input-placeholder {
     //border-width: 2px !important;
     border-color: black !important;
     //border-style: solid !important;
+}
+
+.activity-date {
+  font-size: 11px !important;
+  color: #AAA !important;
 }
 
 

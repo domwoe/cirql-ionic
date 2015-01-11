@@ -275,7 +275,9 @@ angular.module('cirqlApp')
     RESIDENT_SETTINGS: 'User Settings',
     RESIDENT_SETTINGS_HEADER: 'Your User',
     SELECT_AVATAR: 'select your avatar',
-    ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy'
+    ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy',
+    TODAY: 'Today',
+    YESTERDAY: 'Yesterday'
 
 
   });
@@ -339,7 +341,9 @@ angular.module('cirqlApp')
     RESIDENT_SETTINGS: 'Benutzereinstellungen',
     RESIDENT_SETTINGS_HEADER: 'Dein Benutzer',
     SELECT_AVATAR: 'Wähle dein Avatar',
-    ALLOW_GEO_TEXT: 'Erlaube Cirql festzustellen wenn du nicht zuhause bist und spare Energie'
+    ALLOW_GEO_TEXT: 'Erlaube Cirql festzustellen wenn du nicht zuhause bist und spare Energie',
+    TODAY: 'Heute',
+    YESTERDAY: 'Gestern'
   });
 
   $translateProvider.preferredLanguage('de');

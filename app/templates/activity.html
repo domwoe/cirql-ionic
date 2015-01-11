@@ -9,9 +9,9 @@
 
     <ion-content class="has-header">
     <div class="activity">
-        <div class="list card opaque item-text-wrap" ng-repeat="activity in activities">
+        <div class="list card opaque item-text-wrap" ng-repeat="activity in activities | filter: toDate(date) | orderBy: 'date' : true ">
             <div class="item">
-                {{activity.date | customTime }} {{activity.msg}}
+                <p class="activity-date">{{activity.date | toDay | translate}} {{activity.date | toDate | date: 'shortTime' }}</p> {{activity.msg}}
             </div>
         </div>
      </div>   

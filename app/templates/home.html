@@ -8,8 +8,7 @@
   <div class="residents away">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: true }">
       <img class="avatar" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
-      <br />
-      {{resident.name}}
+      <div class="resident-name">{{resident.name}}</div>
     </div>
   </div>
   <div class="circle">
@@ -17,8 +16,7 @@
   <div class="residents at-home center" ng-class="{noaway: (residents | filter:{ isAway: true}).length==0}">
     <div class="resident" ng-repeat="resident in residents | filter:{ isAway: false }">
       <img class="avatar" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
-      <br />
-      {{resident.name}}
+      <div class="resident-name">{{resident.name}}</div>
     </div>
   </div>
   <ion-content class="has-residents">
