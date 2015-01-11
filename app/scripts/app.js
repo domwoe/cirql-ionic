@@ -6,7 +6,8 @@ angular.module('cirqlApp', [
     'simpleLogin',
     'firebase.utils',
     'ngStorage',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'toaster'
 ])
 
 .run(function($ionicPlatform, discovery, $ionicLoading, $translate, geo) {

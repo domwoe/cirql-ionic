@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toaster',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toaster) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -19,8 +19,7 @@ angular.module('cirqlApp')
         var room = $stateParams.roomId;
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
-        var modeUrl = homeUrl + '/rooms/' + room + '/mode';
-        //var sensorUrl = roomUrl + '/sensors/netatmo';
+
         var trvUrl = roomUrl + '/thermostats';
 
         var roomObj = fbutil.syncObject(roomUrl);
@@ -42,15 +41,27 @@ angular.module('cirqlApp')
 
         $scope.hasThermostats = null;
 
+        var trvIds = [];
+
+
         trvObj.$loaded(function(trvs) {
             if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
                 $scope.hasThermostats = false;
                 console.log($scope.hasThermostats);
             } else {
 
+                angular.forEach(trvs, function(value, key) {
+
+                    trvIds.push(key);
+
+                });
+
                 $scope.hasThermostats = true;
+
             }
         });
+
+
 
         $scope.showNextTarget = function() {
             if ($scope.roomValues) {
@@ -59,7 +70,7 @@ angular.module('cirqlApp')
                 return false;
             }
 
-        }
+        };
 
 
         var modeIndex = null;
@@ -92,22 +103,22 @@ angular.module('cirqlApp')
                 $scope.roomValues.mode = 'manu';
             }
 
-            $scope.addRawActivity({type: 'change-mode'});
-        }
+            $scope.addRawActivity({
+                type: 'change-mode'
+            });
+        };
 
 
         var $translate = $filter('translate');
 
-        $scope.openAirQualityPopover = function($event) {
-            //$scope.airQualityPopover.show($event);
+        $scope.openAirQualityPopover = function() {
             $ionicPopup.alert({
                 title: $translate('AIR_QUALITY'),
                 template: $scope.roomValues.airQualityMsg
             });
         };
-        
-        $scope.openHumidityPopover = function($event) {
-            //$scope.humidityPopover.show($event);
+
+        $scope.openHumidityPopover = function() {
             $ionicPopup.alert({
                 title: $translate('HUMIDITY'),
                 template: $scope.roomValues.humidityMsg
@@ -146,7 +157,7 @@ angular.module('cirqlApp')
                 roomObj.residents = {};
             } else {
 
-                if (resident.rooms != undefined) {
+                if (resident.rooms !== undefined) {
 
                     if (!resident.allowsGeolocation && !resident.rooms[room]) {
 
@@ -154,11 +165,9 @@ angular.module('cirqlApp')
                             template: resident.name + ' {{"NO_GEO_ALERT" | translate}}'
                         });
 
-                    }
+                    } else {
 
-                    else {
-
-                        if (resident.rooms[room] != undefined) {
+                        if (resident.rooms[room] !== undefined) {
                             resident.rooms[room] = !resident.rooms[room];
                         } else {
                             resident.rooms[room] = true;
@@ -166,12 +175,12 @@ angular.module('cirqlApp')
 
                     }
 
-                    
+
                 } else {
                     if (resident.allowsGeolocation) {
-                        resident['rooms'] = {};
+                        resident.rooms = {};
                         resident.rooms[room] = true;
-                    }    
+                    }
                 }
                 residents.$save(resident);
                 roomObj.residents[resident.$id] = resident.rooms[room];
@@ -210,7 +219,7 @@ angular.module('cirqlApp')
             //delete all room references in residents
             var roomId = roomObj.$id;
             angular.forEach(residents, function(resident) {
-                if (resident.rooms != undefined && resident.rooms[roomId] != undefined) {
+                if (resident.rooms !== undefined && resident.rooms[roomId] !== undefined) {
                     resident.rooms[roomId] = null;
                     residents.$save(resident);
                 }
@@ -219,7 +228,7 @@ angular.module('cirqlApp')
             //set room reference in thermostats to 'null'
             thermostats.$loaded().then(function() {
                 angular.forEach(thermostats, function(thermostat) {
-                    if(thermostat.room != undefined && thermostat.room == roomId) {
+                    if (thermostat.room !== undefined && thermostat.room === roomId) {
                         thermostat.room = 'null';
                         thermostats.$save(thermostat);
                     }
@@ -229,9 +238,9 @@ angular.module('cirqlApp')
             var sensors = fbutil.syncObject(homeUrl + '/sensors');
             //delete room reference in netatm
             sensors.$loaded().then(function() {
-                for( var station in sensors.netatmo.stations) {
+                for (var station in sensors.netatmo.stations) {
                     for (module in station.modules) {
-                        if(module.room != undefined && module.room == roomId) {
+                        if (module.room !== undefined && module.room === roomId) {
                             module.room = null;
                         }
                     }
@@ -244,33 +253,64 @@ angular.module('cirqlApp')
             //TODO change code to below after update to angularfire v0.9.0
             //roomObj.$remove();
             $state.go('app.home');
-        };
+        }
+
+
+
+
+        function listenForSuccess() {
+
+
+            for (var i=0, j=trvIds.length; i<j;i++) {
+                
+                fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$loaded(function(trv) {
+                    if (trv.status === 'success') {
+                        toaster.pop('success', 'Thermostat', trv.status);
+                    }
+                    else {
+                        (function() {
+                            var unwatch = fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$watch(function(status) {
+                                if (status === 'success') {
+                                    unwatch();
+                                    toaster.pop('success', 'Thermostat', status);
+                                }
+                            });
+                        })();   
+                    }
+                });
+
+                
+
+            }
+
+      
+        }
 
 
         $scope.addRawActivity = function(obj) {
             if (obj.type === 'set-target') {
 
+                listenForSuccess();
+
                 if ($scope.roomValues.mode === 'manu') {
                     obj.type = 'manual-target';
-                }
-                else {
+                } else {
                     obj.type = 'schedule-override';
                 }
 
 
-            } 
-            else if (obj.type === 'change-mode') {
+            } else if (obj.type === 'change-mode') {
                 obj.value = $scope.roomValues.mode;
-            } 
+            }
             var date = new Date();
             obj.date = date.toString();
             obj.name = $scope.residents.$getRecord(user.residentId).name;
             activities.$add(obj);
-            console.log('Activity added:' +JSON.stringify(obj));
-        }
+            console.log('Activity added:' + JSON.stringify(obj));
+        };
 
         $scope.goToRoom = function() {
-            $ionicSideMenuDelegate.canDragContent(true);
+            //$ionicSideMenuDelegate.canDragContent(true);
             $state.go('app.room', {
                 roomId: room
             });

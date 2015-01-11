@@ -27,6 +27,10 @@
             </div>
         </div>
 
+        <toaster-container></toaster-container>
+
+        <span ng-repeat="trv in trvs">{{trv.status}}</span>
+
         <div id="roomclimate" class="field-group" ng-cloak>
             <div ng-if="roomValues.co2" class="field" ng-click="openAirQualityPopover($event)" stop-event="click">
                 <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" cssclass="logo" value="roomValues.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>
