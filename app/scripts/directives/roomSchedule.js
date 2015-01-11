@@ -20,13 +20,18 @@ angular.module('cirqlApp')
                 },
                 link: function(scope, element, attrs) {
 
+                    function roundHalf(num) {
+                        num = Math.round(num * 2) / 2;
+                        return num;
+                    }
+
                     var Schedule = function() {
 
                         this.rendered = false;
                         this.nextId = 0;
                         this.defaultTemperature = 20;
                         this.maxTemp = 30;
-                        this.minTemp = 10;
+                        this.minTemp = 5;
                         this.totalTime = 1425;
                         this.selectedDay = null;
                         this.selectedEntry = null;
@@ -70,15 +75,15 @@ angular.module('cirqlApp')
                         }
 
                         this.tempToPixelOffset = function(temp, height) {
-                            return this.radius + 1 + 
-                                   (temp - this.minTemp)*(height - 2*(this.radius + 1)) / 
-                                   (this.maxTemp - this.minTemp);
+                            return this.radius + 1 +
+                                (temp - this.minTemp) * (height - 2 * (this.radius + 1)) /
+                                (this.maxTemp - this.minTemp);
                         }
 
                         this.pixelOffsetToTemp = function(ypos, height) {
                             return (this.minTemp +
-                                    (ypos - this.radius - 1)*(this.maxTemp - this.minTemp) /
-                                    (height - 2*(this.radius + 1)));
+                                (ypos - this.radius - 1) * (this.maxTemp - this.minTemp) /
+                                (height - 2 * (this.radius + 1)));
                         }
 
                         this.isPointWithinBounds = function(recPath, pX, pY) {
@@ -140,8 +145,8 @@ angular.module('cirqlApp')
                                     if (newposY - this.radius < 0) {
                                         newposY = this.radius;
                                         d.y = newposY - currentY;
-                                    } else if (newposY > 7*this.height - this.radius) {
-                                        newposY = 7*this.height - this.radius;
+                                    } else if (newposY > 7 * this.height - this.radius) {
+                                        newposY = 7 * this.height - this.radius;
                                         d.y = newposY - currentY;
                                     }
                                 }
@@ -155,11 +160,11 @@ angular.module('cirqlApp')
                                 console.log("\n");
 
                                 group.attr('transform', 'translate(' + d.x + ', ' + d.y + ')');
-                                
+
                                 if (this.lockOnHorizontalDrag) {
                                     console.log("Move horizontally");
                                     var getY = d3.transform(group.attr("transform")).translate[1];
-                                    group.attr('transform', 'translate(' + d.x + ', ' + getY + ')');                                        
+                                    group.attr('transform', 'translate(' + d.x + ', ' + getY + ')');
 
                                 } else if (this.lockOnVerticalDrag) {
                                     console.log("Move vertically");
@@ -184,7 +189,7 @@ angular.module('cirqlApp')
                                 } else if (this.lockOnVerticalDrag) {
 
                                     // Update temperature
-                                    var newTemp = this.pixelOffsetToTemp(newposY, 210);
+                                    var newTemp = roundHalf(this.pixelOffsetToTemp(newposY, 210));
                                     var target = Math.floor(newTemp);
                                     var dotTarget;
 
@@ -198,7 +203,7 @@ angular.module('cirqlApp')
                                     var targetTspan = group.select('tspan');
                                     var dotTargetTspan = group.select('g').select('tspan');
 
-                                    if (target + 0.1*dotTarget >= this.minTemp && target + 0.1*dotTarget <= this.maxTemp) {
+                                    if (target + 0.1 * dotTarget >= this.minTemp && target + 0.1 * dotTarget <= this.maxTemp) {
                                         targetTspan.text(target);
                                         dotTargetTspan.text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
@@ -252,8 +257,8 @@ angular.module('cirqlApp')
                                 for (var i = 0; i < scheduleEntries[0].length; i++) {
                                     var currEntry = d3.select(scheduleEntries[0][i]);
                                     var index = currEntry.attr('id');
-                                //    console.log("INDEX: ", index);
-                                //    console.log("SCH: ", this.localSchedule);
+                                    //    console.log("INDEX: ", index);
+                                    //    console.log("SCH: ", this.localSchedule);
 
                                     var tempOffset = this.tempToPixelOffset(
                                         this.localSchedule[index].target,
@@ -307,7 +312,7 @@ angular.module('cirqlApp')
                                 this.selectedEntry.selectAll('rect')
                                     .style('visibility', 'hidden');
                                 this.selectedEntry = null;
-                                d3.select('#label').style('visibility', 'hidden');                              
+                                d3.select('#label').style('visibility', 'hidden');
                             }
                         }
 
@@ -325,16 +330,16 @@ angular.module('cirqlApp')
                             scope.hour = self.pad(entry.hour, 2);
                             scope.minute = self.pad(entry.minute, 2);
 
-                   //         group.selectAll('path')
-                   //             .style('visibility', 'visible');
+                            //         group.selectAll('path')
+                            //             .style('visibility', 'visible');
 
-                  //          group.selectAll('rect')
-                   //             .style('visibility','visible');
+                            //          group.selectAll('rect')
+                            //             .style('visibility','visible');
                             this.selectedEntry = group;
 
                             d3.select('#label').style('visibility', 'visible');
 
-                            
+
                         }
 
                         // true for increase, false for decrease
@@ -349,12 +354,12 @@ angular.module('cirqlApp')
                             var currentDotTemp = parseInt(dotTargetTspan.text());
                             var newTemp = 0;
                             var newDotTemp;
-                           
+
                             if (increaseOrDecrease) {
                                 if (currentDotTemp === 5) {
                                     newTemp = currentTemp + 1;
                                     newDotTemp = 0;
-                                } else if (currentDotTemp === 0){
+                                } else if (currentDotTemp === 0) {
                                     newDotTemp = 5;
                                     newTemp = currentTemp;
                                 }
@@ -453,7 +458,7 @@ angular.module('cirqlApp')
                             var pathIncr = entryGroup.append('path')
                                 .attr('class', 'arrowIncrement')
                                 .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius+3) + ') scale(0.2)')
+                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius + 3) + ') scale(0.2)')
                                 .attr('d', 'M53.696,30.254l32.099,32.1c2.042,2.042,2.042,5.352,0,7.393c-2.041,2.041-5.352,2.041-7.393,0L50,41.344L21.598,69.746 \
 						c-2.042,2.041-5.352,2.041-7.393,0c-2.042-2.041-2.042-5.351,0-7.393l32.099-32.1c1.021-1.02,2.358-1.53,3.696-1.53 \
 						S52.676,29.234,53.696,30.254z')
@@ -491,22 +496,22 @@ angular.module('cirqlApp')
                                             .attr('id', 'vpath')
                                             .attr('x', xpos - self.radius)
                                             .attr('y', 0)
-                                            .attr('width', 2*self.radius)
-                                            .attr('height', 7*self.height)
+                                            .attr('width', 2 * self.radius)
+                                            .attr('height', 7 * self.height)
                                             .attr('fill-opacity', 0.5);
                                         dayGroup.insert('rect', 'g.entry')
                                             .attr('id', 'hpath')
                                             .attr('x', 95)
                                             .attr('y', ypos - self.radius)
                                             .attr('width', 650)
-                                            .attr('height', 2*self.radius)
+                                            .attr('height', 2 * self.radius)
                                             .attr('fill-opacity', 0.5);
                                     })
                                     .on('drag', function(d) {
                                         if (self.dragging) {
                                             //console.log("DRAGGING ", this);
                                             self.mouseDragCallback(this, d);
-/*                                            var m = d3.mouse(this);
+                                            /*                                            var m = d3.mouse(this);
                                             console.log("M: ", m);
 
                                             d.x += m[0] - d.dragstart[0];
@@ -531,8 +536,8 @@ angular.module('cirqlApp')
                                 );
 
                             var recIncr = entryGroup.append('rect')
-                                .attr('x', xpos - 3*this.radius)
-                                .attr('y', ypos - 4.9*this.radius)
+                                .attr('x', xpos - 3 * this.radius)
+                                .attr('y', ypos - 4.9 * this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
                                 .attr('fill-opacity', 0.25)
@@ -542,11 +547,11 @@ angular.module('cirqlApp')
                                 });
 
                             var recDecr = entryGroup.append('rect')
-                                .attr('x', xpos - 3*this.radius)
+                                .attr('x', xpos - 3 * this.radius)
                                 .attr('y', ypos + this.radius)
                                 .attr('width', 6 * this.radius)
                                 .attr('height', 4 * this.radius)
-                                .attr('fill-opacity',0.25)
+                                .attr('fill-opacity', 0.25)
                                 .style('visibility', 'hidden')
                                 .on('click', function() {
                                     self.decrementTemp(this);
@@ -588,13 +593,13 @@ angular.module('cirqlApp')
                                 'target': target,
                                 'weekday': weekday
                             };
-                           // console.log("CREATED ", this.localSchedule[id]);
+                            // console.log("CREATED ", this.localSchedule[id]);
                         }
 
                         this.addEntryCallback = function(self) {
-                         //   console.log("CLICK ON ADD");
+                            //   console.log("CLICK ON ADD");
                             if (self.selectedDay != null) {
-                            //    console.log("Adding entry callback");
+                                //    console.log("Adding entry callback");
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
                                 var groupId = this.weekDays[index];
@@ -711,7 +716,7 @@ angular.module('cirqlApp')
                             self.syncFirebase();
                             scope.reload();
 
-                            
+
                         }
 
                         this.attachListeners = function() {
