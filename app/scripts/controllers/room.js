@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toaster',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toaster) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toastr',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr) {
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -264,15 +264,18 @@ angular.module('cirqlApp')
             for (var i=0, j=trvIds.length; i<j;i++) {
                 
                 fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$loaded(function(trv) {
-                    if (trv.status === 'success') {
-                        toaster.pop('success', 'Thermostat', trv.status);
+                    //toastr.success('Thermostat: '+ trv.status);
+                    if (trv.status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
+                        //toaster.pop('success', 'Thermostat', trv.status);
+                        toastr.success('Thermostat: '+ trv.status);
                     }
                     else {
                         (function() {
                             var unwatch = fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$watch(function(status) {
-                                if (status === 'success') {
+                                if (status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
                                     unwatch();
-                                    toaster.pop('success', 'Thermostat', status);
+                                    //toaster.pop('success', 'Thermostat', status);
+                                    toastr.success('Thermostat: '+ status);
                                 }
                             });
                         })();   

@@ -320,10 +320,9 @@ input:-ms-input-placeholder {
 .home-mode {
     position: absolute;
     text-align: center;
-    letter-spacing: 2.5px;
-    font-size: 12px;
-    left: 58px;
-    top: 77px;
+    font-size: 14px;
+    left: 66px;
+    top: 82px;
 }
 // Select Resident View
 // -------------------------------
@@ -522,18 +521,24 @@ input:-ms-input-placeholder {
     font-size: 20px;
     margin: 0 auto;
     width: 65px;
-    height: 75px;
+    height: 50px;
     //line-height: 60px;
     top: -135px;
     left: 0px;
     z-index: 1;
 }
-#modeSlider #auto {
-    letter-spacing: 2.2px;
+#modeSlider i{
+    
+   font-size: 24px
 }
-#modeSlider #manu {
-    letter-spacing: 1.2px;
+
+#modeSlider span {
+   position: relative;
+   font-weight: 600;
+    top: -5px !important;
+    font-size: 10px !important;
 }
+
 .in-background {
     z-index: -1;
 }
@@ -546,17 +551,17 @@ input:-ms-input-placeholder {
 }
 
 .arrow-left {
-    font-size: 12px;
+    font-size: 12px !important;
     position: relative;
     left: -39px;
-    top: 23px;
+    top: 28px;
 }
 
 .arrow-right {
-    font-size: 12px;
+    font-size: 12px !important;
     position: relative;
     left: 39px;
-    top: -21px;
+    top: -41.8px;
 }
 
 #nextTarget {
@@ -568,7 +573,7 @@ input:-ms-input-placeholder {
     margin: 0 auto;
     width: 100px;
     height: 75px;
-    top: -230px;
+    top: -202.2px;
     left: 100px;
     z-index: -1;
     margin-bottom: -75px;
@@ -791,5 +796,18 @@ input:-ms-input-placeholder {
   color: #AAA !important;
 }
 
+.ns-popover-custom-theme {
+  ul, .list {
+  }
+
+  li, .list-item {
+    list-style-type: none;
+
+    a {
+      &:hover {
+      }
+    }
+  }
+}
 
 

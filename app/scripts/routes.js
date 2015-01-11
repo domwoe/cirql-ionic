@@ -7,7 +7,7 @@
  */
 angular.module('cirqlApp')
 
-.config(function($stateProvider, $urlRouterProvider,$translateProvider) {
+.config(function($stateProvider, $urlRouterProvider,$translateProvider,toastrConfig) {
   $stateProvider
     .state('login', {
       url: '/login',
@@ -278,7 +278,10 @@ angular.module('cirqlApp')
     ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy',
     TODAY: 'Today',
     YESTERDAY: 'Yesterday',
-    MORE: 'more'
+    MORE: 'more',
+    MANUAL: 'MANUAL',
+    SCHEDULEMODE: 'SCHEDULE'
+
 
 
   });
@@ -345,9 +348,33 @@ angular.module('cirqlApp')
     ALLOW_GEO_TEXT: 'Erlaube Cirql festzustellen wenn du nicht zuhause bist und spare Energie',
     TODAY: 'Heute',
     YESTERDAY: 'Gestern',
-    MORE: 'mehr'
+    MORE: 'mehr',
+    MANUAL: 'MANUELL',
+    SCHEDULEMODE: 'ZEITPLAN'
   });
 
   $translateProvider.preferredLanguage('de');
   $translateProvider.fallbackLanguage('en');
+
+  angular.extend(toastrConfig, {
+    allowHtml: true,
+    closeButton: false,
+    closeHtml: '<button>&times;</button>',
+    containerId: 'toast-container',
+    extendedTimeOut: 1000,
+    iconClasses: {
+      error: 'toast-error',
+      info: 'toast-info',
+      success: 'toast-success',
+      warning: 'toast-warning'
+    },
+    messageClass: 'toast-message',
+    positionClass: 'toast-top-right',
+    tapToDismiss: true,
+    timeOut: 500,
+    titleClass: 'toast-title',
+    toastClass: 'toast'
+  });
 });
+
+

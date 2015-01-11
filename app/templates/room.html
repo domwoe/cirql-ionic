@@ -12,10 +12,10 @@
                 <i class="ion-chevron-left arrow-left"></i>
                 <ion-slide-box active-slide="modeToIndex(roomValues.mode)" on-slide-changed="changeMode($index)" does-continue="true" show-pager="false">
                     <ion-slide id="auto">
-                        auto
+                        <i class="ion-ios7-clock"></i> <span translate>SCHEDULEMODE</span>
                     </ion-slide>
                     <ion-slide id="manu">
-                        manu
+                       <i class="ion-android-hand"></i> <span translate>MANUAL</span>
                     </ion-slide>
                 </ion-slide-box>
                 <i class="ion-chevron-right arrow-right"></i>
@@ -26,10 +26,6 @@
                 <br>{{nextTargetDate(roomValues.nextTargetDate) | date:'H:mm'}}
             </div>
         </div>
-
-        <toaster-container></toaster-container>
-
-        <span ng-repeat="trv in trvs">{{trv.status}}</span>
 
         <div id="roomclimate" class="field-group" ng-cloak>
             <div ng-if="roomValues.co2" class="field" ng-click="openAirQualityPopover($event)" stop-event="click">
