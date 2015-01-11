@@ -1,5 +1,11 @@
-<ion-view  hide-nav-bar="false">
-	<room-schedule roomid="roomId" sync="obj" schedule="schedule" radius="radius" go-back="goBack(room)">
-	
-	
+
+<ion-view title="{{'SCHEDULE' | translate}}">
+<ion-nav-buttons side="left">
+                    <button id="save" class="button-clear">
+                        <i class="ion-chevron-left"></i> <span translate>BACK</span>
+                    </button>
+                </ion-nav-buttons>\
+	<room-schedule roomid="roomId" sync="obj" schedule="schedule" radius="radius" go-back="goBack(room)" reload="reload()" roomname="{{roomValues.name}}" dayview="dayview">
+	</room-schedule>
+
 </ion-view>

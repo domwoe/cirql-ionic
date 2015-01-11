@@ -13,6 +13,8 @@ angular.module('cirqlApp')
 
   	$ionicSideMenuDelegate.canDragContent(false);
 
+  	$scope.dayview = false;
+
 
   	$scope.save = function(obj) {
   		console.log(obj);
@@ -43,4 +45,8 @@ angular.module('cirqlApp')
         $ionicSideMenuDelegate.canDragContent(true);
 		$state.go('app.room', {roomId: room});
     };
+
+    $scope.reload = function() {
+    	$state.go($state.current, {}, {reload: true})
+    }
 }]);
