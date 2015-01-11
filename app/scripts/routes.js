@@ -277,7 +277,8 @@ angular.module('cirqlApp')
     SELECT_AVATAR: 'select your avatar',
     ALLOW_GEO_TEXT: 'Let Cirql detect if you are away and save energy',
     TODAY: 'Today',
-    YESTERDAY: 'Yesterday'
+    YESTERDAY: 'Yesterday',
+    MORE: 'more'
 
 
   });
@@ -343,7 +344,8 @@ angular.module('cirqlApp')
     SELECT_AVATAR: 'Wähle dein Avatar',
     ALLOW_GEO_TEXT: 'Erlaube Cirql festzustellen wenn du nicht zuhause bist und spare Energie',
     TODAY: 'Heute',
-    YESTERDAY: 'Gestern'
+    YESTERDAY: 'Gestern',
+    MORE: 'mehr'
   });
 
   $translateProvider.preferredLanguage('de');
