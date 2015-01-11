@@ -14,6 +14,7 @@ angular.module('cirqlApp')
                     hour: "@",
                     minute: "@",
                     goBack: "&",
+                    reload: "&",
                     roomname: "@"
                 },
                 link: function(scope, element, attrs) {
@@ -74,9 +75,9 @@ angular.module('cirqlApp')
                         }
 
                         this.pixelOffsetToTemp = function(ypos, height) {
-                            return this.minTemp +
+                            return (this.minTemp +
                                     (ypos - this.radius - 1)*(this.maxTemp - this.minTemp) /
-                                    (height - 2*(this.radius + 1));
+                                    (height - 2*(this.radius + 1)));
                         }
 
                         this.isPointWithinBounds = function(recPath, pX, pY) {
@@ -702,6 +703,14 @@ angular.module('cirqlApp')
                             });
                         }
 
+                        this.backToWeek = function(self) {
+                            console.log('BACK TO WEEK');
+                            self.syncFirebase();
+                            scope.reload();
+
+                            
+                        }
+
                         this.attachListeners = function() {
                             console.log("Attaching listeners");
                             var self = this;
@@ -720,6 +729,12 @@ angular.module('cirqlApp')
                             console.log("Add button: ", addButton);
                             addButton.on('click', function() {
                                 self.addEntryCallback(self);
+                            });
+
+                            var weekButton = d3.select('#week');
+                            console.log("Add button: ", addButton);
+                            weekButton.on('click', function() {
+                                self.backToWeek(self);
                             });
 
                             var copyButton = d3.select('#copy');

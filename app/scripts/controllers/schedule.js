@@ -43,4 +43,8 @@ angular.module('cirqlApp')
         $ionicSideMenuDelegate.canDragContent(true);
 		$state.go('app.room', {roomId: room});
     };
+
+    $scope.reload = function() {
+    	$state.go($state.current, {}, {reload: true})
+    }
 }]);
