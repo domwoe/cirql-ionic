@@ -21,7 +21,9 @@ angular.module('cirqlApp')
             };
 
 
-
+            $scope.toDate = function(obj) {
+                return new Date(obj.date);    
+            }
 
 
             // Get activities of room from Firebase
