@@ -184,7 +184,7 @@ angular.module('cirqlApp')
     })
 
     .state('app.thermostats', {
-      url: '/rooms/:roomId/thermostats:/fromRoom',
+      url: '/rooms/:roomId/thermostats/:fromRoom',
       views: {
         'menuContent' :{
           templateUrl: 'templates/thermostats.html',

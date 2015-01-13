@@ -36,7 +36,7 @@ angular.module('cirqlApp', [
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
                 $translate.use((language.value).split('-')[0]).then(function(data) {
-                    console.log('SUCCESS -> ' + data);
+                    console.log('SUCCESS -> ' +  data);
                 }, function(error) {
                     console.log('ERROR -> ' + error);
                 });
