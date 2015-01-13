@@ -787,14 +787,35 @@ input:-ms-input-placeholder {
             transform: scale(1); } }
 
 .loading{
-    background-color: inherit;
-    font-weight: 500;
-    color: rgba(255,255,255,0.8) !important;
-    width: 100% !important;
-    height: 100% !important;
-    //border-width: 2px !important;
-    border-color: black !important;
-    //border-style: solid !important;
+  //position: absolute !important;
+  height: 100%;
+  width: 100% !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background-color: rgba(0,0,0,0.9) !important;
+  
+  display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+  
+    
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    
 }
 
 .activity-date {

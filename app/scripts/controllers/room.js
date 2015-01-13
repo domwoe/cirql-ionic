@@ -9,8 +9,12 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toastr','$translate','$ionicLoading',
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', 'toastr', '$translate', '$ionicLoading',
     function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate, $ionicLoading) {
+
+        $ionicLoading.show({
+            templateUrl: 'loading.html'
+        });
 
         $scope.finishedloading = false;
         if (window.screen.hasOwnProperty('lockOrientation')) {
@@ -23,7 +27,7 @@ angular.module('cirqlApp')
             language = 'en';
         }
 
-        
+
 
         var room = $stateParams.roomId;
         var homeUrl = 'homes/' + user.uid;
@@ -154,7 +158,7 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
-             $ionicLoading.show({
+            $ionicLoading.show({
                 templateUrl: 'loading.html'
             });
             roomObj.$destroy();
@@ -279,32 +283,31 @@ angular.module('cirqlApp')
         function listenForSuccess() {
 
 
-            for (var i=0, j=trvIds.length; i<j;i++) {
-                
+            for (var i = 0, j = trvIds.length; i < j; i++) {
+
                 fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$loaded(function(trv) {
                     //toastr.success('Thermostat: '+ trv.status);
                     if (trv.status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
                         //toaster.pop('success', 'Thermostat', trv.status);
-                        toastr.success('Thermostat: '+ trv.status);
-                    }
-                    else {
+                        toastr.success('Thermostat: ' + trv.status);
+                    } else {
                         (function() {
                             var unwatch = fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$watch(function(status) {
                                 if (status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
                                     unwatch();
                                     //toaster.pop('success', 'Thermostat', status);
-                                    toastr.success('Thermostat: '+ status);
+                                    toastr.success('Thermostat: ' + status);
                                 }
                             });
-                        })();   
+                        })();
                     }
                 });
 
-                
+
 
             }
 
-      
+
         }
 
 
