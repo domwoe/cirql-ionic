@@ -339,7 +339,7 @@ input:-ms-input-placeholder {
     font-weight:bold;
     line-height: 34px;
     text-align: center;
-    margin-top: 50px;
+    //margin-top: 50px;
     margin-left: 0px;
 
 }
@@ -503,19 +503,22 @@ input:-ms-input-placeholder {
     font-size: 12px;
 }
 .room-temperature {
-    heigh: 100%
+    //heigh: 100%
 }
 #room-temperature {
-   heigh: 100%
+   //heigh: 100%
 }
 
 .max-width {
   width: 100%;
 }
-#roomclimate {
 
-    margin-top: -40%;
-    height: 30%;
+.max-height {
+  height: 100% !important;
+}
+#roomclimate {
+    position: absolute;
+    margin-top: -15%;
 }
 #modeSlider {
     position: relative;
@@ -579,7 +582,6 @@ input:-ms-input-placeholder {
     top: -202.2px;
     left: 100px;
     z-index: -1;
-    margin-bottom: -75px;
 }
 
 // CARDS

@@ -156,7 +156,7 @@ angular.module('cirqlApp')
             trvObj.$destroy();
             activities.$destroy();
             $state.go('app.home', null, {
-                reload: false
+                reload: true
             });
         };
 

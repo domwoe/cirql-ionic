@@ -25,9 +25,8 @@
                 <br>{{roomValues.nextTarget}}°
                 <br>{{nextTargetDate(roomValues.nextTargetDate) | date:'H:mm'}}
             </div>
-        </div>
 
-        <div id="roomclimate" class="field-group" ng-cloak>
+            <div id="roomclimate" class="field-group" ng-cloak>
             <div ng-if="roomValues.co2" class="field" ng-click="openAirQualityPopover()" stop-event="click">
                 <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" cssclass="logo" value="roomValues.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>
                 <div translate class="alignleft">AIR_QUALITY</div>
@@ -39,6 +38,16 @@
                 <div class="alignright">{{roomValues.humidity}}%</div>
             </div>
         </div>
+
+           
+        
+
+
+        </div>
+
+
+
+        
     </ion-content>
     <ion-footer-bar class="bar-footer">
     <button translate class="button button-block button-light transparent" ng-click="goToActivity()">

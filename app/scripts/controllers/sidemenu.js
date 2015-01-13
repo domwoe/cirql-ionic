@@ -11,6 +11,8 @@ angular.module('cirqlApp')
 
             $scope.room = $state.params.roomId;
 
+            console.log($scope.room);
+
             if ($scope.room) {
                 var usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
                 usesAutoAway.$bindTo($scope, 'usesAutoAway');

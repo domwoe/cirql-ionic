@@ -55,7 +55,7 @@ angular.module('cirqlApp')
                 $state.go('app.room', {
                     roomId: room
                 }, {
-                    reload: false
+                    reload: true
                 });
             };
 
