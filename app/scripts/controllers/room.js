@@ -104,8 +104,14 @@ angular.module('cirqlApp')
             modeIndex = $index;
 
             if ($index % 2 === 0) {
+                if ($scope.roomValues.mode === 'auto') {
+                    return;
+                }
                 $scope.roomValues.mode = 'auto';
             } else {
+                if ($scope.roomValues.mode === 'manu') {
+                    return;
+                }
                 $scope.roomValues.mode = 'manu';
             }
 
@@ -150,7 +156,7 @@ angular.module('cirqlApp')
             trvObj.$destroy();
             activities.$destroy();
             $state.go('app.home', null, {
-                reload: true
+                reload: false
             });
         };
 
