@@ -256,9 +256,9 @@ angular.module('cirqlApp')
                                 'stroke-opacity': 1,
                             });
 
-                            if (!scope.displaytarget) {
-                                ring.style('visibility', 'hidden');
-                            }
+                            // if (!scope.displaytarget) {
+                            //     ring.style('visibility', 'hidden');
+                            // }
                             ring.attr({
                                 'stroke-width': stroke
                             });
