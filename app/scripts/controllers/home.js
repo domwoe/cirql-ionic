@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'datePicker', '$ionicNavBarDelegate',
-        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, datePicker, $ionicNavBarDelegate) {
+    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate',
+        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate) {
 
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
@@ -73,10 +73,21 @@ angular.module('cirqlApp')
                     $ionicLoading.hide();
                 });
 
-                // console.log("home data loaded for user", user.uid);
-                // console.log("home", home);
-                // console.log("rooms", rooms);
-                // console.log("residents", residents);
+                if (user.uid !== null && user.uid !== undefined) {
+                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+                        console.log('trigger geolocation service');
+                        if (window.plugins && window.plugins.DGGeofencing) {
+
+                            geo.init()
+
+                            geo.monitorRegion();
+
+                            geo.startMonitoringSignificantLocationChanges();
+                        }
+                    }
+                } else {
+                    console.log('geo is not on!');
+                }
             }
             loadHome(user);
 
@@ -121,8 +132,8 @@ angular.module('cirqlApp')
             };
 
             $scope.saveHome = function(home) {
-              home.$save();
-              $state.go('app.home');
+                home.$save();
+                $state.go('app.home');
             };
         }
     ]);
