@@ -1,16 +1,11 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', '$ionicSideMenuDelegate',
-        function($timeout, $ionicSideMenuDelegate) {
+    .directive('roomTemperature', ['$timeout', '$ionicLoading', '$ionicSideMenuDelegate',
+        function($timeout, $ionicLoading, $ionicSideMenuDelegate) {
 
             var targetTimer = null;
             var target = null;
-
-            
-
-
-
 
             var polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
                 var angleInRadians = (angleInDegrees - 230) * Math.PI / 180.0;
@@ -107,7 +102,7 @@ angular.module('cirqlApp')
 
                 //var carts = drawArc(arc, start, end, min, max, R, size, targetColor);
                 //
-                $timeout(function() {
+                //$timeout(function() {
 
                     var carts = drawArc(arc, start, end, min, max, R, size, 'url(#gradient' + roomid+')');
                 var targetCart = mustHeat ? carts[1] : carts[0];
@@ -136,7 +131,7 @@ angular.module('cirqlApp')
                     'translate(' + (targetCart.x - 20.5) + ',' + (targetCart.y - 21) + ') scale(0.6)'
                 );
 
-                });
+                //});
                 
             };
 
@@ -145,7 +140,7 @@ angular.module('cirqlApp')
                 scope: {
                     displaytarget: '=',
                     hasthermostats: '=',
-                    ishome: '=',
+                    finishedloading: '=',
                     isaway: '=',
                     mode: '=',
                     usesautoaway: '=',
@@ -331,6 +326,7 @@ angular.module('cirqlApp')
                                 });
 
                             renderState(scope.targettemp, scope.targettemp);
+
                         });
                     };
 
@@ -395,9 +391,13 @@ angular.module('cirqlApp')
                                     scope.roomid
                                 );
                             //}
+                            //
+                             $ionicLoading.hide();
 
                             $timeout(function() {
                                 scope.$apply();
+                                scope.finishedloading = true;
+
                             });
                         }
                     };

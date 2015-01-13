@@ -37,7 +37,7 @@
                                 <div ng-if="room.mode === 'auto'" class="home-mode"><i class="ion-ios7-clock"></i></div>
                                 <div ng-if="room.mode === 'manu'" class="home-mode"><i class="ion-android-hand"></i> </i></div>
                                 <div class="progress-wrapper" ng-style="{'font-size': ((radius + stroke)/ 3)+'px'}">
-                                    <div room-temperature scale="0.60" min="min" max="max" roomid="room.$id" targettemp="room.virtualTarget" measuredtemp="room.temperature" mode="room.mode" valve="room.valve" isaway="room.isAway" usesautoaway="room.usesAutoAway" color="{{ currentColor }}" bgcolor="{{ bgColor }}" radius="{{ radius }}" stroke="{{ stroke }}" displaytarget="true" displayarrows="false" ishome="true">
+                                    <div ng-show="finishedloading" room-temperature scale="0.60" min="min" max="max" roomid="room.$id" targettemp="room.virtualTarget" measuredtemp="room.temperature" mode="room.mode" valve="room.valve" isaway="room.isAway" usesautoaway="room.usesAutoAway" color="{{ currentColor }}" bgcolor="{{ bgColor }}" radius="{{ radius }}" stroke="{{ stroke }}" displaytarget="true" displayarrows="false" finishedloading="finishedloading">
                                     </div>
 
                                 </div>

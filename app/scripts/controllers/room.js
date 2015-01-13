@@ -12,6 +12,7 @@ angular.module('cirqlApp')
 .controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter','toastr','$translate','$ionicLoading',
     function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate, $ionicLoading) {
 
+        $scope.finishedloading = false;
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
         }
@@ -32,10 +33,6 @@ angular.module('cirqlApp')
 
         var roomObj = fbutil.syncObject(roomUrl);
         roomObj.$bindTo($scope, 'roomValues');
-
-        roomObj.$loaded(function() {
-            $timeout(function() {$ionicLoading.hide()});
-        })
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);
