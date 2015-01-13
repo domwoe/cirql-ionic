@@ -84,9 +84,11 @@ angular.module('cirqlApp')
 
                             geo.startMonitoringSignificantLocationChanges();
                         }
+                    } else {
+                        console.log('user.residentId is not nto found');
                     }
                 } else {
-                    console.log('geo is not on!');
+                    console.log('user.uid is not nto found');
                 }
             }
             loadHome(user);
