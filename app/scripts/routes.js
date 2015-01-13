@@ -324,7 +324,7 @@ angular.module('cirqlApp')
     OR: 'ODER',
     CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
     SELECT_USER: 'Benutzer auswählen',
-    NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wählen deinen Nutzer aus',
+    NEW_DEVICE_MSG: 'Du hast dich mit einem unbekannten Gerät angemeldet. Bitte wähle deinen Nutzer aus.',
     CREATE_NEW_USER: 'Neuen Nutzer anlegen',
     ENTER_NAME: 'Gib deinen Namen ein',
     SCHEDULE: 'Zeitplan',

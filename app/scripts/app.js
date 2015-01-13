@@ -11,7 +11,7 @@ angular.module('cirqlApp', [
     'nsPopover'
 ])
 
-.run(function($ionicPlatform, discovery, $ionicLoading, $translate, geo) {
+.run(function($ionicPlatform, discovery, $ionicLoading, $translate) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -24,14 +24,16 @@ angular.module('cirqlApp', [
         }
 
     
-     if (window.plugins && window.plugins.DGGeofencing) {
+        if (window.plugins && window.plugins.DGGeofencing) {
+            console.log('Geofencing plugin available');
+        }
             
-            geo.init()
+     //        geo.init()
 
-            geo.monitorRegion();
+     //        geo.monitorRegion();
 
-            geo.startMonitoringSignificantLocationChanges();
-      }
+     //        geo.startMonitoringSignificantLocationChanges();
+     //  }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
