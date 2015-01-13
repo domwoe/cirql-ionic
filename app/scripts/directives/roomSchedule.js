@@ -188,7 +188,7 @@ angular.module('cirqlApp')
                                     entry.minute = time[1];
 
                                     // Flag for schedule change
-                                    this.changed = this.weekDays[entry.weekday];
+                                    this.changed = this.weekDays[entry.weekday+1];
 
                                 } else if (this.lockOnVerticalDrag) {
 
@@ -215,7 +215,7 @@ angular.module('cirqlApp')
                                         dotTargetTspan.text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
                                          // Flag for schedule change
-                                        this.changed = this.weekDays[this.localSchedule[circleIndex].weekday];
+                                        this.changed = this.weekDays[this.localSchedule[circleIndex].weekday+1];
                                     }
                                 }
                             }
