@@ -11,7 +11,7 @@
     <div class="activity">
         <div class="list card opaque item-text-wrap" ng-repeat="activity in activities | orderBy: 'date' : true ">
             <div class="item">
-                <p class="activity-date">{{activity.date | toDay | translate}} {{activity.date | toDate | date: 'shortTime' }}</p> {{activity.msg}}
+                <p class="activity-date">{{activity.date | toDay | translate}} {{activity.date | toDate | date: 'H:mm' }}</p> {{activity.msg}}
             </div>
         </div>
      </div>   
