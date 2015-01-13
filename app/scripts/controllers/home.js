@@ -8,28 +8,15 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate',
-        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate) {
+    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout',
+        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout) {
 
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
 
             $ionicLoading.show({
-                template: '{{"LOADING" | translate}}...<div class="sk-spinner sk-spinner-circle">' +
-                    '<div class="sk-circle1 sk-circle"></div>' +
-                    '<div class="sk-circle2 sk-circle"></div>' +
-                    '<div class="sk-circle3 sk-circle"></div>' +
-                    '<div class="sk-circle4 sk-circle"></div>' +
-                    '<div class="sk-circle5 sk-circle"></div>' +
-                    '<div class="sk-circle6 sk-circle"></div>' +
-                    '<div class="sk-circle7 sk-circle"></div>' +
-                    '<div class="sk-circle8 sk-circle"></div>' +
-                    '<div class="sk-circle9 sk-circle"></div>' +
-                    '<div class="sk-circle10 sk-circle"></div>' +
-                    '<div class="sk-circle11 sk-circle"></div>' +
-                    '<div class="sk-circle12 sk-circle"></div>' +
-                    '</div>'
+                templateUrl: 'loading.html'
             });
 
             if (user) {
@@ -52,6 +39,9 @@ angular.module('cirqlApp')
             $scope.bgColor = '#000000';
 
             $scope.goToRoom = function(room) {
+                $ionicLoading.show({
+                    templateUrl: 'loading.html'
+                });
                 $state.go('app.room', {
                     roomId: room
                 }, {
@@ -70,7 +60,7 @@ angular.module('cirqlApp')
                 $scope.residents = residents;
 
                 rooms.$loaded().then(function() {
-                    $ionicLoading.hide();
+                    $timeout(function() {$ionicLoading.hide()});
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {
