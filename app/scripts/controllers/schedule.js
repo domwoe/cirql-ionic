@@ -15,14 +15,13 @@ angular.module('cirqlApp')
 
   	$scope.dayview = false;
 
-
-  	$scope.save = function(obj) {
-  		console.log(obj);
-  	}
-
  	var room = $stateParams.roomId;
 	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
 	var roomObj = fbutil.syncObject(roomUrl);
+
+  var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+
+  var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
 
 	roomObj.$loaded().then(function() {
 		roomObj.$bindTo($scope, 'roomValues');
@@ -38,7 +37,28 @@ angular.module('cirqlApp')
 	$scope.roomId = room;
 	$scope.radius = 14;
 
-  	$scope.goBack = function(room) {
+  function addRawActivity(obj) {
+            var date = new Date();
+            obj.date = date.toString();
+            obj.name = residents.$getRecord(user.residentId).name;
+            activities.$add(obj);
+            console.log('Activity added:' + JSON.stringify(obj));
+  }
+
+  	$scope.goback = function(room, changedDay) {
+
+
+      console.log('SCHEDULE CHANGED: ' + changedDay);
+
+      if (changedDay) {
+
+        addRawActivity({
+          type: 'change-schedule',
+          day: changedDay
+        });
+
+      }
+
   		if (window.screen.hasOwnProperty('lockOrientation')) {
         	window.screen.lockOrientation('portrait');
         }
@@ -46,7 +66,18 @@ angular.module('cirqlApp')
 		$state.go('app.room', {roomId: room});
     };
 
-    $scope.reload = function() {
-    	$state.go($state.current, {}, {reload: true})
-    }
+    $scope.reload = function(changedDay) {
+       console.log('SCHEDULE CHANGED: ' + changedDay);
+
+      if (changedDay) {
+
+        addRawActivity({
+          type: 'change-schedule',
+          day: changedDay
+        });
+
+      }
+
+    	$state.go($state.current, {}, {reload: true});
+    };
 }]);

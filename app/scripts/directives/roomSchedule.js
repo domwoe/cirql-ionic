@@ -13,7 +13,7 @@ angular.module('cirqlApp')
                     roomid: "=",
                     hour: "@",
                     minute: "@",
-                    goBack: "&",
+                    goback: "&",
                     reload: "&",
                     roomname: "@",
                     dayview: "="
@@ -41,6 +41,7 @@ angular.module('cirqlApp')
                         this.dragging = false;
                         this.lockOnHorizontalDrag = false;
                         this.lockOnVerticalDrag = false;
+                        this.changed = false;
 
                         scope.sync = this.localSchedule;
 
@@ -186,6 +187,9 @@ angular.module('cirqlApp')
                                     entry.hour = time[0];
                                     entry.minute = time[1];
 
+                                    // Flag for schedule change
+                                    this.changed = this.weekDays[entry.weekday];
+
                                 } else if (this.lockOnVerticalDrag) {
 
                                     // Update temperature
@@ -199,7 +203,10 @@ angular.module('cirqlApp')
                                         dotTarget = '5';
                                     }
 
+                                    
+
                                     console.log("NEW TEMP: ", newTemp);
+
                                     var targetTspan = group.select('tspan');
                                     var dotTargetTspan = group.select('g').select('tspan');
 
@@ -207,6 +214,8 @@ angular.module('cirqlApp')
                                         targetTspan.text(target);
                                         dotTargetTspan.text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
+                                         // Flag for schedule change
+                                        this.changed = this.weekDays[this.localSchedule[circleIndex].weekday];
                                     }
                                 }
                             }
@@ -699,14 +708,15 @@ angular.module('cirqlApp')
                         }
 
                         this.save = function(self) {
-                            self.syncFirebase();
-                            scope.goBack({
-                                room: scope.roomid
-                            });
+
+                        console.log(self.changed);
+                      
+                        self.syncFirebase();
+                        scope.goback({room: scope.roomid, changedDay: self.changed});
                         }
 
                         this.cancel = function() {
-                            scope.goBack({
+                            scope.goback({
                                 room: scope.roomid
                             });
                         }
@@ -714,7 +724,8 @@ angular.module('cirqlApp')
                         this.backToWeek = function(self) {
                             console.log('BACK TO WEEK');
                             self.syncFirebase();
-                            scope.reload();
+                             console.log(self.changed);
+                            scope.reload({changedDay: self.changed});
 
 
                         }
