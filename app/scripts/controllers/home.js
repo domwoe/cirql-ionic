@@ -33,7 +33,7 @@ angular.module('cirqlApp')
             }
 
 
-            $scope.min = 0;
+            $scope.min = 5;
             $scope.max = 30;
             $scope.stroke = 12;
             $scope.radius = 110;
