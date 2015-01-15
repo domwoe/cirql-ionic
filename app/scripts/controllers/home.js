@@ -20,12 +20,17 @@ angular.module('cirqlApp')
             // $ionicLoading.show({
             //     templateUrl: 'loading.html'
             // });
+            // 
+             $timeout(function() {
+                        $cordovaSplashscreen.hide();
+                    },100);
 
             if (user) {
                 $scope.user = user;
                 // redirect to select resident if not set
                 if (!user.residentId) {
                     $state.go('app.resident');
+                    console.log('go to resident');
                 }
                 else {
                     console.log('Home')
@@ -34,6 +39,7 @@ angular.module('cirqlApp')
                 // redirect to login if no user available
             } else {
                 $state.go('login');
+                console.log('go to login');
             }
 
             $ionicLoading.hide();
