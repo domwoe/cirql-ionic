@@ -22,7 +22,7 @@ angular.module('cirqlApp')
 
             $timeout(function() {
                 $cordovaSplashscreen.hide();
-            },500);    
+            },700);    
 
             $scope.user = {
                 email: 'test',

@@ -73,7 +73,7 @@ angular.module('cirqlApp')
                 rooms.$loaded().then(function() {
                    $timeout(function() {
                         $cordovaSplashscreen.hide();
-                    });
+                    },100);
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {

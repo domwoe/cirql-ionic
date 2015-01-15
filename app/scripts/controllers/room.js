@@ -14,10 +14,7 @@ angular.module('cirqlApp')
 
         var room = $stateParams.roomId;
 
-        $ionicLoading.show({
-            templateUrl: 'loading.html'
-        });
-
+    
         $scope.finishedloading = false;
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
