@@ -29,9 +29,7 @@ angular.module('cirqlApp')
                 }
                 else {
                     console.log('Home')
-                    $timeout(function() {
-                        $cordovaSplashscreen.hide();
-                    });
+                    
                 }
                 // redirect to login if no user available
             } else {
@@ -39,7 +37,6 @@ angular.module('cirqlApp')
             }
 
             $ionicLoading.hide();
-
 
             $scope.min = 5;
             $scope.max = 30;
@@ -72,7 +69,9 @@ angular.module('cirqlApp')
                 $scope.residents = residents;
 
                 rooms.$loaded().then(function() {
-                    $timeout(function() {$ionicLoading.hide()});
+                   $timeout(function() {
+                        $cordovaSplashscreen.hide();
+                    });
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {

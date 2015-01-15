@@ -9,10 +9,16 @@
  */
 angular.module('cirqlApp')
     .controller('LoginCtrl',
-        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, resident) {
+        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, resident, $cordovaSplashscreen) {
 
             if ($localStorage.user) {
                 $state.go('app.home');
+            } else {
+
+                $timeout(function() {
+                    $cordovaSplashscreen.hide();
+                });
+
             }
 
             $scope.user = {
@@ -21,9 +27,6 @@ angular.module('cirqlApp')
                 confirm: ''
             };
 
-            setTimeout(function() {
-                navigator.splashscreen.hide();
-            }, 100);
 
 
             $scope.errorMessage = null;
