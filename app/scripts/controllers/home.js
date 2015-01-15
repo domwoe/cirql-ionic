@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout',
-        function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','roomDetailService',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,roomDetailService) {
 
             $scope.finishedloading = false;
 
@@ -17,9 +17,9 @@ angular.module('cirqlApp')
                 window.screen.lockOrientation('portrait');
             }
 
-            $ionicLoading.show({
-                templateUrl: 'loading.html'
-            });
+            // $ionicLoading.show({
+            //     templateUrl: 'loading.html'
+            // });
 
             if (user) {
                 $scope.user = user;
@@ -27,10 +27,18 @@ angular.module('cirqlApp')
                 if (!user.residentId) {
                     $state.go('app.resident');
                 }
+                else {
+                    console.log('Home')
+                    $timeout(function() {
+                        $cordovaSplashscreen.hide();
+                    });
+                }
                 // redirect to login if no user available
             } else {
                 $state.go('login');
             }
+
+            $ionicLoading.hide();
 
 
             $scope.min = 5;
@@ -41,13 +49,15 @@ angular.module('cirqlApp')
             $scope.bgColor = '#000000';
 
             $scope.goToRoom = function(room) {
-                $ionicLoading.show({
-                    templateUrl: 'loading.html'
-                });
+
+                $rootScope.room = room;
+                // $ionicLoading.show({
+                //     templateUrl: 'loading.html'
+                // });
                 $state.go('app.room', {
                     roomId: room
                 }, {
-                    reload: true
+                    reload: false
                 });
             };
 
@@ -67,15 +77,22 @@ angular.module('cirqlApp')
 
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                        console.log('trigger geolocation service');
-                        if (window.plugins && window.plugins.DGGeofencing) {
+                        if (!$rootScope.isGeoStarted) {
+                            console.log('trigger geolocation service');
+                            if (window.plugins && window.plugins.DGGeofencing) {
 
-                            geo.init()
+                                geo.init()
 
-                            geo.monitorRegion();
+                                geo.monitorRegion();
 
-                            geo.startMonitoringSignificantLocationChanges();
+                                geo.startMonitoringSignificantLocationChanges();
+
+                                $rootScope.isGeoStarted = true;
+                            }
                         }
+                        else {
+                            console.log('Geolocation service already started');
+                        }    
                     } else {
                         console.log('user.residentId is not nto found');
                     }

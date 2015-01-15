@@ -8,13 +8,17 @@ angular.module('cirqlApp', [
     'ngStorage',
     'pascalprecht.translate',
     'toastr',
-    'nsPopover'
+    'nsPopover',
+    'ngCordova'
 ])
 
-.run(function($ionicPlatform, discovery, $ionicLoading, $translate) {
+.run(function($ionicPlatform, discovery, $ionicLoading, $translate, $rootScope) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
+        // 
+        $rootScope.isGeoStarted = false;
+        
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }

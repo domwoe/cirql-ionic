@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
-        function($scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
+    .controller('SideMenuCtrl', ['$rootScope','$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
+        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
                 simpleLogin.logout();
@@ -11,23 +11,44 @@ angular.module('cirqlApp')
 
             $scope.room = $state.params.roomId;
 
-            console.log($scope.room);
+            var usesAutoAway = null;
+            var mode = null;
+            var residents = null;
+            var boundResidents = null;
+            var activities = null;
 
-            if ($scope.room) {
-                var usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
-                usesAutoAway.$bindTo($scope, 'usesAutoAway');
 
-                var mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
-                mode.$bindTo($scope, 'mode');
 
-                var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                $scope.residents = residents;
+            $rootScope.$watch('room', function(room) {
 
-                var boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
-                $scope.boundResidents = boundResidents;
+                $scope.room = room;
 
-                 var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/raw');
-            }
+
+                console.log(room);
+
+
+                if (room) {
+
+
+                    console.log(room);
+
+                    usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
+                    usesAutoAway.$bindTo($scope, 'usesAutoAway');
+
+                    mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
+                    mode.$bindTo($scope, 'mode');
+
+                    residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+                    $scope.residents = residents;
+
+                    boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
+                    $scope.boundResidents = boundResidents;
+
+                    //activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/raw');
+
+                }
+            });
+
 
             function disableAutoAway() {
                 if ($scope.usesAutoAway && $scope.usesAutoAway.$value) {
@@ -44,10 +65,10 @@ angular.module('cirqlApp')
 
                 for (var resident in boundResidents) {
                     if (boundResidents[resident] === true || boundResidents[resident] === false) {
-                        
-                            hasBoundResidents = hasBoundResidents || boundResidents[resident];
-                        
-                        
+
+                        hasBoundResidents = hasBoundResidents || boundResidents[resident];
+
+
                     }
                 }
 
@@ -55,7 +76,7 @@ angular.module('cirqlApp')
             }
 
             $scope.toggleBoundResident = function(resident) {
-                
+
                 if (boundResidents === undefined) {
                     boundResidents = {};
                 } else {
@@ -100,7 +121,7 @@ angular.module('cirqlApp')
             $scope.addRawActivity = function() {
 
                 var date = new Date();
-               
+
                 var activity = {
                     date: date.toString(),
                     type: 'auto-away',
@@ -108,8 +129,8 @@ angular.module('cirqlApp')
                     name: $scope.residents.$getRecord(user.residentId).name
                 };
 
-                activities.$add(activity);
-                console.log('Activity added:' +JSON.stringify(activity));
+                fbutil.ref(homeUrl + '/activity/' + $scope.room + '/raw').push(activity);
+                console.log('Activity added:' + JSON.stringify(activity));
             };
 
             $scope.goToSchedule = function() {
@@ -117,7 +138,7 @@ angular.module('cirqlApp')
                     window.screen.lockOrientation('landscape');
                 }
                 $state.go('app.schedule', {
-                    roomId: $state.params.roomId
+                    roomId: $scope.room
                 });
             };
 
@@ -125,7 +146,7 @@ angular.module('cirqlApp')
                 if ($state.params.hasOwnProperty('roomId')) {
 
 
-                    var room = $state.params.roomId;
+                    var room = $scope.room;
 
                     var promise = netatmoService.getNetatmo(room, user.uid);
 

@@ -20,6 +20,12 @@ angular.module('cirqlApp')
                 password: '',
                 confirm: ''
             };
+
+            setTimeout(function() {
+                navigator.splashscreen.hide();
+            }, 100);
+
+
             $scope.errorMessage = null;
 
             $scope.login = function() {

@@ -9,8 +9,10 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', 'toastr', '$translate', '$ionicLoading',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate, $ionicLoading) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', 'toastr', '$translate', '$ionicLoading','roomDetailService',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate, $ionicLoading,roomDetailService) {
+
+        var room = $stateParams.roomId;
 
         $ionicLoading.show({
             templateUrl: 'loading.html'
@@ -29,7 +31,7 @@ angular.module('cirqlApp')
 
 
 
-        var room = $stateParams.roomId;
+       
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
 
@@ -48,7 +50,7 @@ angular.module('cirqlApp')
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
 
-        var activities = fbutil.syncArray(homeUrl + '/activity/' + room + '/raw');
+        //var activities = fbutil.syncArray(homeUrl + '/activity/' + room + '/raw');
 
         var trvObj = fbutil.syncObject(trvUrl);
 
@@ -158,15 +160,15 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
-            $ionicLoading.show({
-                templateUrl: 'loading.html'
-            });
-            roomObj.$destroy();
-            templates.$destroy();
-            trvObj.$destroy();
-            activities.$destroy();
+            // $ionicLoading.show({
+            //     templateUrl: 'loading.html'
+            // });
+            // roomObj.$destroy();
+            // templates.$destroy();
+            // trvObj.$destroy();
+            // activities.$destroy();
             $state.go('app.home', null, {
-                reload: true
+                reload: false
             });
         };
 
@@ -314,7 +316,7 @@ angular.module('cirqlApp')
         $scope.addRawActivity = function(obj) {
             if (obj.type === 'set-target') {
 
-                listenForSuccess();
+                //listenForSuccess();
 
                 if ($scope.roomValues.mode === 'manu') {
                     obj.type = 'manual-target';
@@ -329,7 +331,9 @@ angular.module('cirqlApp')
             var date = new Date();
             obj.date = date.toString();
             obj.name = $scope.residents.$getRecord(user.residentId).name;
-            activities.$add(obj);
+            //activities.$add(obj);
+            //fbutil.ref.child(homeUrl + '/activity/' + room + '/raw').push(obj);
+            fbutil.ref(homeUrl + '/activity/' + room + '/raw').push(obj);
             console.log('Activity added:' + JSON.stringify(obj));
         };
 
