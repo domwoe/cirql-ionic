@@ -20,10 +20,6 @@ angular.module('cirqlApp')
             // $ionicLoading.show({
             //     templateUrl: 'loading.html'
             // });
-            // 
-             $timeout(function() {
-                        $cordovaSplashscreen.hide();
-                    },100);
 
             if (user) {
                 $scope.user = user;
@@ -82,7 +78,7 @@ angular.module('cirqlApp')
 
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                        if (!$rootScope.isGeoStarted) {
+                        //if (!$rootScope.isGeoStarted) {
                             console.log('trigger geolocation service');
                             if (window.plugins && window.plugins.DGGeofencing) {
 
@@ -94,7 +90,7 @@ angular.module('cirqlApp')
 
                                 $rootScope.isGeoStarted = true;
                             }
-                        }
+                        //}
                         else {
                             console.log('Geolocation service already started');
                         }    

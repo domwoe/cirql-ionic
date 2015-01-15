@@ -19,10 +19,10 @@ angular.module('cirqlApp')
             }
 
             console.log('I#m in login');
-            
+
             $timeout(function() {
                 $cordovaSplashscreen.hide();
-            });    
+            },500);    
 
             $scope.user = {
                 email: 'test',
