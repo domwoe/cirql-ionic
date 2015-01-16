@@ -34,7 +34,7 @@ angular.module('cirqlApp')
 
                 // Loading 
                 $ionicLoading.show({
-                    template: '{{"LOADING" | translate}}...<div class="sk-spinner sk-spinner-circle">' +
+                    template: '<div class="sk-spinner sk-spinner-circle">' +
                         '<div class="sk-circle1 sk-circle"></div>' +
                         '<div class="sk-circle2 sk-circle"></div>' +
                         '<div class="sk-circle3 sk-circle"></div>' +
