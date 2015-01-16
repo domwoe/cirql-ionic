@@ -55,10 +55,7 @@ angular.module('cirqlApp')
                 });
 
 
-                simpleLogin.login('password', {
-                    email: $scope.user.email,
-                    password: $scope.user.password
-                })
+                simpleLogin.login($scope.user.email, $scope.user.password)
                     .then(function() {
                         $state.go('app.home');
                     })

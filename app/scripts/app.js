@@ -4,6 +4,7 @@ angular.module('cirqlApp', [
     'ionic',
     'config',
     'simpleLogin',
+    'changeEmail',
     'firebase.utils',
     'ngStorage',
     'pascalprecht.translate',

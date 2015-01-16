@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "ionic": "v1.0.0-beta.13",
-    "angularfire": "~0.8.2",
+    "angularfire": "~0.9.1",
     "d3": "~3.4.11",
     "ngstorage": "~0.3.0",
     "angular-translate": "~2.5.2",

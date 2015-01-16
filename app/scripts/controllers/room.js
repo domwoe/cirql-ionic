@@ -25,18 +25,15 @@ angular.module('cirqlApp')
         if (language !== 'de') {
             language = 'en';
         }
-
-
-        var unbindRoomObj;
        
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
 
-        var trvUrl = roomUrl + '/thermostats';
+        //var trvUrl = roomUrl + '/thermostats';
 
          var roomObj = fbutil.syncObject(roomUrl);
         roomObj.$bindTo($scope,'roomValues').then(function(unbind) {
-            unbindRoomObj = unbind;
+            $scope.unbindRoom = unbind;
         });
 
         $scope.roomValues = roomObj;
@@ -53,29 +50,29 @@ angular.module('cirqlApp')
 
         //var activities = fbutil.syncArray(homeUrl + '/activity/' + room + '/raw');
 
-        var trvObj = fbutil.syncObject(trvUrl);
+        //var trvObj = fbutil.syncObject(trvUrl);
 
-        $scope.hasThermostats = null;
+        //$scope.hasThermostats = null;
 
-        var trvIds = [];
+        //var trvIds = [];
 
 
-        trvObj.$loaded(function(trvs) {
-            if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
-                $scope.hasThermostats = false;
-                console.log($scope.hasThermostats);
-            } else {
+        // trvObj.$loaded(function(trvs) {
+        //     if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
+        //         $scope.hasThermostats = false;
+        //         console.log($scope.hasThermostats);
+        //     } else {
 
-                angular.forEach(trvs, function(value, key) {
+        //         angular.forEach(trvs, function(value, key) {
 
-                    trvIds.push(key);
+        //             trvIds.push(key);
 
-                });
+        //         });
 
-                $scope.hasThermostats = true;
+        //         $scope.hasThermostats = true;
 
-            }
-        });
+        //     }
+        // });
 
 
 
@@ -167,12 +164,12 @@ angular.module('cirqlApp')
             // $ionicLoading.show({
             //     templateUrl: 'loading.html'
             // });
-             unbindRoomObj();
+             $scope.unbindRoom();
              roomObj.$destroy();
              templates.$destroy();
-             trvObj.$destroy();
+             //trvObj.$destroy();
             $state.go('app.home', null, {
-                reload: true
+                reload: false
             });
         };
 
@@ -181,8 +178,8 @@ angular.module('cirqlApp')
         };
 
         $scope.toggleBoundResident = function(resident) {
-            if (roomObj.residents === undefined) {
-                roomObj.residents = {};
+            if ($scope.roomValues.residents === undefined) {
+                $scope.roomValues.residents = {};
             } else {
 
                 if (resident.rooms !== undefined) {
@@ -211,8 +208,8 @@ angular.module('cirqlApp')
                     }
                 }
                 residents.$save(resident);
-                roomObj.residents[resident.$id] = resident.rooms[room];
-                roomObj.$save();
+                $scope.roomValues.residents[resident.$id] = resident.rooms[room];
+                $scope.roomValues.$save();
 
             }
 
