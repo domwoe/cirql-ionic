@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope','$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
         function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
@@ -37,10 +37,10 @@ angular.module('cirqlApp')
 
                     // }
 
-                    
-                    
-                   
-                    
+
+
+
+
                     usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
                     usesAutoAway.$bindTo($scope, 'usesAutoAway');
 
@@ -56,6 +56,22 @@ angular.module('cirqlApp')
 
                 }
             });
+
+            $scope.showWhyAutoAwayIsDisabled = function() {
+
+                if ($scope.mode.$value === 'manu') {
+
+                    $ionicPopup.alert({
+                        template: '{{"NO_AUTOAWAY_BECAUSE_MANU_ALERT" | translate}}'
+                    });
+                } else if (!$scope.hasBoundResidents()) {
+
+                    $ionicPopup.alert({
+                        template: '{{"NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT" | translate}}'
+                    });
+                }
+
+            };
 
 
             function disableAutoAway() {
@@ -151,40 +167,40 @@ angular.module('cirqlApp')
             };
 
             $scope.netatmo = function() {
-               
 
-                    var promise = netatmoService.getNetatmo($scope.room, user.uid);
 
-                    promise.then(function(hasNetatmo) {
+                var promise = netatmoService.getNetatmo($scope.room, user.uid);
 
-                        console.log('hasNetatmo: ' + hasNetatmo);
+                promise.then(function(hasNetatmo) {
 
-                        if (hasNetatmo) {
-                            $state.go('app.netatmo', {
-                                roomId: $scope.room
-                            });
-                        } else {
-                            var isConPromise = netatmoService.isConnected(user.uid);
-                            isConPromise.then(function(isConnected) {
-                                    console.log('isConnected: ' + isConnected);
-                                    if (isConnected) {
-                                        $state.go('app.addNetatmo', {
-                                            roomId: $scope.room
-                                        });
-                                    }
-                                },
-                                // No Netato account connected
-                                function(reject) {
-                                    netatmoService.authorizeUrl(user.uid).then(function(url) {
-                                        window.open(url, '_blank', 'location=yes');
+                    console.log('hasNetatmo: ' + hasNetatmo);
+
+                    if (hasNetatmo) {
+                        $state.go('app.netatmo', {
+                            roomId: $scope.room
+                        });
+                    } else {
+                        var isConPromise = netatmoService.isConnected(user.uid);
+                        isConPromise.then(function(isConnected) {
+                                console.log('isConnected: ' + isConnected);
+                                if (isConnected) {
+                                    $state.go('app.addNetatmo', {
+                                        roomId: $scope.room
                                     });
-
-
+                                }
+                            },
+                            // No Netato account connected
+                            function(reject) {
+                                netatmoService.authorizeUrl(user.uid).then(function(url) {
+                                    window.open(url, '_blank', 'location=yes');
                                 });
-                        }
-                    });
 
-            
+
+                            });
+                    }
+                });
+
+
 
             };
 

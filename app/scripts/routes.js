@@ -280,7 +280,9 @@ angular.module('cirqlApp')
     YESTERDAY: 'Yesterday',
     MORE: 'more',
     MANUAL: 'MANUAL',
-    SCHEDULEMODE: 'SCHEDULE'
+    SCHEDULEMODE: 'SCHEDULE',
+    NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway is only possible in schedule mode',
+    NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'No user bound to this room'
 
 
 
@@ -350,7 +352,9 @@ angular.module('cirqlApp')
     YESTERDAY: 'Gestern',
     MORE: 'mehr',
     MANUAL: 'MANUELL',
-    SCHEDULEMODE: 'ZEITPLAN'
+    SCHEDULEMODE: 'ZEITPLAN',
+    NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway ist nur im Zeitplan-Modus möglich',
+    NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'Diesem Raum ist kein Nutzer zugeordnet'
   });
 
   $translateProvider.preferredLanguage('de');

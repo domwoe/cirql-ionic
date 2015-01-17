@@ -19,16 +19,17 @@
         <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
           ADD_ROOM
         </div>
-        <div>
+        <div show-alert>
           <div ng-if="isRoom()" ng-cloak class="residents residents-select">
             <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
-              <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
-              <br />
+              <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"></img>
+              <br></br>
               {{resident.name}}
             </div>
           </div>
-          <span><ion-toggle style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="addRawActivity()">AutoAway</ion-toggle>
+          <span><ion-toggle id="autoaway-toggle" style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="addRawActivity()">AutoAway</ion-toggle></span>
         </div>
+
         <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
           SCHEDULE
         </div>
@@ -38,21 +39,12 @@
         <div translate class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           THERMOSTATS
         </div>
-        <div class="item nav-clear menu-close" ng-show="isRoom()" ng-click="netatmo()">
+        <div show-alert class="item nav-clear menu-close" ng-show="isRoom()">
           Netatmo
         </div>
         <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.room_settings({roomId: room})">
           ROOM_SETTINGS
         </div>
-        <!-- <div class="item nav-clear menu-close"  ng-show="isHome()">
-          Home Settings
-        </div> -->
-        <!-- <div class="item nav-clear menu-close"  ng-show="isHome()">
-          User Settings
-        </div> -->
-       <!--  <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.holiday">
-          Holiday
-        </div> -->
         <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.gateway({home: true})">
           Gateway
         </div>
