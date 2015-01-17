@@ -9,34 +9,43 @@ angular.module('cirqlApp')
                 $state.go('login');
             };
 
-            $scope.room = $state.params.roomId;
 
             var usesAutoAway = null;
-            var mode = null;
             var residents = null;
             var boundResidents = null;
-            var activities = null;
 
 
+            $scope.room = $state.params.roomId;
 
             $rootScope.$watch('room', function(room) {
 
                 $scope.room = room;
 
 
-                console.log(room);
-
-
                 if (room) {
+                    // if ($scope.usesAutoAway) {
+                    //     $scope.usesAutoAway.$destroy();
+                    // }
+                    // if ($scope.mode) {
+                    //     $scope.mode.$destroy();
+                    // }
+                    // if ($scope.residents) {
+                    //      $scope.residents.$destroy();
+                    // }
+                    // if ($scope.boundResidents) {
+                    //     $scope.boundResidents.$destroy();
 
+                    // }
 
-                    console.log(room);
-
+                    
+                    
+                   
+                    
                     usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
                     usesAutoAway.$bindTo($scope, 'usesAutoAway');
 
-                    mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
-                    mode.$bindTo($scope, 'mode');
+                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
+
 
                     residents = fbutil.syncArray('homes/' + user.uid + '/residents');
                     $scope.residents = residents;
@@ -44,7 +53,6 @@ angular.module('cirqlApp')
                     boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
                     $scope.boundResidents = boundResidents;
 
-                    //activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/raw');
 
                 }
             });
@@ -129,7 +137,7 @@ angular.module('cirqlApp')
                     name: $scope.residents.$getRecord(user.residentId).name
                 };
 
-                fbutil.ref(homeUrl + '/activity/' + $scope.room + '/raw').push(activity);
+                fbutil.ref('homes/' + user.uid + '/activity/' + $scope.room + '/raw').push(activity);
                 console.log('Activity added:' + JSON.stringify(activity));
             };
 
@@ -143,12 +151,9 @@ angular.module('cirqlApp')
             };
 
             $scope.netatmo = function() {
-                if ($state.params.hasOwnProperty('roomId')) {
+               
 
-
-                    var room = $scope.room;
-
-                    var promise = netatmoService.getNetatmo(room, user.uid);
+                    var promise = netatmoService.getNetatmo($scope.room, user.uid);
 
                     promise.then(function(hasNetatmo) {
 
@@ -156,7 +161,7 @@ angular.module('cirqlApp')
 
                         if (hasNetatmo) {
                             $state.go('app.netatmo', {
-                                roomId: $state.params.roomId
+                                roomId: $scope.room
                             });
                         } else {
                             var isConPromise = netatmoService.isConnected(user.uid);
@@ -164,7 +169,7 @@ angular.module('cirqlApp')
                                     console.log('isConnected: ' + isConnected);
                                     if (isConnected) {
                                         $state.go('app.addNetatmo', {
-                                            roomId: $state.params.roomId
+                                            roomId: $scope.room
                                         });
                                     }
                                 },
@@ -179,7 +184,7 @@ angular.module('cirqlApp')
                         }
                     });
 
-                }
+            
 
             };
 

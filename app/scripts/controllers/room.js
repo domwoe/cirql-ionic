@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', 'toastr', '$translate', '$ionicLoading','roomDetailService',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, toastr, $translate, $ionicLoading,roomDetailService) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicLoading',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicLoading) {
 
         var room = $stateParams.roomId;
 
@@ -29,14 +29,14 @@ angular.module('cirqlApp')
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
 
-        //var trvUrl = roomUrl + '/thermostats';
-
          var roomObj = fbutil.syncObject(roomUrl);
-        roomObj.$bindTo($scope,'roomValues').then(function(unbind) {
-            $scope.unbindRoom = unbind;
-        });
 
-        $scope.roomValues = roomObj;
+         $scope.roomValues = roomObj;
+        //roomObj.$bindTo($scope,'roomValues');
+        //     .then(function(unbind) {
+        //    // $scope.unbindRoom = unbind;
+        // });
+
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);
@@ -48,8 +48,9 @@ angular.module('cirqlApp')
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
 
-        //var activities = fbutil.syncArray(homeUrl + '/activity/' + room + '/raw');
 
+
+        //var trvUrl = roomUrl + '/thermostats';
         //var trvObj = fbutil.syncObject(trvUrl);
 
         //$scope.hasThermostats = null;
@@ -110,11 +111,10 @@ angular.module('cirqlApp')
         $scope.changeMode = function($index) {
             modeIndex = $index;
 
-            //console.log(modeIndex);
+            console.log(modeIndex);
 
             if ($index % 2 === 0) {
                 if ($scope.roomValues.mode === 'auto') {
-
                     return;
                 }
                 $scope.roomValues.mode = 'auto';
@@ -124,6 +124,8 @@ angular.module('cirqlApp')
                 }
                 $scope.roomValues.mode = 'manu';
             }
+
+            roomObj.$save();
 
             $scope.addRawActivity({
                 type: 'change-mode'
@@ -164,7 +166,7 @@ angular.module('cirqlApp')
             // $ionicLoading.show({
             //     templateUrl: 'loading.html'
             // });
-             $scope.unbindRoom();
+             //$scope.unbindRoom();
              roomObj.$destroy();
              templates.$destroy();
              //trvObj.$destroy();
@@ -316,7 +318,13 @@ angular.module('cirqlApp')
 
         $scope.addRawActivity = function(obj) {
             //roomObj.$save();
+           
             if (obj.type === 'set-target') {
+
+               roomObj.virtualTarget = obj.target;
+
+                 //console.log(roomObj);
+                 roomObj.$save();
 
                 //listenForSuccess();
 
