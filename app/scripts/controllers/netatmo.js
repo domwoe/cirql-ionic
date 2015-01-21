@@ -48,7 +48,7 @@ angular.module('cirqlApp')
 
             $scope.lastSeen = function(timeString) {
 
-                var timestamp = Date.parse(timeString) - 5000;
+                var timestamp = Date.parse(timeString);
                 var now = Date.now();
 
                 var diff = now - timestamp;
@@ -68,7 +68,7 @@ angular.module('cirqlApp')
                     }
                 } else {
                     $scope.alert = true;
-                    return Date(timestamp).toLocaleString();
+                    return new Date(timestamp).toLocaleString();
                 }
             };
 

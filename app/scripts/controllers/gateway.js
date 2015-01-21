@@ -127,7 +127,10 @@ angular.module('cirqlApp')
             $scope.lastSeen = function(timeString) {
 
                 var timestamp = Date.parse(timeString);
-                var now = new Date;
+                var now = Date.now();
+
+                console.log('TIMESTAMP:' +timestamp);
+                console.log('NOW:' +now);
 
                 var diff = now - timestamp;
 
@@ -146,7 +149,7 @@ angular.module('cirqlApp')
                     }
                 } else {
                     $scope.alert = true;
-                    return Date(timestamp).toLocaleString();
+                    return new Date(timestamp).toLocaleString();
                 }
             };
 
