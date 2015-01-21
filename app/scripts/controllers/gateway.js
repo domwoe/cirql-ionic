@@ -129,9 +129,6 @@ angular.module('cirqlApp')
                 var timestamp = Date.parse(timeString);
                 var now = Date.now();
 
-                console.log('TIMESTAMP:' +timestamp);
-                console.log('NOW:' +now);
-
                 var diff = now - timestamp;
 
                 if (diff < 15 * 60 * 1000) {

@@ -64,13 +64,12 @@ angular.module('cirqlApp')
                 // var home = fbutil.syncObject('homes/' + user.uid);
                 // $scope.home = home;
 
-                var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
-                $scope.rooms = rooms;
+                $scope.rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
 
                 //$scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
     
 
-                rooms.$loaded().then(function() {
+                $scope.rooms.$loaded().then(function() {
                     if (navigator.splashscreen) {
                         $timeout(function() {
                             $cordovaSplashscreen.hide();
