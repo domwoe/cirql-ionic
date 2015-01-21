@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicLoading',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicLoading) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate) {
 
         var room = $stateParams.roomId;
 
@@ -20,18 +20,18 @@ angular.module('cirqlApp')
             window.screen.lockOrientation('portrait');
         }
 
+        var translate = $filter('translate');
         var language = $translate.use();
-
         if (language !== 'de') {
             language = 'en';
         }
-       
+      
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
 
-         var roomObj = fbutil.syncObject(roomUrl);
+        var roomObj = fbutil.syncObject(roomUrl);
 
-         $scope.roomValues = roomObj;
+        $scope.roomValues = roomObj;
         //roomObj.$bindTo($scope,'roomValues');
         //     .then(function(unbind) {
         //    // $scope.unbindRoom = unbind;
@@ -132,9 +132,6 @@ angular.module('cirqlApp')
             });
         };
 
-
-        var translate = $filter('translate');
-
         $scope.openAirQualityPopover = function() {
             $ionicPopup.alert({
                 title: translate('AIR_QUALITY'),
@@ -163,13 +160,10 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
-            // $ionicLoading.show({
-            //     templateUrl: 'loading.html'
-            // });
-             //$scope.unbindRoom();
-             roomObj.$destroy();
-             templates.$destroy();
-             //trvObj.$destroy();
+            //$scope.unbindRoom();
+            roomObj.$destroy();
+            templates.$destroy();
+            //trvObj.$destroy();
             $state.go('app.home', null, {
                 reload: false
             });
@@ -219,15 +213,15 @@ angular.module('cirqlApp')
 
         $scope.showConfirm = function() {
             $ionicPopup.show({
-                template: '<p>' + $translate('REMOVE_ROOM_CONFIRM_TEXT') + '</p>',
-                title: $translate('REMOVE_ROOM'),
+                template: '<p>' + translate('REMOVE_ROOM_CONFIRM_TEXT') + '</p>',
+                title: translate('REMOVE_ROOM'),
                 subTitle: '',
                 scope: $scope,
                 buttons: [{
-                    text: $translate('CANCEL'),
+                    text: translate('CANCEL'),
                     type: 'button-block button-dark transparent',
                 }, {
-                    text: $translate('REMOVE_ROOM'),
+                    text: translate('REMOVE_ROOM'),
                     type: 'button-block button-assertive transparent',
                     onTap: function() {
                         deleteRoom();
@@ -265,14 +259,16 @@ angular.module('cirqlApp')
             var sensors = fbutil.syncObject(homeUrl + '/sensors');
             //delete room reference in netatm
             sensors.$loaded().then(function() {
-                for (var station in sensors.netatmo.stations) {
-                    for (module in station.modules) {
-                        if (module.room !== undefined && module.room === roomId) {
-                            module.room = null;
+                if (sensors.netatmo !== undefined) {
+                    for (var station in sensors.netatmo.stations) {
+                        for (var module in station.modules) {
+                            if (module.room !== undefined && module.room === roomId) {
+                                module.room = null;
+                            }
                         }
                     }
+                    sensors.$save();
                 }
-                sensors.$save();
             });
 
             //delete room
@@ -282,51 +278,15 @@ angular.module('cirqlApp')
             $state.go('app.home');
         }
 
-
-
-
-        function listenForSuccess() {
-
-
-            for (var i = 0, j = trvIds.length; i < j; i++) {
-
-                fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$loaded(function(trv) {
-                    //toastr.success('Thermostat: '+ trv.status);
-                    if (trv.status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
-                        //toaster.pop('success', 'Thermostat', trv.status);
-                        toastr.success('Thermostat: ' + trv.status);
-                    } else {
-                        (function() {
-                            var unwatch = fbutil.syncObject(homeUrl + '/thermostats/' + trvIds[i]).$watch(function(status) {
-                                if (status === 'success' && trv['fhem_desired-temp'] === $scope.roomValues.virtualTarget) {
-                                    unwatch();
-                                    //toaster.pop('success', 'Thermostat', status);
-                                    toastr.success('Thermostat: ' + status);
-                                }
-                            });
-                        })();
-                    }
-                });
-
-
-
-            }
-
-
-        }
-
-
         $scope.addRawActivity = function(obj) {
             //roomObj.$save();
-           
+
             if (obj.type === 'set-target') {
 
-               roomObj.virtualTarget = obj.target;
+                roomObj.virtualTarget = obj.target;
 
-                 //console.log(roomObj);
-                 roomObj.$save();
-
-                //listenForSuccess();
+                //console.log(roomObj);
+                roomObj.$save();
 
                 if ($scope.roomValues.mode === 'manu') {
                     obj.type = 'manual-target';
