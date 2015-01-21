@@ -33,8 +33,9 @@ angular.module('cirqlApp')
                 if ($scope.home) {
                     $scope.home.$destroy();
                 }
-                var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                $scope.residents = residents;
+                if (!$scope.residents) {
+                        $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+                }
             }
             loadResidents(user);
 

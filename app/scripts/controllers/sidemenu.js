@@ -5,6 +5,24 @@ angular.module('cirqlApp')
         function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
+                if ($scope.usesAutoAway) {
+                    $scope.usesAutoAway.$destroy();
+                }
+                if ($scope.mode) {
+                    $scope.mode.$destroy();
+                }
+                if ($scope.boundResidents) {
+                    $scope.boundResidents.$destroy();
+                }
+                if ($scope.rooms) {
+                    $scope.rooms.$destroy();
+                }
+                if ($scope.roomValues) {
+                    $scope.roomValues.$destroy();
+                }
+                if ($scope.residents) {
+                    $scope.residents.$destroy();
+                }
                 simpleLogin.logout();
                 $state.go('login');
             };
