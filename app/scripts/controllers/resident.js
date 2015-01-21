@@ -35,10 +35,6 @@ angular.module('cirqlApp')
                 }
                 var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
                 $scope.residents = residents;
-
-                residents.$loaded(function() {
-
-                });
             }
             loadResidents(user);
 

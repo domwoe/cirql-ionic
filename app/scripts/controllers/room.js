@@ -111,8 +111,6 @@ angular.module('cirqlApp')
         $scope.changeMode = function($index) {
             modeIndex = $index;
 
-            console.log(modeIndex);
-
             if ($index % 2 === 0) {
                 if ($scope.roomValues.mode === 'auto') {
                     return;
