@@ -37,10 +37,6 @@ angular.module('cirqlApp')
 
                     }
 
-
-
-
-
                     $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
 
                     $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
@@ -184,8 +180,6 @@ angular.module('cirqlApp')
                 var promise = netatmoService.getNetatmo($scope.room, user.uid);
 
                 promise.then(function(hasNetatmo) {
-
-                    console.log('hasNetatmo: ' + hasNetatmo);
 
                     if (hasNetatmo) {
                         $state.go('app.netatmo', {
