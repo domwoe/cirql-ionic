@@ -67,8 +67,8 @@ angular.module('cirqlApp')
                 var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
                 $scope.rooms = rooms;
 
-                var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                $scope.residents = residents;
+                //$scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+    
 
                 rooms.$loaded().then(function() {
                     if (navigator.splashscreen) {

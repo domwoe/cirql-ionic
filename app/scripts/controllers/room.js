@@ -42,9 +42,6 @@ angular.module('cirqlApp')
             return new Date(dateString);
         };
 
-        var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-        $scope.residents = residents;
-
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
 
@@ -201,7 +198,7 @@ angular.module('cirqlApp')
                         resident.rooms[room] = true;
                     }
                 }
-                residents.$save(resident);
+                $scope.residents.$save(resident);
                 $scope.roomValues.residents[resident.$id] = resident.rooms[room];
                 $scope.roomValues.$save();
 
@@ -237,10 +234,10 @@ angular.module('cirqlApp')
         function deleteRoom() {
             //delete all room references in residents
             var roomId = roomObj.$id;
-            angular.forEach(residents, function(resident) {
+            angular.forEach($scope.residents, function(resident) {
                 if (resident.rooms !== undefined && resident.rooms[roomId] !== undefined) {
                     resident.rooms[roomId] = null;
-                    residents.$save(resident);
+                    $scope.residents.$save(resident);
                 }
             });
             var thermostats = fbutil.syncArray(homeUrl + '/thermostats');

@@ -14,6 +14,8 @@ angular.module('cirqlApp')
             var residents = null;
             var boundResidents = null;
 
+            $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+
 
             $scope.room = $state.params.roomId;
 
@@ -29,9 +31,7 @@ angular.module('cirqlApp')
                     if ($scope.mode) {
                         $scope.mode.$destroy();
                     }
-                    if ($scope.residents) {
-                         $scope.residents.$destroy();
-                    }
+                    
                     if ($scope.boundResidents) {
                         $scope.boundResidents.$destroy();
 
@@ -39,11 +39,7 @@ angular.module('cirqlApp')
 
                     $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
 
-                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
-
-
-                    residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                    $scope.residents = residents;
+                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');                    
 
                     boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
                     $scope.boundResidents = boundResidents;
@@ -130,7 +126,7 @@ angular.module('cirqlApp')
                     if (!$scope.hasBoundResidents()) {
                         disableAutoAway();
                     }
-                    residents.$save(resident);
+                    $scope.residents.$save(resident);
                     boundResidents[resident.$id] = resident.rooms[$scope.room];
                     boundResidents.$save();
 

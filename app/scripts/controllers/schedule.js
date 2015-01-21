@@ -17,17 +17,10 @@ angular.module('cirqlApp')
 
  	var room = $stateParams.roomId;
 	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
-	var roomObj = fbutil.syncObject(roomUrl);
+	//$scope.roomValues = fbutil.syncObject(roomUrl);
 
-  var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
 
   var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
-
-	roomObj.$loaded().then(function() {
-		roomObj.$bindTo($scope, 'roomValues');
-		//console.log("ROOMVAL: ", roomObj);
-
-	});
 
 	var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
 	scheduleObj.$loaded().then(function() {
@@ -40,13 +33,12 @@ angular.module('cirqlApp')
   function addRawActivity(obj) {
             var date = new Date();
             obj.date = date.toString();
-            obj.name = residents.$getRecord(user.residentId).name;
+            obj.name = $scope.residents.$getRecord(user.residentId).name;
             activities.$add(obj);
             console.log('Activity added:' + JSON.stringify(obj));
   }
 
   	$scope.goback = function(room, changedDay) {
-
 
       console.log('SCHEDULE CHANGED: ' + changedDay);
 
