@@ -14,9 +14,11 @@ angular.module('cirqlApp')
             // hide Loading in case one arrives at this state
             // with a loading screen
             // 
-            $timeout(function() {
-                $cordovaSplashscreen.hide();
-            });
+            if (navigator.splashscreen) {
+                $timeout(function() {
+                    $cordovaSplashscreen.hide();
+                });
+            } 
 
             $ionicLoading.hide();
 

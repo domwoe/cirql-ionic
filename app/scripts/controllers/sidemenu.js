@@ -23,26 +23,25 @@ angular.module('cirqlApp')
 
 
                 if (room) {
-                    // if ($scope.usesAutoAway) {
-                    //     $scope.usesAutoAway.$destroy();
-                    // }
-                    // if ($scope.mode) {
-                    //     $scope.mode.$destroy();
-                    // }
-                    // if ($scope.residents) {
-                    //      $scope.residents.$destroy();
-                    // }
-                    // if ($scope.boundResidents) {
-                    //     $scope.boundResidents.$destroy();
+                    if ($scope.usesAutoAway) {
+                        $scope.usesAutoAway.$destroy();
+                    }
+                    if ($scope.mode) {
+                        $scope.mode.$destroy();
+                    }
+                    if ($scope.residents) {
+                         $scope.residents.$destroy();
+                    }
+                    if ($scope.boundResidents) {
+                        $scope.boundResidents.$destroy();
 
-                    // }
-
-
+                    }
 
 
 
-                    usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
-                    usesAutoAway.$bindTo($scope, 'usesAutoAway');
+
+
+                    $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
 
                     $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
 
@@ -77,6 +76,7 @@ angular.module('cirqlApp')
             function disableAutoAway() {
                 if ($scope.usesAutoAway && $scope.usesAutoAway.$value) {
                     $scope.usesAutoAway.$value = false;
+                    $scope.usesAutoAway.$save();
                 }
             }
 
@@ -142,7 +142,7 @@ angular.module('cirqlApp')
 
             };
 
-            $scope.addRawActivity = function() {
+            function addRawActivity() {
 
                 var date = new Date();
 
@@ -157,6 +157,18 @@ angular.module('cirqlApp')
                 console.log('Activity added:' + JSON.stringify(activity));
             };
 
+
+            $scope.changeAutoAway = function() {
+
+                // sync autoAway with firebase 
+                $scope.usesAutoAway.$save();
+
+                // write to activity log
+                addRawActivity();
+
+            }
+
+            
             $scope.goToSchedule = function() {
                 if (window.screen.hasOwnProperty('lockOrientation')) {
                     window.screen.lockOrientation('landscape');

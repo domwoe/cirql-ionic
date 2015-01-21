@@ -20,9 +20,11 @@ angular.module('cirqlApp')
 
             console.log('I#m in login');
 
-            $timeout(function() {
-                $cordovaSplashscreen.hide();
-            },700);    
+            if (navigator.splashscreen) {
+                $timeout(function() {
+                    $cordovaSplashscreen.hide();
+                },700);
+            }        
 
             $scope.user = {
                 email: 'test',

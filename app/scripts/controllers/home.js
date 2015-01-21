@@ -71,9 +71,11 @@ angular.module('cirqlApp')
                 $scope.residents = residents;
 
                 rooms.$loaded().then(function() {
-                   $timeout(function() {
-                        $cordovaSplashscreen.hide();
-                    },100);
+                    if (navigator.splashscreen) {
+                        $timeout(function() {
+                            $cordovaSplashscreen.hide();
+                        },100);
+                    }
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {
