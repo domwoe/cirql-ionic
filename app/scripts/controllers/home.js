@@ -59,8 +59,7 @@ angular.module('cirqlApp')
             };
 
             function loadHome(user) {
-                // var home = fbutil.syncObject('homes/' + user.uid);
-                // $scope.home = home;
+                $scope.homeSettings = fbutil.syncObject('homes/' + user.uid + '/settings');
 
                 $scope.rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
 

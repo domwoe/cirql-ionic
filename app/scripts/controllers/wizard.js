@@ -36,8 +36,8 @@ angular.module('cirqlApp')
                 $scope.room = null;
             }
 
-            var home = fbutil.syncObject('homes/' + user.uid);
-            home.$bindTo($scope, 'home');
+            var homeSettings = fbutil.syncObject('homes/' + user.uid + '/settings');
+            homeSettings.$bindTo($scope, 'homeSettings');
 
             var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
             $scope.rooms = rooms;
