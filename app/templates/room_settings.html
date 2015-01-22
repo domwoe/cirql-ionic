@@ -26,7 +26,9 @@
                         </div>
                     </div>
                 </div>
-                <button ui-sref="app.room({roomId: room})" class="button button-balanced button-block transparent">Ok</button>
+                <button translate class="button button-balanced button-block transparent" ng-click="save()">
+                    SAVE
+                </button>
                 <button translate class="button button-assertive button-block transparent" ng-click="showConfirm()">
                     REMOVE_ROOM
                 </button>

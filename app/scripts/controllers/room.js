@@ -200,6 +200,14 @@ angular.module('cirqlApp')
 
         };
 
+        $scope.save = function() {
+            $scope.roomValues.$save().then(function() {
+                $state.go('app.room', {
+                    roomId: room
+                });
+            });
+        }
+
         $scope.showConfirm = function() {
             $ionicPopup.show({
                 template: '<p>' + translate('REMOVE_ROOM_CONFIRM_TEXT') + '</p>',
