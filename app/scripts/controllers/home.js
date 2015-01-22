@@ -8,18 +8,16 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','roomDetailService',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,roomDetailService) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,$ionicSideMenuDelegate) {
 
             $scope.finishedloading = false;
+
+            $ionicSideMenuDelegate.canDragContent(true);
 
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
-
-            // $ionicLoading.show({
-            //     templateUrl: 'loading.html'
-            // });
 
             if (user) {
                 $scope.user = user;
@@ -73,7 +71,7 @@ angular.module('cirqlApp')
                     if (navigator.splashscreen) {
                         $timeout(function() {
                             $cordovaSplashscreen.hide();
-                        },100);
+                        },500);
                     }
                 });
 
@@ -92,9 +90,9 @@ angular.module('cirqlApp')
                                 $rootScope.isGeoStarted = true;
                             }
                         //}
-                        else {
-                            console.log('Geolocation service already started');
-                        }    
+                        // else {
+                        //     console.log('Geolocation service already started');
+                        // }    
                     } else {
                         console.log('user.residentId is not nto found');
                     }
@@ -128,18 +126,7 @@ angular.module('cirqlApp')
                     .catch(error);
             };
 
-            // $scope.showDatePicker = function() {
-            //     var options = {
-            //         date: new Date(),
-            //         mode: 'date'
-            //     };
-            //     //var options = {date: new Date(), mode: 'time'}; for time
-            //     //
-            //     datePicker.show(options).then(function(date) {
-            //         alert(date);
-            //     });
-            // };
-
+            
             $scope.goBack = function() {
                 $ionicNavBarDelegate.back();
             };
