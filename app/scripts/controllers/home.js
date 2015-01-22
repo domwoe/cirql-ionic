@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,$ionicSideMenuDelegate) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,$ionicSideMenuDelegate) {
 
             $scope.finishedloading = false;
 

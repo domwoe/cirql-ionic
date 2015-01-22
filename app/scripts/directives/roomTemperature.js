@@ -396,11 +396,11 @@ angular.module('cirqlApp')
                             //
                              $ionicLoading.hide();
 
-                            $timeout(function() {
-                                scope.$apply();
+                            //$timeout(function() {
+                                //scope.$apply();
                                 scope.finishedloading = true;
 
-                            });
+                            //});
                         }
                     };
 
@@ -533,11 +533,7 @@ angular.module('cirqlApp')
                     scope.$watch('usesautoaway', showAwayOrTarget);
                     scope.$watch('valve', colorFlame);
 
-                    renderCircle();
-                    //heartbeat();
-                    //
-                    //
-        
+                    renderCircle();    
 
                 },
                 replace: true,

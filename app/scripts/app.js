@@ -8,12 +8,11 @@ angular.module('cirqlApp', [
     'firebase.utils',
     'ngStorage',
     'pascalprecht.translate',
-    'toastr',
     'nsPopover',
     'ngCordova'
 ])
 
-.run(function($ionicPlatform, discovery, $ionicLoading, $translate, $rootScope) {
+.run(function($ionicPlatform, $ionicLoading, $translate, $rootScope) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
