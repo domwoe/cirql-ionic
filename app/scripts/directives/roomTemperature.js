@@ -459,7 +459,7 @@ angular.module('cirqlApp')
                     }
 
                     function showAwayOrTarget() {
-                        if (scope.isaway && scope.mode === 'auto' && scope.usesautoaway) {
+                        if (scope.isaway && scope.usesautoaway) {
                             d3.selectAll('.target' + scope.ishome + scope.roomid).style('visibility', 'hidden');
                             d3.select('#labelaway' + scope.ishome + scope.roomid).style('visibility', 'visible');
                             isAutoAway = true;
