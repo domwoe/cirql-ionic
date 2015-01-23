@@ -173,7 +173,16 @@ angular.module('cirqlApp')
                         var phi = Math.atan2(coords[1] - 125, coords[0] - 125);
                         phi = (phi * 360 / (2 * Math.PI) + 230) % 360;
 
+
+
                         target = roundHalf(phi * (scope.max - scope.min) / 270) + scope.min;
+
+                        if (target > scope.max) {
+                            target = scope.max;
+                        }
+                        else if (target < scope.min) {
+                            target = scope.min;
+                        }
 
                         // draw arcs
                         renderState(target, null);
@@ -207,9 +216,9 @@ angular.module('cirqlApp')
                                     .on('dragstart', function() {
                                         event.stopPropagation();
                                         event.preventDefault();
-                                        d3.selectAll('.info').remove();
+                                        //d3.selectAll('.info').remove();
                                         $ionicSideMenuDelegate.canDragContent(false);
-                                        mouseDragCallback();
+                                        //mouseDragCallback();
                                         clearTimeout(targetTimer);
                                     })
                                     .on('drag', mouseDragCallback)
@@ -346,11 +355,11 @@ angular.module('cirqlApp')
                             }
 
                             if (newValue < scope.min) {
-                                if (oldValue >= scope.max) {
-                                    return scope.targettemp = scope.max;
-                                } else {
+                                // if (oldValue >= scope.max) {
+                                //     return scope.targettemp = scope.max;
+                                // } else {
                                     return scope.targettemp = scope.min;
-                                }
+                                // }
                             }
 
 
