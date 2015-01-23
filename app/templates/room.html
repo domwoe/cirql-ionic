@@ -42,7 +42,7 @@
                 </ion-slide-box>
                 <i class="ion-chevron-right arrow-right"></i>
             </div>
-            <div ng-show="showNextTarget()" id="nextTarget">
+            <div ng-show="showNextTarget() && roomValues.nextTarget" id="nextTarget">
                 Next
                 <br>{{roomValues.nextTarget}}°
                 <br>{{nextTargetDate(roomValues.nextTargetDate) | date:'H:mm'}}
