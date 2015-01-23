@@ -15,7 +15,6 @@ angular.module('cirqlApp')
                     minute: "@",
                     goback: "&",
                     reload: "&",
-                    roomname: "@",
                     dayview: "="
                 },
                 link: function(scope, element, attrs) {
@@ -229,7 +228,7 @@ angular.module('cirqlApp')
 
                         this.selectDay = function(day) {
                             scope.dayview = true;
-                            //scope.$apply();
+                            scope.$apply();
                             console.log("SELECTED DAY");
                             var weekdays = d3.select('#weekdays');
                             var weekCol = weekdays.append('rect')

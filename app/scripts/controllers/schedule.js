@@ -8,25 +8,24 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-  .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$stateParams', '$state','$ionicSideMenuDelegate',
-  	function($scope, user, fbutil, $stateParams, $state, $ionicSideMenuDelegate) {
+  .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$state','$ionicSideMenuDelegate',
+  	function($scope, user, fbutil, $state, $ionicSideMenuDelegate) {
 
   	$ionicSideMenuDelegate.canDragContent(false);
 
   	$scope.dayview = false;
 
- 	var room = $stateParams.roomId;
+ 	var room = $state.params.roomId;
 	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
 	//$scope.roomValues = fbutil.syncObject(roomUrl);
 
 
   var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
 
-	var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
-	scheduleObj.$loaded().then(function() {
-		$scope.schedule = scheduleObj;
-	});
-
+  var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
+  scheduleObj.$loaded().then(function(schedule) {
+    $scope.schedule = schedule;
+  })
 	$scope.roomId = room;
 	$scope.radius = 14;
 

@@ -9,7 +9,7 @@ angular.module('cirqlApp')
   
                elem.bind('click', function() {
 
-                     if (scope.mode.$value === 'manu' || scope.hasBoundResidents()) {
+                     if (scope.hasBoundResidents()) {
                         scope.showWhyAutoAwayIsDisabled();
                     }
 

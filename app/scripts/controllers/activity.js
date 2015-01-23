@@ -54,11 +54,11 @@ angular.module('cirqlApp')
 
                 if (language === 'de') {
                     $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/de', {
-                        limitToLat: limit
+                        limit: limit
                     });
                 } else {
                     $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/en', {
-                        limitToLast: limit
+                        limit: limit
                     });
                 }
 

@@ -68,23 +68,23 @@ angular.module('cirqlApp')
 
             $scope.showWhyAutoAwayIsDisabled = function() {
 
-                if ($scope.mode.$value === 'manu') {
+                // if ($scope.mode.$value === 'manu') {
 
-                    $ionicPopup.alert({
-                        template: '{{"NO_AUTOAWAY_BECAUSE_MANU_ALERT" | translate}}'
-                    });
-                } else if (!$scope.hasBoundResidents()) {
+                //     $ionicPopup.alert({
+                //         template: '{{"NO_AUTOAWAY_BECAUSE_MANU_ALERT" | translate}}'
+                //     });
+                 if (!$scope.hasBoundResidents()) {
 
                     $ionicPopup.alert({
                         template: '{{"NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT" | translate}}'
                     });
-                }
+                 }
 
             };
 
 
             function disableAutoAway() {
-                if ($scope.usesAutoAway && $scope.usesAutoAway.$value) {
+                if ($scope.usesAutoAway && $scope.usesAutoAway.$value === true) {
                     $scope.usesAutoAway.$value = false;
                     $scope.usesAutoAway.$save();
                 }
@@ -141,12 +141,14 @@ angular.module('cirqlApp')
                         }
                     }
 
-                    if (!$scope.hasBoundResidents()) {
-                        disableAutoAway();
-                    }
                     $scope.residents.$save(resident);
                     boundResidents[resident.$id] = resident.rooms[$scope.room];
                     boundResidents.$save();
+
+                    if ($scope.hasBoundResidents() === false) {
+                        console.log($scope.hasBoundResidents());
+                        disableAutoAway();
+                    }
 
                 }
 
