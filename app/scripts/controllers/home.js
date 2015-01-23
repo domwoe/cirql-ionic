@@ -1,4 +1,4 @@
-'use strict';
+    'use strict';
 
 /**
  * @ngdoc function
@@ -27,7 +27,7 @@ angular.module('cirqlApp')
                     console.log('go to resident');
                 }
                 else {
-                    console.log('Home')
+                    console.log('Home');
                     
                 }
                 // redirect to login if no user available
@@ -80,7 +80,7 @@ angular.module('cirqlApp')
                             console.log('trigger geolocation service');
                             if (window.plugins && window.plugins.DGGeofencing) {
 
-                                geo.init()
+                                geo.init();
 
                                 geo.monitorRegion();
 

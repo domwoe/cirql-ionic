@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('LoginCtrl',
-        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, resident, $cordovaSplashscreen,$timeout) {
+    .controller('LoginCtrl', ['$scope','$localStorage', '$state','$ionicLoading','simpleLogin','$cordovaSplashscreen', '$timeout',
+        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, $cordovaSplashscreen,$timeout) {
 
             if ($localStorage.user) {
                 $state.go('app.home');
@@ -116,4 +116,4 @@ angular.module('cirqlApp')
                 }
                 $ionicLoading.hide();
             }
-        });
+        }]);
