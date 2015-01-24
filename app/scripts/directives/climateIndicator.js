@@ -11,7 +11,7 @@ angular.module('cirqlApp')
                     type: '@',
                     value: '=',
                     thresholds: '=',
-                    cssclass:  '@'
+                    cssclass: '@'
                 },
                 link: function(scope, element, attrs) {
 
@@ -19,7 +19,7 @@ angular.module('cirqlApp')
                     var state;
 
 
-                    function findState(value, thresholds,cb) {
+                    function findState(value, thresholds, cb) {
                         for (var color in thresholds) {
                             thresholds[color].forEach(function(range) {
                                 if (value >= range.start && value < range.end) {
@@ -29,7 +29,7 @@ angular.module('cirqlApp')
                         }
                     }
 
-                    var svgAir = '<svg id="air-quality" class="'+scope.cssclass+'" width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+                    var svgAir = '<svg id="air-quality" class="' + scope.cssclass + '" width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
                         '<g id="Page-25" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">' +
                         '<g id="Portrait-10" transform="translate(-91.000000, -768.000000)">' +
                         '<g id="AirQuality" transform="translate(92.000000, 768.000000)">' +
@@ -40,7 +40,7 @@ angular.module('cirqlApp')
                         '</g>' +
                         '</svg>';
 
-                    var svgHumidity = '<svg id="humidity" class="'+scope.cssclass+'" width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+                    var svgHumidity = '<svg id="humidity" class="' + scope.cssclass + '" width="71px" height="70px" viewBox="0 0 71 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
                         '<g id="Page-25" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">' +
                         '<g id="Portrait-10" transform="translate(-91.000000, -853.000000)">' +
                         '<g id="Humidity" transform="translate(92.000000, 853.000000)">' +
@@ -64,13 +64,13 @@ angular.module('cirqlApp')
                     }
                     element.append(icon);
 
-                    scope.$watch('value', function(newValue,oldValue) {
-                      findState(newValue, scope.thresholds,function(state) {
-                        var cssClass = state+'-bg';
+                    scope.$watch('value', function(newValue, oldValue) {
+                        findState(newValue, scope.thresholds, function(state) {
+                            var cssClass = state + '-bg';
 
-                        element.addClass(cssClass);
-                      });
-                     
+                            element.addClass(cssClass);
+                        });
+
                     })
                 }
 

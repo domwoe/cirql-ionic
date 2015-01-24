@@ -137,7 +137,7 @@ angular.module('cirqlApp')
                     // Delete netatmo object
                     var sensorsObj = fbutil.syncObject('homes/' + user + '/sensors');
                     sensorsObj.$loaded(function(sensors) {
-                        if ( sensors.hasOwnProperty('netatmo') ) {
+                        if (sensors.hasOwnProperty('netatmo')) {
                             sensors.netatmo = null;
                         }
                         sensorsObj.$save();

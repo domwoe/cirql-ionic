@@ -174,9 +174,9 @@ angular.module('cirqlApp')
 
                 // sync autoAway with firebase
 
-                //if ($scope.usesAutoAway.hasOwnProperty($value)) { 
+                if ($scope.usesAutoAway.hasOwnProperty($value) && ($scope.usesAutoAway.$value === true || $scope.usesAutoAway.$value === false)) { 
                     $scope.usesAutoAway.$save();
-                //}
+                }
 
                 // write to activity log
                 addRawActivity();

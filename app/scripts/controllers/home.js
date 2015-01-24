@@ -27,13 +27,15 @@ angular.module('cirqlApp')
                     console.log('go to resident');
                 }
                 else {
+                    $timeout.cancel($rootScope.splashTimeout);
                     console.log('Home');
                     
                 }
                 // redirect to login if no user available
             } else {
-                $state.go('login');
                 console.log('go to login');
+                $state.go('login');
+                
             }
 
             $ionicLoading.hide();

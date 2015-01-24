@@ -59,7 +59,7 @@ angular.module('cirqlApp')
                     return '#F9690E';
                 } else if (temperature < 24) {
                     return '#F22613';
-                } else if (temperature >=24) {
+                } else if (temperature >= 24) {
                     return '#CF000F';
                 } else {
                     return '#000';
@@ -94,21 +94,23 @@ angular.module('cirqlApp')
                 var gradient = d3.select('#gradient' + ishome + roomid)
                     .selectAll('stop')
                     .data([colorBegin, colorEnd])
-                    .attr('stop-color', function(d) { return d; });
+                    .attr('stop-color', function(d) {
+                        return d;
+                    });
 
 
-               
+
 
 
                 //var carts = drawArc(arc, start, end, min, max, R, size, targetColor);
                 //
                 //$timeout(function() {
 
-                    var carts = drawArc(arc, start, end, min, max, R, size, 'url(#gradient' + ishome +roomid+')');
+                var carts = drawArc(arc, start, end, min, max, R, size, 'url(#gradient' + ishome + roomid + ')');
                 var targetCart = mustHeat ? carts[1] : carts[0];
 
-               
-                   
+
+
 
                 var bgTarget = d3.select('#bgTargetHandle' + ishome + roomid);
                 bgTarget.attr({
@@ -132,7 +134,7 @@ angular.module('cirqlApp')
                 );
 
                 //});
-                
+
             };
 
             return {
@@ -179,8 +181,7 @@ angular.module('cirqlApp')
 
                         if (target > scope.max) {
                             target = scope.max;
-                        }
-                        else if (target < scope.min) {
+                        } else if (target < scope.min) {
                             target = scope.min;
                         }
 
@@ -206,7 +207,7 @@ angular.module('cirqlApp')
                                 thermoIcon = d3.select('#thermoIcon' + scope.ishome + scope.roomid),
                                 tempDrawer = d3.select('#tempDrawer' + scope.ishome + scope.roomid),
                                 bgTargetHandle = d3.select('#bgTargetHandle' + scope.ishome + scope.roomid),
-                                bgTargetIcon = d3.select('#bgTargetIcon'+ scope.ishome + scope.roomid),
+                                bgTargetIcon = d3.select('#bgTargetIcon' + scope.ishome + scope.roomid),
                                 ring = d3.select('#target_path' + scope.ishome + scope.roomid),
                                 targetIcon = d3.select('#targetIcon' + scope.ishome + scope.roomid),
                                 flame = d3.select('#flame' + scope.ishome + scope.roomid);
@@ -358,7 +359,7 @@ angular.module('cirqlApp')
                                 // if (oldValue >= scope.max) {
                                 //     return scope.targettemp = scope.max;
                                 // } else {
-                                    return scope.targettemp = scope.min;
+                                return scope.targettemp = scope.min;
                                 // }
                             }
 
@@ -388,26 +389,26 @@ angular.module('cirqlApp')
                             }
 
                             //if (scope.displaytarget) {
-                                var ring = d3.select('#target_path' + scope.ishome + scope.roomid);
-                                updateTargetArc(
-                                    ring,
-                                    startTemp,
-                                    endTemp,
-                                    mustHeat,
-                                    scope.min,
-                                    scope.max,
-                                    scope.radius - 5,
-                                    size,
-                                    scope.ishome,
-                                    scope.roomid
-                                );
+                            var ring = d3.select('#target_path' + scope.ishome + scope.roomid);
+                            updateTargetArc(
+                                ring,
+                                startTemp,
+                                endTemp,
+                                mustHeat,
+                                scope.min,
+                                scope.max,
+                                scope.radius - 5,
+                                size,
+                                scope.ishome,
+                                scope.roomid
+                            );
                             //}
                             //
-                             $ionicLoading.hide();
+                            $ionicLoading.hide();
 
                             //$timeout(function() {
-                                //scope.$apply();
-                                scope.finishedloading = true;
+                            //scope.$apply();
+                            scope.finishedloading = true;
 
                             //});
                         }
@@ -415,7 +416,7 @@ angular.module('cirqlApp')
 
                     var renderThermoIcon = function(temp) {
                         if (temp) {
-                            d3.select('#thermoIcon'+ scope.ishome + scope.roomid)
+                            d3.select('#thermoIcon' + scope.ishome + scope.roomid)
                                 .style('visibility', 'visible');
                         } else {
                             d3.select('#thermoIcon' + scope.ishome + scope.roomid)
@@ -464,13 +465,13 @@ angular.module('cirqlApp')
                             d3.select('#labelaway' + scope.ishome + scope.roomid).style('visibility', 'visible');
                             isAutoAway = true;
                             scope.leafVisibility = 'hidden';
-                            d3.select('#flame'  + scope.ishome + scope.roomid).style('visibility', 'hidden');
+                            d3.select('#flame' + scope.ishome + scope.roomid).style('visibility', 'hidden');
 
                         } else {
                             d3.selectAll('.target' + scope.ishome + scope.roomid).style('visibility', 'visible');
                             d3.select('#labelaway' + scope.ishome + scope.roomid).style('visibility', 'hidden');
                             isAutoAway = false;
-                            d3.select('#flame'  + scope.ishome + scope.roomid).style('visibility', 'visible');
+                            d3.select('#flame' + scope.ishome + scope.roomid).style('visibility', 'visible');
 
                             if (scope.targettemp < 21) {
                                 scope.leafVisibility = 'visible';
@@ -483,7 +484,7 @@ angular.module('cirqlApp')
                     function colorFlame(newValue, oldValue) {
 
                         if (newValue) {
-                            var flame = d3.select('#flame'  + scope.ishome + scope.roomid);
+                            var flame = d3.select('#flame' + scope.ishome + scope.roomid);
                             var low = flame.select('#low');
                             var medium = flame.select('#medium');
                             var high = flame.select('#high')
@@ -542,7 +543,7 @@ angular.module('cirqlApp')
                     scope.$watch('usesautoaway', showAwayOrTarget);
                     scope.$watch('valve', colorFlame);
 
-                    renderCircle();    
+                    renderCircle();
 
                 },
                 replace: true,

@@ -187,7 +187,7 @@ angular.module('cirqlApp')
                                     entry.minute = time[1];
 
                                     // Flag for schedule change
-                                    this.changed = this.weekDays[entry.weekday+1];
+                                    this.changed = this.weekDays[entry.weekday + 1];
 
                                 } else if (this.lockOnVerticalDrag) {
 
@@ -202,7 +202,7 @@ angular.module('cirqlApp')
                                         dotTarget = '5';
                                     }
 
-                                    
+
 
                                     console.log("NEW TEMP: ", newTemp);
 
@@ -213,8 +213,8 @@ angular.module('cirqlApp')
                                         targetTspan.text(target);
                                         dotTargetTspan.text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
-                                         // Flag for schedule change
-                                        this.changed = this.weekDays[this.localSchedule[circleIndex].weekday+1];
+                                        // Flag for schedule change
+                                        this.changed = this.weekDays[this.localSchedule[circleIndex].weekday + 1];
                                     }
                                 }
                             }
@@ -708,10 +708,13 @@ angular.module('cirqlApp')
 
                         this.save = function(self) {
 
-                        console.log(self.changed);
-                      
-                        self.syncFirebase();
-                        scope.goback({room: scope.roomid, changedDay: self.changed});
+                            console.log(self.changed);
+
+                            self.syncFirebase();
+                            scope.goback({
+                                room: scope.roomid,
+                                changedDay: self.changed
+                            });
                         }
 
                         this.cancel = function() {
@@ -723,8 +726,10 @@ angular.module('cirqlApp')
                         this.backToWeek = function(self) {
                             console.log('BACK TO WEEK');
                             self.syncFirebase();
-                             console.log(self.changed);
-                            scope.reload({changedDay: self.changed});
+                            console.log(self.changed);
+                            scope.reload({
+                                changedDay: self.changed
+                            });
 
 
                         }
