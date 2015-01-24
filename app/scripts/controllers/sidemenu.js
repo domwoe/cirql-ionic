@@ -27,9 +27,6 @@ angular.module('cirqlApp')
                 $state.go('login');
             };
 
-
-            var usesAutoAway = null;
-            var residents = null;
             var boundResidents = null;
 
             $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
@@ -49,7 +46,7 @@ angular.module('cirqlApp')
                     if ($scope.mode) {
                         $scope.mode.$destroy();
                     }
-                    
+
                     if ($scope.boundResidents) {
                         $scope.boundResidents.$destroy();
 
@@ -57,7 +54,7 @@ angular.module('cirqlApp')
 
                     $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
 
-                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');                    
+                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
 
                     boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
                     $scope.boundResidents = boundResidents;
@@ -73,12 +70,12 @@ angular.module('cirqlApp')
                 //     $ionicPopup.alert({
                 //         template: '{{"NO_AUTOAWAY_BECAUSE_MANU_ALERT" | translate}}'
                 //     });
-                 if (!$scope.hasBoundResidents()) {
+                if (!$scope.hasBoundResidents()) {
 
                     $ionicPopup.alert({
                         template: '{{"NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT" | translate}}'
                     });
-                 }
+                }
 
             };
 
@@ -107,7 +104,7 @@ angular.module('cirqlApp')
                 }
 
                 return hasBoundResidents;
-            }
+            };
 
             $scope.toggleBoundResident = function(resident) {
 
@@ -115,7 +112,7 @@ angular.module('cirqlApp')
                     boundResidents = {};
                 } else {
 
-                    if (resident.rooms != undefined) {
+                    if (resident.rooms !== undefined) {
 
                         if (!resident.allowsGeolocation && !resident.rooms[$scope.room]) {
 
@@ -125,7 +122,7 @@ angular.module('cirqlApp')
 
                         } else {
 
-                            if (resident.rooms[$scope.room] != undefined) {
+                            if (resident.rooms[$scope.room] !== undefined) {
                                 resident.rooms[$scope.room] = !resident.rooms[$scope.room];
                             } else {
                                 resident.rooms[$scope.room] = true;
@@ -136,7 +133,7 @@ angular.module('cirqlApp')
 
                     } else {
                         if (resident.allowsGeolocation) {
-                            resident['rooms'] = {};
+                            resident.rooms = {};
                             resident.rooms[$scope.room] = true;
                         }
                     }
@@ -167,23 +164,23 @@ angular.module('cirqlApp')
 
                 fbutil.ref('homes/' + user.uid + '/activity/' + $scope.room + '/raw').push(activity);
                 console.log('Activity added:' + JSON.stringify(activity));
-            };
+            }
 
 
             $scope.changeAutoAway = function() {
 
                 // sync autoAway with firebase
 
-                if ($scope.usesAutoAway.hasOwnProperty($value) && ($scope.usesAutoAway.$value === true || $scope.usesAutoAway.$value === false)) { 
+                if ($scope.usesAutoAway.hasOwnProperty('$value') && ($scope.usesAutoAway.$value === true || $scope.usesAutoAway.$value === false)) {
                     $scope.usesAutoAway.$save();
                 }
 
                 // write to activity log
                 addRawActivity();
 
-            }
+            };
 
-            
+
             $scope.goToSchedule = function() {
                 if (window.screen.hasOwnProperty('lockOrientation')) {
                     window.screen.lockOrientation('landscape');
@@ -215,7 +212,7 @@ angular.module('cirqlApp')
                                 }
                             },
                             // No Netato account connected
-                            function(reject) {
+                            function() {
                                 netatmoService.authorizeUrl(user.uid).then(function(url) {
                                     window.open(url, '_blank', 'location=yes');
                                 });
@@ -234,14 +231,14 @@ angular.module('cirqlApp')
                     return true;
                 }
                 return false;
-            }
+            };
 
             $scope.isHome = function() {
                 if ($state.current.name === 'app.home') {
                     return true;
                 }
                 return false;
-            }
+            };
 
 
 

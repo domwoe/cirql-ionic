@@ -206,7 +206,7 @@ angular.module('cirqlApp')
                     roomId: room
                 });
             });
-        }
+        };
 
         $scope.showConfirm = function() {
             $ionicPopup.show({

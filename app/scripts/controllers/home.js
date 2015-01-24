@@ -1,4 +1,4 @@
-    'use strict';
+'use strict';
 
 /**
  * @ngdoc function
@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,$ionicSideMenuDelegate) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate) {
 
             $scope.finishedloading = false;
 
@@ -25,17 +25,16 @@ angular.module('cirqlApp')
                 if (!user.residentId) {
                     $state.go('app.resident');
                     console.log('go to resident');
-                }
-                else {
+                } else {
                     $timeout.cancel($rootScope.splashTimeout);
                     console.log('Home');
-                    
+
                 }
                 // redirect to login if no user available
             } else {
                 console.log('go to login');
                 $state.go('login');
-                
+
             }
 
             $ionicLoading.hide();
@@ -66,30 +65,30 @@ angular.module('cirqlApp')
                 $scope.rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
 
                 //$scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-    
+
 
                 $scope.rooms.$loaded().then(function() {
                     if (navigator.splashscreen) {
                         $timeout(function() {
                             $cordovaSplashscreen.hide();
-                        },500);
+                        }, 500);
                     }
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
                         //if (!$rootScope.isGeoStarted) {
-                            console.log('trigger geolocation service');
-                            if (window.plugins && window.plugins.DGGeofencing) {
+                        console.log('trigger geolocation service');
+                        if (window.plugins && window.plugins.DGGeofencing) {
 
-                                geo.init();
+                            geo.init();
 
-                                geo.monitorRegion();
+                            geo.monitorRegion();
 
-                                geo.startMonitoringSignificantLocationChanges();
+                            geo.startMonitoringSignificantLocationChanges();
 
-                                $rootScope.isGeoStarted = true;
-                            }
+                            $rootScope.isGeoStarted = true;
+                        }
                         //}
                         // else {
                         //     console.log('Geolocation service already started');
@@ -127,7 +126,7 @@ angular.module('cirqlApp')
                     .catch(error);
             };
 
-            
+
             $scope.goBack = function() {
                 $ionicNavBarDelegate.back();
             };

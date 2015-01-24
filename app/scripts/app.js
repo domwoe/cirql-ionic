@@ -12,13 +12,13 @@ angular.module('cirqlApp', [
     'ngCordova'
 ])
 
-.run(function($ionicPlatform, $ionicLoading, $translate, $rootScope, $cordovaSplashscreen,$timeout) {
+.run(function($ionicPlatform, $ionicLoading, $translate, $rootScope, $cordovaSplashscreen, $timeout) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         // 
         $rootScope.isGeoStarted = false;
-        
+
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
@@ -27,22 +27,22 @@ angular.module('cirqlApp', [
             StatusBar.styleDefault();
         }
 
-    
+
         if (window.plugins && window.plugins.DGGeofencing) {
             console.log('Geofencing plugin available');
         }
-            
-     //        geo.init()
 
-     //        geo.monitorRegion();
+        //        geo.init()
 
-     //        geo.startMonitoringSignificantLocationChanges();
-     //  }
+        //        geo.monitorRegion();
+
+        //        geo.startMonitoringSignificantLocationChanges();
+        //  }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
                 $translate.use((language.value).split('-')[0]).then(function(data) {
-                    console.log('SUCCESS -> ' +  data);
+                    console.log('SUCCESS -> ' + data);
                 }, function(error) {
                     console.log('ERROR -> ' + error);
                 });
@@ -51,7 +51,7 @@ angular.module('cirqlApp', [
 
         $rootScope.splashTimeout = $timeout(function() {
             $cordovaSplashscreen.hide();
-         },700);   
+        }, 700);
 
         function showOffline() {
             console.log('Offline');

@@ -11,9 +11,6 @@ angular.module('cirqlApp')
     .controller('WizardCtrl', ['$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$ionicPopup',
         function($scope, user, simpleLogin, fbutil, $state, $ionicLoading, $ionicPopup) {
 
-
-            var newRoomId;
-
             $scope.user = user;
             $scope.name = '';
             $scope.resident = {
@@ -59,7 +56,7 @@ angular.module('cirqlApp')
             };
 
             $scope.isSelected = function(avatar) {
-              return $scope.resident.avatar == avatar;
+              return $scope.resident.avatar === avatar;
             };
 
             $scope.createResident = function() {
@@ -85,14 +82,14 @@ angular.module('cirqlApp')
                     });
 
                 } else {
-                    if ($scope.boundResidents[resident.$id] != undefined) {
+                    if ($scope.boundResidents[resident.$id] !== undefined) {
                         $scope.boundResidents[resident.$id] = !$scope.boundResidents[resident.$id];
                     } else {
                         $scope.boundResidents[resident.$id] = true;
                     }
                 }
 
-            }
+            };
 
             $scope.createRoom = function(name, category, boundResidents) {
                 $scope.errorMessage = null;

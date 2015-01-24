@@ -18,7 +18,7 @@ angular.module('cirqlApp')
                 $timeout(function() {
                     $cordovaSplashscreen.hide();
                 });
-            } 
+            }
 
             $ionicLoading.hide();
 
@@ -34,7 +34,7 @@ angular.module('cirqlApp')
                     $scope.home.$destroy();
                 }
                 if (!$scope.residents) {
-                        $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+                    $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
                 }
             }
             loadResidents(user);
@@ -61,7 +61,7 @@ angular.module('cirqlApp')
             };
 
             $scope.isSelected = function(avatar) {
-                return $scope.resident.avatar == avatar;
+                return $scope.resident.avatar === avatar;
             };
 
             $scope.name = '';

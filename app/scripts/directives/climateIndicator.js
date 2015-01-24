@@ -13,11 +13,9 @@ angular.module('cirqlApp')
                     thresholds: '=',
                     cssclass: '@'
                 },
-                link: function(scope, element, attrs) {
+                link: function(scope, element) {
 
                     var icon;
-                    var state;
-
 
                     function findState(value, thresholds, cb) {
                         for (var color in thresholds) {
@@ -64,14 +62,14 @@ angular.module('cirqlApp')
                     }
                     element.append(icon);
 
-                    scope.$watch('value', function(newValue, oldValue) {
+                    scope.$watch('value', function(newValue) {
                         findState(newValue, scope.thresholds, function(state) {
                             var cssClass = state + '-bg';
 
                             element.addClass(cssClass);
                         });
 
-                    })
+                    });
                 }
 
 

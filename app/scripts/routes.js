@@ -7,7 +7,7 @@
  */
 angular.module('cirqlApp')
 
-.config(function($stateProvider, $urlRouterProvider, $translateProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $translateProvider) {
     $stateProvider
         .state('login', {
             url: '/login',
@@ -29,7 +29,7 @@ angular.module('cirqlApp')
         resolve: {
             // controller will not be invoked until getCurrentUser resolves
             'user': ['simpleLogin',
-                function(simpleLogin) {
+                function (simpleLogin) {
                     // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
                     // since $getCurrentUser returns a promise resolved when auth is initialized,
                     // we can simple return that here to ensure the controller waits for auth before
@@ -66,7 +66,7 @@ angular.module('cirqlApp')
         resolve: {
             // controller will not be invoked until getCurrentUser resolves
             'user': ['simpleLogin',
-                function(simpleLogin) {
+                function (simpleLogin) {
                     // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
                     // since $getCurrentUser returns a promise resolved when auth is initialized,
                     // we can simple return that here to ensure the controller waits for auth before

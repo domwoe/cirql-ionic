@@ -12,11 +12,11 @@ angular.module('cirqlApp')
         function($scope, $localStorage, $state, $ionicLoading, simpleLogin, $cordovaSplashscreen, $timeout) {
 
             if ($localStorage.user) {
-                 console.log('Redirect to home');
+                console.log('Redirect to home');
                 $state.go('app.home');
-            } 
+            }
 
-            
+
             console.log('I#m in login');
 
             if (navigator.splashscreen) {
@@ -26,8 +26,8 @@ angular.module('cirqlApp')
                     }, 500);
                 }
             }
-          
-        
+
+
 
 
             $scope.user = {

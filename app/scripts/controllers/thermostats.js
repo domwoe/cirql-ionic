@@ -14,19 +14,19 @@ angular.module('cirqlApp')
             $scope.hasThermostat = true;
             $ionicLoading.show({
                 template: '<div class="sk-spinner sk-spinner-circle">' +
-                        '<div class="sk-circle1 sk-circle"></div>' +
-                        '<div class="sk-circle2 sk-circle"></div>' +
-                        '<div class="sk-circle3 sk-circle"></div>' +
-                        '<div class="sk-circle4 sk-circle"></div>' +
-                        '<div class="sk-circle5 sk-circle"></div>' +
-                        '<div class="sk-circle6 sk-circle"></div>' +
-                        '<div class="sk-circle7 sk-circle"></div>' +
-                        '<div class="sk-circle8 sk-circle"></div>' +
-                        '<div class="sk-circle9 sk-circle"></div>' +
-                        '<div class="sk-circle10 sk-circle"></div>' +
-                        '<div class="sk-circle11 sk-circle"></div>' +
-                        '<div class="sk-circle12 sk-circle"></div>' +
-                        '</div>'
+                    '<div class="sk-circle1 sk-circle"></div>' +
+                    '<div class="sk-circle2 sk-circle"></div>' +
+                    '<div class="sk-circle3 sk-circle"></div>' +
+                    '<div class="sk-circle4 sk-circle"></div>' +
+                    '<div class="sk-circle5 sk-circle"></div>' +
+                    '<div class="sk-circle6 sk-circle"></div>' +
+                    '<div class="sk-circle7 sk-circle"></div>' +
+                    '<div class="sk-circle8 sk-circle"></div>' +
+                    '<div class="sk-circle9 sk-circle"></div>' +
+                    '<div class="sk-circle10 sk-circle"></div>' +
+                    '<div class="sk-circle11 sk-circle"></div>' +
+                    '<div class="sk-circle12 sk-circle"></div>' +
+                    '</div>'
             });
 
             $ionicSideMenuDelegate.canDragContent(false);
@@ -73,7 +73,7 @@ angular.module('cirqlApp')
 
             });
 
-           
+
 
             $scope.pairNewThermostat = function() {
 
@@ -93,24 +93,18 @@ angular.module('cirqlApp')
 
                 gatewayIdObj.$loaded(function(gatewayId) {
 
-                     if (!gatewayId.$value) {
+                    if (!gatewayId.$value) {
 
-                         $state.go('app.gateway');
-                    } 
-                    else {
+                        $state.go('app.gateway');
+                    } else {
 
                         $scope.showPopup();
 
-                        var gatewayId = gatewayId.$value;
+                        $scope.gateway  = fbutil.syncObject('gateways/' + gatewayId.$value);
 
-                    
-                        var gatewayObj = fbutil.syncObject('gateways/' + gatewayId);
+                        fbutil.ref('gateways/' + gatewayId.$value + '/activatePairing').set(true);
 
-                        $scope.gateway = gatewayObj;
-
-                        fbutil.ref('gateways/' + gatewayId + '/' + activatePairing).set(true);
-
-                    }        
+                    }
 
 
                 });
@@ -126,8 +120,8 @@ angular.module('cirqlApp')
                 $scope.thermostats.$save(thermostat);
 
                 // Add thermostat reference to room object
-                
-                fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/' + thermostat.$id ).set(true);
+
+                fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/' + thermostat.$id).set(true);
 
             };
 
@@ -139,7 +133,7 @@ angular.module('cirqlApp')
                 $scope.thermostats.$save(thermostat);
 
                 // Delete thermostat reference from room object
-            
+
                 fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/' + thermostat.$id).set(null);
 
             };

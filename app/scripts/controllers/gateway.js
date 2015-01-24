@@ -106,7 +106,7 @@ angular.module('cirqlApp')
             $scope.showConfirm = function() {
 
                 $ionicPopup.show({
-                    template: '<p>Are you sure you want to remove this gateway from your account?</p>'+
+                    template: '<p>Are you sure you want to remove this gateway from your account?</p>' +
                         '<p>The system won\'t work without a gateway!</p>',
                     title: 'Remove Gateway',
                     subTitle: '',
@@ -151,11 +151,11 @@ angular.module('cirqlApp')
             };
 
 
-             $scope.goBack = function() {
-                
+            $scope.goBack = function() {
+
                 // Coming from home via sidemenu
                 // 
-                if ($state.params.home == 'true') {
+                if ($state.params.home === 'true') {
                     $state.go('app.home');
                 }
                 $ionicNavBarDelegate.back();
