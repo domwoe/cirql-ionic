@@ -9,10 +9,12 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate) {
+.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate','$ionicSideMenuDelegate',
+    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate) {
 
         var room = $stateParams.roomId;
+
+        $ionicSideMenuDelegate.canDragContent(true);
 
     
         $scope.finishedloading = false;
@@ -29,21 +31,11 @@ angular.module('cirqlApp')
         var homeUrl = 'homes/' + user.uid;
         var roomUrl = homeUrl + '/rooms/' + room;
 
-        var roomObj = fbutil.syncObject(roomUrl);
-
-        $scope.roomValues = roomObj;
-        //roomObj.$bindTo($scope,'roomValues');
-        //     .then(function(unbind) {
-        //    // $scope.unbindRoom = unbind;
-        // });
-
+        $scope.roomValues = fbutil.syncObject(roomUrl);
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);
         };
-
-        var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-        $scope.residents = residents;
 
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
@@ -111,8 +103,6 @@ angular.module('cirqlApp')
         $scope.changeMode = function($index) {
             modeIndex = $index;
 
-            console.log(modeIndex);
-
             if ($index % 2 === 0) {
                 if ($scope.roomValues.mode === 'auto') {
                     return;
@@ -125,7 +115,7 @@ angular.module('cirqlApp')
                 $scope.roomValues.mode = 'manu';
             }
 
-            roomObj.$save();
+            $scope.roomValues.$save();
 
             $scope.addRawActivity({
                 type: 'change-mode'
@@ -160,8 +150,7 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
-            //$scope.unbindRoom();
-            roomObj.$destroy();
+            $scope.roomValues.$destroy();
             templates.$destroy();
             //trvObj.$destroy();
             $state.go('app.home', null, {
@@ -203,12 +192,20 @@ angular.module('cirqlApp')
                         resident.rooms[room] = true;
                     }
                 }
-                residents.$save(resident);
+                $scope.residents.$save(resident);
                 $scope.roomValues.residents[resident.$id] = resident.rooms[room];
                 $scope.roomValues.$save();
 
             }
 
+        };
+
+        $scope.save = function() {
+            $scope.roomValues.$save().then(function() {
+                $state.go('app.room', {
+                    roomId: room
+                });
+            });
         };
 
         $scope.showConfirm = function() {
@@ -238,11 +235,11 @@ angular.module('cirqlApp')
          */
         function deleteRoom() {
             //delete all room references in residents
-            var roomId = roomObj.$id;
-            angular.forEach(residents, function(resident) {
+            var roomId = $scope.roomValues.$id;
+            angular.forEach($scope.residents, function(resident) {
                 if (resident.rooms !== undefined && resident.rooms[roomId] !== undefined) {
                     resident.rooms[roomId] = null;
-                    residents.$save(resident);
+                    $scope.residents.$save(resident);
                 }
             });
             var thermostats = fbutil.syncArray(homeUrl + '/thermostats');
@@ -274,19 +271,17 @@ angular.module('cirqlApp')
             //delete room
             fbutil.ref(roomUrl).remove();
             //TODO change code to below after update to angularfire v0.9.0
-            //roomObj.$remove();
+            //$scope.roomValues.$remove();
             $state.go('app.home');
         }
 
         $scope.addRawActivity = function(obj) {
-            //roomObj.$save();
 
             if (obj.type === 'set-target') {
 
-                roomObj.virtualTarget = obj.target;
+                $scope.roomValues.virtualTarget = obj.target;
 
-                //console.log(roomObj);
-                roomObj.$save();
+                $scope.roomValues.$save();
 
                 if ($scope.roomValues.mode === 'manu') {
                     obj.type = 'manual-target';
@@ -301,8 +296,6 @@ angular.module('cirqlApp')
             var date = new Date();
             obj.date = date.toString();
             obj.name = $scope.residents.$getRecord(user.residentId).name;
-            //activities.$add(obj);
-            //fbutil.ref.child(homeUrl + '/activity/' + room + '/raw').push(obj);
             fbutil.ref(homeUrl + '/activity/' + room + '/raw').push(obj);
             console.log('Activity added:' + JSON.stringify(obj));
         };

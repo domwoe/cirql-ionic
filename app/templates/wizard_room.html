@@ -1,21 +1,17 @@
 <ion-view>
-  <ion-header-bar class="bar-transparent">
-    <h1 translate class="title">CREATE_ACCOUNT_TITLE</h1>
-  </ion-header-bar>
-  <div class="wrapper">
-    <div class="circle">
-      <a class="step step-1 step-done">1</a>
-      <a class="step step-2 step-done">2</a>
-      <a class="step step-3 step-done">3</a>
-      <a class="step step-4 step-active">4</a>
-    </div>
-    <ion-content class="has-header" scroll="false">
-      <div class="create">
-        <div class="title">
-          <h1 translate>ADD_ROOM_HEADER</h1>
-        </div>
-        <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
-        </div>
+  <div class="circle">
+    <a class="step step-1 step-done">1</a>
+    <a class="step step-2 step-done">2</a>
+    <a class="step step-3 step-done">3</a>
+    <a class="step step-4 step-active">4</a>
+  </div>
+  <ion-content class="has-header" scroll="false">
+    <div class="create">
+      <div class="title">
+        <h1 translate>ADD_ROOM_HEADER</h1>
+      </div>
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
+      </div>
       <div class="list">
         <div class="item item-input-inset transparent">
           <label class="item-input-wrapper">
@@ -27,7 +23,7 @@
             CATEGORY
           </div>
           <select ng-model="room.category" ng-options="category.$id as category.name | translate for category in categories" id="roomCategory"></select>
-            <option value=""></option>
+          <option value=""></option>
           </select>
         </label>
         <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
@@ -39,15 +35,14 @@
           </div>
         </div>
         <!--<div ng-cloak class="residents residents-select center">-->
-          <!--<div class="resident" ng-repeat="resident in residents">-->
-            <!--<div class="avatar" ng-class="{resident-selected: selected(resident)" ng-click="select(resident)"></div>-->
-            <!--{{resident.name}}-->
-          <!--</div>-->
+        <!--<div class="resident" ng-repeat="resident in residents">-->
+        <!--<div class="avatar" ng-class="{resident-selected: selected(resident)" ng-click="select(resident)"></div>-->
+        <!--{{resident.name}}-->
+        <!--</div>-->
         <!--</div>-->
         <button translate ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">ADD_ROOM</button>
         <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
       </div>
     </div>
-    </ion-content>
-  </div>
+  </ion-content>
 </ion-view>

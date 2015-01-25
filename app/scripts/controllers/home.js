@@ -8,18 +8,16 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', 'datePicker', '$ionicNavBarDelegate','$timeout','$cordovaSplashscreen','roomDetailService',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, datePicker, $ionicNavBarDelegate,$timeout,$cordovaSplashscreen,roomDetailService) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate) {
 
             $scope.finishedloading = false;
+
+            $ionicSideMenuDelegate.canDragContent(true);
 
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
-
-            // $ionicLoading.show({
-            //     templateUrl: 'loading.html'
-            // });
 
             if (user) {
                 $scope.user = user;
@@ -27,15 +25,16 @@ angular.module('cirqlApp')
                 if (!user.residentId) {
                     $state.go('app.resident');
                     console.log('go to resident');
-                }
-                else {
-                    console.log('Home')
-                    
+                } else {
+                    $timeout.cancel($rootScope.splashTimeout);
+                    console.log('Home');
+
                 }
                 // redirect to login if no user available
             } else {
-                $state.go('login');
                 console.log('go to login');
+                $state.go('login');
+
             }
 
             $ionicLoading.hide();
@@ -61,39 +60,39 @@ angular.module('cirqlApp')
             };
 
             function loadHome(user) {
-                // var home = fbutil.syncObject('homes/' + user.uid);
-                // $scope.home = home;
+                $scope.homeSettings = fbutil.syncObject('homes/' + user.uid + '/settings');
 
-                var rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
-                $scope.rooms = rooms;
+                $scope.rooms = fbutil.syncArray('homes/' + user.uid + '/rooms');
 
-                var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                $scope.residents = residents;
+                //$scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
 
-                rooms.$loaded().then(function() {
-                   $timeout(function() {
-                        $cordovaSplashscreen.hide();
-                    },100);
+
+                $scope.rooms.$loaded().then(function() {
+                    if (navigator.splashscreen) {
+                        $timeout(function() {
+                            $cordovaSplashscreen.hide();
+                        }, 500);
+                    }
                 });
 
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
                         //if (!$rootScope.isGeoStarted) {
-                            console.log('trigger geolocation service');
-                            if (window.plugins && window.plugins.DGGeofencing) {
+                        console.log('trigger geolocation service');
+                        if (window.plugins && window.plugins.DGGeofencing) {
 
-                                geo.init()
+                            geo.init();
 
-                                geo.monitorRegion();
+                            geo.monitorRegion();
 
-                                geo.startMonitoringSignificantLocationChanges();
+                            geo.startMonitoringSignificantLocationChanges();
 
-                                $rootScope.isGeoStarted = true;
-                            }
+                            $rootScope.isGeoStarted = true;
+                        }
                         //}
-                        else {
-                            console.log('Geolocation service already started');
-                        }    
+                        // else {
+                        //     console.log('Geolocation service already started');
+                        // }    
                     } else {
                         console.log('user.residentId is not nto found');
                     }
@@ -127,17 +126,6 @@ angular.module('cirqlApp')
                     .catch(error);
             };
 
-            // $scope.showDatePicker = function() {
-            //     var options = {
-            //         date: new Date(),
-            //         mode: 'date'
-            //     };
-            //     //var options = {date: new Date(), mode: 'time'}; for time
-            //     //
-            //     datePicker.show(options).then(function(date) {
-            //         alert(date);
-            //     });
-            // };
 
             $scope.goBack = function() {
                 $ionicNavBarDelegate.back();

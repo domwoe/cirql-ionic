@@ -16,10 +16,9 @@
         <div translate class="item nav-clear menu-close" ui-sref="app.home">
           HOME
         </div>
-        <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.addRoom">
+        <div translate class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.addRoom">
           ADD_ROOM
         </div>
-        <div show-alert>
           <div ng-if="isRoom()" ng-cloak class="residents residents-select">
             <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
               <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"></img>
@@ -27,31 +26,30 @@
               {{resident.name}}
             </div>
           </div>
-          <span><ion-toggle id="autoaway-toggle" style="margin-top:-35px" ng-if="isRoom()" ng-disabled="mode.$value === 'manu' || !hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="addRawActivity()">AutoAway</ion-toggle></span>
-        </div>
+          <span show-alert><ion-toggle show-alert id="autoaway-toggle" style="margin-top:-35px" ng-if="isRoom()" ng-disabled="!hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="changeAutoAway()">AutoAway</ion-toggle></span>
 
-        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ng-click="goToSchedule()">
+        <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ng-click="goToSchedule()">
           SCHEDULE
         </div>
-        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.activity({roomId: room})">
+        <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ui-sref="app.activity({roomId: room})">
           ACTIVITY
         </div>
-        <div translate class="item nav-clear menu-close" ng-show="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
+        <div translate class="item nav-clear menu-close" ng-if="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           THERMOSTATS
         </div>
-        <div show-alert class="item nav-clear menu-close" ng-show="isRoom()">
+        <div class="item nav-clear menu-close" ng-if="isRoom()" ng-click="netatmo()">
           Netatmo
         </div>
-        <div translate class="item nav-clear menu-close"  ng-show="isRoom()" ui-sref="app.room_settings({roomId: room})">
+        <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ui-sref="app.room_settings({roomId: room})">
           ROOM_SETTINGS
         </div>
-        <div class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.gateway({home: true})">
+        <div class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.gateway({home: true})">
           Gateway
         </div>
-        <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.resident_settings">
+        <div translate class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.resident_settings">
           RESIDENT_SETTINGS
         </div>
-        <div translate class="item nav-clear menu-close"  ng-show="isHome()" ui-sref="app.home_settings">
+        <div translate class="item nav-clear menu-close"  ng-if ="isHome()" ui-sref="app.home_settings">
           HOME_SETTINGS
         </div>
         <div translate class="item nav-clear menu-close" ng-click="logout()">

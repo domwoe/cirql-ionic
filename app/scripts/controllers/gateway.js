@@ -106,7 +106,7 @@ angular.module('cirqlApp')
             $scope.showConfirm = function() {
 
                 $ionicPopup.show({
-                    template: '<p>Are you sure you want to remove this gateway from your account?</p>'+
+                    template: '<p>Are you sure you want to remove this gateway from your account?</p>' +
                         '<p>The system won\'t work without a gateway!</p>',
                     title: 'Remove Gateway',
                     subTitle: '',
@@ -127,7 +127,7 @@ angular.module('cirqlApp')
             $scope.lastSeen = function(timeString) {
 
                 var timestamp = Date.parse(timeString);
-                var now = new Date;
+                var now = Date.now();
 
                 var diff = now - timestamp;
 
@@ -146,16 +146,16 @@ angular.module('cirqlApp')
                     }
                 } else {
                     $scope.alert = true;
-                    return Date(timestamp).toLocaleString();
+                    return new Date(timestamp).toLocaleString();
                 }
             };
 
 
-             $scope.goBack = function() {
-                
+            $scope.goBack = function() {
+
                 // Coming from home via sidemenu
                 // 
-                if ($state.params.home == 'true') {
+                if ($state.params.home === 'true') {
                     $state.go('app.home');
                 }
                 $ionicNavBarDelegate.back();

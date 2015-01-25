@@ -13,20 +13,20 @@ angular.module('cirqlApp')
         function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
 
             $ionicLoading.show({
-               template: '{{"LOADING" | translate}}...<div class="sk-spinner sk-spinner-circle">' +
-                        '<div class="sk-circle1 sk-circle"></div>' +
-                        '<div class="sk-circle2 sk-circle"></div>' +
-                        '<div class="sk-circle3 sk-circle"></div>' +
-                        '<div class="sk-circle4 sk-circle"></div>' +
-                        '<div class="sk-circle5 sk-circle"></div>' +
-                        '<div class="sk-circle6 sk-circle"></div>' +
-                        '<div class="sk-circle7 sk-circle"></div>' +
-                        '<div class="sk-circle8 sk-circle"></div>' +
-                        '<div class="sk-circle9 sk-circle"></div>' +
-                        '<div class="sk-circle10 sk-circle"></div>' +
-                        '<div class="sk-circle11 sk-circle"></div>' +
-                        '<div class="sk-circle12 sk-circle"></div>' +
-                        '</div>'
+                template: '<div class="sk-spinner sk-spinner-circle">' +
+                    '<div class="sk-circle1 sk-circle"></div>' +
+                    '<div class="sk-circle2 sk-circle"></div>' +
+                    '<div class="sk-circle3 sk-circle"></div>' +
+                    '<div class="sk-circle4 sk-circle"></div>' +
+                    '<div class="sk-circle5 sk-circle"></div>' +
+                    '<div class="sk-circle6 sk-circle"></div>' +
+                    '<div class="sk-circle7 sk-circle"></div>' +
+                    '<div class="sk-circle8 sk-circle"></div>' +
+                    '<div class="sk-circle9 sk-circle"></div>' +
+                    '<div class="sk-circle10 sk-circle"></div>' +
+                    '<div class="sk-circle11 sk-circle"></div>' +
+                    '<div class="sk-circle12 sk-circle"></div>' +
+                    '</div>'
             });
 
             $ionicSideMenuDelegate.canDragContent(false);
@@ -48,7 +48,7 @@ angular.module('cirqlApp')
 
             $scope.lastSeen = function(timeString) {
 
-                var timestamp = Date.parse(timeString) - 5000;
+                var timestamp = Date.parse(timeString);
                 var now = Date.now();
 
                 var diff = now - timestamp;
@@ -68,7 +68,7 @@ angular.module('cirqlApp')
                     }
                 } else {
                     $scope.alert = true;
-                    return Date(timestamp).toLocaleString();
+                    return new Date(timestamp).toLocaleString();
                 }
             };
 

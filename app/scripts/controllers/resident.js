@@ -14,9 +14,11 @@ angular.module('cirqlApp')
             // hide Loading in case one arrives at this state
             // with a loading screen
             // 
-            $timeout(function() {
-                $cordovaSplashscreen.hide();
-            });
+            if (navigator.splashscreen) {
+                $timeout(function() {
+                    $cordovaSplashscreen.hide();
+                });
+            }
 
             $ionicLoading.hide();
 
@@ -31,12 +33,9 @@ angular.module('cirqlApp')
                 if ($scope.home) {
                     $scope.home.$destroy();
                 }
-                var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-                $scope.residents = residents;
-
-                residents.$loaded(function() {
-
-                });
+                if (!$scope.residents) {
+                    $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+                }
             }
             loadResidents(user);
 
@@ -62,7 +61,7 @@ angular.module('cirqlApp')
             };
 
             $scope.isSelected = function(avatar) {
-                return $scope.resident.avatar == avatar;
+                return $scope.resident.avatar === avatar;
             };
 
             $scope.name = '';

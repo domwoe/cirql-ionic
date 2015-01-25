@@ -8,76 +8,72 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-  .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$stateParams', '$state','$ionicSideMenuDelegate',
-  	function($scope, user, fbutil, $stateParams, $state, $ionicSideMenuDelegate) {
+    .controller('ScheduleCtrl', ['$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate',
+        function($scope, user, fbutil, $state, $ionicSideMenuDelegate) {
 
-  	$ionicSideMenuDelegate.canDragContent(false);
+            $ionicSideMenuDelegate.canDragContent(false);
 
-  	$scope.dayview = false;
+            $scope.dayview = false;
 
- 	var room = $stateParams.roomId;
-	var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
-	var roomObj = fbutil.syncObject(roomUrl);
-
-  var residents = fbutil.syncArray('homes/' + user.uid + '/residents');
-
-  var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
-
-	roomObj.$loaded().then(function() {
-		roomObj.$bindTo($scope, 'roomValues');
-		//console.log("ROOMVAL: ", roomObj);
-
-	});
-
-	var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
-	scheduleObj.$loaded().then(function() {
-		$scope.schedule = scheduleObj;
-	});
-
-	$scope.roomId = room;
-	$scope.radius = 14;
-
-  function addRawActivity(obj) {
-            var date = new Date();
-            obj.date = date.toString();
-            obj.name = residents.$getRecord(user.residentId).name;
-            activities.$add(obj);
-            console.log('Activity added:' + JSON.stringify(obj));
-  }
-
-  	$scope.goback = function(room, changedDay) {
+            var room = $state.params.roomId;
+            var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
+            //$scope.roomValues = fbutil.syncObject(roomUrl);
 
 
-      console.log('SCHEDULE CHANGED: ' + changedDay);
+            var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
 
-      if (changedDay) {
+            var scheduleObj = fbutil.syncArray(roomUrl + '/schedule/');
+            scheduleObj.$loaded().then(function(schedule) {
+                $scope.schedule = schedule;
+            });
+            $scope.roomId = room;
+            $scope.radius = 14;
 
-        addRawActivity({
-          type: 'change-schedule',
-          day: changedDay
-        });
+            function addRawActivity(obj) {
+                var date = new Date();
+                obj.date = date.toString();
+                obj.name = $scope.residents.$getRecord(user.residentId).name;
+                activities.$add(obj);
+                console.log('Activity added:' + JSON.stringify(obj));
+            }
 
-      }
+            $scope.goback = function(room, changedDay) {
 
-  		if (window.screen.hasOwnProperty('lockOrientation')) {
-        	window.screen.lockOrientation('portrait');
+                console.log('SCHEDULE CHANGED: ' + changedDay);
+
+                if (changedDay) {
+
+                    addRawActivity({
+                        type: 'change-schedule',
+                        day: changedDay
+                    });
+
+                }
+
+                if (window.screen.hasOwnProperty('lockOrientation')) {
+                    window.screen.lockOrientation('portrait');
+                }
+                $ionicSideMenuDelegate.canDragContent(true);
+                $state.go('app.room', {
+                    roomId: room
+                });
+            };
+
+            $scope.reload = function(changedDay) {
+                console.log('SCHEDULE CHANGED: ' + changedDay);
+
+                if (changedDay) {
+
+                    addRawActivity({
+                        type: 'change-schedule',
+                        day: changedDay
+                    });
+
+                }
+
+                $state.go($state.current, {}, {
+                    reload: true
+                });
+            };
         }
-        $ionicSideMenuDelegate.canDragContent(true);
-		$state.go('app.room', {roomId: room});
-    };
-
-    $scope.reload = function(changedDay) {
-       console.log('SCHEDULE CHANGED: ' + changedDay);
-
-      if (changedDay) {
-
-        addRawActivity({
-          type: 'change-schedule',
-          day: changedDay
-        });
-
-      }
-
-    	$state.go($state.current, {}, {reload: true});
-    };
-}]);
+    ]);
