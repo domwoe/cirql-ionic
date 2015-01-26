@@ -9,6 +9,7 @@ angular.module('cirqlApp', [
     'ngStorage',
     'pascalprecht.translate',
     'nsPopover',
+    'ng.deviceDetector',
     'ngCordova'
 ])
 
@@ -17,7 +18,6 @@ angular.module('cirqlApp', [
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         // 
-        $rootScope.isGeoStarted = false;
 
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -29,15 +29,12 @@ angular.module('cirqlApp', [
 
 
         if (window.plugins && window.plugins.DGGeofencing) {
-            console.log('Geofencing plugin available');
+            console.log('Radshag Geofencing plugin for IOS is available');
         }
 
-        //        geo.init()
-
-        //        geo.monitorRegion();
-
-        //        geo.startMonitoringSignificantLocationChanges();
-        //  }
+         if (window.geofence) {
+            console.log('Cowbell Geofencing plugin for Android is available');
+         }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {

@@ -8,8 +8,9 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'geo', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, geo, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
+        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate) {
 
             $scope.finishedloading = false;
 
@@ -78,26 +79,33 @@ angular.module('cirqlApp')
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
                         //if (!$rootScope.isGeoStarted) {
-                        console.log('trigger geolocation service');
-                        if (window.plugins && window.plugins.DGGeofencing) {
+                        if (deviceDetector.os === 'ios') {
+                            console.log('trigger geolocation service for iOS');
+                            if (window.plugins && window.plugins.DGGeofencing) {
 
-                            geo.init();
+                                geo.init();
 
-                            geo.monitorRegion();
+                                geo.monitorRegion();
 
-                            geo.startMonitoringSignificantLocationChanges();
+                                geo.startMonitoringSignificantLocationChanges();
+                            }
+                        } else if (deviceDetector.os === 'android') {
+                            console.log('trigger geolocation service for Android');
+                            if (window.geofence) {
+                                geo2.init();
 
-                            $rootScope.isGeoStarted = true;
+                                geo2.monitorRegion();
+                            }
                         }
-                        //}
-                        // else {
-                        //     console.log('Geolocation service already started');
-                        // }    
+                        else {
+                            console.log('Othero OS: ' + deviceDetector.os);
+                        }
+
                     } else {
-                        console.log('user.residentId is not nto found');
+                        console.log('user.residentId is not found');
                     }
                 } else {
-                    console.log('user.uid is not nto found');
+                    console.log('user.uid is not found');
                 }
             }
             loadHome(user);
