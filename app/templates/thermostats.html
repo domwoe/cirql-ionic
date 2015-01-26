@@ -13,6 +13,14 @@
             <div class="item">
                 <div class="row">
                     <div class="col">
+                        Id:
+                    </div>
+                    <div class="col">
+                        {{thermostat.$id}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         Serial No:
                     </div>
                     <div class="col">
@@ -21,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        Setpoint Temperature:
+                        Setpoint:
                     </div>
                     <div class="col">
                         {{thermostat["fhem_desired-temp"]}}°C
@@ -29,7 +37,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        Measured Temperature:
+                        Measured:
                     </div>
                     <div class="col">
                         {{thermostat["fhem_measured-temp"]}}°C
@@ -53,20 +61,28 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        Battery:
+                        Status:
                     </div>
                     <div class="col">
-                        {{thermostat.fhem_battery}}
+                        {{thermostat.status}}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        Battery Level:
+                        External Sensor:
                     </div>
                     <div class="col">
-                        {{thermostat.fhem_batteryLevel}}V
+                        {{thermostat.usesExternalTemp}}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col">
+                        Waiting:
+                    </div>
+                    <div class="col">
+                        {{thermostat.waitForThermostat}}
+                    </div>
+                </div>  
                 <div class="row">
                     <div class="col">
                         Last Seen:

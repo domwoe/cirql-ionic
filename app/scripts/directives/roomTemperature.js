@@ -227,17 +227,19 @@ angular.module('cirqlApp')
                                         $ionicSideMenuDelegate.canDragContent(true);
                                         // Set target in scope (and firebase) 1s after
                                         // releasing the icon
-                                        targetTimer = setTimeout(function() {
-                                            scope.targettemp = target;
-                                            scope.addactivityfn({
-                                                activity: {
-                                                    type: 'set-target',
-                                                    target: target
-                                                }
-                                            });
-                                        }, 500);
-                                        //heartbeat();
+                                        if (!isNaN(parseFloat(target))) {
+                                            targetTimer = setTimeout(function() {
+                                                scope.targettemp = target;
+                                                scope.addactivityfn({
+                                                    activity: {
+                                                        type: 'set-target',
+                                                        target: target
+                                                    }
+                                                });
+                                            }, 500);
+                                        }
                                     }));
+
                             } else {
                                 //targetIcon.style('visibility', 'hidden');
                                 //bgTargetIcon.style('visibility', 'hidden');

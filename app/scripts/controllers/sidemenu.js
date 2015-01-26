@@ -170,6 +170,8 @@ angular.module('cirqlApp')
             $scope.changeAutoAway = function() {
 
                 // sync autoAway with firebase
+                // 
+                console.log($scope.usesAutoAway);
 
                 if ($scope.usesAutoAway.hasOwnProperty('$value') && ($scope.usesAutoAway.$value === true || $scope.usesAutoAway.$value === false)) {
                     $scope.usesAutoAway.$save();
