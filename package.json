@@ -57,6 +57,7 @@
     "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
     "https://github.com/radshag/PhoneGap-Geofencing.git",
     "org.apache.cordova.network-information",
-    "org.apache.cordova.splashscreen"
+    "org.apache.cordova.splashscreen",
+    "https://github.com/cowbell/cordova-plugin-geofence"
   ]
 }

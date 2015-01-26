@@ -10,6 +10,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
         if (user.uid !== null && user.uid !== undefined) {
             if (user.residentId !== null && user.residentId !== undefined) {
                 fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
                 console.log('TEST: homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
             }
         }
@@ -27,7 +28,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                     window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
                         function(result) {
                             //console.log('RESULTS: ' + JSON.stringify(result));
-                            console.log('INIT-Geo: Success');
+                            console.log('Radshag Geo initialized');
 
                             var callbacktype = result.callbacktype;
                             var regionId = result.regionId;
@@ -136,7 +137,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
             monitorRegion: function(params) {
                 var deferred = $q.defer();
-                if (!monitorStarted) {
+                if (monitorStarted === false) {
                     if (fbRegions) {
                         monitorStarted = true;
                         fbHome.$loaded(function(data) {
