@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', 
         function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
@@ -27,41 +27,48 @@ angular.module('cirqlApp')
                 $state.go('login');
             };
 
+            if (user) {
+                $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
+
+
+                $scope.room = $state.params.roomId;
+
+                $rootScope.$watch('room', function(room) {
+
+                    $scope.room = room;
+
+
+                    if (room) {
+                        if ($scope.usesAutoAway) {
+                            $scope.usesAutoAway.$destroy();
+                        }
+                        if ($scope.mode) {
+                            $scope.mode.$destroy();
+                        }
+
+                        if ($scope.boundResidents) {
+                            $scope.boundResidents.$destroy();
+
+                        }
+
+                        $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
+
+                        $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
+
+                        boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
+                        $scope.boundResidents = boundResidents;
+
+
+                    }
+                });
+            } else {
+                $state.go('login');
+            }
+
+
             var boundResidents = null;
 
-            $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
 
-
-            $scope.room = $state.params.roomId;
-
-            $rootScope.$watch('room', function(room) {
-
-                $scope.room = room;
-
-
-                if (room) {
-                    if ($scope.usesAutoAway) {
-                        $scope.usesAutoAway.$destroy();
-                    }
-                    if ($scope.mode) {
-                        $scope.mode.$destroy();
-                    }
-
-                    if ($scope.boundResidents) {
-                        $scope.boundResidents.$destroy();
-
-                    }
-
-                    $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
-
-                    $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
-
-                    boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
-                    $scope.boundResidents = boundResidents;
-
-
-                }
-            });
 
             $scope.showWhyAutoAwayIsDisabled = function() {
 
