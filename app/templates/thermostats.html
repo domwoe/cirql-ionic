@@ -53,20 +53,28 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        Battery:
+                        Status:
                     </div>
                     <div class="col">
-                        {{thermostat.fhem_battery}}
+                        {{thermostat.status}}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        Battery Level:
+                        External Temperature Sensor:
                     </div>
                     <div class="col">
-                        {{thermostat.fhem_batteryLevel}}V
+                        {{thermostat.usesExternalTemperature}}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col">
+                        Is waiting for thermostat:
+                    </div>
+                    <div class="col">
+                        {{thermostat.waitForThermostat}}
+                    </div>
+                </div>  
                 <div class="row">
                     <div class="col">
                         Last Seen:
