@@ -35,31 +35,34 @@ angular.module('cirqlApp')
 
                 $rootScope.$watch('room', function(room) {
 
-                    $scope.room = room;
-
-
                     if (room) {
-                        if ($scope.usesAutoAway) {
-                            $scope.usesAutoAway.$destroy();
+
+                        $scope.room = room;
+
+
+                        if (room) {
+                            if ($scope.usesAutoAway) {
+                                $scope.usesAutoAway.$destroy();
+                            }
+                            if ($scope.mode) {
+                                $scope.mode.$destroy();
+                            }
+
+                            if ($scope.boundResidents) {
+                                $scope.boundResidents.$destroy();
+
+                            }
+
+                            $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
+
+                            $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
+
+                            boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
+                            $scope.boundResidents = boundResidents;
+
+
                         }
-                        if ($scope.mode) {
-                            $scope.mode.$destroy();
-                        }
-
-                        if ($scope.boundResidents) {
-                            $scope.boundResidents.$destroy();
-
-                        }
-
-                        $scope.usesAutoAway = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/usesAutoAway');
-
-                        $scope.mode = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/mode');
-
-                        boundResidents = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $scope.room + '/residents');
-                        $scope.boundResidents = boundResidents;
-
-
-                    }
+                    }    
                 });
             } else {
                 $state.go('login');
@@ -169,8 +172,11 @@ angular.module('cirqlApp')
                     name: $scope.residents.$getRecord(user.residentId).name
                 };
 
-                fbutil.ref('homes/' + user.uid + '/activity/' + $scope.room + '/raw').push(activity);
-                console.log('Activity added:' + JSON.stringify(activity));
+                if ($scope.room) {
+
+                    fbutil.ref('homes/' + user.uid + '/activity/' + $scope.room + '/raw').push(activity);
+                    console.log('Activity added:' + JSON.stringify(activity));
+                }
             }
 
 

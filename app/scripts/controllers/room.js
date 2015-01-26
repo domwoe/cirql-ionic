@@ -27,11 +27,19 @@ angular.module('cirqlApp')
         if (language !== 'de') {
             language = 'en';
         }
-      
-        var homeUrl = 'homes/' + user.uid;
-        var roomUrl = homeUrl + '/rooms/' + room;
 
-        $scope.roomValues = fbutil.syncObject(roomUrl);
+        if (user.uid && room) {
+      
+            var homeUrl = 'homes/' + user.uid;
+            var roomUrl = homeUrl + '/rooms/' + room;
+
+            $scope.roomValues = fbutil.syncObject(roomUrl);
+        }
+        else {
+            console.log('Failed to load user.uid '+user.uid+' or '+room);
+        }   
+
+        
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);

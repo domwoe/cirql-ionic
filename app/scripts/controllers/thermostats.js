@@ -39,13 +39,19 @@ angular.module('cirqlApp')
                 $scope.room = room;
             }
 
-            $scope.roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
+            if (user.uid && room) {
 
-            var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
+                $scope.roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
 
-            var trvsInRoom = fbutil.syncArray(trvUrl);
+                var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
 
-            var thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
+                var trvsInRoom = fbutil.syncArray(trvUrl);
+
+                var thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
+            }
+            else {
+                console.log('Failed to load user.uid '+user.uid+' or '+room);
+            }    
 
             $scope.thermostats = thermostats;
 
