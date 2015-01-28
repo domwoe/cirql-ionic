@@ -75,15 +75,24 @@ angular.module('cirqlApp')
                         }
 
                         this.tempToPixelOffset = function(temp, height) {
-                            return this.radius + 1 +
-                                (temp - this.minTemp) * (height - 2 * (this.radius + 1)) /
-                                (this.maxTemp - this.minTemp);
+                            console.log("HEIGHT: ", height);
+                            var redH = height - 2*(this.radius + 1);
+                            var offset = redH + this.radius + 1 - (temp - this.minTemp) * redH / (this.maxTemp - this.minTemp);
+                            console.log("TEMP: ", temp);
+                            console.log("OFFSET: ", offset);
+                            return offset;
+/*                            return this.radius + 1 +
+                                (temp - this.maxTemp) * (height - 2 * (this.radius + 1)) /
+                                (this.maxTemp - this.minTemp);*/
                         }
 
                         this.pixelOffsetToTemp = function(ypos, height) {
-                            return (this.minTemp +
+                            var redH = height - 2*(this.radius + 1);
+                            var temp = this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
+                            return temp;
+/*                            return (this.minTemp +
                                 (ypos - this.radius - 1) * (this.maxTemp - this.minTemp) /
-                                (height - 2 * (this.radius + 1)));
+                                (height - 2 * (this.radius + 1)));*/
                         }
 
                         this.isPointWithinBounds = function(recPath, pX, pY) {
@@ -91,10 +100,6 @@ angular.module('cirqlApp')
                             var y = parseInt(recPath.attr('y'));
                             var width = parseInt(recPath.attr('width'));
                             var height = parseInt(recPath.attr('height'));
-                            console.log("X: ", x);
-                            console.log("Y: ", y);
-                            console.log("W: ", width);
-                            console.log("H: ", height);
 
                             return (
                                 pX >= x &&
@@ -112,11 +117,9 @@ angular.module('cirqlApp')
                                 if (Math.abs(m[0] - d.dragstart[0]) > Math.abs(m[1] - d.dragstart[1]) + 4) {
                                     this.lockOnHorizontalDrag = true;
                                     d3.select('#vpath').style('visibility', 'hidden');
-                                    console.log("LOCK ON HORIZONTAL");
                                 } else if (Math.abs(m[0] - d.dragstart[0]) + 4 < Math.abs(m[1] - d.dragstart[1])) {
                                     this.lockOnVerticalDrag = true;
                                     d3.select('#hpath').style('visibility', 'hidden');
-                                    console.log("LOCK ON VERTICAL");
                                 }
                             } else {
                                 if (this.lockOnHorizontalDrag) {
@@ -150,14 +153,6 @@ angular.module('cirqlApp')
                                         d.y = newposY - currentY;
                                     }
                                 }
-
-                                console.log("MX: ", m[0]);
-                                console.log("MY: ", m[1]);
-                                console.log("DX: ", d.x);
-                                console.log("DY: ", d.y);
-                                console.log("NX: ", newposX);
-                                console.log("NY: ", newposY);
-                                console.log("\n");
 
                                 group.attr('transform', 'translate(' + d.x + ', ' + d.y + ')');
 
@@ -201,8 +196,6 @@ angular.module('cirqlApp')
                                     } else {
                                         dotTarget = '5';
                                     }
-
-
 
                                     console.log("NEW TEMP: ", newTemp);
 
@@ -265,12 +258,10 @@ angular.module('cirqlApp')
                                 for (var i = 0; i < scheduleEntries[0].length; i++) {
                                     var currEntry = d3.select(scheduleEntries[0][i]);
                                     var index = currEntry.attr('id');
-                                    //    console.log("INDEX: ", index);
-                                    //    console.log("SCH: ", this.localSchedule);
 
                                     var tempOffset = this.tempToPixelOffset(
                                         this.localSchedule[index].target,
-                                        weekCol.attr('height')
+                                        parseInt(weekCol.attr('height'))
                                     );
 
                                     var circle = currEntry.select('circle');
@@ -517,18 +508,7 @@ angular.module('cirqlApp')
                                     })
                                     .on('drag', function(d) {
                                         if (self.dragging) {
-                                            //console.log("DRAGGING ", this);
                                             self.mouseDragCallback(this, d);
-                                            /*                                            var m = d3.mouse(this);
-                                            console.log("M: ", m);
-
-                                            d.x += m[0] - d.dragstart[0];
-                                            d.y += m[1] - d.dragstart[1];
-
-                                            var circle = d3.select(this);
-                                            var group = d3.select(circle.node().parentNode);
-
-                                            group.attr("transform", "translate(" + [d.x, d.y] + ")");*/
                                         }
                                     })
                                     .on('dragend', function(d) {
