@@ -229,6 +229,5 @@ angular.module('cirqlApp')
                 });
             };
 
-
         }
     ]);

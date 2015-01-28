@@ -1,4 +1,4 @@
-<ion-side-menus>
+<ion-side-menus enable-menu-with-back-views="true">
 
   <ion-pane ion-side-menu-content>
     <ion-nav-bar class="bar-transparent">
@@ -13,10 +13,10 @@
     </header> -->
     <ion-content scroll="true" class="center">
       <div class="list">
-        <div translate class="item nav-clear menu-close" ui-sref="app.home">
+        <div translate class="item nav-clear menu-toggle" ui-sref="app.home">
           HOME
         </div>
-        <div translate class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.addRoom">
+        <div translate class="item nav-clear menu-toggle"  ng-if="isHome()" ui-sref="app.addRoom">
           ADD_ROOM
         </div>
           <div ng-if="isRoom()" ng-cloak class="residents residents-select">
@@ -28,31 +28,31 @@
           </div>
           <span show-alert><ion-toggle show-alert id="autoaway-toggle" style="margin-top:-35px" ng-if="isRoom()" ng-disabled="!hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="changeAutoAway()">AutoAway</ion-toggle></span>
 
-        <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ng-click="goToSchedule()">
+        <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ng-click="goToSchedule()">
           SCHEDULE
         </div>
-        <!-- <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ui-sref="app.activity({roomId: room})">
+        <!-- <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ui-sref="app.activity({roomId: room})">
           ACTIVITY
         </div> -->
-        <div translate class="item nav-clear menu-close" ng-if="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
+        <div translate class="item menu-toggle" ng-if="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           THERMOSTATS
         </div>
-        <div class="item nav-clear menu-close" ng-if="isRoom()" ng-click="netatmo()">
+        <div class="item nav-clear menu-toggle" ng-if="isRoom()" ng-click="netatmo()">
           Netatmo
         </div>
-        <div translate class="item nav-clear menu-close"  ng-if="isRoom()" ui-sref="app.room_settings({roomId: room})">
+        <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ui-sref="app.room_settings({roomId: room})">
           ROOM_SETTINGS
         </div>
-        <div class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.gateway({home: true})">
+        <div class="item menu-toggle"  ng-if="isHome()" ui-sref="app.gateway({home: true})">
           Gateway
         </div>
-        <div translate class="item nav-clear menu-close"  ng-if="isHome()" ui-sref="app.resident_settings">
+        <div translate class="item nav-clear menu-toggle"  ng-if="isHome()" ui-sref="app.resident_settings">
           RESIDENT_SETTINGS
         </div>
-        <div translate class="item nav-clear menu-close"  ng-if ="isHome()" ui-sref="app.home_settings">
+        <div translate class="item nav-clear menu-toggle"  ng-if ="isHome()" ui-sref="app.home_settings">
           HOME_SETTINGS
         </div>
-        <div translate class="item nav-clear menu-close" ng-click="logout()">
+        <div translate class="item nav-clear menu-toggle" ng-click="logout()">
           LOGOUT
         </div>
       </div>
