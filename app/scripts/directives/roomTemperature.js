@@ -326,7 +326,7 @@ angular.module('cirqlApp')
                                     d3.selectAll('.info').remove();
                                     flame.append('text')
                                         .text(scope.valve + '%')
-                                        .attr('font-size', '12px')
+                                        .attr('font-size', '9px')
                                         .attr('font-weight', 600)
                                         .attr('fill', '#fff')
                                         .attr('class', 'info valve');
@@ -425,7 +425,7 @@ angular.module('cirqlApp')
                                 .style('visibility', 'hidden');
                         }
 
-                        $timeout(function() {
+                        //$timeout(function() {
                             var measured_ring = d3.select('#measured_path' + scope.ishome + scope.roomid);
                             if (scope.measuredtemp) {
                                 updateMeasuredArc(
@@ -441,7 +441,7 @@ angular.module('cirqlApp')
                                 );
                                 renderState(scope.targettemp, scope.targettemp);
                             }
-                        });
+                        //});
                     };
 
                     function showWarning(msg) {

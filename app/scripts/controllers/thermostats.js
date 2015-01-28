@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$rootScope', '$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup',
-        function($rootScope, $scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup) {
+    .controller('ThermostatsCtrl', ['$rootScope', '$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup','$timeout',
+        function($rootScope, $scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup, $timeout) {
 
             var pairingPopup;
 
@@ -66,7 +66,7 @@ angular.module('cirqlApp')
                         };
                     }
 
-                    $ionicLoading.hide();
+                    $timeout($ionicLoading.hide,200);
 
 
                 });
