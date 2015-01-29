@@ -8,9 +8,9 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('NetatmoCtrl', ['$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate', '$ionicPopup', '$ionicLoading',
+    .controller('NetatmoCtrl', ['$rootScope', '$scope', '$state', 'user', 'fbutil', 'netatmoService', '$ionicSideMenuDelegate', '$ionicPopup', '$ionicLoading',
 
-        function($scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
+        function($rootScope, $scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
 
             $ionicLoading.show({
                 template: '<div class="sk-spinner sk-spinner-circle">' +
@@ -31,13 +31,7 @@ angular.module('cirqlApp')
 
             $ionicSideMenuDelegate.canDragContent(false);
 
-            var room;
-
-            if ($state.params.hasOwnProperty('roomId')) {
-                room = $state.params.roomId;
-            }
-
-            netatmoService.getNetatmo(room, user.uid).then(function(netatmo) {
+            netatmoService.getNetatmo($rootScope.room, user.uid).then(function(netatmo) {
                 $scope.netatmo = netatmo;
             });
 
@@ -87,13 +81,13 @@ angular.module('cirqlApp')
             $scope.goToRoom = function() {
                 $ionicSideMenuDelegate.canDragContent(true);
                 $state.go('app.room', {
-                    roomId: room
+                    roomId: $rootScope.room
                 });
             };
 
             $scope.addNetatmo = function(stationId, moduleId) {
 
-                var roomUrl = 'homes/' + user.uid + '/rooms/' + room + '/sensors';
+                var roomUrl = 'homes/' + user.uid + '/rooms/' + $rootScope.room + '/sensors';
                 var roomObj = fbutil.syncObject(roomUrl);
 
                 var netatmoUrl = 'homes/' + user.uid + '/sensors/netatmo/stations/' +
@@ -114,17 +108,17 @@ angular.module('cirqlApp')
                 // Add room reference to Netatmo
                 netatmoObj.$loaded().then(function() {
                     console.log(netatmoObj);
-                    netatmoObj.room = room;
+                    netatmoObj.room = $rootScope.room;
                     netatmoObj.$save();
                 });
                 $state.go('app.netatmo', {
-                    roomId: room
+                    roomId: $rootScope.room
                 });
             };
 
             $scope.delNetatmo = function() {
 
-                var roomUrl = 'homes/' + user.uid + '/rooms/' + room + '/sensors';
+                var roomUrl = 'homes/' + user.uid + '/rooms/' + $rootScope.room + '/sensors';
                 var roomObj = fbutil.syncObject(roomUrl);
 
                 var netatmoUrl = 'homes/' + user.uid + '/sensors/netatmo/stations/' +
@@ -141,7 +135,7 @@ angular.module('cirqlApp')
                 });
 
                 $state.go('app.addNetatmo', {
-                    roomId: room
+                    roomId: $rootScope.room
                 });
             };
 

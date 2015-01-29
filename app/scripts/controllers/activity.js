@@ -1,22 +1,22 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('ActivityCtrl', ['$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate',
-        function($scope, user, fbutil, $state, $ionicLoading, $translate) {
+    .controller('ActivityCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate',
+        function($rootScope, $scope, user, fbutil, $state, $ionicLoading, $translate) {
 
             var language = $translate.use();
 
             // Get roomId
-            if ($state.params.hasOwnProperty('roomId')) {
-                $scope.room = $state.params.roomId;
-            }
+            // if ($state.params.hasOwnProperty('roomId')) {
+            //     $rootScope.room = $state.params.roomId;
+            // }
 
             $scope.goToRoom = function() {
                 if ($scope.activities && $scope.activities.hasOwnProperty('$destroy')) {
                     $scope.activities.$destroy();
                 }
                 $state.go('app.room', {
-                    roomId: $scope.room
+                    roomId: $rootScope.room
                 });
             };
 
@@ -53,11 +53,11 @@ angular.module('cirqlApp')
                 limit = limit + more;
 
                 if (language === 'de') {
-                    $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/de', {
+                    $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $rootScope.room + '/de', {
                         limit: limit
                     });
                 } else {
-                    $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $scope.room + '/en', {
+                    $scope.activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + $rootScope.room + '/en', {
                         limit: limit
                     });
                 }

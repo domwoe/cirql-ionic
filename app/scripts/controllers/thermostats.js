@@ -219,7 +219,7 @@ angular.module('cirqlApp')
             /**
              * Go back to room screen
              */
-            $scope.goToRoom = function() {
+            $scope.goBack = function() {
                 $ionicSideMenuDelegate.canDragContent(true);
                 $scope.roomObj.$destroy();
                 trvsInRoom.$destroy();
