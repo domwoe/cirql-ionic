@@ -3,7 +3,6 @@
 angular.module('cirqlApp')
     .directive('roomSchedule', ['$timeout',
         function($timeout) {
-
             return {
                 restrict: 'EA',
                 scope: {
@@ -11,11 +10,11 @@ angular.module('cirqlApp')
                     radius: "=",
                     sync: "=",
                     roomid: "=",
-                    hour: "@",
-                    minute: "@",
                     goback: "&",
                     reload: "&",
-                    dayview: "="
+                    dayview: "=",
+                    hour: "@",
+                    minute: "@",
                 },
                 link: function(scope, element, attrs) {
 
@@ -75,24 +74,14 @@ angular.module('cirqlApp')
                         }
 
                         this.tempToPixelOffset = function(temp, height) {
-                            console.log("HEIGHT: ", height);
                             var redH = height - 2*(this.radius + 1);
-                            var offset = redH + this.radius + 1 - (temp - this.minTemp) * redH / (this.maxTemp - this.minTemp);
-                            console.log("TEMP: ", temp);
-                            console.log("OFFSET: ", offset);
-                            return offset;
-/*                            return this.radius + 1 +
-                                (temp - this.maxTemp) * (height - 2 * (this.radius + 1)) /
-                                (this.maxTemp - this.minTemp);*/
+                            return redH + this.radius + 1 - (temp - this.minTemp) * redH / (this.maxTemp - this.minTemp);
                         }
 
                         this.pixelOffsetToTemp = function(ypos, height) {
                             var redH = height - 2*(this.radius + 1);
                             var temp = this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
                             return temp;
-/*                            return (this.minTemp +
-                                (ypos - this.radius - 1) * (this.maxTemp - this.minTemp) /
-                                (height - 2 * (this.radius + 1)));*/
                         }
 
                         this.isPointWithinBounds = function(recPath, pX, pY) {
@@ -173,8 +162,12 @@ angular.module('cirqlApp')
 
                                     // Update time
                                     var time = this.pixelOffsetToTime(newposX);
+                                    console.log("TIME: ", time);
                                     scope.hour = this.pad(time[0], 2);
                                     scope.minute = this.pad(time[1], 2);
+
+                                    console.log("HOUR: ", scope.hour);
+                                    console.log("MIN: ", scope.minute);
 
                                     // Update the times in the local schedule
                                     var entry = this.localSchedule[circleIndex];
@@ -191,12 +184,14 @@ angular.module('cirqlApp')
                                     var target = Math.floor(newTemp);
                                     var dotTarget;
 
-                                    if (newTemp - target <= 0.5) {
+                                    console.log("FLOOR: ", target);
+
+                                    if (newTemp - target < 0.5) {
                                         dotTarget = '0';
                                     } else {
                                         dotTarget = '5';
                                     }
-
+                                    console.log("DOT TEMP: ", dotTarget);
                                     console.log("NEW TEMP: ", newTemp);
 
                                     var targetTspan = group.select('tspan');
@@ -219,10 +214,30 @@ angular.module('cirqlApp')
                             });
                         }
 
+                        this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target) {
+                            this.addEntry(dayGroup, id, xpos, ypos, target);
+                            var entryGroup = dayGroup.select('#' + id);
+
+                            console.log("entryg: ", entryGroup);
+                            var text = entryGroup.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 12)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#483e37');
+
+                            var tspan = text.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', xpos)
+                                .attr('y', ypos + 1.75*this.radius)
+                                .text(
+                                    this.pad(this.localSchedule[id].hour, 2) + ':' + 
+                                    this.pad(this.localSchedule[id].minute, 2)
+                                );
+                        }
+
                         this.selectDay = function(day) {
                             scope.dayview = true;
                             scope.$apply();
-                            console.log("SELECTED DAY");
                             var weekdays = d3.select('#weekdays');
                             var weekCol = weekdays.append('rect')
                                 .attr('id', 'week_column')
@@ -268,14 +283,16 @@ angular.module('cirqlApp')
                                     var posX = parseInt(circle.attr('cx'));
                                     var offsetY = tempOffset - parseInt(circle.attr('cy'));
 
-                                    console.log("CURR ENTRY: ", currEntry);
-
                                     currEntry.remove();
-                                    // TODO: Write function to update entry positions instead
-                                    this.addEntry(dayGroup, index, posX, tempOffset, this.localSchedule[index].target);
+                                    this.addDetailedEntry(
+                                        dayGroup, 
+                                        index, 
+                                        posX, 
+                                        tempOffset, 
+                                        this.localSchedule[index].target
+                                    );
                                 }
                             }
-
                             // Move to front
                             dayGroup.moveToFront();
                         }
@@ -318,7 +335,6 @@ angular.module('cirqlApp')
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
 
-                            this.deselectEntry();
                             var selection = group.select('circle')
                                 .attr('fill', 'black')
                                 .attr('r', this.radius + 15);
@@ -328,17 +344,9 @@ angular.module('cirqlApp')
 
                             scope.hour = self.pad(entry.hour, 2);
                             scope.minute = self.pad(entry.minute, 2);
-
-                            //         group.selectAll('path')
-                            //             .style('visibility', 'visible');
-
-                            //          group.selectAll('rect')
-                            //             .style('visibility','visible');
                             this.selectedEntry = group;
 
                             d3.select('#label').style('visibility', 'visible');
-
-
                         }
 
                         // true for increase, false for decrease
@@ -445,24 +453,6 @@ angular.module('cirqlApp')
                                 .attr('y', ypos + (this.radius / 2) * 0.8)
                                 .text(dotTarget);
 
-                            var pathDecr = entryGroup.append('path')
-                                .attr('class', 'arrowDecrement')
-                                .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos + this.radius - 6) + ') scale(0.2)')
-                                .attr('d', 'M50,71.276c-1.338,0-2.676-0.511-3.696-1.53l-32.099-32.1c-2.042-2.042-2.042-5.352,0-7.393 \
-						c2.041-2.041,5.351-2.041,7.393,0L50,58.656l28.402-28.402c2.042-2.041,5.352-2.041,7.393,0c2.042,2.041,2.042,5.351,0,7.393 \
-						l-32.099,32.1C52.676,70.766,51.338,71.276,50,71.276z')
-                                .style('visibility', 'hidden');
-
-                            var pathIncr = entryGroup.append('path')
-                                .attr('class', 'arrowIncrement')
-                                .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius + 3) + ') scale(0.2)')
-                                .attr('d', 'M53.696,30.254l32.099,32.1c2.042,2.042,2.042,5.352,0,7.393c-2.041,2.041-5.352,2.041-7.393,0L50,41.344L21.598,69.746 \
-						c-2.042,2.041-5.352,2.041-7.393,0c-2.042-2.041-2.042-5.351,0-7.393l32.099-32.1c1.021-1.02,2.358-1.53,3.696-1.53 \
-						S52.676,29.234,53.696,30.254z')
-                                .style('visibility', 'hidden');
-
                             var back = entryGroup.append('circle')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
@@ -512,39 +502,54 @@ angular.module('cirqlApp')
                                         }
                                     })
                                     .on('dragend', function(d) {
-                                        console.log("DRAG END");
                                         self.dragging = false;
                                         self.lockOnVerticalDrag = false;
                                         self.lockOnHorizontalDrag = false;
                                         // Remove path rectangles
                                         d3.select('#vpath').remove();
                                         d3.select('#hpath').remove();
+                                        // Deselect entry
+                                        self.deselectEntry();
                                         delete d.dragstart;
                                     })
                                 );
+                        }
 
-                            var recIncr = entryGroup.append('rect')
-                                .attr('x', xpos - 3 * this.radius)
-                                .attr('y', ypos - 4.9 * this.radius)
-                                .attr('width', 6 * this.radius)
-                                .attr('height', 4 * this.radius)
-                                .attr('fill-opacity', 0.25)
-                                .style('visibility', 'hidden')
-                                .on('click', function() {
-                                    self.incrementTemp(this);
-                                });
+                        this.renderTimeline = function() {
+                            var weekGroup = d3.select('#weekdays');
 
-                            var recDecr = entryGroup.append('rect')
-                                .attr('x', xpos - 3 * this.radius)
-                                .attr('y', ypos + this.radius)
-                                .attr('width', 6 * this.radius)
-                                .attr('height', 4 * this.radius)
-                                .attr('fill-opacity', 0.25)
-                                .style('visibility', 'hidden')
-                                .on('click', function() {
-                                    self.decrementTemp(this);
-                                });
+                            var timelineGroup = weekGroup.append('g')
+                                .attr('id', 'timelineGroup');
 
+                            var timelineRect = timelineGroup.append('rect')
+                                .attr('id', 'timeline_back')
+                                .attr('fill', '#b3b3b3')
+                                .attr('fill-opacity', 0.6)
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 1)
+                                .attr('x', 95)
+                                .attr('y', 210)
+                                .attr('height', 20)
+                                .attr('width', 650);
+
+                            var text = timelineGroup.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 12)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#FFFFFF');
+
+                            var ypos = 225;
+                            var step = 650/24;
+                            var xpos = 105;
+
+                            for (var i = 0; i < 24; i++) {
+                                text.append('tspan')
+                                    .attr('text-anchor', 'middle')
+                                    .attr('x', xpos)
+                                    .attr('y', ypos)
+                                    .text(i);
+                                xpos += step;
+                            }
                         }
 
                         this.renderScheduleEntries = function() {
@@ -581,13 +586,10 @@ angular.module('cirqlApp')
                                 'target': target,
                                 'weekday': weekday
                             };
-                            // console.log("CREATED ", this.localSchedule[id]);
                         }
 
                         this.addEntryCallback = function(self) {
-                            //   console.log("CLICK ON ADD");
                             if (self.selectedDay != null) {
-                                //    console.log("Adding entry callback");
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
                                 var groupId = this.weekDays[index];
@@ -769,6 +771,7 @@ angular.module('cirqlApp')
 
                     var renderState = function() {
                         if (scope.schedule && !scheduler.rendered) {
+                            scheduler.renderTimeline();
                             scheduler.renderScheduleEntries();
                             scheduler.attachListeners();
                             scheduler.rendered = true;
@@ -839,11 +842,6 @@ angular.module('cirqlApp')
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
                                 </g> \
-                            </g> \
-                            <g id="label" visibility="hidden"> \
-                                <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                                    <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
-                                </text> \
                             </g> \
                         </svg> \
                 </ion-content> \
