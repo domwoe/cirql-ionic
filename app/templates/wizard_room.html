@@ -29,7 +29,7 @@
         <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
         <div ng-cloak class="residents residents-select center">
           <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
-            <img class="avatar" ng-click="toggleBoundResident(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+            <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
             <br />
             {{resident.name}}
           </div>
