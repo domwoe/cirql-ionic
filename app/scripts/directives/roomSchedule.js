@@ -151,6 +151,18 @@ angular.module('cirqlApp')
                                     entry.hour = time[0];
                                     entry.minute = time[1];
 
+                                    // Show the time in the label
+                                    group.select('text.label').select('tspan').text(
+                                        this.pad(entry.hour, 2) + ":" +
+                                        this.pad(entry.minute, 2)
+                                    );
+
+                                    // Update the hidden time label
+                                    group.select('g.time').select('tspan').text(
+                                        this.pad(entry.hour, 2) + ":" +
+                                        this.pad(entry.minute, 2)  
+                                    );
+
                                     // Flag for schedule change
                                     this.changed = this.weekDays[entry.weekday + 1];
 
@@ -530,7 +542,7 @@ angular.module('cirqlApp')
 
                             var ypos = 225;
                             var step = 650/24;
-                            var xpos = 105;
+                            var xpos = 100;
 
                             for (var i = 0; i < 24; i++) {
                                 text.append('tspan')
