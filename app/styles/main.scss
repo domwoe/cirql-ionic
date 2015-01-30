@@ -402,7 +402,6 @@ input:-ms-input-placeholder {
     border-radius: 8px;
 }
 
-
 // Add Room View
 // -------------------------------
 .add-room {
@@ -413,9 +412,12 @@ input:-ms-input-placeholder {
 // Schedule View
 // -------------------------------
 .schedule-block {
+    height: 85%;
+    width: 100%;
     display: block;
     margin: 0 auto;
 }
+
 // Utility classes
 // -------------------------------
 

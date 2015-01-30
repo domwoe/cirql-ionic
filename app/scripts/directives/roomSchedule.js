@@ -784,7 +784,7 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content scroll="false"> \
                     <div class="schedule-block"> \
-                        <svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+                        <svg id="room-schedule" width="100%" height="100%" viewBox="-3 -100 752 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
                                     <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
