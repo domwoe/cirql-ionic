@@ -54,14 +54,16 @@ angular.module('cirqlApp')
 
                         this.pad = function(num, size) {
                             var s = num + "";
-                            while (s.length < size) s = "0" + s;
+                            while (s.length < size) {
+                                s = "0" + s;
+                            }
                             return s;
-                        }
+                        };
 
                         this.timeToPixelOffset = function(hours, minutes) {
                             var time = hours * 60 + minutes;
                             return this.leftBound + time * this.width / this.totalTime;
-                        }
+                        };
 
                         this.pixelOffsetToTime = function(xpos) {
                             var time = (xpos - this.leftBound) * this.totalTime / (this.width);
@@ -69,17 +71,17 @@ angular.module('cirqlApp')
                                 Math.floor(time / 60),
                                 15 * Math.floor(time % 60 / 15)
                             ];
-                        }
+                        };
 
                         this.tempToPixelOffset = function(temp, height) {
                             var redH = height - 2*(this.radius + 1);
                             return redH + this.radius + 1 - (temp - this.minTemp) * redH / (this.maxTemp - this.minTemp);
-                        }
+                        };
 
                         this.pixelOffsetToTemp = function(ypos, height) {
                             var redH = height - 2*(this.radius + 1);
                             return this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
-                        }
+                        };
 
                         this.mouseDragCallback = function(ev, d) {
 
@@ -160,7 +162,7 @@ angular.module('cirqlApp')
                                     // Update the hidden time label
                                     group.select('g.time').select('tspan').text(
                                         this.pad(entry.hour, 2) + ":" +
-                                        this.pad(entry.minute, 2)  
+                                        this.pad(entry.minute, 2)
                                     );
 
                                     // Flag for schedule change
@@ -183,13 +185,13 @@ angular.module('cirqlApp')
                                     }
                                 }
                             }
-                        }
+                        };
 
                         d3.selection.prototype.moveToFront = function() {
                             return this.each(function() {
                                 this.parentNode.appendChild(this);
                             });
-                        }
+                        };
 
                         this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target) {
                             this.addEntry(dayGroup, id, xpos, ypos, target);
@@ -209,10 +211,10 @@ angular.module('cirqlApp')
                                 .attr('x', xpos)
                                 .attr('y', ypos + 1.75*this.radius)
                                 .text(
-                                    this.pad(this.localSchedule[id].hour, 2) + ':' + 
+                                    this.pad(this.localSchedule[id].hour, 2) + ':' +
                                     this.pad(this.localSchedule[id].minute, 2)
                                 );
-                        }
+                        };
 
                         this.selectDay = function(day) {
                             scope.dayview = true;
@@ -264,17 +266,17 @@ angular.module('cirqlApp')
 
                                     currEntry.remove();
                                     this.addDetailedEntry(
-                                        dayGroup, 
-                                        index, 
-                                        posX, 
-                                        tempOffset, 
+                                        dayGroup,
+                                        index,
+                                        posX,
+                                        tempOffset,
                                         this.localSchedule[index].target
                                     );
                                 }
                             }
                             // Move to front
                             dayGroup.moveToFront();
-                        }
+                        };
 
                         this.deselectDay = function() {
                             var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
@@ -282,10 +284,10 @@ angular.module('cirqlApp')
                             var previousRec2 = d3.select(previousRec[1]);
                             previousRec1.attr('fill-opacity', 0.6);
                             previousRec2.attr('fill-opacity', 0.6);
-                        }
+                        };
 
                         this.daySelector = function(day) {
-                            if (this.selectedDay != null) {
+                            if (this.selectedDay !== null) {
                                 if (this.selectedDay !== day) {
                                     this.deselectEntry();
                                 }
@@ -295,10 +297,10 @@ angular.module('cirqlApp')
                                 this.selectDay(day);
                                 this.selectedDay = day;
                             }
-                        }
+                        };
 
                         this.deselectEntry = function() {
-                            if (this.selectedEntry != null) {
+                            if (this.selectedEntry !== null) {
                                 this.selectedEntry.select('circle')
                                     .attr('fill', 'red')
                                     .attr('r', this.radius);
@@ -309,7 +311,7 @@ angular.module('cirqlApp')
                                 this.selectedEntry = null;
                                 d3.select('#label').style('visibility', 'hidden');
                             }
-                        }
+                        };
 
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
@@ -343,10 +345,8 @@ angular.module('cirqlApp')
                             group.select('g.time').attr('visibility', 'hidden');
                             group.select('g.temp').attr('visibility', 'hidden');
 
-                            var circleIndex = group.attr('id');
-                            var entry = self.localSchedule[circleIndex];
                             this.selectedEntry = group;
-                        }
+                        };
 
                         // true for increase, false for decrease
                         this.updateTemp = function(obj, increaseOrDecrease) {
@@ -390,15 +390,15 @@ angular.module('cirqlApp')
                                 var index = parentNode.attr('id');
                                 this.localSchedule[index].target = newTemp;
                             }
-                        }
+                        };
 
                         this.decrementTemp = function(obj) {
                             this.updateTemp(obj, false);
-                        }
+                        };
 
                         this.incrementTemp = function(obj) {
                             this.updateTemp(obj, true);
-                        }
+                        };
 
                         this.addEntry = function(dayGroup, id, xpos, ypos, target) {
 
@@ -515,7 +515,7 @@ angular.module('cirqlApp')
                                         delete d.dragstart;
                                     })
                                 );
-                        }
+                        };
 
                         this.renderTimeline = function() {
                             var weekGroup = d3.select('#weekdays');
@@ -552,7 +552,7 @@ angular.module('cirqlApp')
                                     .text(i);
                                 xpos += step;
                             }
-                        }
+                        };
 
                         this.renderScheduleEntries = function() {
 
@@ -579,7 +579,7 @@ angular.module('cirqlApp')
                                 var dayGroup = d3.select('#' + groupId);
                                 this.addEntry(dayGroup, index, xpos, ypos, entry.target);
                             }
-                        }
+                        };
 
                         this.updateSchedule = function(id, hour, minute, target, weekday) {
                             this.localSchedule[id] = {
@@ -588,24 +588,23 @@ angular.module('cirqlApp')
                                 'target': target,
                                 'weekday': weekday
                             };
-                        }
+                        };
 
                         this.addEntryCallback = function(self) {
-                            if (self.selectedDay != null) {
+                            if (self.selectedDay !== null) {
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
-                                var groupId = this.weekDays[index];
-                                var ypos = self.height * index + self.height / 2;
+                                var ypos = this.tempToPixelOffset(self.defaultTemperature, 210);
                                 var id = 'c' + self.nextId;
 
                                 // Update local schedule
                                 self.updateSchedule(id, 0, 0, self.defaultTemperature, index + 1);
                                 self.nextId++;
 
-                                self.addEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
-                                self.entrySelector(self, '#' + id);
+                                self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
+                               // self.entrySelector(self, '#' + id);
                             }
-                        }
+                        };
 
                         this.copySchedule = function(self, dest) {
                             var destDay = d3.select(dest);
@@ -642,22 +641,22 @@ angular.module('cirqlApp')
                             });
                             self.deselectEntry();
                             destDay.moveToFront();
-                        }
+                        };
 
                         this.copyScheduleCallback = function(self) {
-                            if (self.selectedDay != null) {
+                            if (self.selectedDay !== null) {
                                 self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
                             }
-                        }
+                        };
 
                         this.deleteEntryCallback = function(self) {
-                            if (self.selectedEntry != null) {
+                            if (self.selectedEntry !== null) {
                                 var index = this.selectedEntry.attr('id');
                                 delete self.localSchedule[index];
                                 this.selectedEntry.remove();
                                 self.selectedEntry = null;
                             }
-                        }
+                        };
 
                         this.syncFirebase = function() {
 
@@ -672,13 +671,13 @@ angular.module('cirqlApp')
                             // Push or update rest
                             for (var key in this.localSchedule) {
                                 var found = false;
-                                for (var i = 0; i < scope.schedule.length; i++) {
-                                    var entry = scope.schedule[i];
-                                    if (key === entry.$id) {
-                                        scope.schedule[i].hour = this.localSchedule[key].hour;
-                                        scope.schedule[i].minute = this.localSchedule[key].minute;
-                                        scope.schedule[i].target = this.localSchedule[key].target;
-                                        scope.schedule.$save(scope.schedule[i]);
+                                for (var j = 0; j < scope.schedule.length; j++) {
+                                    var scheduleEntry = scope.schedule[j];
+                                    if (key === scheduleEntry.$id) {
+                                        scope.schedule[j].hour = this.localSchedule[key].hour;
+                                        scope.schedule[j].minute = this.localSchedule[key].minute;
+                                        scope.schedule[j].target = this.localSchedule[key].target;
+                                        scope.schedule.$save(scope.schedule[j]);
                                         found = true;
                                     }
                                 }
@@ -688,7 +687,7 @@ angular.module('cirqlApp')
                             }
 
                             scope.$apply();
-                        }
+                        };
 
                         this.save = function(self) {
 
@@ -699,13 +698,13 @@ angular.module('cirqlApp')
                                 room: scope.roomid,
                                 changedDay: self.changed
                             });
-                        }
+                        };
 
                         this.cancel = function() {
                             scope.goback({
                                 room: scope.roomid
                             });
-                        }
+                        };
 
                         this.backToWeek = function(self) {
                             console.log('BACK TO WEEK');
@@ -714,16 +713,14 @@ angular.module('cirqlApp')
                             scope.reload({
                                 changedDay: self.changed
                             });
-
-
-                        }
+                        };
 
                         this.attachListeners = function() {
                             console.log("Attaching listeners");
                             var self = this;
                             var allDays = d3.selectAll('g.parent');
                             allDays.on('click', function() {
-                                if (self.entriesToCopy != null && this !== self.selectedDay) {
+                                if (self.entriesToCopy !== null && this !== self.selectedDay) {
                                     self.copySchedule(self, this);
                                     self.entriesToCopy = null;
                                 } else {
@@ -766,8 +763,8 @@ angular.module('cirqlApp')
                                 console.log('clicked on cancel');
                                 self.cancel();
                             });
-                        }
-                    }
+                        };
+                    };
 
                     var scheduler = new Schedule();
 
@@ -779,12 +776,6 @@ angular.module('cirqlApp')
                             scheduler.rendered = true;
                         }
                     };
-
-                    var sync = function() {
-                        if (scope.schedule && scheduler.rendered) {
-                            schedule.syncFirebase();
-                        }
-                    }
 
                     scope.$watch('schedule', renderState);
 
