@@ -12,9 +12,7 @@ angular.module('cirqlApp')
                     roomid: "=",
                     goback: "&",
                     reload: "&",
-                    dayview: "=",
-                    hour: "@",
-                    minute: "@",
+                    dayview: "="
                 },
                 link: function(scope, element, attrs) {
 
@@ -80,22 +78,7 @@ angular.module('cirqlApp')
 
                         this.pixelOffsetToTemp = function(ypos, height) {
                             var redH = height - 2*(this.radius + 1);
-                            var temp = this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
-                            return temp;
-                        }
-
-                        this.isPointWithinBounds = function(recPath, pX, pY) {
-                            var x = parseInt(recPath.attr('x'));
-                            var y = parseInt(recPath.attr('y'));
-                            var width = parseInt(recPath.attr('width'));
-                            var height = parseInt(recPath.attr('height'));
-
-                            return (
-                                pX >= x &&
-                                x <= pX + width &&
-                                pY >= y &&
-                                y <= pY + height
-                            );
+                            return this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
                         }
 
                         this.mouseDragCallback = function(ev, d) {
@@ -137,8 +120,8 @@ angular.module('cirqlApp')
                                     if (newposY - this.radius < 0) {
                                         newposY = this.radius;
                                         d.y = newposY - currentY;
-                                    } else if (newposY > 7 * this.height - this.radius) {
-                                        newposY = 7 * this.height - this.radius;
+                                    } else if (newposY > 7 * this.height - this.radius - 1) {
+                                        newposY = 7 * this.height - this.radius - 1;
                                         d.y = newposY - currentY;
                                     }
                                 }
@@ -159,15 +142,9 @@ angular.module('cirqlApp')
                                 var circleIndex = group.attr('id');
 
                                 if (this.lockOnHorizontalDrag) {
-
                                     // Update time
                                     var time = this.pixelOffsetToTime(newposX);
                                     console.log("TIME: ", time);
-                                    scope.hour = this.pad(time[0], 2);
-                                    scope.minute = this.pad(time[1], 2);
-
-                                    console.log("HOUR: ", scope.hour);
-                                    console.log("MIN: ", scope.minute);
 
                                     // Update the times in the local schedule
                                     var entry = this.localSchedule[circleIndex];
@@ -178,28 +155,16 @@ angular.module('cirqlApp')
                                     this.changed = this.weekDays[entry.weekday + 1];
 
                                 } else if (this.lockOnVerticalDrag) {
-
                                     // Update temperature
                                     var newTemp = roundHalf(this.pixelOffsetToTemp(newposY, 210));
-                                    var target = Math.floor(newTemp);
-                                    var dotTarget;
-
-                                    console.log("FLOOR: ", target);
-
-                                    if (newTemp - target < 0.5) {
-                                        dotTarget = '0';
-                                    } else {
-                                        dotTarget = '5';
-                                    }
-                                    console.log("DOT TEMP: ", dotTarget);
-                                    console.log("NEW TEMP: ", newTemp);
-
-                                    var targetTspan = group.select('tspan');
-                                    var dotTargetTspan = group.select('g').select('tspan');
-
-                                    if (target + 0.1 * dotTarget >= this.minTemp && target + 0.1 * dotTarget <= this.maxTemp) {
-                                        targetTspan.text(target);
-                                        dotTargetTspan.text(dotTarget);
+                                    if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
+                                        // Show the temp in the label
+                                        group.select('text.label').select('tspan').text(newTemp);
+                                        // Update the hidden temp labels
+                                        var target = Math.floor(newTemp);
+                                        var dotTarget = (newTemp - target < 0.5) ? 0: 5;
+                                        group.select('tspan.target').text(target);
+                                        group.select('tspan.dot_target').text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
                                         // Flag for schedule change
                                         this.changed = this.weekDays[this.localSchedule[circleIndex].weekday + 1];
@@ -217,9 +182,11 @@ angular.module('cirqlApp')
                         this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target) {
                             this.addEntry(dayGroup, id, xpos, ypos, target);
                             var entryGroup = dayGroup.select('#' + id);
+                            var textGroup = entryGroup.append('g')
+                                .attr('class', 'time');
 
                             console.log("entryg: ", entryGroup);
-                            var text = entryGroup.append('text')
+                            var text = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 12)
                                 .attr('font-weight', 600)
@@ -323,10 +290,10 @@ angular.module('cirqlApp')
                                 this.selectedEntry.select('circle')
                                     .attr('fill', 'red')
                                     .attr('r', this.radius);
-                                this.selectedEntry.selectAll('path')
-                                    .style('visibility', 'hidden');
-                                this.selectedEntry.selectAll('rect')
-                                    .style('visibility', 'hidden');
+                                this.selectedEntry.select('g.time').attr('visibility', 'visible');
+                                this.selectedEntry.select('g.temp').attr('visibility', 'visible');
+                                this.selectedEntry.select('circle.label_back').remove();
+                                this.selectedEntry.select('text.label').remove();
                                 this.selectedEntry = null;
                                 d3.select('#label').style('visibility', 'hidden');
                             }
@@ -334,19 +301,39 @@ angular.module('cirqlApp')
 
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
+                            var selection = group.select('circle');
 
-                            var selection = group.select('circle')
-                                .attr('fill', 'black')
-                                .attr('r', this.radius + 15);
+                            var label_back = group.append('circle')
+                                .attr('class', 'label_back')
+                                .attr('fill', 'red')
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 2)
+                                .attr('r', this.radius*1.3)
+                                .attr('cx', selection.attr('cx'))
+                                .attr('cy', selection.attr('cy') - 2.5*this.radius);
+
+                            var xpos = label_back.attr('cx');
+                            var ypos = label_back.attr('cy');
+
+                            var text = group.append('text')
+                                .attr('class', 'label')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 14)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#FFFFFF');
+
+                            var tspan = text.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', xpos)
+                                .attr('y', parseInt(ypos) + this.radius/2 - 2);
+
+                            // Hide the time and temperature
+                            group.select('g.time').attr('visibility', 'hidden');
+                            group.select('g.temp').attr('visibility', 'hidden');
 
                             var circleIndex = group.attr('id');
                             var entry = self.localSchedule[circleIndex];
-
-                            scope.hour = self.pad(entry.hour, 2);
-                            scope.minute = self.pad(entry.minute, 2);
                             this.selectedEntry = group;
-
-                            d3.select('#label').style('visibility', 'visible');
                         }
 
                         // true for increase, false for decrease
@@ -427,27 +414,30 @@ angular.module('cirqlApp')
                                 .attr('r', this.radius)
                                 .attr('fill', 'red');
 
-                            var text = entryGroup.append('text')
+                            var textGroup = entryGroup.append('g')
+                                .attr('class', 'temp');
+
+                            var text = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 14)
                                 .attr('font-weight', 600)
                                 .attr('fill', '#FFFFFF');
 
                             var tspan = text.append('tspan')
+                                .attr('class', 'target')
                                 .attr('text-anchor', 'middle')
                                 .attr('x', xpos - 3)
                                 .attr('y', ypos + (this.radius / 2) * 0.8)
                                 .text(Math.floor(numTarget));
 
-                            var entryGroup2 = entryGroup.append('g');
-
-                            var text2 = entryGroup2.append('text')
+                            var text2 = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 9)
                                 .attr('font-weight', 600)
                                 .attr('fill', '#FFFFFF');
 
                             var tspan2 = text2.append('tspan')
+                                .attr('class', 'dot_target')
                                 .attr('text-anchor', 'middle')
                                 .attr('x', xpos + 8)
                                 .attr('y', ypos + (this.radius / 2) * 0.8)
