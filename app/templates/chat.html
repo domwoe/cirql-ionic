@@ -1,24 +1,26 @@
-<ion-view title="{{'CHAT' | translate}}">
+<ion-view class="messaging-view"  title="{{'CHAT' | translate}}">
   <ion-nav-buttons side="left">
   <button class="button-clear" ui-sref="app.home">
     <i class="ion-chevron-left"></i> {{'HOME' | translate}}
   </button>
   </ion-nav-buttons>
-  <ion-content scroll="true" class="has-header" style="padding: 10px;">
-    <ol class="messages">
-      <li ng-class="{'userMsg': message.residentId == residentId}" ng-repeat="message in messages">
-        <div>
-          <span ng-if="message.residentId != residentId" class="message-username">{{message.username}}</span>
-          <p ng-bind="message.content" ng-class="{'userMsg': message.residentId == residentId}"></p>
-        </div>
-      </li>
-    </ol>
+  <ion-content scroll="true">
+  <div class="message" ng-repeat='message in messages' ng-class='{ other: message.residentId != residentId }'>
+    <div class="avatar" ng-style='{ backgroundImage: "url(./images/avatar" + (residents.$getRecord(message.residentId).avatar || 0) + ".png)" }'>
+      <div class="resident-name">{{residents.$getRecord(message.residentId).name}}</div>
+    </div>
+    <div class="message">
+      <span>{{message.content}}</span>
+    </div>
+  </div>
   </ion-content>
   <ion-footer-bar style="display:inline">
     <form ng-submit="sendMessage()" class="message-form">
-      <label class="item-input-wrapper">
-        <input ng-model="newMessage" class="input-message" type="text" placeholder="Message">
-      </label>
+      <div class="item item-input-inset transparent">
+        <label class="item-input-wrapper">
+          <input ng-model="newMessage" class="input-message transparent" type="text" placeholder="{{'TYPE_MESSAGE' | translate}}">
+        </label>
+      </div>
     </form>
   </ion-footer-bar>
 </ion-view>

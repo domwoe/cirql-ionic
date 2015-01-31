@@ -21,10 +21,13 @@ angular.module('cirqlApp')
                 $scope.state = fbutil.syncObject('chat/' + user.uid + '/state/' + user.residentId);
                 $scope.residentId = user.residentId;
 
-                $ionicScrollDelegate.scrollBottom(true);
-                console.log(username);
-                console.log($scope.residentId);
-
+                $scope.messages.$loaded()
+                    .then(function(){
+                        $ionicScrollDelegate.scrollBottom(true);
+                    });
+                $scope.messages.$watch(function(event) {
+                    $ionicScrollDelegate.scrollBottom(true);
+                });
                 $scope.$watch('newMessage', function(newValue, oldValue) {
                     if(typeof newValue != 'undefined'){
                         if(newValue != ''){

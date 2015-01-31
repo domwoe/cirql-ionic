@@ -840,49 +840,19 @@ input:-ms-input-placeholder {
 // Chat
 // -------------------------------
 
-.messages {
-  margin:0;
-  padding:0;
-  list-style-type:none;
+.messaging-view {
+    .scroll { min-height:100%; padding:10px 0 50px; }
+    .message { padding:0 10px 10px;
+        .avatar { height:35px; width:35px; background-size:contain; background-repeat:no-repeat; float:left;
+            .resident-name {text-align: center;padding-top: 40px;}
+        }
+        .message { overflow:hidden; padding:5px 5px 0; text-align:left;
+            span { padding:10px; display:inline-block; text-align:left; }
+        }
+        &.other {
+            .avatar { float:right; }
+            .message { text-align:right; }
+        }
+    }
+    .bar-footer { height:initial !important; }
 }
-
-.messages li {
-  position: relative;
-  display:block;
-  clear:both;
-  /*max-width:50%;*/
-  margin:0 0 1rem 0;
-  padding:0;
-  float: right;
-}
-
-.messages li.userMsg {
-  float:left;
-}
-
-.messages p {
-  border-radius:.75rem;
-  background:#158ffe;
-  color:#fff;
-  padding:.6875rem;
-  margin:0;
-  font-size:.875rem;
-}
-
-.messages li p.userMsg {
-  background:#e6e5eb;
-  color:#383641;
-}
-
-.input-message{
-  background-color: #eee;
-}
-
-.message-form{
-  width: 100%;
-}
-
-.message-username{
-  font-size: 10px;
-}
-
