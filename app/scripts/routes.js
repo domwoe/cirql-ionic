@@ -205,6 +205,16 @@ angular.module('cirqlApp')
                 controller: 'NetatmoCtrl'
             }
         }
+    })
+
+    .state('app.chat', {
+        url: '/chat',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/chat.html',
+                controller: 'ChatCtrl'
+            }
+        }
     });
     // if none of the above states are matched, use this as the fallback
     //$urlRouterProvider.otherwise('/app/home');
@@ -277,7 +287,8 @@ angular.module('cirqlApp')
         SCHEDULEMODE: 'SCHEDULE',
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway is only possible in schedule mode',
         NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'No user bound to this room',
-        ME: 'me'
+        ME: 'me',
+        CHAT: 'Chat'
 
 
 
@@ -350,7 +361,8 @@ angular.module('cirqlApp')
         SCHEDULEMODE: 'ZEITPLAN',
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway ist nur im Zeitplan-Modus möglich',
         NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'Diesem Raum ist kein Nutzer zugeordnet',
-        ME: 'Ich'
+        ME: 'Ich',
+        CHAT: 'Chat'
     });
 
     $translateProvider.preferredLanguage('de');
