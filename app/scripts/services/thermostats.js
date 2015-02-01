@@ -10,17 +10,30 @@ angular.module('cirqlApp')
     .factory('thermostatService', ['fbutil', '$q',
         function(fbutil, $q) {
 
+        	var isWatching = null;
+
             var thermostat = {
 
                 watchForNewThermostat: function(user) {
                     var deferred = $q.defer();
-                    fbutil.ref('homes/' + user.uid + '/thermostats').on('child_added', function(fbThermostat) {
+                    isWatching = fbutil.ref('homes/' + user.uid + '/thermostats');
+                    isWatching.on('child_added', function(fbThermostat) {
                         if (fbThermostat.child('room') === 'null') {
-                            fbutil.ref('homes/' + user.uid + '/thermostats').off();
-                            deferred.resolve(fbThermostat.key());
+                            fbutil.ref('homes/' + user.uid + '/thermostats').off('child_added',function() {
+                            	isWatching = null;
+                            	deferred.resolve(fbThermostat.key());
+                            }); 
                         }
-                        return deferred.promise;
                     });
+                    return deferred.promise;
+                },
+
+                cancelWatching: function() {
+                	if (isWatching) {
+                		isWatching.off('child_added', function() {
+                			isWatching = null;
+                		});
+                	}
                 },
 
                 addToRoom: function(user, thermostat, room) {

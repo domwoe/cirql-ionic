@@ -206,6 +206,9 @@ angular.module('cirqlApp')
                     buttons: [{
                         text: 'Cancel',
                         type: 'button-block button-assertive transparent',
+                        onTap: function() {
+                            thermostatService.cancelWatching();
+                        }
                     }]
                 });
             };
@@ -215,6 +218,7 @@ angular.module('cirqlApp')
              */
             $scope.goBack = function() {
                 $ionicSideMenuDelegate.canDragContent(true);
+                thermostatService.cancelWatching();
                 trvsInRoom.$destroy();
                 thermostats.$destroy();
                 $state.go('app.room', {
