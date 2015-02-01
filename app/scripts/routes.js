@@ -276,7 +276,8 @@ angular.module('cirqlApp')
         MANUAL: 'MANUAL',
         SCHEDULEMODE: 'SCHEDULE',
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway is only possible in schedule mode',
-        NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'No user bound to this room'
+        NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'No user bound to this room',
+        ME: 'me'
 
 
 
@@ -293,7 +294,7 @@ angular.module('cirqlApp')
         REMOVE: 'Entferne',
         REMOVE_FROM: 'Entferne aus',
         ADD_TO: 'Hinzufügen zu',
-        NO_THERMOSTATS: 'Es sind keine nicht-verbundene Thermostate verfügbar',
+        NO_THERMOSTATS: 'Es sind keine nicht verbundenen Thermostate verfügbar',
         ADD_THERMOSTAT: 'Thermostat hinzufügen',
         PAIR_THERMOSTAT: 'Neues Thermostat verbinden',
         AIR_QUALITY: 'Luftqualität',
@@ -348,7 +349,8 @@ angular.module('cirqlApp')
         MANUAL: 'MANUELL',
         SCHEDULEMODE: 'ZEITPLAN',
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway ist nur im Zeitplan-Modus möglich',
-        NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'Diesem Raum ist kein Nutzer zugeordnet'
+        NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'Diesem Raum ist kein Nutzer zugeordnet',
+        ME: 'Ich'
     });
 
     $translateProvider.preferredLanguage('de');

@@ -9,10 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate','$ionicSideMenuDelegate',
-    function($scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate) {
-
-        var room = $stateParams.roomId;
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate','$ionicSideMenuDelegate',
+    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate) {
 
         $ionicSideMenuDelegate.canDragContent(true);
 
@@ -28,15 +26,15 @@ angular.module('cirqlApp')
             language = 'en';
         }
 
-        if (user.uid && room) {
+        if (user.uid && $rootScope.room) {
       
             var homeUrl = 'homes/' + user.uid;
-            var roomUrl = homeUrl + '/rooms/' + room;
+            var roomUrl = homeUrl + '/rooms/' + $rootScope.room;
 
             $scope.roomValues = fbutil.syncObject(roomUrl);
         }
         else {
-            console.log('Failed to load user.uid '+user.uid+' or '+room);
+            console.log('Failed to load user.uid '+user.uid+' or '+$rootScope.room);
         }   
 
         
@@ -144,7 +142,6 @@ angular.module('cirqlApp')
             });
         };
 
-        $scope.roomId = room;
         $scope.user = user;
         $scope.logout = simpleLogin.logout;
         $scope.min = 5;
@@ -167,7 +164,7 @@ angular.module('cirqlApp')
         };
 
         $scope.isBoundResident = function(resident) {
-            return resident.rooms[room] && resident.allowsGeolocation;
+            return resident.rooms[$rootScope.room] && resident.allowsGeolocation;
         };
 
         $scope.toggleBoundResident = function(resident) {
@@ -177,7 +174,7 @@ angular.module('cirqlApp')
 
                 if (resident.rooms !== undefined) {
 
-                    if (!resident.allowsGeolocation && !resident.rooms[room]) {
+                    if (!resident.allowsGeolocation && !resident.rooms[$rootScope.room]) {
 
                         $ionicPopup.alert({
                             template: resident.name + ' {{"NO_GEO_ALERT" | translate}}'
@@ -185,10 +182,10 @@ angular.module('cirqlApp')
 
                     } else {
 
-                        if (resident.rooms[room] !== undefined) {
-                            resident.rooms[room] = !resident.rooms[room];
+                        if (resident.rooms[$rootScope.room] !== undefined) {
+                            resident.rooms[$rootScope.room] = !resident.rooms[$rootScope.room];
                         } else {
-                            resident.rooms[room] = true;
+                            resident.rooms[$rootScope.room] = true;
                         }
 
                     }
@@ -197,11 +194,11 @@ angular.module('cirqlApp')
                 } else {
                     if (resident.allowsGeolocation) {
                         resident.rooms = {};
-                        resident.rooms[room] = true;
+                        resident.rooms[$rootScope.room] = true;
                     }
                 }
                 $scope.residents.$save(resident);
-                $scope.roomValues.residents[resident.$id] = resident.rooms[room];
+                $scope.roomValues.residents[resident.$id] = resident.rooms[$rootScope.room];
                 $scope.roomValues.$save();
 
             }
@@ -211,7 +208,7 @@ angular.module('cirqlApp')
         $scope.save = function() {
             $scope.roomValues.$save().then(function() {
                 $state.go('app.room', {
-                    roomId: room
+                    roomId: $rootScope.room
                 });
             });
         };
@@ -243,7 +240,7 @@ angular.module('cirqlApp')
          */
         function deleteRoom() {
             //delete all room references in residents
-            var roomId = $scope.roomValues.$id;
+            var roomId = $rootScope.room;
             angular.forEach($scope.residents, function(resident) {
                 if (resident.rooms !== undefined && resident.rooms[roomId] !== undefined) {
                     resident.rooms[roomId] = null;
@@ -304,20 +301,20 @@ angular.module('cirqlApp')
             var date = new Date();
             obj.date = date.toString();
             obj.name = $scope.residents.$getRecord(user.residentId).name;
-            fbutil.ref(homeUrl + '/activity/' + room + '/raw').push(obj);
+            fbutil.ref(homeUrl + '/activity/' + $rootScope.room + '/raw').push(obj);
             console.log('Activity added:' + JSON.stringify(obj));
         };
 
-        $scope.goToRoom = function() {
+        $scope.goBack = function() {
             //$ionicSideMenuDelegate.canDragContent(true);
             $state.go('app.room', {
-                roomId: room
+                roomId: $rootScope.room
             });
         };
 
         $scope.goToActivity = function() {
             $state.go('app.activity', {
-                roomId: room
+                roomId: $rootScope.room
             });
         };
 

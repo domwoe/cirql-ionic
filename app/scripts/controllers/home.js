@@ -36,7 +36,7 @@ angular.module('cirqlApp')
             }
 
             $rootScope.$watch('splashTimeout', function(timeout) {
-                console.log('CANCEL SPLASH TIMEOUT');
+                //console.log('CANCEL SPLASH TIMEOUT');
                 $timeout.cancel(timeout);
             });
 
