@@ -14,7 +14,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                 console.log('TEST: homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
             }
         }
-        var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
+        var radius = [400, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
         var initStarted = false;
         var monitorStarted = false;
         var signStarted = false;

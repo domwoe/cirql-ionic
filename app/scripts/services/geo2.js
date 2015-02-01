@@ -12,7 +12,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
                 console.log('TEST2: homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
             }
         }
-        var radius = [250, 7500, 15000, 30000, 45000, 60000, 75000, 90000, 150000];
+        var radius = [250, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
         var initStarted = false;
         var monitorStarted = false;
         var receiveStarted = false;
@@ -95,7 +95,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
                                         transitionType: TransitionType.ENTER,
                                         notification: {
                                             id: i,
-                                            title: radius[i - 1]+"-enter",
+                                            title: radius[i - 1] + "-enter",
                                             text: regionsURL,
                                             openAppOnClick: false
                                         }
@@ -111,7 +111,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
                                         transitionType: TransitionType.EXIT,
                                         notification: {
                                             id: i,
-                                            title: radius[i - 1]+"-exit",
+                                            title: radius[i - 1] + "-exit",
                                             text: regionsURL,
                                             openAppOnClick: false
                                         }
