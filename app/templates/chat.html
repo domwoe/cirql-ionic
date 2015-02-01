@@ -1,10 +1,10 @@
 <ion-view class="messaging-view"  title="{{'CHAT' | translate}}">
   <ion-nav-buttons side="left">
-  <button class="button-clear" ui-sref="app.home">
+  <button class="button-clear" ng-click="goBack()">
     <i class="ion-chevron-left"></i> {{'HOME' | translate}}
   </button>
   </ion-nav-buttons>
-  <ion-content scroll="true">
+  <ion-content scroll="true" delegate-handle="chat">
   <div class="message" ng-repeat='message in messages' ng-class='{ other: message.residentId != residentId }'>
     <div class="avatar" ng-style='{ backgroundImage: "url(./images/avatar" + (residents.$getRecord(message.residentId).avatar || 0) + ".png)" }'>
       <div class="resident-name">{{residents.$getRecord(message.residentId).name}}</div>

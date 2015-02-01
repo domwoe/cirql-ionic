@@ -55,8 +55,6 @@ angular.module('cirqlApp', [
             $cordovaSplashscreen.hide();
         }, 1000);
 
-        $state.go('app.home');
-
         function showOffline() {
             console.log('Offline');
             $ionicLoading.show({

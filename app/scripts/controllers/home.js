@@ -19,28 +19,11 @@ angular.module('cirqlApp')
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
-            if (user) {
-                $scope.user = user;
-                // redirect to select resident if not set
-                if (!user.residentId) {
-                    $state.go('app.resident');
-                    console.log('go to resident');
-                } else {
-
-                }
-                // redirect to login if no user available
-            } else {
-                console.log('go to login');
-                $state.go('login');
-
-            }
 
             $rootScope.$watch('splashTimeout', function(timeout) {
                 console.log('CANCEL SPLASH TIMEOUT');
                 $timeout.cancel(timeout);
             });
-
-            
 
             $ionicLoading.hide();
 

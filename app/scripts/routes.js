@@ -9,11 +9,11 @@ angular.module('cirqlApp')
 
 .config(function($stateProvider, $urlRouterProvider, $translateProvider) {
     $stateProvider
-        .state('login', {
-            url: '/login',
-            templateUrl: 'templates/login.html',
-            controller: 'LoginCtrl'
-        })
+    .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+    })
 
     .state('create', {
         url: '/create',
@@ -58,6 +58,24 @@ angular.module('cirqlApp')
         controller: 'WizardCtrl'
     })
 
+    .state('resident', {
+        url: '/resident',
+        templateUrl: 'templates/resident.html',
+        controller: 'ResidentCtrl',
+        resolve: {
+            // controller will not be invoked until getCurrentUser resolves
+            'user': ['simpleLogin',
+                function(simpleLogin) {
+                    // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
+                    // since $getCurrentUser returns a promise resolved when auth is initialized,
+                    // we can simple return that here to ensure the controller waits for auth before
+                    // loading
+                    return simpleLogin.getUser();
+                }
+            ]
+        }
+    })
+
     .state('app', {
         url: '/app',
         abstract: true,
@@ -93,16 +111,6 @@ angular.module('cirqlApp')
             'menuContent': {
                 templateUrl: 'templates/home_settings.html',
                 controller: 'HomeCtrl'
-            }
-        }
-    })
-
-    .state('app.resident', {
-        url: '/resident',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/resident.html',
-                controller: 'ResidentCtrl'
             }
         }
     })
@@ -217,7 +225,7 @@ angular.module('cirqlApp')
         }
     });
     // if none of the above states are matched, use this as the fallback
-    //$urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise('/app/home');
 
     $translateProvider.translations('en', {
         ROOM: 'Room',

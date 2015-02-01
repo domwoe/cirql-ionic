@@ -52,8 +52,9 @@
         <div translate class="item nav-clear menu-toggle"  ng-if ="isHome()" ui-sref="app.home_settings">
           HOME_SETTINGS
         </div>
-        <div translate class="item nav-clear menu-toggle"  ng-if ="isHome()" ui-sref="app.chat">
-          CHAT
+        <div class="item nav-clear menu-toggle"  ng-if ="isHome()" ui-sref="app.chat">
+          <span translate>CHAT</span>
+          <span ng-if="messageCount.$value - messageRead.$value > 0" class="badge badge-assertive">{{messageCount.$value - messageRead.$value}}</span>
         </div>
         <div translate class="item nav-clear menu-toggle" ng-click="logout()">
           LOGOUT
