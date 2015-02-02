@@ -459,7 +459,7 @@ angular.module('cirqlApp')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
                                 .attr('r', this.radius)
-                                .attr('fill-opacity', 0);/*
+                                .attr('fill-opacity', 0);
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
                                         d3.event.sourceEvent.preventDefault();
@@ -516,7 +516,7 @@ angular.module('cirqlApp')
                                         self.deselectEntry();
                                         delete d.dragstart;
                                     })
-                                );*/
+                                );
                         };
 
                         this.renderTimeline = function() {
@@ -721,23 +721,11 @@ angular.module('cirqlApp')
                         this.attachListeners = function() {
                             console.log("Attaching listeners");
                             var self = this;
-                            var allDays = d3.selectAll('g.parent');/*
+                            var allDays = d3.selectAll('g.parent');
                             allDays.on('click', function() {
                                 console.log("CLICK CLICK");
-                                //d3.event.preventDefault();
-                                //d3.event.stopPropagation();
-                                if (self.entriesToCopy !== null && this !== self.selectedDay) {
-                                    self.copySchedule(self, this);
-                                    self.entriesToCopy = null;
-                                } else {
-                                    self.daySelector(this);
-                                    self.inDetailedView = true;
-                                }
-                            });*/
-
-                            var monday = d3.select('#monday');
-                            monday.on('click', function() {
-                                console.log("CLICK CLICK");
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
                                 if (self.entriesToCopy !== null && this !== self.selectedDay) {
                                     self.copySchedule(self, this);
                                     self.entriesToCopy = null;

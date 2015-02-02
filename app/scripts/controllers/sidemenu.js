@@ -68,10 +68,7 @@ angular.module('cirqlApp')
                 $state.go('login');
             }
 
-
             var boundResidents = null;
-
-
 
             $scope.showWhyAutoAwayIsDisabled = function() {
 
@@ -179,7 +176,6 @@ angular.module('cirqlApp')
                 }
             }
 
-
             $scope.changeAutoAway = function() {
 
                 // sync autoAway with firebase
@@ -194,7 +190,6 @@ angular.module('cirqlApp')
                 addRawActivity();
 
             };
-
 
             $scope.goToSchedule = function() {
                 if (window.screen.hasOwnProperty('lockOrientation')) {
