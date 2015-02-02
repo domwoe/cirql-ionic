@@ -19,10 +19,7 @@ angular.module('cirqlApp', [
         // for form inputs)
         // 
 
-
-        if (window.screen.hasOwnProperty('lockOrientation')) {
-            window.screen.lockOrientation('portrait');
-        }
+        window.screen.lockOrientation('portrait');
 
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);

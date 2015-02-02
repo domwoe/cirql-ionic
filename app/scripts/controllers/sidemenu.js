@@ -207,9 +207,7 @@ angular.module('cirqlApp')
 
 
             $scope.goToSchedule = function() {
-                if (window.screen.hasOwnProperty('lockOrientation')) {
-                    window.screen.lockOrientation('landscape');
-                }
+                window.screen.lockOrientation('landscape');
                 $state.go('app.schedule', {
                     roomId: $scope.room
                 });
