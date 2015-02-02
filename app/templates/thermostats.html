@@ -1,13 +1,13 @@
 <ion-view title="Thermostats">
 
     <ion-nav-buttons side="left">
-        <button class="button-clear" ng-click="goToRoom()">
+        <button class="button-clear" ng-click="goBack()">
             <i class="ion-chevron-left"></i>
             <span translate>BACK</span>
         </button>
     </ion-nav-buttons>
 
-    <ion-content class="has-header has-footer" scroll="true" overflow-scroll="false">
+    <ion-content class="has-header has-footer" scroll="true">
 
         <div class="list card opaque item-text-wrap" ng-repeat="thermostat in thermostats | filter:thermostatFilter">
             <div class="item">
@@ -108,17 +108,17 @@
 
         </div>
 
-        <div class="centerAll" ng-cloak>
-            <h2 translate ng-if="(thermostats | filter:thermostatFilter).length==0">NO_THERMOSTATS</h2>
+        <div class="centerAll" ng-if="(thermostats | filter:thermostatFilter).length==0" ng-cloak>
+            <h2 translate >NO_THERMOSTATS</h2>
             <!-- <h3 translate ng-if="(thermostats | filter:thermostatFilter).length==0">Maybe you want to pair a new one?</h3> -->
         </div>
 
     </ion-content>
     <ion-footer-bar class="bar-footer">
-        <button translate ng-hide="isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
+        <button translate ng-if="!isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
             ADD_THERMOSTAT
         </button>
-        <button translate ng-show="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+        <button translate ng-if="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
             PAIR_THERMOSTAT
         </button>
     </ion-footer-bar>

@@ -8,8 +8,10 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup',
-        function($scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup) {
+    .controller('ThermostatsCtrl', ['$rootScope', '$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup','$timeout',
+        function($rootScope, $scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup, $timeout) {
+
+            var pairingPopup;
 
             $scope.hasThermostat = true;
             $ionicLoading.show({
@@ -31,47 +33,47 @@ angular.module('cirqlApp')
 
             $ionicSideMenuDelegate.canDragContent(false);
 
-            var room;
-            var pairingPopup;
+            if (user.uid && $rootScope.room) {
 
-            if ($state.params.hasOwnProperty('roomId')) {
-                room = $state.params.roomId;
-                $scope.room = room;
+                $scope.roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + $rootScope.room);
+
+                var trvUrl = 'homes/' + user.uid + '/rooms/' + $rootScope.room + '/thermostats';
+
+                var trvsInRoom = fbutil.syncArray(trvUrl);
+
+                var thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
+
+
+
+                $scope.thermostats = thermostats;
+
+                trvsInRoom.$loaded(function(trvs) {
+
+                    if (trvs.length > 0) {
+
+                        $scope.hasThermostat = true;
+                        $scope.isAddView = false;
+                        $scope.thermostatFilter = {
+                            room: $rootScope.room
+                        };
+
+
+                    } else {
+                        $scope.hasThermostat = false;
+                        $scope.isAddView = true;
+                        $scope.thermostatFilter = {
+                            room: 'null'
+                        };
+                    }
+
+                    $timeout($ionicLoading.hide,200);
+
+
+                });
+
+            } else {
+                console.log('Failed to load user.uid ' + user.uid + ' or ' + $rootScope.room);
             }
-
-            $scope.roomObj = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room);
-
-            var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
-
-            var trvsInRoom = fbutil.syncArray(trvUrl);
-
-            var thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
-
-            $scope.thermostats = thermostats;
-
-            trvsInRoom.$loaded(function(trvs) {
-
-                if (trvs.length > 0) {
-
-                    $scope.hasThermostat = true;
-                    $scope.isAddView = false;
-                    $scope.thermostatFilter = {
-                        room: room
-                    };
-
-
-                } else {
-                    $scope.hasThermostat = false;
-                    $scope.isAddView = true;
-                    $scope.thermostatFilter = {
-                        room: 'null'
-                    };
-                }
-
-                $ionicLoading.hide();
-
-
-            });
 
 
 
@@ -100,7 +102,7 @@ angular.module('cirqlApp')
 
                         $scope.showPopup();
 
-                        $scope.gateway  = fbutil.syncObject('gateways/' + gatewayId.$value);
+                        $scope.gateway = fbutil.syncObject('gateways/' + gatewayId.$value);
 
                         fbutil.ref('gateways/' + gatewayId.$value + '/activatePairing').set(true);
 
@@ -115,13 +117,13 @@ angular.module('cirqlApp')
             $scope.addThermostat = function(thermostat) {
 
                 // Add room reference  to thermostat object
-                thermostat.room = room;
+                thermostat.room = $rootScope.room;
 
                 $scope.thermostats.$save(thermostat);
 
                 // Add thermostat reference to room object
 
-                fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/' + thermostat.$id).set(true);
+                fbutil.ref('homes/' + user.uid + '/rooms/' + $rootScope.room + '/thermostats/' + thermostat.$id).set(true);
 
             };
 
@@ -134,7 +136,7 @@ angular.module('cirqlApp')
 
                 // Delete thermostat reference from room object
 
-                fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/' + thermostat.$id).set(null);
+                fbutil.ref('homes/' + user.uid + '/rooms/' + $rootScope.room + '/thermostats/' + thermostat.$id).set(null);
 
             };
 
@@ -217,16 +219,15 @@ angular.module('cirqlApp')
             /**
              * Go back to room screen
              */
-            $scope.goToRoom = function() {
+            $scope.goBack = function() {
                 $ionicSideMenuDelegate.canDragContent(true);
                 $scope.roomObj.$destroy();
                 trvsInRoom.$destroy();
                 thermostats.$destroy();
                 $state.go('app.room', {
-                    roomId: room
+                    roomId: $rootScope.room
                 });
             };
-
 
         }
     ]);

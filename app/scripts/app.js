@@ -13,11 +13,16 @@ angular.module('cirqlApp', [
     'ngCordova'
 ])
 
-.run(function($ionicPlatform, $ionicLoading, $translate, $rootScope, $cordovaSplashscreen, $timeout) {
+.run(function($ionicPlatform, $ionicLoading, $translate, $rootScope, $cordovaSplashscreen, $timeout, $state) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         // 
+
+
+        if (window.screen.hasOwnProperty('lockOrientation')) {
+            window.screen.lockOrientation('portrait');
+        }
 
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -48,7 +53,9 @@ angular.module('cirqlApp', [
 
         $rootScope.splashTimeout = $timeout(function() {
             $cordovaSplashscreen.hide();
-        }, 700);
+        }, 1000);
+
+        $state.go('app.home');
 
         function showOffline() {
             console.log('Offline');

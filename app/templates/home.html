@@ -8,7 +8,9 @@
             <div class="residents away">
                 <div class="resident" ng-repeat="resident in residents | filter:{ isAway: true }">
                     <img class="avatar" ng-src="./images/avatar{{resident.avatar || '0'}}.png" />
-                    <div class="resident-name">{{resident.name}}</div>
+                    <div class="resident-name">
+                    <span>{{resident.name}}</span> 
+                    <span ng-if="resident.$id===user.residentId">(<span translate>ME</span>)</span></div>
                 </div>
             </div>
             <div class="circle">

@@ -29,7 +29,7 @@
         <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
         <div ng-cloak class="residents residents-select center">
           <div class="resident" ng-class="{unselected: !boundResidents[resident.$id]}" ng-repeat="resident in residents">
-            <img class="avatar" ng-click="toggleBoundResident(resident)" src="/images/avatar{{resident.avatar || '0'}}.png"/>
+            <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png"/>
             <br />
             {{resident.name}}
           </div>
@@ -41,7 +41,7 @@
         <!--</div>-->
         <!--</div>-->
         <button translate ng-click="createRoom(room.name, room.category, boundResidents)" class="button button-balanced button-block">ADD_ROOM</button>
-        <!--<button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>-->
+        <button ui-sref="app.home" class="button button-balanced button-block">Cancel</button>
       </div>
     </div>
   </ion-content>
