@@ -43,7 +43,15 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
         getUser: function() {
             // check for user object it local storage
             if ($localStorage.user) {
-                return $localStorage.user;
+                return auth.$authWithCustomToken($localStorage.user.token).then(function(login) {
+                    $localStorage.user.token = login.token;
+                    return $localStorage.user;
+                }).catch(function(error) {
+                    console.error('Authentication failed:', error);
+                    $localStorage.user = null;
+                    return null;
+                });
+
             } else {
                 // if invalide or none exists authenticate with firebase
                 return auth.$waitForAuth().then(function(login) {
