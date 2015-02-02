@@ -9,10 +9,16 @@
  */
 angular.module('cirqlApp')
     .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate) {
+        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'flurry',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, flurry) {
 
             $scope.finishedloading = false;
+
+            if ($rootScope.flurry === true) {
+                flurry.logPageView();
+            }
+            console.log('FLURRY: '+$rootScope.flurry);
+
 
             $ionicSideMenuDelegate.canDragContent(true);
 
@@ -27,6 +33,7 @@ angular.module('cirqlApp')
                     console.log('go to resident');
                 } else {
 
+
                 }
                 // redirect to login if no user available
             } else {
@@ -40,7 +47,21 @@ angular.module('cirqlApp')
                 $timeout.cancel(timeout);
             });
 
-            
+            if ($rootScope.flurry !== true) {
+                console.log('INIT FLURRY');
+                var options = {
+                    userId: user.residentId,
+                    enableLogging: true, // defaults to false
+                    enableEventLogging: true, // should every event show up the app's log, defaults to true
+                    enableCrashReporting: true, // should app crashes be recorded in flurry, defaults to false, iOS only
+                    enableBackgroundSessions: true, // should the session continue when the app is the background, defaults to false, iOS only
+                    reportSessionsOnClose: true, // should data be pushed to flurry when the app closes, defaults to true, iOS only
+                    reportSessionsOnPause: true // should data be pushed to flurry when the app is paused, defaults to true, iOS only
+                };
+                $rootScope.flurry = flurry.init(options);
+            }
+
+
 
             $ionicLoading.hide();
 
@@ -100,8 +121,7 @@ angular.module('cirqlApp')
 
                                 geo2.monitorRegion();
                             }
-                        }
-                        else {
+                        } else {
                             console.log('Othero OS: ' + deviceDetector.os);
                         }
 
