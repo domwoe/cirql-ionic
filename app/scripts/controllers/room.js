@@ -9,12 +9,27 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate','$ionicSideMenuDelegate',
-    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate) {
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'flurry', 'log',
+    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, flurry, log) {
 
         $ionicSideMenuDelegate.canDragContent(true);
 
-    
+        if ($rootScope.flurry === true) {
+            flurry.logPageView();
+            flurry.logEvent('enterView', {
+                view: 'room',
+                roomId: $rootScope.room
+            });
+        }
+
+        log.event({
+            user: user.uid,
+            resident: user.residentId,
+            type: 'view',
+            view: 'room',
+            room: $rootScope.room
+        });
+
         $scope.finishedloading = false;
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -27,17 +42,16 @@ angular.module('cirqlApp')
         }
 
         if (user.uid && $rootScope.room) {
-      
+
             var homeUrl = 'homes/' + user.uid;
             var roomUrl = homeUrl + '/rooms/' + $rootScope.room;
 
             $scope.roomValues = fbutil.syncObject(roomUrl);
+        } else {
+            console.log('Failed to load user.uid ' + user.uid + ' or ' + $rootScope.room);
         }
-        else {
-            console.log('Failed to load user.uid '+user.uid+' or '+$rootScope.room);
-        }   
 
-        
+
 
         $scope.nextTargetDate = function(dateString) {
             return new Date(dateString);

@@ -9,16 +9,21 @@
  */
 angular.module('cirqlApp')
     .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'flurry',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, flurry) {
+        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'flurry','log',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, flurry,log) {
 
             $scope.finishedloading = false;
 
             if ($rootScope.flurry === true) {
                 flurry.logPageView();
             }
-            console.log('FLURRY: '+$rootScope.flurry);
 
+            log.event({
+                user: user.uid,
+                resident: user.residentId,
+                type: 'view',
+                view: 'home'
+            });
 
             $ionicSideMenuDelegate.canDragContent(true);
 
@@ -58,7 +63,9 @@ angular.module('cirqlApp')
                     reportSessionsOnClose: true, // should data be pushed to flurry when the app closes, defaults to true, iOS only
                     reportSessionsOnPause: true // should data be pushed to flurry when the app is paused, defaults to true, iOS only
                 };
-                $rootScope.flurry = flurry.init(options);
+                flurry.init(options).then(function(hasStarted) {
+                    $rootScope.flurry = hasStarted;
+                });
             }
 
 
