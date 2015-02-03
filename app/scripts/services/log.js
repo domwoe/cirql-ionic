@@ -14,14 +14,14 @@ angular.module('cirqlApp')
 
                 event: function(event) {
 
-                    if (!event.user) {
+                    if (!event.homeid || event.homeid == undefined) {
                         console.log('LOG ERROR: user missing');
                     }
-                    else if (!event.resident) {
+                    else if (!event.residentid || event.residentid == undefined) {
                         console.log('LOG ERROR: resident missing');
                     }
                     else {
-                        fbutil.ref('homes/' + event.user + '/log').push(event);
+                        fbutil.ref('homes/' + event.homeid + '/log').push(event);
                     }
 
 

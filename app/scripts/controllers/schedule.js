@@ -14,11 +14,11 @@ angular.module('cirqlApp')
             $ionicSideMenuDelegate.canDragContent(false);
 
             log.event({
-                user: user.uid,
-                resident: user.residentId,
+                homeid: user.uid,
+                residentid: user.residentId,
                 type: 'view',
                 view: 'schedule',
-                room: $rootScope.room
+                roomid: $rootScope.room
             });
 
             $scope.dayview = false;
