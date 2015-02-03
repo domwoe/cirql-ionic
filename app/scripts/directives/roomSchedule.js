@@ -782,7 +782,7 @@ angular.module('cirqlApp')
                 },
                 replace: false,
                 template: '\
-                <ion-content scroll="false"> \
+                <ion-content scroll="false" data-tap-disabled="true"> \
                     <div class="schedule-block"> \
                         <svg id="room-schedule" width="100%" height="100%" viewBox="-3 -100 752 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
