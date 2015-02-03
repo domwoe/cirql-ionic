@@ -851,6 +851,8 @@ angular.module('cirqlApp')
                             var timeoutId;
 
                             allDays.on("mousedown", function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
                                 if (!self.inContextMenu) {
                                     self.contextMenuSwitch = true;
                                     console.log("MOUSE DOWN");
@@ -870,8 +872,9 @@ angular.module('cirqlApp')
                                     self.closeContextMenu();
                                 }
                             });
-
                             allDays.on('mouseup', function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
                                 if (!self.inContextMenu) {
                                     clearTimeout(timeoutId);
                                     console.log("MOUSEUP VALID: ", self.isClickValid);
