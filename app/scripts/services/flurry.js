@@ -7,8 +7,8 @@
  */
 
 angular.module('cirqlApp')
-    .factory('flurry', ['$q',
-        function($q) {
+    .factory('flurry', ['$q', 'deviceDetector',
+        function($q, deviceDetector) {
 
             var flurryAnalytics = null;
 
@@ -18,16 +18,31 @@ angular.module('cirqlApp')
                     var deferred = $q.defer();
                     if (window.FlurryAnalytics) {
                         console.log('Flurry constructor available');
-
+                        var key = null;
                         flurryAnalytics = new window.FlurryAnalytics();
 
-                        flurryAnalytics.init('ZQ8G944BMC99JZHF7DHR', options, function() {
-                            console.log('Flurry initialized');
-                            deferred.resolve(true);
-                        }, function(err) {
-                            console.error(['Flurry initialization error', err]);
-                            deferred.resolve(false);
-                        });
+                        if (deviceDetector.os === 'ios') {
+
+                            key = 'ZQ8G944BMC99JZHF7DHR';
+                        }
+                        else if (deviceDetector.os === 'android') {
+                            key = 'RXTY2NF2S7HDFFKVZBRH';
+                        }
+
+                        if (key !== null) {
+
+                            flurryAnalytics.init(key, options, function() {
+                                console.log('Flurry initialized');
+                                deferred.resolve(true);
+                            }, function(err) {
+                                console.error(['Flurry initialization error', err]);
+                                deferred.resolve(false);
+                            });
+                        }
+                        else {
+                            console.log('Flurry no API Key because OS: '+deviceDetector.os);
+                            deferred.reject();
+                        }    
                     } else {
                         console.log('Flurry constructor not available');
                         deferred.resolve(false);
