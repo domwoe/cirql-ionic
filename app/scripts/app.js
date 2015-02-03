@@ -19,7 +19,6 @@ angular.module('cirqlApp', [
         // for form inputs)
         // 
 
-
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
         }
@@ -32,14 +31,13 @@ angular.module('cirqlApp', [
             StatusBar.styleDefault();
         }
 
-
         if (window.plugins && window.plugins.DGGeofencing) {
             console.log('Radshag Geofencing plugin for IOS is available');
         }
 
-         if (window.geofence) {
+        if (window.geofence) {
             console.log('Cowbell Geofencing plugin for Android is available');
-         }
+        }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
@@ -82,15 +80,10 @@ angular.module('cirqlApp', [
             $ionicLoading.hide();
         }
 
-
         document.addEventListener('offline', showOffline, false);
         document.addEventListener('online', hideOffline, false);
 
         $ionicPlatform.on('offline', showOffline);
-
-
         $ionicPlatform.on('online', hideOffline);
-
-
     });
 });

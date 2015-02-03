@@ -38,6 +38,11 @@ angular.module('cirqlApp')
                         this.lockOnHorizontalDrag = false;
                         this.lockOnVerticalDrag = false;
                         this.changed = false;
+                        this.inDetailedView = false;
+                        this.isClickValid = true;
+                        this.inContextMenu = false;
+                        this.contextSelectedDay = null;
+                        this.contextMenuSwitch = false;
 
                         scope.sync = this.localSchedule;
 
@@ -401,7 +406,6 @@ angular.module('cirqlApp')
                         };
 
                         this.addEntry = function(dayGroup, id, xpos, ypos, target) {
-
                             var numTarget = parseFloat(target);
                             var dotTarget;
 
@@ -459,7 +463,7 @@ angular.module('cirqlApp')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
                                 .attr('r', this.radius)
-                                .attr('fill-opacity', 0)
+                                .attr('fill-opacity', 0);
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
                                         d3.event.sourceEvent.preventDefault();
@@ -467,36 +471,48 @@ angular.module('cirqlApp')
 
                                         var parentNode = d3.select(this).node().parentNode;
                                         var secondAncestor = d3.select(parentNode).node().parentNode;
-                                        self.daySelector(secondAncestor);
-                                        self.entrySelector(self, parentNode);
-                                        self.dragging = true;
 
-                                        var group = d3.select(parentNode);
-                                        var selection = group.select('circle');
+                                        if (self.inDetailedView) {
+                                            
+                                            self.daySelector(secondAncestor);
+                                            self.entrySelector(self, parentNode);
+                                            self.dragging = true;
 
-                                        var trX = d3.transform(group.attr("transform")).translate[0];
-                                        var trY = d3.transform(group.attr("transform")).translate[1];
+                                            var group = d3.select(parentNode);
+                                            var selection = group.select('circle');
 
-                                        d.dragstart = d3.mouse(this); // store this
+                                            var trX = d3.transform(group.attr("transform")).translate[0];
+                                            var trY = d3.transform(group.attr("transform")).translate[1];
 
-                                        var xpos = parseInt(selection.attr('cx')) + trX;
-                                        var ypos = parseInt(selection.attr('cy')) + trY;
+                                            d.dragstart = d3.mouse(this); // store this
 
-                                        var dayGroup = d3.select(secondAncestor);
-                                        dayGroup.insert('rect', 'g.entry')
-                                            .attr('id', 'vpath')
-                                            .attr('x', xpos - self.radius)
-                                            .attr('y', 0)
-                                            .attr('width', 2 * self.radius)
-                                            .attr('height', 7 * self.height)
-                                            .attr('fill-opacity', 0.5);
-                                        dayGroup.insert('rect', 'g.entry')
-                                            .attr('id', 'hpath')
-                                            .attr('x', 95)
-                                            .attr('y', ypos - self.radius)
-                                            .attr('width', 650)
-                                            .attr('height', 2 * self.radius)
-                                            .attr('fill-opacity', 0.5);
+                                            var xpos = parseInt(selection.attr('cx')) + trX;
+                                            var ypos = parseInt(selection.attr('cy')) + trY;
+
+                                            var dayGroup = d3.select(secondAncestor);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'vpath')
+                                                .attr('x', xpos - self.radius)
+                                                .attr('y', 0)
+                                                .attr('width', 2 * self.radius)
+                                                .attr('height', 7 * self.height)
+                                                .attr('fill-opacity', 0.5);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'hpath')
+                                                .attr('x', 95)
+                                                .attr('y', ypos - self.radius)
+                                                .attr('width', 650)
+                                                .attr('height', 2 * self.radius)
+                                                .attr('fill-opacity', 0.5);
+                                        } else {
+                                            if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
+                                                self.copySchedule(self, secondAncestor);
+                                                self.entriesToCopy = null;
+                                            } else {
+                                                self.daySelector(secondAncestor);
+                                                self.inDetailedView = true;
+                                            }
+                                        }
                                     })
                                     .on('drag', function(d) {
                                         if (self.dragging) {
@@ -606,6 +622,17 @@ angular.module('cirqlApp')
                             }
                         };
 
+                        this.clearDay = function(dayGroup) {
+                            var destDayEntries = dayGroup.selectAll('g.entry');
+                            destDayEntries.remove();
+                            if (destDayEntries[0]) {
+                                for (var i = 0; i < destDayEntries[0].length; i++) {
+                                    var idToDel = d3.select(destDayEntries[0][i]).attr('id');
+                                    delete this.localSchedule[idToDel];
+                                }
+                            }
+                        }
+
                         this.copySchedule = function(self, dest) {
                             var destDay = d3.select(dest);
 
@@ -710,23 +737,159 @@ angular.module('cirqlApp')
                             console.log('BACK TO WEEK');
                             self.syncFirebase();
                             console.log(self.changed);
+                            this.inDetailedView = false;
                             scope.reload({
                                 changedDay: self.changed
                             });
                         };
 
+                        this.getIndexForDay = function(day) {
+                            return this.weekDays.indexOf(d3.select(day).attr('id'));
+                        };
+
+                        this.closeContextMenu = function() {
+                            // Delete copy and clear buttons
+                            var group = d3.select('g.copy-paste');
+                            console.log(" TO REMVE: ", group);
+                            group.remove();
+                            // Remove day highlight
+                            d3.select(this.contextSelectedDay).selectAll('rect')
+                                .attr('fill-opacity', 0.6);
+                            this.contextSelectedDay = null;
+                            this.isClickValid = true;
+                            this.inContextMenu = false;
+                        };
+
+                        this.renderCopyPasteButtons = function(day) {
+                            var dayGroup = d3.select(day);
+                            dayGroup.moveToFront();
+
+                            var parentNode = d3.select(dayGroup.node().parentNode);
+                            var copyPasteButtons = parentNode.append('g')
+                                .attr('class', 'copy-paste');
+
+                            // Highlight the day
+                            dayGroup.selectAll('rect')
+                                .attr('fill-opacity', 1.0);
+
+                            var idx = this.getIndexForDay(day);
+                            if (idx === 0) {
+                                idx = 1;
+                            } else if (idx === 6) {
+                                idx = 5;
+                            } else {
+                                idx--;
+                            }
+
+                            var backRect = copyPasteButtons.append('rect') 
+                                .attr('x', 1)
+                                .attr('y', 1 + idx * 30)
+                                .attr('height', 28)
+                                .attr('width', 100)
+                                .attr('rx', 5)
+                                .attr('ry', 5)
+                                .attr('fill', '#483e37');
+
+                            // Copy day button
+                            var copyButton = copyPasteButtons.append('rect')
+                                .attr('x', 1)
+                                .attr('y', 1 + idx * 30)
+                                .attr('height', 28)
+                                .attr('width', 40)
+                                .attr('fill-opacity', 0);
+                            var copyText = copyPasteButtons.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 10)
+                                .attr('font-weight', 400)
+                                .attr('fill', '#FFFFFF');
+                            var copyTspan = copyText.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', 20)
+                                .attr('y', idx * 30 + 18)
+                                .text("Copy");
+
+                            // Draw separator
+                            var sep = copyPasteButtons.append('line')
+                                .style("stroke", "white")
+                                .style('stroke-opacity', 0.4)
+                                .attr("x1", 40)
+                                .attr('y1', 4 + idx * 30)
+                                .attr('x2', 40)
+                                .attr('y2', (idx + 1) * 30 - 4);
+
+                            var clearText = copyPasteButtons.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 10)
+                                .attr('font-weight', 400)
+                                .attr('fill', '#FFFFFF');
+                            var clearTspan = clearText.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', 70)
+                                .attr('y', idx * 30 + 18)
+                                .text("Clear day");
+                            // Clear day button
+                            var clearButton = copyPasteButtons.append('rect')
+                                .attr('x', 40)
+                                .attr('y', 1 + idx * 30)
+                                .attr('width', 60)
+                                .attr('height', 28)
+                                .attr('fill-opacity', 0);
+                            // Attach listener for click
+                            var self = this;
+                            clearButton.on('mousedown', function() {
+                                self.clearDay(dayGroup);
+                                self.closeContextMenu();
+                                console.log("CLICK ON CLEAR");
+                            });
+                        }
+
                         this.attachListeners = function() {
                             console.log("Attaching listeners");
                             var self = this;
                             var allDays = d3.selectAll('g.parent');
-                            allDays.on('click', function() {
-                                if (self.entriesToCopy !== null && this !== self.selectedDay) {
-                                    self.copySchedule(self, this);
-                                    self.entriesToCopy = null;
-                                } else {
-                                    self.daySelector(this);
-                                }
 
+                            var timeoutId;
+
+                            allDays.on("mousedown", function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
+                                if (!self.inContextMenu) {
+                                    self.contextMenuSwitch = true;
+                                    console.log("MOUSE DOWN");
+                                    var target = this;
+                                    var mouse = d3.mouse(target);
+
+                                    timeoutId = setTimeout(function() {
+                                        self.isClickValid = false;
+                                        self.inContextMenu = true;
+                                        self.contextSelectedDay = target;
+                                        console.log("TIMEOUT");
+                                        // Show copy and clear
+                                        self.renderCopyPasteButtons(target);
+                                    }, 300);
+                                } else {
+                                    console.log("CLOSE CONTEXT MENU");
+                                    self.closeContextMenu();
+                                }
+                            });
+                            allDays.on('mouseup', function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
+                                if (!self.inContextMenu) {
+                                    clearTimeout(timeoutId);
+                                    console.log("MOUSEUP VALID: ", self.isClickValid);
+                                    if (self.isClickValid && self.contextMenuSwitch) {
+                                        console.log("CLICK CLICK");
+                                        if (self.entriesToCopy !== null && this !== self.selectedDay) {
+                                        self.copySchedule(self, this);
+                                        self.entriesToCopy = null;
+                                        } else {
+                                            self.daySelector(this);
+                                            self.inDetailedView = true;
+                                        }
+                                    }
+                                }
+                                self.contextMenuSwitch = false;
                             });
 
                             var addButton = d3.select('#add');
