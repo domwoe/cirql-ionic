@@ -10,35 +10,54 @@ angular.module('cirqlApp')
     .factory('flurry', ['$q',
         function($q) {
 
-            var flurryAnalytics = null;
+            var f = null;
+
+            function s(method) {
+                console.log('FLURRY '+method+ 'successful!');
+            }
+
+            function e(err) {
+                console.log('FLURRY error: '+err);
+            }
 
             var flurry = {
 
-                init: function(options) {
+                init: function(userid) {
                     var deferred = $q.defer();
-                    if (window.FlurryAnalytics) {
+                    if (window.Flurry) {
                         console.log('Flurry constructor available');
 
-                        flurryAnalytics = new window.FlurryAnalytics();
+                        f = new window.FlurryAnalytics();
 
-                        flurryAnalytics.init('ZQ8G944BMC99JZHF7DHR', options, function() {
-                            console.log('Flurry initialized');
-                            deferred.resolve(true);
-                        }, function(err) {
-                            console.error(['Flurry initialization error', err]);
-                            deferred.resolve(false);
-                        });
-                    } else {
-                        console.log('Flurry constructor not available');
-                        deferred.resolve(false);
 
-                    }
 
-                    return deferred.promise;
+                        f.setUserID(userid,s,e);
+                        f.setAppVersion(1,s, e);
+                        f.setShowErrorInLogEnabled('Yes',s, e);
+                        f.setEventLoggingEnabled('Yes',s, e);
+                        f.setDebugLogEnabled('Yes',s, e);
+                        f.setSecureTransportEnabled('No',s, e);
+                        f.setSessionContinueSeconds(60,s, e);
+                        f.setCrashReportingEnabled('Yes',s, e);
+
+                        f.startSession('ZQ8G944BMC99JZHF7DHR',
+                            function(res) {
+                                s(res);
+                                deferred.resolve(true);
+                            },
+                            function(err) { 
+                                e(err);
+                                deferred.resolve(false);
+                            }
+                        );
+
+                        return deferred.promise;
+                    }    
+
                 },
 
                 logEvent: function(event, params) {
-                    flurryAnalytics.logEvent(event, params, function() {
+                    f.logEvent(event, params, function() {
                         console.log('Flurry logEvent successful!');
                     }, function(err) {
                         console.error(['Flurry logEvent error', err]);
@@ -46,7 +65,7 @@ angular.module('cirqlApp')
                 },
 
                 logError: function(error) {
-                    flurryAnalytics.logError('Error', error, function() {
+                    f.logError('Error', error, function() {
                         console.log('Flurry logError successful!');
                     }, function(err) {
                         console.error(['Flurry logError error', err]);
@@ -54,7 +73,7 @@ angular.module('cirqlApp')
                 },
 
                 logPageView: function() {
-                    flurryAnalytics.logPageView(function() {
+                    f.logPageView(function() {
                         console.log('Flurry logPageView successful!');
                     }, function(err) {
                         console.error(['Flurry logPageView error', err]);
