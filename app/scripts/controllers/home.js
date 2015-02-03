@@ -40,7 +40,7 @@ angular.module('cirqlApp')
                 $timeout.cancel(timeout);
             });
 
-            
+
 
             $ionicLoading.hide();
 
@@ -84,24 +84,25 @@ angular.module('cirqlApp')
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
                         //if (!$rootScope.isGeoStarted) {
                         if (deviceDetector.os === 'ios') {
-                            console.log('trigger geolocation service for iOS');
                             if (window.plugins && window.plugins.DGGeofencing) {
+                                console.log('trigger geolocation service for iOS');
 
                                 geo.init();
 
+                                //geo.removeRegion();
                                 geo.monitorRegion();
 
-                                geo.startMonitoringSignificantLocationChanges();
+                                //geo.startMonitoringSignificantLocationChanges();
                             }
                         } else if (deviceDetector.os === 'android') {
-                            console.log('trigger geolocation service for Android');
                             if (window.geofence) {
+                                console.log('trigger geolocation service for Android');
+
                                 geo2.init();
 
                                 geo2.monitorRegion();
                             }
-                        }
-                        else {
+                        } else {
                             console.log('Othero OS: ' + deviceDetector.os);
                         }
 

@@ -3,15 +3,9 @@
 angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil',
     function($q, $log, simpleLogin, fbutil) {
 
-        var user = simpleLogin.getUser();
-        var fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
+        var user = null;
+        var fbHome = null;
         var fbRegions = null;
-        if (user.uid !== null && user.uid !== undefined) {
-            if (user.residentId !== null && user.residentId !== undefined) {
-                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
-                console.log('TEST2: homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
-            }
-        }
         var radius = [250, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
         var initStarted = false;
         var monitorStarted = false;
@@ -73,8 +67,20 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
             monitorRegion: function() {
                 var deferred = $q.defer();
                 if (monitorStarted === false) {
-                    if (fbRegions) {
-                        monitorStarted = true;
+                    if (fbRegions === null) {
+                        user = simpleLogin.getUserObject();
+                        console.log('User: ' + JSON.stringify(user));
+                        if (user.uid !== null && user.uid !== undefined) {
+                            console.log('residentid: ' + user.residentId);
+                            if (user.residentId !== null && user.residentId !== undefined) {
+                                fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
+                                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
+                                console.log('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+                            }
+                        }
+                    }
+                    if (fbRegions !== ) {
+
                         fbHome.$loaded(function(data) {
                             var regionsURL = 'homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions';
                             if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
@@ -84,6 +90,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
 
                                 console.log('Regions will be set now: ');
                                 var geofences = [];
+                                monitorStarted = true;
                                 for (var i = 1; i <= radius.length; i++) {
 
                                     var enterId = i + "-enter";

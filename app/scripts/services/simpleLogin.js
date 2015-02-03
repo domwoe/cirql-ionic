@@ -55,10 +55,15 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
             } else {
                 // if invalide or none exists authenticate with firebase
                 return auth.$waitForAuth().then(function(login) {
+
                     $localStorage.user = login;
                     return login;
                 });
             }
+        },
+
+        getUserObject: function() {
+            return $localStorage.user;
         },
 
         login: function(email, pass) {

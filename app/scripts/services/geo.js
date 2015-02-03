@@ -4,19 +4,13 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
     function($q, $log, simpleLogin, fbutil) {
 
         var user = simpleLogin.getUser();
-        var fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
+        var fbHome = null;
         var fbLocation = null;
         var fbRegions = null;
-        if (user.uid !== null && user.uid !== undefined) {
-            if (user.residentId !== null && user.residentId !== undefined) {
-                fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
-                console.log('TEST: homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-            }
-        }
         var radius = [400, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
         var initStarted = false;
         var monitorStarted = false;
+        var removeStarted = false;
         var signStarted = false;
 
         var service = {
@@ -130,22 +124,39 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                         });
 
-                    console.log('Geo: return promise');
+                    console.log('Geo:  callback return promise');
                 }
                 return deferred.promise;
             },
 
             monitorRegion: function(params) {
                 var deferred = $q.defer();
+                console.log('Monitor regions entered 1');
                 if (monitorStarted === false) {
-                    if (fbRegions) {
-                        monitorStarted = true;
+                    console.log('Monitor regions entered 2');
+                    if (fbRegions === null) {
+                        user = simpleLogin.getUserObject();
+                        console.log('User: ' + JSON.stringify(user));
+                        if (user.uid !== null && user.uid !== undefined) {
+                            console.log('residentid: ' + user.residentId);
+                            if (user.residentId !== null && user.residentId !== undefined) {
+                                fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
+                                fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+                                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
+                                console.log('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+                            }
+                        }
+                    }
+                    if (fbRegions !== null) {
+                        console.log('Monitor regions finally entered');
+
                         fbHome.$loaded(function(data) {
 
                             if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
                                 var lat = data.lat + '';
                                 var lng = data.lng + '';
                                 console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
+                                monitorStarted = true;
 
                                 console.log('Regions will be set now: ');
                                 for (var i = 1; i <= radius.length; i++) {
@@ -159,7 +170,6 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                         },
                                         function(error) {
                                             console.log('Monitor-Geo: error with ' + params);
-                                            monitorStarted = false;
                                             deferred.reject(error);
                                         });
                                 }
@@ -171,7 +181,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                             }
 
                         });
-                        console.log('Geo: return promise');
+                        console.log('Geo: monitorregion return promise');
                     }
                 }
                 return deferred.promise;
@@ -181,20 +191,42 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
             removeRegion: function(params) {
                 var deferred = $q.defer();
 
-                window.plugins.DGGeofencing.stopMonitoringRegion(params,
-                    function(result) {
-                        console.log('Geo: removed Location ' + params);
-                        deferred.resolve(result);
-                    },
-                    function(error) {
-                        console.log('Geo: error');
-                        deferred.reject(error);
+                // if (removeStarted === false) {
+                //     if (fbRegions) {
+                //         fbHome.$loaded(function(data) {
 
-                    });
+                //             if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
+                //                 var lat = data.lat + '';
+                //                 var lng = data.lng + '';
+                //                 console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
+                //                 removeStarted = true;
 
-                console.log('Geo: return promise');
+                //                 console.log('Regions will be set now: ');
+                //                 for (var i = 1; i <= radius.length; i++) {
+
+                //                     var params = ['' + i, lat, lng, radius[i - 1]];
+
+                //                     window.plugins.DGGeofencing.stopMonitoringRegion(params,
+                //                         function(result) {
+                //                             console.log('Geo: removed new region ' + params);
+                //                             deferred.resolve(result);
+                //                         },
+                //                         function(error) {
+                //                             console.log('Remove-Geo: error with ' + params);
+                //                             deferred.reject(error);
+                //                         });
+                //                 }
+
+                //             } else {
+                //                 console.log('RemoveOperation: HomeRegion could not be set');
+                //                 console.log('RemoveOperation: Regions could not be set');
+                //             }
+
+                //         });
+                //         console.log('Geo: removeregion return promise');
+                //     }
+                // }
                 return deferred.promise;
-
 
             },
 
@@ -202,9 +234,10 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                 var deferred = $q.defer();
                 if (!signStarted) {
                     if (fbLocation === null) {
-                        user = simpleLogin.getUser();
+                         user = simpleLogin.getUserObject();
                         if (user.uid !== null && user.uid !== undefined) {
                             if (user.residentId !== null && user.residentId !== undefined) {
+                                fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
                                 fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
                                 fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
                                 console.log('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
