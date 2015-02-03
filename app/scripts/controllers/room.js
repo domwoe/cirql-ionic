@@ -23,11 +23,11 @@ angular.module('cirqlApp')
         }
 
         log.event({
-            user: user.uid,
-            resident: user.residentId,
+            homeid: user.uid,
+            residentid: user.residentId,
             type: 'view',
             view: 'room',
-            room: $rootScope.room
+            roomid: $rootScope.room
         });
 
         $scope.finishedloading = false;

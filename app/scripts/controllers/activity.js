@@ -7,11 +7,11 @@ angular.module('cirqlApp')
             var language = $translate.use();
 
             log.event({
-                user: user.uid,
-                resident: user.residentId,
+                homeid: user.uid,
+                residentid: user.residentId,
                 type: 'view',
                 view: 'activity',
-                room: $rootScope.room
+                roomid: $rootScope.room
             });
 
             // Get roomId
