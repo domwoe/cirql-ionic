@@ -31,7 +31,7 @@ angular.module('cirqlApp')
         });
 
         $scope.finishedloading = false;
-        if (window.screen.hasOwnProperty('lockOrientation')) {
+        if (window.screen && window.screen.lockOrientation) {
             window.screen.lockOrientation('portrait');
         }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', 
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
         function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
@@ -44,16 +44,13 @@ angular.module('cirqlApp')
 
 
                         }
-                    }    
+                    }
                 });
             } else {
                 $state.go('login');
             }
 
-
             var boundResidents = null;
-
-
 
             $scope.showWhyAutoAwayIsDisabled = function() {
 
@@ -161,7 +158,6 @@ angular.module('cirqlApp')
                 }
             }
 
-
             $scope.changeAutoAway = function() {
 
                 // sync autoAway with firebase
@@ -177,9 +173,8 @@ angular.module('cirqlApp')
 
             };
 
-
             $scope.goToSchedule = function() {
-                if (window.screen.hasOwnProperty('lockOrientation')) {
+                if (window.screen && window.screen.lockOrientation) {
                     window.screen.lockOrientation('landscape');
                 }
                 $state.go('app.schedule', {

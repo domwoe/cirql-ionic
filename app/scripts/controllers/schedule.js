@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate','log',
-        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate,log) {
+    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate', 'log',
+        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate, log) {
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -58,9 +58,10 @@ angular.module('cirqlApp')
 
                 }
 
-                if (window.screen.hasOwnProperty('lockOrientation')) {
+                if (window.screen && window.screen.lockOrientation) {
                     window.screen.lockOrientation('portrait');
                 }
+
                 $ionicSideMenuDelegate.canDragContent(true);
                 $state.go('app.room', {
                     roomId: room
