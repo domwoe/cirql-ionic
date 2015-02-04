@@ -412,14 +412,14 @@ input:-ms-input-placeholder {
 // Schedule View
 // -------------------------------
 .schedule-block {
-    min-height:100%;
+    height: 100%;
     width: 100%;
     overflow: visible;
 }
 
 .schedule-header {
-  height: 44px;
-  background-color: #483e37;
+  background-color: #483e37 !important;
+  opacity: 1 !important;
 }
 
 

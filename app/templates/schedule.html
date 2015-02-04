@@ -1,8 +1,9 @@
-<ion-view hide-nav-bar="true">
-<ion-content scroll="false" data-tap-disabled="true">
-<div class="schedule-header">
-</div>
-                    <div class="schedule-block">
+<ion-view "class=schedule-header" title="{{'SCHEDULE' | translate}}">
+	<ion-nav-buttons side="left">
+        <button id="save" class="button-clear">
+            <i class="ion-chevron-left"></i> <span translate>BACK</span>
+        </button>
+    </ion-nav-buttons>
 	<room-schedule roomid="roomId" sync="obj" schedule="schedule" radius="radius" goback="goback(room,changedDay)" 			reload="reload(changedDay)" dayview="dayview">
 	</room-schedule>
 </ion-view>
