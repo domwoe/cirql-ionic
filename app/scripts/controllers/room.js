@@ -13,7 +13,6 @@ angular.module('cirqlApp')
     function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate) {
 
         $ionicSideMenuDelegate.canDragContent(true);
-
     
         $scope.finishedloading = false;
     //    if (window.screen.hasOwnProperty('lockOrientation')) {

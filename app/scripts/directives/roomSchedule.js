@@ -327,9 +327,9 @@ angular.module('cirqlApp')
                                 .attr('fill', 'red')
                                 .attr('stroke', '#FFFFFF')
                                 .attr('stroke-width', 2)
-                                .attr('r', this.radius*1.3)
+                                .attr('r', this.radius*1.7)
                                 .attr('cx', selection.attr('cx'))
-                                .attr('cy', selection.attr('cy') - 2.5*this.radius);
+                                .attr('cy', selection.attr('cy') - 4.0*this.radius);
 
                             var xpos = label_back.attr('cx');
                             var ypos = label_back.attr('cy');
@@ -462,17 +462,20 @@ angular.module('cirqlApp')
                             var back = entryGroup.append('circle')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
-                                .attr('r', this.radius)
+                                .attr('r', 2.0*this.radius)
                                 .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
+                                        console.log("DRAG START");
                                         d3.event.sourceEvent.preventDefault();
                                         d3.event.sourceEvent.stopPropagation();
 
-                                        var parentNode = d3.select(this).node().parentNode;
+                                        var selectedNode = d3.select(this);
+                                        var parentNode = selectedNode.node().parentNode;
                                         var secondAncestor = d3.select(parentNode).node().parentNode;
-
-                                        if (self.inDetailedView) {
+                                        console.log("Selected: ", selectedNode);
+                                        console.log("ENTRY: ", self.selectedEntry);
+                                        if (self.inDetailedView && selectedNode !== self.selectedEntry) {
                                             
                                             self.daySelector(secondAncestor);
                                             self.entrySelector(self, parentNode);
@@ -505,13 +508,13 @@ angular.module('cirqlApp')
                                                 .attr('height', 2 * self.radius)
                                                 .attr('fill-opacity', 0.5);
                                         } else {
-                                            if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
+                                         /*   if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
                                                 self.copySchedule(self, secondAncestor);
                                                 self.entriesToCopy = null;
-                                            } else {
+                                            } else {*/
                                                 self.daySelector(secondAncestor);
                                                 self.inDetailedView = true;
-                                            }
+//                                            }
                                         }
                                     })
                                     .on('drag', function(d) {
@@ -520,6 +523,7 @@ angular.module('cirqlApp')
                                         }
                                     })
                                     .on('dragend', function(d) {
+                                        console.log("DRAGEND");
                                         self.dragging = false;
                                         self.lockOnVerticalDrag = false;
                                         self.lockOnHorizontalDrag = false;
@@ -758,6 +762,7 @@ angular.module('cirqlApp')
                             this.contextSelectedDay = null;
                             this.isClickValid = true;
                             this.inContextMenu = false;
+                            this.contextMenuSwitch = false;
                         };
 
                         this.renderCopyPasteButtons = function(day) {
@@ -837,6 +842,8 @@ angular.module('cirqlApp')
                             // Attach listener for click
                             var self = this;
                             clearButton.on('mousedown', function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
                                 self.clearDay(dayGroup);
                                 self.closeContextMenu();
                                 console.log("CLICK ON CLEAR");
@@ -852,8 +859,8 @@ angular.module('cirqlApp')
 
                             allDays.on("mousedown", function() {
                                 d3.event.preventDefault();
-                                d3.event.stopPropagation();
-                                if (!self.inContextMenu) {
+                                //d3.event.stopPropagation();
+                                if (!self.inContextMenu && !self.inDetailedView) {
                                     self.contextMenuSwitch = true;
                                     console.log("MOUSE DOWN");
                                     var target = this;
@@ -874,11 +881,11 @@ angular.module('cirqlApp')
                             });
                             allDays.on('mouseup', function() {
                                 d3.event.preventDefault();
-                                d3.event.stopPropagation();
-                                if (!self.inContextMenu) {
+                                //d3.event.stopPropagation();
+                                if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                     clearTimeout(timeoutId);
                                     console.log("MOUSEUP VALID: ", self.isClickValid);
-                                    if (self.isClickValid && self.contextMenuSwitch) {
+                                    if (self.isClickValid) {
                                         console.log("CLICK CLICK");
                                         if (self.entriesToCopy !== null && this !== self.selectedDay) {
                                         self.copySchedule(self, this);
@@ -889,7 +896,7 @@ angular.module('cirqlApp')
                                         }
                                     }
                                 }
-                                self.contextMenuSwitch = false;
+                                self.contextMenuSwitch = true;
                             });
 
                             var addButton = d3.select('#add');
