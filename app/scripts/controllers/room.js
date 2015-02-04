@@ -15,9 +15,9 @@ angular.module('cirqlApp')
         $ionicSideMenuDelegate.canDragContent(true);
     
         $scope.finishedloading = false;
-    //    if (window.screen.hasOwnProperty('lockOrientation')) {
+        if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
-      //  }
+        }
 
         var translate = $filter('translate');
         var language = $translate.use();
