@@ -320,39 +320,37 @@ angular.module('cirqlApp')
 
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
-                           // if (group !== this.selectedEntry) {
-                                var selection = group.select('circle');
+                            var selection = group.select('circle');
 
-                                var label_back = group.append('circle')
-                                    .attr('class', 'label_back')
-                                    .attr('fill', 'red')
-                                    .attr('stroke', '#FFFFFF')
-                                    .attr('stroke-width', 2)
-                                    .attr('r', this.radius*1.3)
-                                    .attr('cx', selection.attr('cx'))
-                                    .attr('cy', selection.attr('cy') - 2.5*this.radius);
+                            var label_back = group.append('circle')
+                                .attr('class', 'label_back')
+                                .attr('fill', 'red')
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 2)
+                                .attr('r', this.radius*1.7)
+                                .attr('cx', selection.attr('cx'))
+                                .attr('cy', selection.attr('cy') - 4.0*this.radius);
 
-                                var xpos = label_back.attr('cx');
-                                var ypos = label_back.attr('cy');
+                            var xpos = label_back.attr('cx');
+                            var ypos = label_back.attr('cy');
 
-                                var text = group.append('text')
-                                    .attr('class', 'label')
-                                    .attr('font-family', 'Helvetica Neue')
-                                    .attr('font-size', 14)
-                                    .attr('font-weight', 600)
-                                    .attr('fill', '#FFFFFF');
+                            var text = group.append('text')
+                                .attr('class', 'label')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 14)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#FFFFFF');
 
-                                var tspan = text.append('tspan')
-                                    .attr('text-anchor', 'middle')
-                                    .attr('x', xpos)
-                                    .attr('y', parseInt(ypos) + this.radius/2 - 2);
+                            var tspan = text.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', xpos)
+                                .attr('y', parseInt(ypos) + this.radius/2 - 2);
 
-                                // Hide the time and temperature
-                                group.select('g.time').attr('visibility', 'hidden');
-                                group.select('g.temp').attr('visibility', 'hidden');
+                            // Hide the time and temperature
+                            group.select('g.time').attr('visibility', 'hidden');
+                            group.select('g.temp').attr('visibility', 'hidden');
 
-                                this.selectedEntry = group;
-                           // }
+                            this.selectedEntry = group;
                         };
 
                         // true for increase, false for decrease
@@ -464,7 +462,7 @@ angular.module('cirqlApp')
                             var back = entryGroup.append('circle')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
-                                .attr('r', this.radius)
+                                .attr('r', 2.0*this.radius)
                                 .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
