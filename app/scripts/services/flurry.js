@@ -7,49 +7,47 @@
  */
 
 angular.module('cirqlApp')
-    .factory('flurry', ['$q',
-        function($q) {
+    .factory('flurry', ['$q', 'deviceDetector',
+        function($q, deviceDetector) {
 
-            var f = null;
-
-            function s(method) {
-                console.log('FLURRY '+method+ 'successful!');
-            }
-
-            function e(err) {
-                console.log('FLURRY error: '+err);
-            }
+            var flurryAnalytics = null;
 
             var flurry = {
 
-                init: function(userid) {
+                init: function(options) {
                     var deferred = $q.defer();
                     if (window.Flurry) {
                         console.log('Flurry constructor available');
 
-                        f = new window.FlurryAnalytics();
+                        var key = null;
+                        flurryAnalytics = new window.FlurryAnalytics();
 
+                        if (deviceDetector.os === 'ios') {
 
+                            key = 'ZQ8G944BMC99JZHF7DHR';
+                        }
+                        else if (deviceDetector.os === 'android') {
+                            key = 'RXTY2NF2S7HDFFKVZBRH';
+                        }
 
-                        f.setUserID(userid,s,e);
-                        f.setAppVersion(1,s, e);
-                        f.setShowErrorInLogEnabled('Yes',s, e);
-                        f.setEventLoggingEnabled('Yes',s, e);
-                        f.setDebugLogEnabled('Yes',s, e);
-                        f.setSecureTransportEnabled('No',s, e);
-                        f.setSessionContinueSeconds(60,s, e);
-                        f.setCrashReportingEnabled('Yes',s, e);
+                        if (key !== null) {
 
-                        f.startSession('ZQ8G944BMC99JZHF7DHR',
-                            function(res) {
-                                s(res);
+                            flurryAnalytics.init(key, options, function() {
+                                console.log('Flurry initialized');
                                 deferred.resolve(true);
-                            },
-                            function(err) { 
-                                e(err);
+                            }, function(err) {
+                                console.error(['Flurry initialization error', err]);
                                 deferred.resolve(false);
-                            }
-                        );
+                            });
+                        }
+                        else {
+                            console.log('Flurry no API Key because OS: '+deviceDetector.os);
+                            deferred.reject();
+                        }    
+                    } else {
+                        console.log('Flurry constructor not available');
+                        deferred.resolve(false);
+
 
                         return deferred.promise;
                     }    
@@ -57,7 +55,7 @@ angular.module('cirqlApp')
                 },
 
                 logEvent: function(event, params) {
-                    f.logEvent(event, params, function() {
+                    flurryAnalytics.logEvent(event, params, function() {
                         console.log('Flurry logEvent successful!');
                     }, function(err) {
                         console.error(['Flurry logEvent error', err]);
@@ -65,7 +63,7 @@ angular.module('cirqlApp')
                 },
 
                 logError: function(error) {
-                    f.logError('Error', error, function() {
+                    flurryAnalytics.logError('Error', error, function() {
                         console.log('Flurry logError successful!');
                     }, function(err) {
                         console.error(['Flurry logError error', err]);
@@ -73,7 +71,7 @@ angular.module('cirqlApp')
                 },
 
                 logPageView: function() {
-                    f.logPageView(function() {
+                    flurryAnalytics.logPageView(function() {
                         console.log('Flurry logPageView successful!');
                     }, function(err) {
                         console.error(['Flurry logPageView error', err]);

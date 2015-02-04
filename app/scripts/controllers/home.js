@@ -16,6 +16,9 @@ angular.module('cirqlApp')
 
             if ($rootScope.flurry === true) {
                 flurry.logPageView();
+                flurry.logEvent('view', {
+                    view: 'home'
+                });
             }
 
             log.event({
