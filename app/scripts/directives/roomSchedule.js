@@ -954,10 +954,7 @@
 
                     },
                     replace: false,
-                    template: '\
-                <ion-content class="has-header" overflow="visible" scroll="false" data-tap-disabled="true">\
-        <div class="schedule-block">\
-        <svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
+                    template: '<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
                                     <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
@@ -1010,9 +1007,7 @@
                                 </g> \
                                 <rect fill="#483e37" width="95" height="20" x="0" y="210" /> \
                             </g> \
-                        </svg> \
-                        </div> \
-                </ion-content>'
+                        </svg>'
                 };
             }
         ]);
