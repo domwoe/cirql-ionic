@@ -674,9 +674,11 @@ angular.module('cirqlApp')
                             destDay.moveToFront();
                         };
 
-                        this.copyScheduleCallback = function(self) {
-                            if (self.selectedDay !== null) {
-                                self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
+                        this.copyScheduleCallback = function() {
+                            console.log("THIS: ", this.selectedDay);
+                            if (this.selectedDay !== null) {
+                                console.log("COPY CALLED");
+                                this.entriesToCopy = d3.select(this.selectedDay).selectAll('g.entry');
                             }
                         };
 
@@ -763,6 +765,7 @@ angular.module('cirqlApp')
                             this.isClickValid = true;
                             this.inContextMenu = false;
                             this.contextMenuSwitch = false;
+                            this.selectedDay = null;
                         };
 
                         this.renderCopyPasteButtons = function(day) {
@@ -795,13 +798,6 @@ angular.module('cirqlApp')
                                 .attr('ry', 5)
                                 .attr('fill', '#483e37');
 
-                            // Copy day button
-                            var copyButton = copyPasteButtons.append('rect')
-                                .attr('x', 1)
-                                .attr('y', 1 + idx * 30)
-                                .attr('height', 28)
-                                .attr('width', 40)
-                                .attr('fill-opacity', 0);
                             var copyText = copyPasteButtons.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 10)
@@ -812,6 +808,20 @@ angular.module('cirqlApp')
                                 .attr('x', 20)
                                 .attr('y', idx * 30 + 18)
                                 .text("Copy");
+                            // Copy day button
+                            var copyButton = copyPasteButtons.append('rect')
+                                .attr('x', 1)
+                                .attr('y', 1 + idx * 30)
+                                .attr('height', 28)
+                                .attr('width', 40)
+                                .attr('fill-opacity', 0);
+                            copyButton.on('mousedown', function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
+                                self.copyScheduleCallback();
+                                console.log("To COPY: ", self.entriesToCopy);
+                                self.closeContextMenu();
+                            });
 
                             // Draw separator
                             var sep = copyPasteButtons.append('line')
@@ -869,6 +879,7 @@ angular.module('cirqlApp')
                                     timeoutId = setTimeout(function() {
                                         self.isClickValid = false;
                                         self.inContextMenu = true;
+                                        self.selectedDay = target;
                                         self.contextSelectedDay = target;
                                         console.log("TIMEOUT");
                                         // Show copy and clear
