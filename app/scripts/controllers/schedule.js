@@ -8,10 +8,18 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate) {
+    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate','log',
+        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate,log) {
 
             $ionicSideMenuDelegate.canDragContent(false);
+
+            log.event({
+                homeid: user.uid,
+                residentid: user.residentId,
+                type: 'view',
+                view: 'schedule',
+                roomid: $rootScope.room
+            });
 
             $scope.dayview = false;
 
@@ -26,7 +34,7 @@ angular.module('cirqlApp')
             scheduleObj.$loaded().then(function(schedule) {
                 $scope.schedule = schedule;
             });
-            $scope.roomId = $rootScope.room
+            $scope.roomId = $rootScope.room;
             $scope.radius = 14;
 
             function addRawActivity(obj) {

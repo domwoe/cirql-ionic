@@ -58,6 +58,8 @@
     "https://github.com/radshag/PhoneGap-Geofencing.git",
     "org.apache.cordova.network-information",
     "org.apache.cordova.splashscreen",
-    "https://github.com/cowbell/cordova-plugin-geofence"
+    "https://github.com/cowbell/cordova-plugin-geofence",
+    "https://github.com/blakgeek/cordova-plugin-flurryanalytics",
+    "https://github.com/jfpsf/flurry-phonegap-plugin.git"
   ]
 }

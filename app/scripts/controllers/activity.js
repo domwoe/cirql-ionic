@@ -1,10 +1,18 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('ActivityCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate',
-        function($rootScope, $scope, user, fbutil, $state, $ionicLoading, $translate) {
+    .controller('ActivityCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate','log',
+        function($rootScope, $scope, user, fbutil, $state, $ionicLoading, $translate, log) {
 
             var language = $translate.use();
+
+            log.event({
+                homeid: user.uid,
+                residentid: user.residentId,
+                type: 'view',
+                view: 'activity',
+                roomid: $rootScope.room
+            });
 
             // Get roomId
             // if ($state.params.hasOwnProperty('roomId')) {
