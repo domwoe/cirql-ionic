@@ -3,7 +3,7 @@
 angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil',
     function($q, $log, simpleLogin, fbutil) {
 
-        var user = simpleLogin.getUser();
+        var user = null;
         var fbHome = null;
         var fbLocation = null;
         var fbRegions = null;
@@ -131,9 +131,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
             monitorRegion: function(params) {
                 var deferred = $q.defer();
-                console.log('Monitor regions entered 1');
                 if (monitorStarted === false) {
-                    console.log('Monitor regions entered 2');
                     if (fbRegions === null) {
                         user = simpleLogin.getUserObject();
                         console.log('User: ' + JSON.stringify(user));
@@ -148,7 +146,6 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                         }
                     }
                     if (fbRegions !== null) {
-                        console.log('Monitor regions finally entered');
 
                         fbHome.$loaded(function(data) {
 
@@ -234,7 +231,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                 var deferred = $q.defer();
                 if (!signStarted) {
                     if (fbLocation === null) {
-                         user = simpleLogin.getUserObject();
+                        user = simpleLogin.getUserObject();
                         if (user.uid !== null && user.uid !== undefined) {
                             if (user.residentId !== null && user.residentId !== undefined) {
                                 fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
@@ -267,19 +264,23 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
             stopMonitoringSignificantLocationChanges: function() {
                 var deferred = $q.defer();
-                window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
-                    function(result) {
-                        console.log('Geo: start monitoring significant location changes');
-                        deferred.resolve(result);
-                    },
-                    function(error) {
-                        console.log(' Geo: error');
-                        signStarted = false;
-                        deferred.reject(error);
+                if (fbLocation !== null) {
+                    console.log('Stop significant geo');
+                    signStarted = false;
+                    window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
+                        function(result) {
+                            console.log('Geo: start monitoring significant location changes');
+                            deferred.resolve(result);
+                        },
+                        function(error) {
+                            console.log(' Geo: error');
+                            signStarted = false;
+                            deferred.reject(error);
 
-                    });
+                        });
 
-                console.log('Geo: return promise');
+                    console.log('Geo: return promise');
+                }
                 return deferred.promise;
             }
         };

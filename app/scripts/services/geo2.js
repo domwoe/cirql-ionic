@@ -79,7 +79,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
                             }
                         }
                     }
-                    if (fbRegions !== ) {
+                    if (fbRegions !== null) {
 
                         fbHome.$loaded(function(data) {
                             var regionsURL = 'homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions';

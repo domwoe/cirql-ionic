@@ -92,7 +92,8 @@ angular.module('cirqlApp')
                                 //geo.removeRegion();
                                 geo.monitorRegion();
 
-                                //geo.startMonitoringSignificantLocationChanges();
+                                //geo.stopMonitoringSignificantLocationChanges();
+                                geo.startMonitoringSignificantLocationChanges();
                             }
                         } else if (deviceDetector.os === 'android') {
                             if (window.geofence) {
@@ -103,7 +104,7 @@ angular.module('cirqlApp')
                                 geo2.monitorRegion();
                             }
                         } else {
-                            console.log('Othero OS: ' + deviceDetector.os);
+                            console.log('Other OS: ' + deviceDetector.os);
                         }
 
                     } else {
