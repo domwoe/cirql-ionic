@@ -228,17 +228,13 @@ angular.module('cirqlApp')
                             var weekCol = weekdays.append('rect')
                                 .attr('id', 'week_column')
                                 .attr('fill', '#483e37')
-                                .attr('fill-opacity', 1)
-                                .attr('stroke', '#FFFFFF')
-                                .attr('stroke-width', 1)
                                 .attr('x', 0)
                                 .attr('y', 0)
-                                .attr('height', 210)
+                                .attr('height', 230)
                                 .attr('width', 95);
                             var scheduleCol = weekdays.append('rect')
                                 .attr('id', 'schedule_column')
-                                .attr('fill', '#b3b3b3')
-                                .attr('fill-opacity', 1)
+                                .attr('fill', '#FFFFFF')
                                 .attr('stroke', '#FFFFFF')
                                 .attr('stroke-width', 1)
                                 .attr('x', 95)
@@ -545,7 +541,7 @@ angular.module('cirqlApp')
 
                             var timelineRect = timelineGroup.append('rect')
                                 .attr('id', 'timeline_back')
-                                .attr('fill', '#b3b3b3')
+                                .attr('fill', '#FFFFFF')
                                 .attr('fill-opacity', 1)
                                 .attr('stroke', '#BFBFBF')
                                 .attr('stroke-width', 1)
@@ -558,7 +554,7 @@ angular.module('cirqlApp')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 12)
                                 .attr('font-weight', 600)
-                                .attr('fill', '#FFFFFF');
+                                .attr('fill', '#483e37');
 
                             var ypos = 225;
                             var step = 650/24;
@@ -952,60 +948,60 @@ angular.module('cirqlApp')
                 },
                 replace: false,
                 template: '\
-                <ion-content class="has-header" scroll="false" data-tap-disabled="true"> \
+                <ion-content class="has-header has-footer" scroll="false" data-tap-disabled="true"> \
                     <div class="schedule-block"> \
                         <svg id="room-schedule" width="100%" height="100%" viewBox="0 0 742 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                                     </text> \
-                                    <rect id="r1" fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                                    <rect id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
                                 <g id="tuesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="30" /> \
-                                    <rect fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
+                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="60" /> \
-                                    <rect fill="#b3b3b3" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
+                                    <rect fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="90" /> \
-                                    <rect fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
+                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="120" /> \
-                                    <rect fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
+                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="150" /> \
-                                    <rect fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
+                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-                                    <rect fill="#b3b3b3" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
                                 </g> \
-                                <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="20" x="0" y="210" /> \
+                                <rect fill="#483e37" width="95" height="20" x="0" y="210" /> \
                             </g> \
                         </svg> \
                 </ion-content> \
