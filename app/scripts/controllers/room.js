@@ -16,7 +16,7 @@ angular.module('cirqlApp')
 
         if ($rootScope.flurry === true) {
             flurry.logPageView();
-            flurry.logEvent('enterView', {
+            flurry.logEvent('view', {
                 view: 'room',
                 roomId: $rootScope.room
             });
