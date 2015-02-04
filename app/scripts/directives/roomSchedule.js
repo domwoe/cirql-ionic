@@ -463,7 +463,7 @@ angular.module('cirqlApp')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
                                 .attr('r', this.radius)
-                                .attr('fill-opacity', 0);
+                                .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
                                         d3.event.sourceEvent.preventDefault();
