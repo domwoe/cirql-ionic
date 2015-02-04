@@ -963,9 +963,9 @@ angular.module('cirqlApp')
                 },
                 replace: false,
                 template: '\
-                <ion-content class="has-header" scroll="false" data-tap-disabled="true"> \
+                <ion-content class="has-footer has-header" scroll="false" data-tap-disabled="true"> \
                     <div class="schedule-block"> \
-                        <svg id="room-schedule" width="100%" height="100%" viewBox="0 0 742 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
+                        <svg id="room-schedule" width="100%" height="100%" viewBox="0 0 742 239" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
                                     <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
@@ -1018,6 +1018,7 @@ angular.module('cirqlApp')
                                 </g> \
                             </g> \
                         </svg> \
+                    </div> \
                 </ion-content> \
                 <ion-footer-bar class="bar-footer"> \
                     <div class="row">\
