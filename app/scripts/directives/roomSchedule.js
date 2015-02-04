@@ -631,7 +631,7 @@
                                         delete this.localSchedule[idToDel];
                                     }
                                 }
-                            }
+                            };
 
                             this.copySchedule = function(self, dest) {
                                 var destDay = d3.select(dest);
@@ -845,7 +845,7 @@
                                     self.closeContextMenu();
                                     console.log("CLICK ON CLEAR");
                                 });
-                            }
+                            };
 
                             this.attachListeners = function() {
                                 console.log("Attaching listeners");
@@ -955,7 +955,7 @@
                     },
                     replace: false,
                     template: '\
-                <ion-content class="has-header has-footer" overflow="visible" scroll="false" data-tap-disabled="true">\
+                <ion-content class="has-header" overflow="visible" scroll="false" data-tap-disabled="true">\
         <div class="schedule-block">\
         <svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
@@ -1012,20 +1012,7 @@
                             </g> \
                         </svg> \
                         </div> \
-                </ion-content> \
-                <ion-footer-bar class="bar-footer"> \
-                    <div class="row">\
-                        <div class="col">\
-                            <button ng-show="dayview" id="week" class="button button-light button-block transparent padding ">Week</button> \
-                        </div>\
-                        <div class="col col-offset-50">\
-                            <button ng-show="dayview" id="add" class="button  button-light button-block transparent padding">Add</button> \
-                        </div>\
-                        <div class="col">\
-                            <button ng-show="dayview" id="delete" class="button button-light button-block transparent padding">Delete</button> \
-                        </div>\
-                    </div>\
-                </ion-footer-bar>'
+                </ion-content>'
                 };
             }
         ]);
