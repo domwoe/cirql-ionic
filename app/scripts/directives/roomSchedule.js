@@ -283,8 +283,8 @@
                                 var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
-                                previousRec1.attr('fill-opacity', 0.6);
-                                previousRec2.attr('fill-opacity', 0.6);
+                                previousRec1.attr('fill', '#483e37');
+                                previousRec2.attr('fill',  '#FFFFFF');
                             };
 
                             this.daySelector = function(day) {
@@ -753,8 +753,7 @@
                                 console.log(" TO REMVE: ", group);
                                 group.remove();
                                 // Remove day highlight
-                                d3.select(this.contextSelectedDay).selectAll('rect')
-                                    .attr('fill-opacity', 0.6);
+                                d3.select(this.contextSelectedDay).selectAll('rect');
                                 this.contextSelectedDay = null;
                                 this.isClickValid = true;
                                 this.inContextMenu = false;
@@ -771,7 +770,9 @@
 
                                 // Highlight the day
                                 dayGroup.selectAll('rect')
-                                    .attr('fill-opacity', 1.0);
+                                    .attr('fill', '#ecf0f1');   
+                                dayGroup.selectAll('text')
+                                    .attr('fill', '#483e37');
 
                                 var idx = this.getIndexForDay(day);
                                 if (idx === 0) {
@@ -789,7 +790,7 @@
                                     .attr('width', 100)
                                     .attr('rx', 5)
                                     .attr('ry', 5)
-                                    .attr('fill', '#483e37');
+                                    .attr('fill', '#2980b9');
 
                                 // Copy day button
                                 var copyButton = copyPasteButtons.append('rect')
@@ -837,7 +838,7 @@
                                     .attr('fill-opacity', 0);
                                 // Attach listener for click
                                 var self = this;
-                                clearButton.on('mousedown', function() {
+                                clearButton.on('touchstart', function() {
                                     d3.event.preventDefault();
                                     d3.event.stopPropagation();
                                     self.clearDay(dayGroup);
@@ -853,7 +854,7 @@
 
                                 var timeoutId;
 
-                                allDays.on("mousedown", function() {
+                                var allDaysOnTouchStartCallback = function() {
                                     d3.event.preventDefault();
                                     //d3.event.stopPropagation();
                                     if (!self.inContextMenu && !self.inDetailedView) {
@@ -874,8 +875,9 @@
                                         console.log("CLOSE CONTEXT MENU");
                                         self.closeContextMenu();
                                     }
-                                });
-                                allDays.on('mouseup', function() {
+                                };
+
+                                var allDaysOnTouchEndCallback = function() {
                                     d3.event.preventDefault();
                                     //d3.event.stopPropagation();
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
@@ -893,7 +895,12 @@
                                         }
                                     }
                                     self.contextMenuSwitch = true;
-                                });
+                                };
+
+                                allDays.on('touchstart', allDaysOnTouchStartCallback);
+                                allDays.on('mousedown', allDaysOnTouchStartCallback);
+                                allDays.on('touchend', allDaysOnTouchEndCallback);
+                                allDays.on('mouseup', allDaysOnTouchEndCallback);
 
                                 var addButton = d3.select('#add');
                                 console.log("Add button: ", addButton);
@@ -948,7 +955,7 @@
                     },
                     replace: false,
                     template: '\
-                <ion-content class="has-header has-footer" scroll="false" data-tap-disabled="true">\
+                <ion-content class="has-header has-footer" overflow="visible" scroll="false" data-tap-disabled="true">\
         <div class="schedule-block">\
         <svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
