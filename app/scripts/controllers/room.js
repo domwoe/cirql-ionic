@@ -17,7 +17,7 @@ angular.module('cirqlApp')
     
         $scope.finishedloading = false;
     //    if (window.screen.hasOwnProperty('lockOrientation')) {
-            //window.screen.lockOrientation('portrait');
+            window.screen.lockOrientation('portrait');
       //  }
 
         var translate = $filter('translate');
