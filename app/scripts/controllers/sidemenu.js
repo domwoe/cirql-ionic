@@ -50,10 +50,7 @@ angular.module('cirqlApp')
                 $state.go('login');
             }
 
-
             var boundResidents = null;
-
-
 
             $scope.showWhyAutoAwayIsDisabled = function() {
 
@@ -161,7 +158,6 @@ angular.module('cirqlApp')
                 }
             }
 
-
             $scope.changeAutoAway = function() {
 
                 // sync autoAway with firebase
@@ -177,11 +173,10 @@ angular.module('cirqlApp')
 
             };
 
-
             $scope.goToSchedule = function() {
-                if (window.screen.hasOwnProperty('lockOrientation')) {
-                    window.screen.lockOrientation('landscape');
-                }
+             //   if (window.screen.hasOwnProperty('lockOrientation')) {
+                    //window.screen.lockOrientation('landscape');
+               // }
                 $state.go('app.schedule', {
                     roomId: $scope.room
                 });

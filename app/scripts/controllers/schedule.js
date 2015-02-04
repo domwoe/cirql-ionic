@@ -61,6 +61,7 @@ angular.module('cirqlApp')
                 if (window.screen.hasOwnProperty('lockOrientation')) {
                     window.screen.lockOrientation('portrait');
                 }
+                
                 $ionicSideMenuDelegate.canDragContent(true);
                 $state.go('app.room', {
                     roomId: room

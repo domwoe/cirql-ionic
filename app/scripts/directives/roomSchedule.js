@@ -3,7 +3,6 @@
 angular.module('cirqlApp')
     .directive('roomSchedule', ['$timeout',
         function($timeout) {
-
             return {
                 restrict: 'EA',
                 scope: {
@@ -11,8 +10,6 @@ angular.module('cirqlApp')
                     radius: "=",
                     sync: "=",
                     roomid: "=",
-                    hour: "@",
-                    minute: "@",
                     goback: "&",
                     reload: "&",
                     dayview: "="
@@ -41,6 +38,11 @@ angular.module('cirqlApp')
                         this.lockOnHorizontalDrag = false;
                         this.lockOnVerticalDrag = false;
                         this.changed = false;
+                        this.inDetailedView = false;
+                        this.isClickValid = true;
+                        this.inContextMenu = false;
+                        this.contextSelectedDay = null;
+                        this.contextMenuSwitch = false;
 
                         scope.sync = this.localSchedule;
 
@@ -57,14 +59,16 @@ angular.module('cirqlApp')
 
                         this.pad = function(num, size) {
                             var s = num + "";
-                            while (s.length < size) s = "0" + s;
+                            while (s.length < size) {
+                                s = "0" + s;
+                            }
                             return s;
-                        }
+                        };
 
                         this.timeToPixelOffset = function(hours, minutes) {
                             var time = hours * 60 + minutes;
                             return this.leftBound + time * this.width / this.totalTime;
-                        }
+                        };
 
                         this.pixelOffsetToTime = function(xpos) {
                             var time = (xpos - this.leftBound) * this.totalTime / (this.width);
@@ -72,37 +76,17 @@ angular.module('cirqlApp')
                                 Math.floor(time / 60),
                                 15 * Math.floor(time % 60 / 15)
                             ];
-                        }
+                        };
 
                         this.tempToPixelOffset = function(temp, height) {
-                            return this.radius + 1 +
-                                (temp - this.minTemp) * (height - 2 * (this.radius + 1)) /
-                                (this.maxTemp - this.minTemp);
-                        }
+                            var redH = height - 2*(this.radius + 1);
+                            return redH + this.radius + 1 - (temp - this.minTemp) * redH / (this.maxTemp - this.minTemp);
+                        };
 
                         this.pixelOffsetToTemp = function(ypos, height) {
-                            return (this.minTemp +
-                                (ypos - this.radius - 1) * (this.maxTemp - this.minTemp) /
-                                (height - 2 * (this.radius + 1)));
-                        }
-
-                        this.isPointWithinBounds = function(recPath, pX, pY) {
-                            var x = parseInt(recPath.attr('x'));
-                            var y = parseInt(recPath.attr('y'));
-                            var width = parseInt(recPath.attr('width'));
-                            var height = parseInt(recPath.attr('height'));
-                            console.log("X: ", x);
-                            console.log("Y: ", y);
-                            console.log("W: ", width);
-                            console.log("H: ", height);
-
-                            return (
-                                pX >= x &&
-                                x <= pX + width &&
-                                pY >= y &&
-                                y <= pY + height
-                            );
-                        }
+                            var redH = height - 2*(this.radius + 1);
+                            return this.minTemp + (redH + this.radius + 1 - ypos)*(this.maxTemp - this.minTemp) / redH;
+                        };
 
                         this.mouseDragCallback = function(ev, d) {
 
@@ -112,11 +96,9 @@ angular.module('cirqlApp')
                                 if (Math.abs(m[0] - d.dragstart[0]) > Math.abs(m[1] - d.dragstart[1]) + 4) {
                                     this.lockOnHorizontalDrag = true;
                                     d3.select('#vpath').style('visibility', 'hidden');
-                                    console.log("LOCK ON HORIZONTAL");
                                 } else if (Math.abs(m[0] - d.dragstart[0]) + 4 < Math.abs(m[1] - d.dragstart[1])) {
                                     this.lockOnVerticalDrag = true;
                                     d3.select('#hpath').style('visibility', 'hidden');
-                                    console.log("LOCK ON VERTICAL");
                                 }
                             } else {
                                 if (this.lockOnHorizontalDrag) {
@@ -145,19 +127,11 @@ angular.module('cirqlApp')
                                     if (newposY - this.radius < 0) {
                                         newposY = this.radius;
                                         d.y = newposY - currentY;
-                                    } else if (newposY > 7 * this.height - this.radius) {
-                                        newposY = 7 * this.height - this.radius;
+                                    } else if (newposY > 7 * this.height - this.radius - 1) {
+                                        newposY = 7 * this.height - this.radius - 1;
                                         d.y = newposY - currentY;
                                     }
                                 }
-
-                                console.log("MX: ", m[0]);
-                                console.log("MY: ", m[1]);
-                                console.log("DX: ", d.x);
-                                console.log("DY: ", d.y);
-                                console.log("NX: ", newposX);
-                                console.log("NY: ", newposY);
-                                console.log("\n");
 
                                 group.attr('transform', 'translate(' + d.x + ', ' + d.y + ')');
 
@@ -175,61 +149,81 @@ angular.module('cirqlApp')
                                 var circleIndex = group.attr('id');
 
                                 if (this.lockOnHorizontalDrag) {
-
                                     // Update time
                                     var time = this.pixelOffsetToTime(newposX);
-                                    scope.hour = this.pad(time[0], 2);
-                                    scope.minute = this.pad(time[1], 2);
+                                    console.log("TIME: ", time);
 
                                     // Update the times in the local schedule
                                     var entry = this.localSchedule[circleIndex];
                                     entry.hour = time[0];
                                     entry.minute = time[1];
 
+                                    // Show the time in the label
+                                    group.select('text.label').select('tspan').text(
+                                        this.pad(entry.hour, 2) + ":" +
+                                        this.pad(entry.minute, 2)
+                                    );
+
+                                    // Update the hidden time label
+                                    group.select('g.time').select('tspan').text(
+                                        this.pad(entry.hour, 2) + ":" +
+                                        this.pad(entry.minute, 2)
+                                    );
+
                                     // Flag for schedule change
                                     this.changed = this.weekDays[entry.weekday + 1];
 
                                 } else if (this.lockOnVerticalDrag) {
-
                                     // Update temperature
                                     var newTemp = roundHalf(this.pixelOffsetToTemp(newposY, 210));
-                                    var target = Math.floor(newTemp);
-                                    var dotTarget;
-
-                                    if (newTemp - target <= 0.5) {
-                                        dotTarget = '0';
-                                    } else {
-                                        dotTarget = '5';
-                                    }
-
-
-
-                                    console.log("NEW TEMP: ", newTemp);
-
-                                    var targetTspan = group.select('tspan');
-                                    var dotTargetTspan = group.select('g').select('tspan');
-
-                                    if (target + 0.1 * dotTarget >= this.minTemp && target + 0.1 * dotTarget <= this.maxTemp) {
-                                        targetTspan.text(target);
-                                        dotTargetTspan.text(dotTarget);
+                                    if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
+                                        // Show the temp in the label
+                                        group.select('text.label').select('tspan').text(newTemp);
+                                        // Update the hidden temp labels
+                                        var target = Math.floor(newTemp);
+                                        var dotTarget = (newTemp - target < 0.5) ? 0: 5;
+                                        group.select('tspan.target').text(target);
+                                        group.select('tspan.dot_target').text(dotTarget);
                                         this.localSchedule[circleIndex].target = newTemp;
                                         // Flag for schedule change
                                         this.changed = this.weekDays[this.localSchedule[circleIndex].weekday + 1];
                                     }
                                 }
                             }
-                        }
+                        };
 
                         d3.selection.prototype.moveToFront = function() {
                             return this.each(function() {
                                 this.parentNode.appendChild(this);
                             });
-                        }
+                        };
+
+                        this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target) {
+                            this.addEntry(dayGroup, id, xpos, ypos, target);
+                            var entryGroup = dayGroup.select('#' + id);
+                            var textGroup = entryGroup.append('g')
+                                .attr('class', 'time');
+
+                            console.log("entryg: ", entryGroup);
+                            var text = textGroup.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 12)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#483e37');
+
+                            var tspan = text.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', xpos)
+                                .attr('y', ypos + 1.75*this.radius)
+                                .text(
+                                    this.pad(this.localSchedule[id].hour, 2) + ':' +
+                                    this.pad(this.localSchedule[id].minute, 2)
+                                );
+                        };
 
                         this.selectDay = function(day) {
                             scope.dayview = true;
                             scope.$apply();
-                            console.log("SELECTED DAY");
                             var weekdays = d3.select('#weekdays');
                             var weekCol = weekdays.append('rect')
                                 .attr('id', 'week_column')
@@ -265,29 +259,29 @@ angular.module('cirqlApp')
                                 for (var i = 0; i < scheduleEntries[0].length; i++) {
                                     var currEntry = d3.select(scheduleEntries[0][i]);
                                     var index = currEntry.attr('id');
-                                    //    console.log("INDEX: ", index);
-                                    //    console.log("SCH: ", this.localSchedule);
 
                                     var tempOffset = this.tempToPixelOffset(
                                         this.localSchedule[index].target,
-                                        weekCol.attr('height')
+                                        parseInt(weekCol.attr('height'))
                                     );
 
                                     var circle = currEntry.select('circle');
                                     var posX = parseInt(circle.attr('cx'));
                                     var offsetY = tempOffset - parseInt(circle.attr('cy'));
 
-                                    console.log("CURR ENTRY: ", currEntry);
-
                                     currEntry.remove();
-                                    // TODO: Write function to update entry positions instead
-                                    this.addEntry(dayGroup, index, posX, tempOffset, this.localSchedule[index].target);
+                                    this.addDetailedEntry(
+                                        dayGroup,
+                                        index,
+                                        posX,
+                                        tempOffset,
+                                        this.localSchedule[index].target
+                                    );
                                 }
                             }
-
                             // Move to front
                             dayGroup.moveToFront();
-                        }
+                        };
 
                         this.deselectDay = function() {
                             var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
@@ -295,10 +289,10 @@ angular.module('cirqlApp')
                             var previousRec2 = d3.select(previousRec[1]);
                             previousRec1.attr('fill-opacity', 0.6);
                             previousRec2.attr('fill-opacity', 0.6);
-                        }
+                        };
 
                         this.daySelector = function(day) {
-                            if (this.selectedDay != null) {
+                            if (this.selectedDay !== null) {
                                 if (this.selectedDay !== day) {
                                     this.deselectEntry();
                                 }
@@ -308,47 +302,56 @@ angular.module('cirqlApp')
                                 this.selectDay(day);
                                 this.selectedDay = day;
                             }
-                        }
+                        };
 
                         this.deselectEntry = function() {
-                            if (this.selectedEntry != null) {
+                            if (this.selectedEntry !== null) {
                                 this.selectedEntry.select('circle')
                                     .attr('fill', 'red')
                                     .attr('r', this.radius);
-                                this.selectedEntry.selectAll('path')
-                                    .style('visibility', 'hidden');
-                                this.selectedEntry.selectAll('rect')
-                                    .style('visibility', 'hidden');
+                                this.selectedEntry.select('g.time').attr('visibility', 'visible');
+                                this.selectedEntry.select('g.temp').attr('visibility', 'visible');
+                                this.selectedEntry.select('circle.label_back').remove();
+                                this.selectedEntry.select('text.label').remove();
                                 this.selectedEntry = null;
                                 d3.select('#label').style('visibility', 'hidden');
                             }
-                        }
+                        };
 
                         this.entrySelector = function(self, entry) {
                             var group = d3.select(entry);
+                            var selection = group.select('circle');
 
-                            this.deselectEntry();
-                            var selection = group.select('circle')
-                                .attr('fill', 'black')
-                                .attr('r', this.radius + 15);
+                            var label_back = group.append('circle')
+                                .attr('class', 'label_back')
+                                .attr('fill', 'red')
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 2)
+                                .attr('r', this.radius*1.7)
+                                .attr('cx', selection.attr('cx'))
+                                .attr('cy', selection.attr('cy') - 4.0*this.radius);
 
-                            var circleIndex = group.attr('id');
-                            var entry = self.localSchedule[circleIndex];
+                            var xpos = label_back.attr('cx');
+                            var ypos = label_back.attr('cy');
 
-                            scope.hour = self.pad(entry.hour, 2);
-                            scope.minute = self.pad(entry.minute, 2);
+                            var text = group.append('text')
+                                .attr('class', 'label')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 14)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#FFFFFF');
 
-                            //         group.selectAll('path')
-                            //             .style('visibility', 'visible');
+                            var tspan = text.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', xpos)
+                                .attr('y', parseInt(ypos) + this.radius/2 - 2);
 
-                            //          group.selectAll('rect')
-                            //             .style('visibility','visible');
+                            // Hide the time and temperature
+                            group.select('g.time').attr('visibility', 'hidden');
+                            group.select('g.temp').attr('visibility', 'hidden');
+
                             this.selectedEntry = group;
-
-                            d3.select('#label').style('visibility', 'visible');
-
-
-                        }
+                        };
 
                         // true for increase, false for decrease
                         this.updateTemp = function(obj, increaseOrDecrease) {
@@ -392,18 +395,17 @@ angular.module('cirqlApp')
                                 var index = parentNode.attr('id');
                                 this.localSchedule[index].target = newTemp;
                             }
-                        }
+                        };
 
                         this.decrementTemp = function(obj) {
                             this.updateTemp(obj, false);
-                        }
+                        };
 
                         this.incrementTemp = function(obj) {
                             this.updateTemp(obj, true);
-                        }
+                        };
 
                         this.addEntry = function(dayGroup, id, xpos, ypos, target) {
-
                             var numTarget = parseFloat(target);
                             var dotTarget;
 
@@ -428,144 +430,149 @@ angular.module('cirqlApp')
                                 .attr('r', this.radius)
                                 .attr('fill', 'red');
 
-                            var text = entryGroup.append('text')
+                            var textGroup = entryGroup.append('g')
+                                .attr('class', 'temp');
+
+                            var text = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 14)
                                 .attr('font-weight', 600)
                                 .attr('fill', '#FFFFFF');
 
                             var tspan = text.append('tspan')
+                                .attr('class', 'target')
                                 .attr('text-anchor', 'middle')
                                 .attr('x', xpos - 3)
                                 .attr('y', ypos + (this.radius / 2) * 0.8)
                                 .text(Math.floor(numTarget));
 
-                            var entryGroup2 = entryGroup.append('g');
-
-                            var text2 = entryGroup2.append('text')
+                            var text2 = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 9)
                                 .attr('font-weight', 600)
                                 .attr('fill', '#FFFFFF');
 
                             var tspan2 = text2.append('tspan')
+                                .attr('class', 'dot_target')
                                 .attr('text-anchor', 'middle')
                                 .attr('x', xpos + 8)
                                 .attr('y', ypos + (this.radius / 2) * 0.8)
                                 .text(dotTarget);
 
-                            var pathDecr = entryGroup.append('path')
-                                .attr('class', 'arrowDecrement')
-                                .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos + this.radius - 6) + ') scale(0.2)')
-                                .attr('d', 'M50,71.276c-1.338,0-2.676-0.511-3.696-1.53l-32.099-32.1c-2.042-2.042-2.042-5.352,0-7.393 \
-						c2.041-2.041,5.351-2.041,7.393,0L50,58.656l28.402-28.402c2.042-2.041,5.352-2.041,7.393,0c2.042,2.041,2.042,5.351,0,7.393 \
-						l-32.099,32.1C52.676,70.766,51.338,71.276,50,71.276z')
-                                .style('visibility', 'hidden');
-
-                            var pathIncr = entryGroup.append('path')
-                                .attr('class', 'arrowIncrement')
-                                .attr('fill', '#FFFFFF')
-                                .attr('transform', 'translate(' + (xpos - this.radius + 3.5) + ',' + (ypos - 2 * this.radius + 3) + ') scale(0.2)')
-                                .attr('d', 'M53.696,30.254l32.099,32.1c2.042,2.042,2.042,5.352,0,7.393c-2.041,2.041-5.352,2.041-7.393,0L50,41.344L21.598,69.746 \
-						c-2.042,2.041-5.352,2.041-7.393,0c-2.042-2.041-2.042-5.351,0-7.393l32.099-32.1c1.021-1.02,2.358-1.53,3.696-1.53 \
-						S52.676,29.234,53.696,30.254z')
-                                .style('visibility', 'hidden');
-
                             var back = entryGroup.append('circle')
                                 .attr('cx', xpos)
                                 .attr('cy', ypos)
-                                .attr('r', this.radius)
+                                .attr('r', 2.0*this.radius)
                                 .attr('fill-opacity', 0)
                                 .call(d3.behavior.drag()
                                     .on('dragstart', function(d) {
+                                        console.log("DRAG START");
                                         d3.event.sourceEvent.preventDefault();
                                         d3.event.sourceEvent.stopPropagation();
 
-                                        var parentNode = d3.select(this).node().parentNode;
+                                        var selectedNode = d3.select(this);
+                                        var parentNode = selectedNode.node().parentNode;
                                         var secondAncestor = d3.select(parentNode).node().parentNode;
-                                        self.daySelector(secondAncestor);
-                                        self.entrySelector(self, parentNode);
-                                        self.dragging = true;
+                                        console.log("Selected: ", selectedNode);
+                                        console.log("ENTRY: ", self.selectedEntry);
+                                        if (self.inDetailedView && selectedNode !== self.selectedEntry) {
+                                            
+                                            self.daySelector(secondAncestor);
+                                            self.entrySelector(self, parentNode);
+                                            self.dragging = true;
 
-                                        var group = d3.select(parentNode);
-                                        var selection = group.select('circle');
+                                            var group = d3.select(parentNode);
+                                            var selection = group.select('circle');
 
-                                        var trX = d3.transform(group.attr("transform")).translate[0];
-                                        var trY = d3.transform(group.attr("transform")).translate[1];
+                                            var trX = d3.transform(group.attr("transform")).translate[0];
+                                            var trY = d3.transform(group.attr("transform")).translate[1];
 
-                                        d.dragstart = d3.mouse(this); // store this
+                                            d.dragstart = d3.mouse(this); // store this
 
-                                        var xpos = parseInt(selection.attr('cx')) + trX;
-                                        var ypos = parseInt(selection.attr('cy')) + trY;
+                                            var xpos = parseInt(selection.attr('cx')) + trX;
+                                            var ypos = parseInt(selection.attr('cy')) + trY;
 
-                                        var dayGroup = d3.select(secondAncestor);
-                                        dayGroup.insert('rect', 'g.entry')
-                                            .attr('id', 'vpath')
-                                            .attr('x', xpos - self.radius)
-                                            .attr('y', 0)
-                                            .attr('width', 2 * self.radius)
-                                            .attr('height', 7 * self.height)
-                                            .attr('fill-opacity', 0.5);
-                                        dayGroup.insert('rect', 'g.entry')
-                                            .attr('id', 'hpath')
-                                            .attr('x', 95)
-                                            .attr('y', ypos - self.radius)
-                                            .attr('width', 650)
-                                            .attr('height', 2 * self.radius)
-                                            .attr('fill-opacity', 0.5);
+                                            var dayGroup = d3.select(secondAncestor);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'vpath')
+                                                .attr('x', xpos - self.radius)
+                                                .attr('y', 0)
+                                                .attr('width', 2 * self.radius)
+                                                .attr('height', 7 * self.height)
+                                                .attr('fill-opacity', 0.5);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'hpath')
+                                                .attr('x', 95)
+                                                .attr('y', ypos - self.radius)
+                                                .attr('width', 650)
+                                                .attr('height', 2 * self.radius)
+                                                .attr('fill-opacity', 0.5);
+                                        } else {
+                                         /*   if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
+                                                self.copySchedule(self, secondAncestor);
+                                                self.entriesToCopy = null;
+                                            } else {*/
+                                                self.daySelector(secondAncestor);
+                                                self.inDetailedView = true;
+//                                            }
+                                        }
                                     })
                                     .on('drag', function(d) {
                                         if (self.dragging) {
-                                            //console.log("DRAGGING ", this);
                                             self.mouseDragCallback(this, d);
-                                            /*                                            var m = d3.mouse(this);
-                                            console.log("M: ", m);
-
-                                            d.x += m[0] - d.dragstart[0];
-                                            d.y += m[1] - d.dragstart[1];
-
-                                            var circle = d3.select(this);
-                                            var group = d3.select(circle.node().parentNode);
-
-                                            group.attr("transform", "translate(" + [d.x, d.y] + ")");*/
                                         }
                                     })
                                     .on('dragend', function(d) {
-                                        console.log("DRAG END");
+                                        console.log("DRAGEND");
                                         self.dragging = false;
                                         self.lockOnVerticalDrag = false;
                                         self.lockOnHorizontalDrag = false;
                                         // Remove path rectangles
                                         d3.select('#vpath').remove();
                                         d3.select('#hpath').remove();
+                                        // Deselect entry
+                                        self.deselectEntry();
                                         delete d.dragstart;
                                     })
                                 );
+                        };
 
-                            var recIncr = entryGroup.append('rect')
-                                .attr('x', xpos - 3 * this.radius)
-                                .attr('y', ypos - 4.9 * this.radius)
-                                .attr('width', 6 * this.radius)
-                                .attr('height', 4 * this.radius)
-                                .attr('fill-opacity', 0.25)
-                                .style('visibility', 'hidden')
-                                .on('click', function() {
-                                    self.incrementTemp(this);
-                                });
+                        this.renderTimeline = function() {
+                            var weekGroup = d3.select('#weekdays');
 
-                            var recDecr = entryGroup.append('rect')
-                                .attr('x', xpos - 3 * this.radius)
-                                .attr('y', ypos + this.radius)
-                                .attr('width', 6 * this.radius)
-                                .attr('height', 4 * this.radius)
-                                .attr('fill-opacity', 0.25)
-                                .style('visibility', 'hidden')
-                                .on('click', function() {
-                                    self.decrementTemp(this);
-                                });
+                            var timelineGroup = weekGroup.append('g')
+                                .attr('id', 'timelineGroup');
 
-                        }
+                            var timelineRect = timelineGroup.append('rect')
+                                .attr('id', 'timeline_back')
+                                .attr('fill', '#b3b3b3')
+                                .attr('fill-opacity', 0.6)
+                                .attr('stroke', '#FFFFFF')
+                                .attr('stroke-width', 1)
+                                .attr('x', 95)
+                                .attr('y', 210)
+                                .attr('height', 20)
+                                .attr('width', 650);
+
+                            var text = timelineGroup.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 12)
+                                .attr('font-weight', 600)
+                                .attr('fill', '#FFFFFF');
+
+                            var ypos = 225;
+                            var step = 650/24;
+                            var xpos = 100;
+
+                            for (var i = 0; i < 24; i++) {
+                                text.append('tspan')
+                                    .attr('text-anchor', 'middle')
+                                    .attr('x', xpos)
+                                    .attr('y', ypos)
+                                    .text(i);
+                                xpos += step;
+                            }
+                        };
 
                         this.renderScheduleEntries = function() {
 
@@ -592,7 +599,7 @@ angular.module('cirqlApp')
                                 var dayGroup = d3.select('#' + groupId);
                                 this.addEntry(dayGroup, index, xpos, ypos, entry.target);
                             }
-                        }
+                        };
 
                         this.updateSchedule = function(id, hour, minute, target, weekday) {
                             this.localSchedule[id] = {
@@ -601,25 +608,32 @@ angular.module('cirqlApp')
                                 'target': target,
                                 'weekday': weekday
                             };
-                            // console.log("CREATED ", this.localSchedule[id]);
-                        }
+                        };
 
                         this.addEntryCallback = function(self) {
-                            //   console.log("CLICK ON ADD");
-                            if (self.selectedDay != null) {
-                                //    console.log("Adding entry callback");
+                            if (self.selectedDay !== null) {
                                 var dayGroup = d3.select(self.selectedDay);
                                 var index = self.weekDays.indexOf(dayGroup.attr('id'));
-                                var groupId = this.weekDays[index];
-                                var ypos = self.height * index + self.height / 2;
+                                var ypos = this.tempToPixelOffset(self.defaultTemperature, 210);
                                 var id = 'c' + self.nextId;
 
                                 // Update local schedule
                                 self.updateSchedule(id, 0, 0, self.defaultTemperature, index + 1);
                                 self.nextId++;
 
-                                self.addEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
-                                self.entrySelector(self, '#' + id);
+                                self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
+                               // self.entrySelector(self, '#' + id);
+                            }
+                        };
+
+                        this.clearDay = function(dayGroup) {
+                            var destDayEntries = dayGroup.selectAll('g.entry');
+                            destDayEntries.remove();
+                            if (destDayEntries[0]) {
+                                for (var i = 0; i < destDayEntries[0].length; i++) {
+                                    var idToDel = d3.select(destDayEntries[0][i]).attr('id');
+                                    delete this.localSchedule[idToDel];
+                                }
                             }
                         }
 
@@ -658,22 +672,22 @@ angular.module('cirqlApp')
                             });
                             self.deselectEntry();
                             destDay.moveToFront();
-                        }
+                        };
 
                         this.copyScheduleCallback = function(self) {
-                            if (self.selectedDay != null) {
+                            if (self.selectedDay !== null) {
                                 self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
                             }
-                        }
+                        };
 
                         this.deleteEntryCallback = function(self) {
-                            if (self.selectedEntry != null) {
+                            if (self.selectedEntry !== null) {
                                 var index = this.selectedEntry.attr('id');
                                 delete self.localSchedule[index];
                                 this.selectedEntry.remove();
                                 self.selectedEntry = null;
                             }
-                        }
+                        };
 
                         this.syncFirebase = function() {
 
@@ -688,13 +702,13 @@ angular.module('cirqlApp')
                             // Push or update rest
                             for (var key in this.localSchedule) {
                                 var found = false;
-                                for (var i = 0; i < scope.schedule.length; i++) {
-                                    var entry = scope.schedule[i];
-                                    if (key === entry.$id) {
-                                        scope.schedule[i].hour = this.localSchedule[key].hour;
-                                        scope.schedule[i].minute = this.localSchedule[key].minute;
-                                        scope.schedule[i].target = this.localSchedule[key].target;
-                                        scope.schedule.$save(scope.schedule[i]);
+                                for (var j = 0; j < scope.schedule.length; j++) {
+                                    var scheduleEntry = scope.schedule[j];
+                                    if (key === scheduleEntry.$id) {
+                                        scope.schedule[j].hour = this.localSchedule[key].hour;
+                                        scope.schedule[j].minute = this.localSchedule[key].minute;
+                                        scope.schedule[j].target = this.localSchedule[key].target;
+                                        scope.schedule.$save(scope.schedule[j]);
                                         found = true;
                                     }
                                 }
@@ -704,7 +718,7 @@ angular.module('cirqlApp')
                             }
 
                             scope.$apply();
-                        }
+                        };
 
                         this.save = function(self) {
 
@@ -715,37 +729,174 @@ angular.module('cirqlApp')
                                 room: scope.roomid,
                                 changedDay: self.changed
                             });
-                        }
+                        };
 
                         this.cancel = function() {
                             scope.goback({
                                 room: scope.roomid
                             });
-                        }
+                        };
 
                         this.backToWeek = function(self) {
                             console.log('BACK TO WEEK');
                             self.syncFirebase();
                             console.log(self.changed);
+                            this.inDetailedView = false;
                             scope.reload({
                                 changedDay: self.changed
                             });
+                        };
 
+                        this.getIndexForDay = function(day) {
+                            return this.weekDays.indexOf(d3.select(day).attr('id'));
+                        };
 
+                        this.closeContextMenu = function() {
+                            // Delete copy and clear buttons
+                            var group = d3.select('g.copy-paste');
+                            console.log(" TO REMVE: ", group);
+                            group.remove();
+                            // Remove day highlight
+                            d3.select(this.contextSelectedDay).selectAll('rect')
+                                .attr('fill-opacity', 0.6);
+                            this.contextSelectedDay = null;
+                            this.isClickValid = true;
+                            this.inContextMenu = false;
+                            this.contextMenuSwitch = false;
+                        };
+
+                        this.renderCopyPasteButtons = function(day) {
+                            var dayGroup = d3.select(day);
+                            dayGroup.moveToFront();
+
+                            var parentNode = d3.select(dayGroup.node().parentNode);
+                            var copyPasteButtons = parentNode.append('g')
+                                .attr('class', 'copy-paste');
+
+                            // Highlight the day
+                            dayGroup.selectAll('rect')
+                                .attr('fill-opacity', 1.0);
+
+                            var idx = this.getIndexForDay(day);
+                            if (idx === 0) {
+                                idx = 1;
+                            } else if (idx === 6) {
+                                idx = 5;
+                            } else {
+                                idx--;
+                            }
+
+                            var backRect = copyPasteButtons.append('rect') 
+                                .attr('x', 1)
+                                .attr('y', 1 + idx * 30)
+                                .attr('height', 28)
+                                .attr('width', 100)
+                                .attr('rx', 5)
+                                .attr('ry', 5)
+                                .attr('fill', '#483e37');
+
+                            // Copy day button
+                            var copyButton = copyPasteButtons.append('rect')
+                                .attr('x', 1)
+                                .attr('y', 1 + idx * 30)
+                                .attr('height', 28)
+                                .attr('width', 40)
+                                .attr('fill-opacity', 0);
+                            var copyText = copyPasteButtons.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 10)
+                                .attr('font-weight', 400)
+                                .attr('fill', '#FFFFFF');
+                            var copyTspan = copyText.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', 20)
+                                .attr('y', idx * 30 + 18)
+                                .text("Copy");
+
+                            // Draw separator
+                            var sep = copyPasteButtons.append('line')
+                                .style("stroke", "white")
+                                .style('stroke-opacity', 0.4)
+                                .attr("x1", 40)
+                                .attr('y1', 4 + idx * 30)
+                                .attr('x2', 40)
+                                .attr('y2', (idx + 1) * 30 - 4);
+
+                            var clearText = copyPasteButtons.append('text')
+                                .attr('font-family', 'Helvetica Neue')
+                                .attr('font-size', 10)
+                                .attr('font-weight', 400)
+                                .attr('fill', '#FFFFFF');
+                            var clearTspan = clearText.append('tspan')
+                                .attr('text-anchor', 'middle')
+                                .attr('x', 70)
+                                .attr('y', idx * 30 + 18)
+                                .text("Clear day");
+                            // Clear day button
+                            var clearButton = copyPasteButtons.append('rect')
+                                .attr('x', 40)
+                                .attr('y', 1 + idx * 30)
+                                .attr('width', 60)
+                                .attr('height', 28)
+                                .attr('fill-opacity', 0);
+                            // Attach listener for click
+                            var self = this;
+                            clearButton.on('mousedown', function() {
+                                d3.event.preventDefault();
+                                d3.event.stopPropagation();
+                                self.clearDay(dayGroup);
+                                self.closeContextMenu();
+                                console.log("CLICK ON CLEAR");
+                            });
                         }
 
                         this.attachListeners = function() {
                             console.log("Attaching listeners");
                             var self = this;
                             var allDays = d3.selectAll('g.parent');
-                            allDays.on('click', function() {
-                                if (self.entriesToCopy != null && this !== self.selectedDay) {
-                                    self.copySchedule(self, this);
-                                    self.entriesToCopy = null;
-                                } else {
-                                    self.daySelector(this);
-                                }
 
+                            var timeoutId;
+
+                            allDays.on("mousedown", function() {
+                                d3.event.preventDefault();
+                                //d3.event.stopPropagation();
+                                if (!self.inContextMenu && !self.inDetailedView) {
+                                    self.contextMenuSwitch = true;
+                                    console.log("MOUSE DOWN");
+                                    var target = this;
+                                    var mouse = d3.mouse(target);
+
+                                    timeoutId = setTimeout(function() {
+                                        self.isClickValid = false;
+                                        self.inContextMenu = true;
+                                        self.contextSelectedDay = target;
+                                        console.log("TIMEOUT");
+                                        // Show copy and clear
+                                        self.renderCopyPasteButtons(target);
+                                    }, 300);
+                                } else {
+                                    console.log("CLOSE CONTEXT MENU");
+                                    self.closeContextMenu();
+                                }
+                            });
+                            allDays.on('mouseup', function() {
+                                d3.event.preventDefault();
+                                //d3.event.stopPropagation();
+                                if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
+                                    clearTimeout(timeoutId);
+                                    console.log("MOUSEUP VALID: ", self.isClickValid);
+                                    if (self.isClickValid) {
+                                        console.log("CLICK CLICK");
+                                        if (self.entriesToCopy !== null && this !== self.selectedDay) {
+                                        self.copySchedule(self, this);
+                                        self.entriesToCopy = null;
+                                        } else {
+                                            self.daySelector(this);
+                                            self.inDetailedView = true;
+                                        }
+                                    }
+                                }
+                                self.contextMenuSwitch = true;
                             });
 
                             var addButton = d3.select('#add');
@@ -782,33 +933,28 @@ angular.module('cirqlApp')
                                 console.log('clicked on cancel');
                                 self.cancel();
                             });
-                        }
-                    }
+                        };
+                    };
 
                     var scheduler = new Schedule();
 
                     var renderState = function() {
                         if (scope.schedule && !scheduler.rendered) {
+                            scheduler.renderTimeline();
                             scheduler.renderScheduleEntries();
                             scheduler.attachListeners();
                             scheduler.rendered = true;
                         }
                     };
 
-                    var sync = function() {
-                        if (scope.schedule && scheduler.rendered) {
-                            schedule.syncFirebase();
-                        }
-                    }
-
                     scope.$watch('schedule', renderState);
 
                 },
                 replace: false,
                 template: '\
-                <ion-content scroll="false"> \
+                <ion-content scroll="false" data-tap-disabled="true"> \
                     <div class="schedule-block"> \
-                        <svg id="room-schedule" overflow="visible" width="100%" height="95%" viewBox="-3 -100 752 330" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">\
+                        <svg id="room-schedule" width="100%" height="100%" viewBox="-3 -100 752 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
                                     <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
@@ -859,11 +1005,6 @@ angular.module('cirqlApp')
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
                                 </g> \
-                            </g> \
-                            <g id="label" visibility="hidden"> \
-                                <text font-family="Helvetica Neue" font-size="20" font-weight="300" fill="#FFFFFF "> \
-                                    <tspan text-anchor="middle" x="47.5" y="230">{{hour}}:{{minute}}</tspan> \
-                                </text> \
                             </g> \
                         </svg> \
                 </ion-content> \
