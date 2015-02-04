@@ -79,9 +79,9 @@ a {
     top: 7%;
     left: -30%;
 }
-.has-header {
-    top: 10%;
-}
+// .has-header {
+//     margin-top: 44px;
+// }
 .title {
     position: relative;
     height: 3em;
@@ -412,10 +412,10 @@ input:-ms-input-placeholder {
 // Schedule View
 // -------------------------------
 .schedule-block {
-    height: 95%;
+    min-height:100%;
     width: 100%;
-    margin-top: -9%;
 }
+
 
 // Utility classes
 // -------------------------------
