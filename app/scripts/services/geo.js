@@ -3,6 +3,9 @@
 angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil',
     function($q, $log, simpleLogin, fbutil) {
 
+        fbutil.ref('test').on('child_added', function(fbTest) {
+            console.log('FIREBASE TEST: '+JSON.stringify(fbTest.val()));
+        });
         var user = null;
         var fbHome = null;
         var fbLocation = null;

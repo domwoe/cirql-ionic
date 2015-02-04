@@ -16,7 +16,7 @@ angular.module('cirqlApp')
 
         if ($rootScope.flurry === true) {
             flurry.logPageView();
-            flurry.logEvent('enterView', {
+            flurry.logEvent('view', {
                 view: 'room',
                 roomId: $rootScope.room
             });
@@ -31,7 +31,7 @@ angular.module('cirqlApp')
         });
 
         $scope.finishedloading = false;
-        if (window.screen.hasOwnProperty('lockOrientation')) {
+        if (window.screen && window.screen.lockOrientation) {
             window.screen.lockOrientation('portrait');
         }
 

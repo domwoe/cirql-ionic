@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', 
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
         function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
 
             $scope.logout = function() {
@@ -44,7 +44,7 @@ angular.module('cirqlApp')
 
 
                         }
-                    }    
+                    }
                 });
             } else {
                 $state.go('login');
@@ -174,9 +174,9 @@ angular.module('cirqlApp')
             };
 
             $scope.goToSchedule = function() {
-             //   if (window.screen.hasOwnProperty('lockOrientation')) {
-                    //window.screen.lockOrientation('landscape');
-               // }
+                if (window.screen && window.screen.lockOrientation) {
+                    window.screen.lockOrientation('landscape');
+                }
                 $state.go('app.schedule', {
                     roomId: $scope.room
                 });
