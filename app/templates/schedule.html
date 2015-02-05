@@ -1,9 +1,24 @@
-<ion-view "class=schedule-header" title="{{'SCHEDULE' | translate}}">
-	<ion-nav-buttons side="left">
-        <button id="save" class="button-clear">
+<ion-view "class=schedule-header" title="{{'SCHEDULE' | translate}}" hide-nav-bar="true">
+    <ion-nav-buttons side="left">
+        <button ng-show="!dayview" id="save" class="button-clear">
             <i class="ion-chevron-left"></i> <span translate>BACK</span>
         </button>
+        <button ng-show="dayview" id="week" class="button-clear">
+            <i class="ion-chevron-left"></i> <span translate>WEEK</span>
+        </button>
     </ion-nav-buttons>
-	<room-schedule roomid="roomId" sync="obj" schedule="schedule" radius="radius" goback="goback(room,changedDay)" 			reload="reload(changedDay)" dayview="dayview">
-	</room-schedule>
+    <ion-nav-buttons ng-show="dayview" side="right">
+        <button id="add" class="button-clear">
+            <span translate>ADD</span>
+        </button>
+        <button id="delete" class="button-clear">
+            <span translate>DELETE</span>
+        </button>
+    </ion-nav-buttons>
+    <ion-content class="has-header allow-overflow" scroll="false" data-tap-disabled="true">
+        <div class="schedule-block">
+            <room-schedule roomid="roomId" sync="obj" schedule="schedule" radius="radius" goback="goback(room,changedDay)" reload="reload(changedDay)" dayview="dayview">
+            </room-schedule>
+        </div>
+    </ion-content>
 </ion-view>

@@ -283,8 +283,8 @@
                                 var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
-                                previousRec1.attr('fill-opacity', 0.6);
-                                previousRec2.attr('fill-opacity', 0.6);
+                                previousRec1.attr('fill', '#483e37');
+                                previousRec2.attr('fill',  '#FFFFFF');
                             };
 
                             this.daySelector = function(day) {
@@ -631,7 +631,7 @@
                                         delete this.localSchedule[idToDel];
                                     }
                                 }
-                            }
+                            };
 
                             this.copySchedule = function(self, dest) {
                                 var destDay = d3.select(dest);
@@ -648,6 +648,7 @@
                                 }
 
                                 self.entriesToCopy.each(function() {
+                                    console.log("ENTRY: ", this);
 
                                     var entry = d3.select(this);
                                     var index = entry.attr('id');
@@ -668,12 +669,6 @@
                                 });
                                 self.deselectEntry();
                                 destDay.moveToFront();
-                            };
-
-                            this.copyScheduleCallback = function(self) {
-                                if (self.selectedDay !== null) {
-                                    self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
-                                }
                             };
 
                             this.deleteEntryCallback = function(self) {
@@ -753,8 +748,16 @@
                                 console.log(" TO REMVE: ", group);
                                 group.remove();
                                 // Remove day highlight
-                                d3.select(this.contextSelectedDay).selectAll('rect')
-                                    .attr('fill-opacity', 0.6);
+                                console.log("selected day: ", this.contextSelectedDay);
+                                var dayGroup = d3.select(this.contextSelectedDay);
+                                 // Remove highlight
+                                dayGroup.selectAll('rect.label-col')
+                                    .attr('fill', '#483e37');
+                                dayGroup.selectAll('rect.schedule-col')
+                                    .attr('fill', '#FFFFFF');    
+                                dayGroup.selectAll('text')
+                                    .attr('fill', '#FFFFFF');
+
                                 this.contextSelectedDay = null;
                                 this.isClickValid = true;
                                 this.inContextMenu = false;
@@ -762,6 +765,7 @@
                             };
 
                             this.renderCopyPasteButtons = function(day) {
+                                var self = this;
                                 var dayGroup = d3.select(day);
                                 dayGroup.moveToFront();
 
@@ -771,7 +775,9 @@
 
                                 // Highlight the day
                                 dayGroup.selectAll('rect')
-                                    .attr('fill-opacity', 1.0);
+                                    .attr('fill', '#ecf0f1');   
+                                dayGroup.selectAll('text')
+                                    .attr('fill', '#483e37');
 
                                 var idx = this.getIndexForDay(day);
                                 if (idx === 0) {
@@ -782,22 +788,17 @@
                                     idx--;
                                 }
 
+                                var backWidth = (this.entriesToCopy !== null) ? 140: 100;
+
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
                                     .attr('y', 1 + idx * 30)
                                     .attr('height', 28)
-                                    .attr('width', 100)
+                                    .attr('width', backWidth)
                                     .attr('rx', 5)
                                     .attr('ry', 5)
-                                    .attr('fill', '#483e37');
+                                    .attr('fill', '#2980b9');
 
-                                // Copy day button
-                                var copyButton = copyPasteButtons.append('rect')
-                                    .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
-                                    .attr('width', 40)
-                                    .attr('fill-opacity', 0);
                                 var copyText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
@@ -808,6 +809,24 @@
                                     .attr('x', 20)
                                     .attr('y', idx * 30 + 18)
                                     .text("Copy");
+                                // Copy day button
+                                var copyButton = copyPasteButtons.append('rect')
+                                    .attr('x', 1)
+                                    .attr('y', 1 + idx * 30)
+                                    .attr('height', 28)
+                                    .attr('width', 40)
+                                    .attr('fill-opacity', 0);
+                                var copyDayCallback = function() {
+                                    d3.event.preventDefault();
+                                    d3.event.stopPropagation();
+                                    if (self.contextSelectedDay !== null) {
+                                        self.entriesToCopy = d3.select(self.contextSelectedDay).selectAll('g.entry');
+                                    }
+                                    console.log("To COPY: ", self.entriesToCopy);
+                                    self.closeContextMenu();
+                                }
+                                copyButton.on('touchstart', copyDayCallback);
+                                copyButton.on('mousedown', copyDayCallback);
 
                                 // Draw separator
                                 var sep = copyPasteButtons.append('line')
@@ -818,33 +837,75 @@
                                     .attr('x2', 40)
                                     .attr('y2', (idx + 1) * 30 - 4);
 
+                                console.log("ENTRIES TO COPY: ", this.entriesToCopy);
+                                if (this.entriesToCopy !== null) { // Add paste button
+                                    var pasteText = copyPasteButtons.append('text')
+                                        .attr('font-family', 'Helvetica Neue')
+                                        .attr('font-size', 10)
+                                        .attr('font-weight', 400)
+                                        .attr('fill', '#FFFFFF');
+                                    var pasteTspan = pasteText.append('tspan')
+                                        .attr('text-anchor', 'left')
+                                        .attr('x', 46)
+                                        .attr('y', idx * 30 + 18)
+                                        .text("Paste");
+
+                                    var pasteDayCallback = function() {
+                                        console.log("COPYING");
+                                        d3.event.preventDefault();
+                                        d3.event.stopPropagation();
+                                        self.copySchedule(self, self.contextSelectedDay);
+                                        self.entriesToCopy = null;
+                                        self.closeContextMenu();
+                                    };
+                                    var pasteButton = copyPasteButtons.append('rect')
+                                        .attr('x', 42)
+                                        .attr('y', 1 + idx * 30)
+                                        .attr('height', 28)
+                                        .attr('width', 40)
+                                        .attr('fill-opacity', 0);
+                                    pasteButton.on('mousedown', pasteDayCallback);
+                                    pasteButton.on('touchstart', pasteDayCallback);
+
+                                    // Draw separator
+                                    var pasteSep = copyPasteButtons.append('line')
+                                        .style("stroke", "white")
+                                        .style('stroke-opacity', 0.4)
+                                        .attr("x1", 80)
+                                        .attr('y1', 4 + idx * 30)
+                                        .attr('x2', 80)
+                                        .attr('y2', (idx + 1) * 30 - 4);
+                                }
+
+                                var clearBtnX = (this.entriesToCopy !== null) ? 85: 45;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
                                     .attr('font-weight', 400)
                                     .attr('fill', '#FFFFFF');
                                 var clearTspan = clearText.append('tspan')
-                                    .attr('text-anchor', 'middle')
-                                    .attr('x', 70)
+                                    .attr('text-anchor', 'left')
+                                    .attr('x', clearBtnX)
                                     .attr('y', idx * 30 + 18)
                                     .text("Clear day");
                                 // Clear day button
                                 var clearButton = copyPasteButtons.append('rect')
-                                    .attr('x', 40)
+                                    .attr('x', clearBtnX)
                                     .attr('y', 1 + idx * 30)
-                                    .attr('width', 60)
+                                    .attr('width', 50)
                                     .attr('height', 28)
                                     .attr('fill-opacity', 0);
-                                // Attach listener for click
-                                var self = this;
-                                clearButton.on('mousedown', function() {
+                                // Attach listener for clear
+                                var clearDayCallback = function() {
                                     d3.event.preventDefault();
                                     d3.event.stopPropagation();
                                     self.clearDay(dayGroup);
                                     self.closeContextMenu();
                                     console.log("CLICK ON CLEAR");
-                                });
-                            }
+                                };
+                                clearButton.on('touchstart', clearDayCallback);
+                                clearButton.on('mousedown', clearDayCallback);
+                            };
 
                             this.attachListeners = function() {
                                 console.log("Attaching listeners");
@@ -853,9 +914,9 @@
 
                                 var timeoutId;
 
-                                allDays.on("mousedown", function() {
+                                var allDaysOnTouchStartCallback = function() {
                                     d3.event.preventDefault();
-                                    //d3.event.stopPropagation();
+                                    d3.event.stopPropagation();
                                     if (!self.inContextMenu && !self.inDetailedView) {
                                         self.contextMenuSwitch = true;
                                         console.log("MOUSE DOWN");
@@ -874,10 +935,11 @@
                                         console.log("CLOSE CONTEXT MENU");
                                         self.closeContextMenu();
                                     }
-                                });
-                                allDays.on('mouseup', function() {
+                                };
+
+                                var allDaysOnTouchEndCallback = function() {
                                     d3.event.preventDefault();
-                                    //d3.event.stopPropagation();
+                                    d3.event.stopPropagation();
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
                                         console.log("MOUSEUP VALID: ", self.isClickValid);
@@ -893,7 +955,12 @@
                                         }
                                     }
                                     self.contextMenuSwitch = true;
-                                });
+                                };
+
+                                allDays.on('touchstart', allDaysOnTouchStartCallback);
+                                allDays.on('mousedown', allDaysOnTouchStartCallback);
+                                allDays.on('touchend', allDaysOnTouchEndCallback);
+                                allDays.on('mouseup', allDaysOnTouchEndCallback);
 
                                 var addButton = d3.select('#add');
                                 console.log("Add button: ", addButton);
@@ -905,12 +972,6 @@
                                 console.log("Add button: ", addButton);
                                 weekButton.on('click', function() {
                                     self.backToWeek(self);
-                                });
-
-                                var copyButton = d3.select('#copy');
-                                copyButton.on('click', function() {
-                                    console.log('clicked on cancel');
-                                    self.copyScheduleCallback(self);
                                 });
 
                                 var deleteButton = d3.select('#delete');
@@ -947,78 +1008,60 @@
 
                     },
                     replace: false,
-                    template: '\
-                <ion-content class="has-header has-footer" scroll="false" data-tap-disabled="true">\
-        <div class="schedule-block">\
-        <svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
+                    template: '<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                                     </text> \
-                                    <rect id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                                    <rect class="schedule-col" id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
                                 <g id="tuesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
-                                    <rect fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
                                 </g> \
                                 <rect fill="#483e37" width="95" height="20" x="0" y="210" /> \
                             </g> \
-                        </svg> \
-                        </div> \
-                </ion-content> \
-                <ion-footer-bar class="bar-footer"> \
-                    <div class="row">\
-                        <div class="col">\
-                            <button ng-show="dayview" id="week" class="button button-light button-block transparent padding ">Week</button> \
-                        </div>\
-                        <div class="col col-offset-50">\
-                            <button ng-show="dayview" id="add" class="button  button-light button-block transparent padding">Add</button> \
-                        </div>\
-                        <div class="col">\
-                            <button ng-show="dayview" id="delete" class="button button-light button-block transparent padding">Delete</button> \
-                        </div>\
-                    </div>\
-                </ion-footer-bar>'
+                        </svg>'
                 };
             }
         ]);
