@@ -753,7 +753,16 @@
                                 console.log(" TO REMVE: ", group);
                                 group.remove();
                                 // Remove day highlight
-                                d3.select(this.contextSelectedDay).selectAll('rect');
+                                console.log("selected day: ", this.contextSelectedDay);
+                                var dayGroup = d3.select(this.contextSelectedDay);
+                                 // Remove highlight
+                                dayGroup.selectAll('rect.label-col')
+                                    .attr('fill', '#483e37');
+                                dayGroup.selectAll('rect.schedule-col')
+                                    .attr('fill', '#FFFFFF');    
+                                dayGroup.selectAll('text')
+                                    .attr('fill', '#FFFFFF');
+
                                 this.contextSelectedDay = null;
                                 this.isClickValid = true;
                                 this.inContextMenu = false;
@@ -856,7 +865,7 @@
 
                                 var allDaysOnTouchStartCallback = function() {
                                     d3.event.preventDefault();
-                                    //d3.event.stopPropagation();
+                                    d3.event.stopPropagation();
                                     if (!self.inContextMenu && !self.inDetailedView) {
                                         self.contextMenuSwitch = true;
                                         console.log("MOUSE DOWN");
@@ -879,7 +888,7 @@
 
                                 var allDaysOnTouchEndCallback = function() {
                                     d3.event.preventDefault();
-                                    //d3.event.stopPropagation();
+                                    d3.event.stopPropagation();
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
                                         console.log("MOUSEUP VALID: ", self.isClickValid);
@@ -957,50 +966,50 @@
                     template: '<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
                                     </text> \
-                                    <rect id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                                    <rect class="schedule-col" id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
                                 <g id="tuesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
-                                    <rect fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
-                                    <rect fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
                                     </text> \
