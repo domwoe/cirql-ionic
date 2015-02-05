@@ -648,6 +648,7 @@
                                 }
 
                                 self.entriesToCopy.each(function() {
+                                    console.log("ENTRY: ", this);
 
                                     var entry = d3.select(this);
                                     var index = entry.attr('id');
@@ -668,12 +669,6 @@
                                 });
                                 self.deselectEntry();
                                 destDay.moveToFront();
-                            };
-
-                            this.copyScheduleCallback = function(self) {
-                                if (self.selectedDay !== null) {
-                                    self.entriesToCopy = d3.select(self.selectedDay).selectAll('g');
-                                }
                             };
 
                             this.deleteEntryCallback = function(self) {
@@ -770,6 +765,7 @@
                             };
 
                             this.renderCopyPasteButtons = function(day) {
+                                var self = this;
                                 var dayGroup = d3.select(day);
                                 dayGroup.moveToFront();
 
@@ -792,22 +788,17 @@
                                     idx--;
                                 }
 
+                                var backWidth = (this.entriesToCopy !== null) ? 140: 100;
+
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
                                     .attr('y', 1 + idx * 30)
                                     .attr('height', 28)
-                                    .attr('width', 100)
+                                    .attr('width', backWidth)
                                     .attr('rx', 5)
                                     .attr('ry', 5)
                                     .attr('fill', '#2980b9');
 
-                                // Copy day button
-                                var copyButton = copyPasteButtons.append('rect')
-                                    .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
-                                    .attr('width', 40)
-                                    .attr('fill-opacity', 0);
                                 var copyText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
@@ -818,6 +809,24 @@
                                     .attr('x', 20)
                                     .attr('y', idx * 30 + 18)
                                     .text("Copy");
+                                // Copy day button
+                                var copyButton = copyPasteButtons.append('rect')
+                                    .attr('x', 1)
+                                    .attr('y', 1 + idx * 30)
+                                    .attr('height', 28)
+                                    .attr('width', 40)
+                                    .attr('fill-opacity', 0);
+                                var copyDayCallback = function() {
+                                    d3.event.preventDefault();
+                                    d3.event.stopPropagation();
+                                    if (self.contextSelectedDay !== null) {
+                                        self.entriesToCopy = d3.select(self.contextSelectedDay).selectAll('g.entry');
+                                    }
+                                    console.log("To COPY: ", self.entriesToCopy);
+                                    self.closeContextMenu();
+                                }
+                                copyButton.on('touchstart', copyDayCallback);
+                                copyButton.on('mousedown', copyDayCallback);
 
                                 // Draw separator
                                 var sep = copyPasteButtons.append('line')
@@ -828,32 +837,74 @@
                                     .attr('x2', 40)
                                     .attr('y2', (idx + 1) * 30 - 4);
 
+                                console.log("ENTRIES TO COPY: ", this.entriesToCopy);
+                                if (this.entriesToCopy !== null) { // Add paste button
+                                    var pasteText = copyPasteButtons.append('text')
+                                        .attr('font-family', 'Helvetica Neue')
+                                        .attr('font-size', 10)
+                                        .attr('font-weight', 400)
+                                        .attr('fill', '#FFFFFF');
+                                    var pasteTspan = pasteText.append('tspan')
+                                        .attr('text-anchor', 'left')
+                                        .attr('x', 46)
+                                        .attr('y', idx * 30 + 18)
+                                        .text("Paste");
+
+                                    var pasteDayCallback = function() {
+                                        console.log("COPYING");
+                                        d3.event.preventDefault();
+                                        d3.event.stopPropagation();
+                                        self.copySchedule(self, self.contextSelectedDay);
+                                        self.entriesToCopy = null;
+                                        self.closeContextMenu();
+                                    };
+                                    var pasteButton = copyPasteButtons.append('rect')
+                                        .attr('x', 42)
+                                        .attr('y', 1 + idx * 30)
+                                        .attr('height', 28)
+                                        .attr('width', 40)
+                                        .attr('fill-opacity', 0);
+                                    pasteButton.on('mousedown', pasteDayCallback);
+                                    pasteButton.on('touchstart', pasteDayCallback);
+
+                                    // Draw separator
+                                    var pasteSep = copyPasteButtons.append('line')
+                                        .style("stroke", "white")
+                                        .style('stroke-opacity', 0.4)
+                                        .attr("x1", 80)
+                                        .attr('y1', 4 + idx * 30)
+                                        .attr('x2', 80)
+                                        .attr('y2', (idx + 1) * 30 - 4);
+                                }
+
+                                var clearBtnX = (this.entriesToCopy !== null) ? 85: 45;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
                                     .attr('font-weight', 400)
                                     .attr('fill', '#FFFFFF');
                                 var clearTspan = clearText.append('tspan')
-                                    .attr('text-anchor', 'middle')
-                                    .attr('x', 70)
+                                    .attr('text-anchor', 'left')
+                                    .attr('x', clearBtnX)
                                     .attr('y', idx * 30 + 18)
                                     .text("Clear day");
                                 // Clear day button
                                 var clearButton = copyPasteButtons.append('rect')
-                                    .attr('x', 40)
+                                    .attr('x', clearBtnX)
                                     .attr('y', 1 + idx * 30)
-                                    .attr('width', 60)
+                                    .attr('width', 50)
                                     .attr('height', 28)
                                     .attr('fill-opacity', 0);
-                                // Attach listener for click
-                                var self = this;
-                                clearButton.on('touchstart', function() {
+                                // Attach listener for clear
+                                var clearDayCallback = function() {
                                     d3.event.preventDefault();
                                     d3.event.stopPropagation();
                                     self.clearDay(dayGroup);
                                     self.closeContextMenu();
                                     console.log("CLICK ON CLEAR");
-                                });
+                                };
+                                clearButton.on('touchstart', clearDayCallback);
+                                clearButton.on('mousedown', clearDayCallback);
                             };
 
                             this.attachListeners = function() {
@@ -921,12 +972,6 @@
                                 console.log("Add button: ", addButton);
                                 weekButton.on('click', function() {
                                     self.backToWeek(self);
-                                });
-
-                                var copyButton = d3.select('#copy');
-                                copyButton.on('click', function() {
-                                    console.log('clicked on cancel');
-                                    self.copyScheduleCallback(self);
                                 });
 
                                 var deleteButton = d3.select('#delete');
