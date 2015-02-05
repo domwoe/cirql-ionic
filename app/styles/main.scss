@@ -424,6 +424,7 @@ input:-ms-input-placeholder {
 
 .allow-overflow {
     overflow: visible;
+    z-index: 999;
 }
 
 
