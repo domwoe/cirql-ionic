@@ -204,7 +204,6 @@ angular.module('cirqlApp')
                             var textGroup = entryGroup.append('g')
                                 .attr('class', 'time');
 
-                            console.log("entryg: ", entryGroup);
                             var text = textGroup.append('text')
                                 .attr('font-family', 'Helvetica Neue')
                                 .attr('font-size', 12)
@@ -817,7 +816,7 @@ angular.module('cirqlApp')
                                 .attr('fill-opacity', 0);
                             copyButton.on('mousedown', function() {
                                 d3.event.preventDefault();
-                                d3.event.stopPropagation();
+                            //    d3.event.stopPropagation();
                                 self.copyScheduleCallback();
                                 console.log("To COPY: ", self.entriesToCopy);
                                 self.closeContextMenu();
@@ -853,7 +852,7 @@ angular.module('cirqlApp')
                             var self = this;
                             clearButton.on('mousedown', function() {
                                 d3.event.preventDefault();
-                                d3.event.stopPropagation();
+                           //     d3.event.stopPropagation();
                                 self.clearDay(dayGroup);
                                 self.closeContextMenu();
                                 console.log("CLICK ON CLEAR");
@@ -910,39 +909,29 @@ angular.module('cirqlApp')
                                 self.contextMenuSwitch = true;
                             });
 
+                            var saveButton = d3.select('#save');
+                            console.log("#PARENT NODE: ", d3.select(saveButton.node().parentNode));
+                            saveButton.on('click', function() {
+                                console.log('save');
+                                self.save(self);
+                            });
+
+                            var weekButton = d3.select('#week');
+                            console.log("Week button: ", weekButton);
+                            weekButton.on('click', function() {
+                                console.log("BACKTO");
+                                self.backToWeek(self);
+                            });
+
                             var addButton = d3.select('#add');
                             console.log("Add button: ", addButton);
                             addButton.on('click', function() {
                                 self.addEntryCallback(self);
                             });
 
-                            var weekButton = d3.select('#week');
-                            console.log("Add button: ", addButton);
-                            weekButton.on('click', function() {
-                                self.backToWeek(self);
-                            });
-
-                            var copyButton = d3.select('#copy');
-                            copyButton.on('click', function() {
-                                console.log('clicked on cancel');
-                                self.copyScheduleCallback(self);
-                            });
-
                             var deleteButton = d3.select('#delete');
                             deleteButton.on('click', function() {
                                 self.deleteEntryCallback(self);
-                            });
-
-                            var saveButton = d3.select('#save');
-                            saveButton.on('click', function() {
-                                console.log('save');
-                                self.save(self);
-                            });
-
-                            var cancelButton = d3.select('#cancel');
-                            cancelButton.on('click', function() {
-                                console.log('clicked on cancel');
-                                self.cancel();
                             });
                         };
                     };
@@ -965,7 +954,7 @@ angular.module('cirqlApp')
                 template: '\
                 <ion-content class="has-footer has-header" scroll="false" data-tap-disabled="true"> \
                     <div class="schedule-block"> \
-                        <svg id="room-schedule" width="100%" height="100%" viewBox="-3 -10 752 330" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
+                        <svg id="room-schedule" width="100%" height="100%" viewBox="0 0 747 250" preserveAspectRatio="xMinyMin" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
                                     <rect fill="#483e37" fill-opacity="0.6" stroke="#FFFFFF" stroke-width="1" width="95" height="30" x="0" y="0" /> \
