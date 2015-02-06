@@ -21,12 +21,12 @@ angular.module('cirqlApp')
                 roomid: $rootScope.room
             });
 
-            $scope.dayview = false;
+            // Use rootscope to inject in directive and back to schedule.html template
+            $rootScope.dayView = false;
 
             var room = $rootScope.room;
             var roomUrl = 'homes/' + user.uid + '/rooms/' + room;
             //$scope.roomValues = fbutil.syncObject(roomUrl);
-
 
             var activities = fbutil.syncArray('homes/' + user.uid + '/activity/' + room + '/raw');
 

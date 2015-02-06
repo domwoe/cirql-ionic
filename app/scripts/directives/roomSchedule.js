@@ -1,8 +1,8 @@
     'use strict';
 
     angular.module('cirqlApp')
-        .directive('roomSchedule', ['$timeout', 'colorForTemperature',
-            function($timeout, colorForTemperature) {
+        .directive('roomSchedule', ['$rootScope', '$timeout', 'colorForTemperature',
+            function($rootScope, $timeout, colorForTemperature) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -11,8 +11,7 @@
                         sync: "=",
                         roomid: "=",
                         goback: "&",
-                        reload: "&",
-                        dayview: "="
+                        reload: "&"
                     },
                     link: function(scope, element, attrs) {
 
@@ -223,8 +222,8 @@
                             };
 
                             this.selectDay = function(day) {
-                                scope.dayview = true;
-                                scope.$apply();
+                                $rootScope.dayView = true;
+                                $rootScope.$apply();
                                 var weekdays = d3.select('#weekdays');
                                 var weekCol = weekdays.append('rect')
                                     .attr('id', 'week_column')
@@ -279,6 +278,8 @@
                             };
 
                             this.deselectDay = function() {
+                                $rootScope.dayView = false;
+                                $rootScope.$apply();
                                 var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
@@ -457,18 +458,14 @@
                                     .attr('fill-opacity', 0)
                                     .call(d3.behavior.drag()
                                         .on('dragstart', function(d) {
-                                            console.log("DRAG START");
                                             d3.event.sourceEvent.preventDefault();
                                             d3.event.sourceEvent.stopPropagation();
 
                                             var selectedNode = d3.select(this);
                                             var parentNode = selectedNode.node().parentNode;
                                             var secondAncestor = d3.select(parentNode).node().parentNode;
-                                            console.log("Selected: ", selectedNode);
-                                            console.log("ENTRY: ", self.selectedEntry);
 
                                             if (self.inDeleteView) {
-                                                console.log("IN DELETE MODE");
                                                 var selectedEntry = d3.select(parentNode);
                                                 var index = selectedEntry.attr('id');
                                                 delete self.localSchedule[index];
@@ -525,7 +522,6 @@
                                         })
                                         .on('dragend', function(d) {
                                             if (!self.inDeleteView) {
-                                                console.log("DRAGEND");
                                                 self.dragging = false;
                                                 self.lockOnVerticalDrag = false;
                                                 self.lockOnHorizontalDrag = false;
@@ -717,9 +713,6 @@
                             };
 
                             this.save = function(self) {
-
-                                console.log(self.changed);
-
                                 self.syncFirebase();
                                 scope.goback({
                                     room: scope.roomid,
@@ -734,9 +727,7 @@
                             };
 
                             this.backToWeek = function(self) {
-                                console.log('BACK TO WEEK');
                                 self.syncFirebase();
-                                console.log(self.changed);
                                 this.inDetailedView = false;
                                 scope.reload({
                                     changedDay: self.changed
@@ -750,10 +741,8 @@
                             this.closeContextMenu = function() {
                                 // Delete copy and clear buttons
                                 var group = d3.select('g.copy-paste');
-                                console.log(" TO REMVE: ", group);
                                 group.remove();
                                 // Remove day highlight
-                                console.log("selected day: ", this.contextSelectedDay);
                                 var dayGroup = d3.select(this.contextSelectedDay);
                                  // Remove highlight
                                 dayGroup.selectAll('rect.label-col')
@@ -827,7 +816,6 @@
                                     if (self.contextSelectedDay !== null) {
                                         self.entriesToCopy = d3.select(self.contextSelectedDay).selectAll('g.entry');
                                     }
-                                    console.log("To COPY: ", self.entriesToCopy);
                                     self.closeContextMenu();
                                 }
                                 copyButton.on('touchstart', copyDayCallback);
@@ -842,7 +830,6 @@
                                     .attr('x2', 40)
                                     .attr('y2', (idx + 1) * 30 - 4);
 
-                                console.log("ENTRIES TO COPY: ", this.entriesToCopy);
                                 if (this.entriesToCopy !== null) { // Add paste button
                                     var pasteText = copyPasteButtons.append('text')
                                         .attr('font-family', 'Helvetica Neue')
@@ -856,7 +843,6 @@
                                         .text("Paste");
 
                                     var pasteDayCallback = function() {
-                                        console.log("COPYING");
                                         d3.event.preventDefault();
                                         d3.event.stopPropagation();
                                         self.copySchedule(self, self.contextSelectedDay);
@@ -906,14 +892,12 @@
                                     d3.event.stopPropagation();
                                     self.clearDay(dayGroup);
                                     self.closeContextMenu();
-                                    console.log("CLICK ON CLEAR");
                                 };
                                 clearButton.on('touchstart', clearDayCallback);
                                 clearButton.on('mousedown', clearDayCallback);
                             };
 
                             this.attachListeners = function() {
-                                console.log("Attaching listeners");
                                 var self = this;
                                 var allDays = d3.selectAll('g.parent');
 
@@ -924,7 +908,6 @@
                                     d3.event.stopPropagation();
                                     if (!self.inContextMenu && !self.inDetailedView) {
                                         self.contextMenuSwitch = true;
-                                        console.log("MOUSE DOWN");
                                         var target = this;
                                         var mouse = d3.mouse(target);
 
@@ -932,12 +915,10 @@
                                             self.isClickValid = false;
                                             self.inContextMenu = true;
                                             self.contextSelectedDay = target;
-                                            console.log("TIMEOUT");
                                             // Show copy and clear
                                             self.renderCopyPasteButtons(target);
                                         }, 300);
                                     } else {
-                                        console.log("CLOSE CONTEXT MENU");
                                         self.closeContextMenu();
                                     }
                                 };
@@ -947,9 +928,7 @@
                                     d3.event.stopPropagation();
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
-                                        console.log("MOUSEUP VALID: ", self.isClickValid);
                                         if (self.isClickValid) {
-                                            console.log("CLICK CLICK");
                                             if (self.entriesToCopy !== null && this !== self.selectedDay) {
                                                 self.copySchedule(self, this);
                                                 self.entriesToCopy = null;
@@ -968,32 +947,27 @@
                                 allDays.on('mouseup', allDaysOnTouchEndCallback);
 
                                 var addButton = d3.select('#add');
-                                console.log("Add button: ", addButton);
                                 addButton.on('click', function() {
                                     self.addEntryCallback(self);
                                 });
 
                                 var weekButton = d3.select('#week');
-                                console.log("Add button: ", addButton);
                                 weekButton.on('click', function() {
                                     self.backToWeek(self);
                                 });
 
                                 var deleteButton = d3.select('#delete');
                                 deleteButton.on('click', function() {
-                                    console.log("delete CALLBACK");
                                     self.switchToDeleteView(self);
                                 });
 
                                 var saveButton = d3.select('#save');
                                 saveButton.on('click', function() {
-                                    console.log('save');
                                     self.save(self);
                                 });
 
                                 var cancelButton = d3.select('#cancel');
                                 cancelButton.on('click', function() {
-                                    console.log('clicked on cancel');
                                     self.cancel();
                                 });
                             };
