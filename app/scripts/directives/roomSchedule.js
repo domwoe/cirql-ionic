@@ -43,6 +43,7 @@
                             this.inContextMenu = false;
                             this.contextSelectedDay = null;
                             this.contextMenuSwitch = false;
+                            this.inDeleteView = false;
 
                             scope.sync = this.localSchedule;
 
@@ -149,7 +150,7 @@
                                     if (this.lockOnHorizontalDrag) {
                                         // Update time
                                         var time = this.pixelOffsetToTime(newposX);
-                                        
+
                                         // Update the times in the local schedule
                                         var entry = this.localSchedule[circleIndex];
                                         entry.hour = time[0];
@@ -235,8 +236,6 @@
                                 var scheduleCol = weekdays.append('rect')
                                     .attr('id', 'schedule_column')
                                     .attr('fill', '#FFFFFF')
-                                    .attr('stroke', '#FFFFFF')
-                                    .attr('stroke-width', 1)
                                     .attr('x', 95)
                                     .attr('y', 0)
                                     .attr('height', 210)
@@ -467,41 +466,56 @@
                                             var secondAncestor = d3.select(parentNode).node().parentNode;
                                             console.log("Selected: ", selectedNode);
                                             console.log("ENTRY: ", self.selectedEntry);
-                                            if (self.inDetailedView && selectedNode !== self.selectedEntry) {
 
-                                                self.daySelector(secondAncestor);
-                                                self.entrySelector(self, parentNode);
-                                                self.dragging = true;
-
-                                                var group = d3.select(parentNode);
-                                                var selection = group.select('circle');
-
-                                                var trX = d3.transform(group.attr("transform")).translate[0];
-                                                var trY = d3.transform(group.attr("transform")).translate[1];
-
-                                                d.dragstart = d3.mouse(this); // store this
-
-                                                var xpos = parseInt(selection.attr('cx')) + trX;
-                                                var ypos = parseInt(selection.attr('cy')) + trY;
-
-                                                var dayGroup = d3.select(secondAncestor);
-                                                dayGroup.insert('rect', 'g.entry')
-                                                    .attr('id', 'vpath')
-                                                    .attr('x', xpos - self.radius)
-                                                    .attr('y', 0)
-                                                    .attr('width', 2 * self.radius)
-                                                    .attr('height', 7 * self.height)
-                                                    .attr('fill-opacity', 0.5);
-                                                dayGroup.insert('rect', 'g.entry')
-                                                    .attr('id', 'hpath')
-                                                    .attr('x', 95)
-                                                    .attr('y', ypos - self.radius)
-                                                    .attr('width', 650)
-                                                    .attr('height', 2 * self.radius)
-                                                    .attr('fill-opacity', 0.5);
+                                            if (self.inDeleteView) {
+                                                console.log("IN DELETE MODE");
+                                                var selectedEntry = d3.select(parentNode);
+                                                var index = selectedEntry.attr('id');
+                                                delete self.localSchedule[index];
+                                                selectedEntry.remove();
+                                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
+                                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
+                                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
+                                                self.selectedEntry = null;
+                                                self.inDeleteView = false;
+                                           
                                             } else {
-                                                self.daySelector(secondAncestor);
-                                                self.inDetailedView = true;
+                                                if (self.inDetailedView && selectedNode !== self.selectedEntry) {
+
+                                                    self.daySelector(secondAncestor);
+                                                    self.entrySelector(self, parentNode);
+                                                    self.dragging = true;
+
+                                                    var group = d3.select(parentNode);
+                                                    var selection = group.select('circle');
+
+                                                    var trX = d3.transform(group.attr("transform")).translate[0];
+                                                    var trY = d3.transform(group.attr("transform")).translate[1];
+
+                                                    d.dragstart = d3.mouse(this); // store this
+
+                                                    var xpos = parseInt(selection.attr('cx')) + trX;
+                                                    var ypos = parseInt(selection.attr('cy')) + trY;
+
+                                                    var dayGroup = d3.select(secondAncestor);
+                                                    dayGroup.insert('rect', 'g.entry')
+                                                        .attr('id', 'vpath')
+                                                        .attr('x', xpos - self.radius)
+                                                        .attr('y', 0)
+                                                        .attr('width', 2 * self.radius)
+                                                        .attr('height', 7 * self.height)
+                                                        .attr('fill-opacity', 0.5);
+                                                    dayGroup.insert('rect', 'g.entry')
+                                                        .attr('id', 'hpath')
+                                                        .attr('x', 95)
+                                                        .attr('y', ypos - self.radius)
+                                                        .attr('width', 650)
+                                                        .attr('height', 2 * self.radius)
+                                                        .attr('fill-opacity', 0.5);
+                                                } else {
+                                                    self.daySelector(secondAncestor);
+                                                    self.inDetailedView = true;
+                                                }
                                             }
                                         })
                                         .on('drag', function(d) {
@@ -510,16 +524,18 @@
                                             }
                                         })
                                         .on('dragend', function(d) {
-                                            console.log("DRAGEND");
-                                            self.dragging = false;
-                                            self.lockOnVerticalDrag = false;
-                                            self.lockOnHorizontalDrag = false;
-                                            // Remove path rectangles
-                                            d3.select('#vpath').remove();
-                                            d3.select('#hpath').remove();
-                                            // Deselect entry
-                                            self.deselectEntry();
-                                            delete d.dragstart;
+                                            if (!self.inDeleteView) {
+                                                console.log("DRAGEND");
+                                                self.dragging = false;
+                                                self.lockOnVerticalDrag = false;
+                                                self.lockOnHorizontalDrag = false;
+                                                // Remove path rectangles
+                                                d3.select('#vpath').remove();
+                                                d3.select('#hpath').remove();
+                                                // Deselect entry
+                                                self.deselectEntry();
+                                                delete d.dragstart;
+                                            }
                                         })
                                     );
                             };
@@ -660,12 +676,12 @@
                                 destDay.moveToFront();
                             };
 
-                            this.deleteEntryCallback = function(self) {
-                                if (self.selectedEntry !== null) {
-                                    var index = this.selectedEntry.attr('id');
-                                    delete self.localSchedule[index];
-                                    this.selectedEntry.remove();
-                                    self.selectedEntry = null;
+                            this.switchToDeleteView = function(self) {
+                                if (self.inDetailedView) {
+                                    self.inDeleteView = true;
+                                    d3.select('#schedule_column').attr('fill', '#C0C0C0');
+                                    d3.selectAll('rect.schedule-col').attr('fill', '#C0C0C0');
+                                    d3.select('#timeline_back').attr('fill', '#C0C0C0');
                                 }
                             };
 
@@ -965,7 +981,8 @@
 
                                 var deleteButton = d3.select('#delete');
                                 deleteButton.on('click', function() {
-                                    self.deleteEntryCallback(self);
+                                    console.log("delete CALLBACK");
+                                    self.switchToDeleteView(self);
                                 });
 
                                 var saveButton = d3.select('#save');
