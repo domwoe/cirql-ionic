@@ -1,8 +1,8 @@
     'use strict';
 
     angular.module('cirqlApp')
-        .directive('roomSchedule', ['$timeout',
-            function($timeout) {
+        .directive('roomSchedule', ['$timeout', 'colorForTemperature',
+            function($timeout, colorForTemperature) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -136,12 +136,10 @@
                                     group.attr('transform', 'translate(' + d.x + ', ' + d.y + ')');
 
                                     if (this.lockOnHorizontalDrag) {
-                                        console.log("Move horizontally");
                                         var getY = d3.transform(group.attr("transform")).translate[1];
                                         group.attr('transform', 'translate(' + d.x + ', ' + getY + ')');
 
                                     } else if (this.lockOnVerticalDrag) {
-                                        console.log("Move vertically");
                                         var getX = d3.transform(group.attr("transform")).translate[0];
                                         group.attr('transform', 'translate(' + getX + ', ' + d.y + ')');
                                     }
@@ -151,8 +149,7 @@
                                     if (this.lockOnHorizontalDrag) {
                                         // Update time
                                         var time = this.pixelOffsetToTime(newposX);
-                                        console.log("TIME: ", time);
-
+                                        
                                         // Update the times in the local schedule
                                         var entry = this.localSchedule[circleIndex];
                                         entry.hour = time[0];
@@ -179,6 +176,10 @@
                                         if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
                                             // Show the temp in the label
                                             group.select('text.label').select('tspan').text(newTemp);
+                                            // Update the color
+                                            var color = colorForTemperature.get(newTemp);
+                                            group.select('circle').attr('fill', color);
+                                            group.select('circle.label_back').attr('fill', color);
                                             // Update the hidden temp labels
                                             var target = Math.floor(newTemp);
                                             var dotTarget = (newTemp - target < 0.5) ? 0 : 5;
@@ -204,7 +205,6 @@
                                 var textGroup = entryGroup.append('g')
                                     .attr('class', 'time');
 
-                                console.log("entryg: ", entryGroup);
                                 var text = textGroup.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 12)
@@ -302,9 +302,6 @@
 
                             this.deselectEntry = function() {
                                 if (this.selectedEntry !== null) {
-                                    this.selectedEntry.select('circle')
-                                        .attr('fill', 'red')
-                                        .attr('r', this.radius);
                                     this.selectedEntry.select('g.time').attr('visibility', 'visible');
                                     this.selectedEntry.select('g.temp').attr('visibility', 'visible');
                                     this.selectedEntry.select('circle.label_back').remove();
@@ -320,7 +317,8 @@
 
                                 var label_back = group.append('circle')
                                     .attr('class', 'label_back')
-                                    .attr('fill', 'red')
+                                    .attr('fill', colorForTemperature.get(
+                                        self.localSchedule[group.attr('id')].target))
                                     .attr('stroke', '#FFFFFF')
                                     .attr('stroke-width', 2)
                                     .attr('r', this.radius * 1.7)
@@ -383,8 +381,6 @@
 
                                 newTemp = newTemp + 0.1 * newDotTemp;
 
-                                console.log(newTemp);
-
                                 if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
                                     targetTspan.text(Math.floor(newTemp));
                                     dotTargetTspan.text(newDotTemp);
@@ -424,7 +420,7 @@
                                     .attr('cx', xpos)
                                     .attr('cy', ypos)
                                     .attr('r', this.radius)
-                                    .attr('fill', 'red');
+                                    .attr('fill', colorForTemperature.get(target));
 
                                 var textGroup = entryGroup.append('g')
                                     .attr('class', 'temp');
@@ -504,13 +500,8 @@
                                                     .attr('height', 2 * self.radius)
                                                     .attr('fill-opacity', 0.5);
                                             } else {
-                                                /*   if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
-                                                self.copySchedule(self, secondAncestor);
-                                                self.entriesToCopy = null;
-                                            } else {*/
                                                 self.daySelector(secondAncestor);
                                                 self.inDetailedView = true;
-                                                //                                            }
                                             }
                                         })
                                         .on('drag', function(d) {
@@ -618,7 +609,6 @@
                                     self.nextId++;
 
                                     self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
-                                    // self.entrySelector(self, '#' + id);
                                 }
                             };
 
@@ -648,7 +638,6 @@
                                 }
 
                                 self.entriesToCopy.each(function() {
-                                    console.log("ENTRY: ", this);
 
                                     var entry = d3.select(this);
                                     var index = entry.attr('id');
