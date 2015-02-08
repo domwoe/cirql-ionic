@@ -284,7 +284,7 @@
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
                                 previousRec1.attr('fill', '#483e37');
-                                previousRec2.attr('fill',  '#FFFFFF');
+                                previousRec2.attr('fill', '#FFFFFF');
                             };
 
                             this.daySelector = function(day) {
@@ -475,7 +475,7 @@
                                                 d3.select('#timeline_back').attr('fill', '#FFFFFF');
                                                 self.selectedEntry = null;
                                                 self.inDeleteView = false;
-                                           
+
                                             } else {
                                                 if (self.inDetailedView && selectedNode !== self.selectedEntry) {
 
@@ -744,11 +744,11 @@
                                 group.remove();
                                 // Remove day highlight
                                 var dayGroup = d3.select(this.contextSelectedDay);
-                                 // Remove highlight
+                                // Remove highlight
                                 dayGroup.selectAll('rect.label-col')
                                     .attr('fill', '#483e37');
                                 dayGroup.selectAll('rect.schedule-col')
-                                    .attr('fill', '#FFFFFF');    
+                                    .attr('fill', '#FFFFFF');
                                 dayGroup.selectAll('text')
                                     .attr('fill', '#FFFFFF');
 
@@ -769,7 +769,7 @@
 
                                 // Highlight the day
                                 dayGroup.selectAll('rect')
-                                    .attr('fill', '#ecf0f1');   
+                                    .attr('fill', '#ecf0f1');
                                 dayGroup.selectAll('text')
                                     .attr('fill', '#483e37');
 
@@ -782,7 +782,7 @@
                                     idx--;
                                 }
 
-                                var backWidth = (this.entriesToCopy !== null) ? 140: 100;
+                                var backWidth = (this.entriesToCopy !== null) ? 140 : 100;
 
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
@@ -868,7 +868,7 @@
                                         .attr('y2', (idx + 1) * 30 - 4);
                                 }
 
-                                var clearBtnX = (this.entriesToCopy !== null) ? 85: 45;
+                                var clearBtnX = (this.entriesToCopy !== null) ? 85 : 45;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
@@ -993,7 +993,7 @@
                                 <g id="monday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="25">{{"MONDAY" | translate}}</tspan> \
                                     </text> \
                                     <rect class="schedule-col" id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
@@ -1001,42 +1001,42 @@
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="55">{{"TUESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="85">{{"WEDNESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="115">{{"THURSDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="145">{{"FRIDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="175">{{"SATURDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="180" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="205">{{"SUNDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <rect fill="#483e37" width="95" height="20" x="0" y="210" /> \

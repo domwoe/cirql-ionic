@@ -280,7 +280,14 @@ angular.module('cirqlApp')
         ME: 'me',
         WEEK: 'Week',
         ADD: 'Add',
-        DELETE: 'Delete'
+        DELETE: 'Delete',
+        MONDAY: 'Monday',
+        TUESDAY: 'Tuesday',
+        WEDNESDAY: 'Wednesday',
+        THURSDAY: 'Thursday',
+        FRIDAY: 'Friday',
+        SATURDAY: 'Saturday',
+        SUNDAY: 'Sunday'
 
 
 
@@ -356,7 +363,14 @@ angular.module('cirqlApp')
         ME: 'Ich',
         WEEK: 'Woche',
         ADD: 'Hinzügen',
-        DELETE: 'Entfernen'
+        DELETE: 'Entfernen',
+        MONDAY: 'Montag',
+        TUESDAY: 'Dienstag',
+        WEDNESDAY: 'Mittwoch',
+        THURSDAY: 'Donnerstag',
+        FRIDAY: 'Freitag',
+        SATURDAY: 'Samstag',
+        SUNDAY: 'Sonntag'
     });
 
     $translateProvider.preferredLanguage('de');

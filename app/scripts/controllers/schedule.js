@@ -21,6 +21,7 @@ angular.module('cirqlApp')
                 roomid: $rootScope.room
             });
 
+
             // Use rootscope to inject in directive and back to schedule.html template
             $rootScope.dayView = false;
 
