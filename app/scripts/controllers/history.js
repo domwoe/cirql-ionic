@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('HistoryCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', 'log', '$ionicSideMenuDelegate', '$filter', '$translate','$timeout',
+    .controller('HistoryCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', 'log', '$ionicSideMenuDelegate', '$filter', '$translate', '$timeout',
         function($rootScope, $scope, user, fbutil, $state, $ionicLoading, log, $ionicSideMenuDelegate, $filter, $translate, $timeout) {
 
             if (window.screen && window.screen.lockOrientation) {
                 window.screen.lockOrientation('landscape');
             }
 
-            $timeout($ionicLoading.hide,2000);
+            $timeout($ionicLoading.hide, 2000);
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -45,7 +45,7 @@ angular.module('cirqlApp')
                     $state.go('app.room', {
                         roomId: $rootScope.room
                     });
-                },300);    
+                }, 300);
             };
 
             var translate = $filter('translate');
@@ -65,16 +65,23 @@ angular.module('cirqlApp')
 
                         if (fbMeasure.val()) {
                             var name;
+                            var yAxis;
+
                             if (fbMeasure.key() === 'co2') {
                                 name = translate('AIR_QUALITY');
+                                yAxis = 2;
                             } else if (fbMeasure.key() === 'humidity') {
                                 name = translate('HUMIDITY');
+                                yAxis = 1;
                             } else if (fbMeasure.key() === 'temperature') {
                                 name = translate('TEMPERATURE');
+                                yAxis = 0;
                             } else if (fbMeasure.key() === 'target') {
                                 name = translate('TARGET');
+                                yAxis = 0;
                             } else if (fbMeasure.key() === 'valve') {
                                 name = translate('VALVE');
+                                yAxis = 1;
                             }
 
                             series.push({
@@ -83,6 +90,7 @@ angular.module('cirqlApp')
                                 type: name === translate('TARGET') ? 'line' : 'spline',
                                 step: name === translate('TARGET') ? true : false,
                                 visible: name === translate('TEMPERATURE') ? true : false,
+                                yAxis : yAxis
                             });
                             var index = series.length - 1;
 
@@ -118,6 +126,73 @@ angular.module('cirqlApp')
                         xAxis: {
                             type: 'datetime'
                         },
+                        yAxis: [{ // Primary yAxis
+                            minTickInterval: 0.5,
+                            labels: {
+                                format: '{value}°C',
+                                style: {
+                                    color: Highcharts.getOptions().colors[3]
+                                }
+                            },
+                            title: {
+                                text: translate('TEMPERATURE'),
+                                style: {
+                                    color: Highcharts.getOptions().colors[3]
+                                }
+                            },
+                            opposite: false
+
+                        }, { // Secondary yAxis
+                            gridLineWidth: 0,
+                            title: {
+                                text: translate('HUMIDITY'),
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            labels: {
+                                format: '{value} %',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            opposite: true
+
+                        }, { // Tertiary yAxis
+                            gridLineWidth: 0,
+                            min: 350,
+                            //max: 3000,
+                            title: {
+                                text: 'CO2',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value} ppm',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: false
+                        }, { // Tertiary yAxis
+                            gridLineWidth: 0,
+                            min: 0,
+                            max: 100,
+                            title: {
+                                text: translate('VALVE'),
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value} %',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true
+                        }],
                         exporting: {
                             enabled: false
                         },
@@ -128,12 +203,12 @@ angular.module('cirqlApp')
                             spline: {
                                 marker: {
                                     enabled: false
-                                 }
+                                }
                             },
                             line: {
                                 marker: {
                                     enabled: false
-                                 }
+                                }
                             }
                         }
                     },
