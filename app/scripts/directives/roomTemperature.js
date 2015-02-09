@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('roomTemperature', ['$timeout', '$ionicLoading', '$ionicSideMenuDelegate',
-        function($timeout, $ionicLoading, $ionicSideMenuDelegate) {
+    .directive('roomTemperature', ['$timeout', '$ionicLoading', '$ionicSideMenuDelegate', 'colorForTemperature',
+        function($timeout, $ionicLoading, $ionicSideMenuDelegate, colorForTemperature) {
 
             var targetTimer = null;
             var target = null;
@@ -44,31 +44,9 @@ angular.module('cirqlApp')
                 return [startCart, endCart];
             };
 
-
-            function colorForTemperature(temperature) {
-
-                if (temperature < 16) {
-                    return '#1F3A93';
-                } else if (temperature < 18) {
-                    return '#22A7F0';
-                } else if (temperature < 19) {
-                    return '#F9BF3B';
-                } else if (temperature < 21) {
-                    return '#F39C12';
-                } else if (temperature < 22) {
-                    return '#F9690E';
-                } else if (temperature < 24) {
-                    return '#F22613';
-                } else if (temperature >= 24) {
-                    return '#CF000F';
-                } else {
-                    return '#000';
-                }
-            }
-
             var updateMeasuredArc = function(arc, start, end, min, max, R, size, ishome, roomid) {
 
-                var color = colorForTemperature(end);
+                var color = colorForTemperature.get(end);
                 //color = '#FFF';
                 var carts = drawArc(arc, start, end, min, max, R, size, '#FFF');
                 var endCart = carts[1];
@@ -85,8 +63,8 @@ angular.module('cirqlApp')
                 var targetColor = mustHeat ? '#F9690E' : '#3498DB';
                 targetColor = '#000';
 
-                var targetColor = colorForTemperature(mustHeat ? end : start);
-                var measuredColor = colorForTemperature(mustHeat ? start : end);
+                var targetColor = colorForTemperature.get(mustHeat ? end : start);
+                var measuredColor = colorForTemperature.get(mustHeat ? start : end);
 
                 var colorBegin = mustHeat ? measuredColor : targetColor;
                 var colorEnd = mustHeat ? targetColor : measuredColor;

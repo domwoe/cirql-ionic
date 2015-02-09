@@ -1,8 +1,8 @@
     'use strict';
 
     angular.module('cirqlApp')
-        .directive('roomSchedule', ['$timeout',
-            function($timeout) {
+        .directive('roomSchedule', ['$rootScope', '$timeout', 'colorForTemperature',
+            function($rootScope, $timeout, colorForTemperature) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -11,8 +11,7 @@
                         sync: "=",
                         roomid: "=",
                         goback: "&",
-                        reload: "&",
-                        dayview: "="
+                        reload: "&"
                     },
                     link: function(scope, element, attrs) {
 
@@ -43,6 +42,7 @@
                             this.inContextMenu = false;
                             this.contextSelectedDay = null;
                             this.contextMenuSwitch = false;
+                            this.inDeleteView = false;
 
                             scope.sync = this.localSchedule;
 
@@ -136,12 +136,10 @@
                                     group.attr('transform', 'translate(' + d.x + ', ' + d.y + ')');
 
                                     if (this.lockOnHorizontalDrag) {
-                                        console.log("Move horizontally");
                                         var getY = d3.transform(group.attr("transform")).translate[1];
                                         group.attr('transform', 'translate(' + d.x + ', ' + getY + ')');
 
                                     } else if (this.lockOnVerticalDrag) {
-                                        console.log("Move vertically");
                                         var getX = d3.transform(group.attr("transform")).translate[0];
                                         group.attr('transform', 'translate(' + getX + ', ' + d.y + ')');
                                     }
@@ -151,7 +149,6 @@
                                     if (this.lockOnHorizontalDrag) {
                                         // Update time
                                         var time = this.pixelOffsetToTime(newposX);
-                                        console.log("TIME: ", time);
 
                                         // Update the times in the local schedule
                                         var entry = this.localSchedule[circleIndex];
@@ -179,6 +176,10 @@
                                         if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
                                             // Show the temp in the label
                                             group.select('text.label').select('tspan').text(newTemp);
+                                            // Update the color
+                                            var color = colorForTemperature.get(newTemp);
+                                            group.select('circle').attr('fill', color);
+                                            group.select('circle.label_back').attr('fill', color);
                                             // Update the hidden temp labels
                                             var target = Math.floor(newTemp);
                                             var dotTarget = (newTemp - target < 0.5) ? 0 : 5;
@@ -204,7 +205,6 @@
                                 var textGroup = entryGroup.append('g')
                                     .attr('class', 'time');
 
-                                console.log("entryg: ", entryGroup);
                                 var text = textGroup.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 12)
@@ -222,8 +222,8 @@
                             };
 
                             this.selectDay = function(day) {
-                                scope.dayview = true;
-                                scope.$apply();
+                                $rootScope.dayView = true;
+                                $rootScope.$apply();
                                 var weekdays = d3.select('#weekdays');
                                 var weekCol = weekdays.append('rect')
                                     .attr('id', 'week_column')
@@ -235,8 +235,6 @@
                                 var scheduleCol = weekdays.append('rect')
                                     .attr('id', 'schedule_column')
                                     .attr('fill', '#FFFFFF')
-                                    .attr('stroke', '#FFFFFF')
-                                    .attr('stroke-width', 1)
                                     .attr('x', 95)
                                     .attr('y', 0)
                                     .attr('height', 210)
@@ -280,11 +278,13 @@
                             };
 
                             this.deselectDay = function() {
+                                $rootScope.dayView = false;
+                                $rootScope.$apply();
                                 var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
                                 previousRec1.attr('fill', '#483e37');
-                                previousRec2.attr('fill',  '#FFFFFF');
+                                previousRec2.attr('fill', '#FFFFFF');
                             };
 
                             this.daySelector = function(day) {
@@ -302,9 +302,6 @@
 
                             this.deselectEntry = function() {
                                 if (this.selectedEntry !== null) {
-                                    this.selectedEntry.select('circle')
-                                        .attr('fill', 'red')
-                                        .attr('r', this.radius);
                                     this.selectedEntry.select('g.time').attr('visibility', 'visible');
                                     this.selectedEntry.select('g.temp').attr('visibility', 'visible');
                                     this.selectedEntry.select('circle.label_back').remove();
@@ -320,7 +317,8 @@
 
                                 var label_back = group.append('circle')
                                     .attr('class', 'label_back')
-                                    .attr('fill', 'red')
+                                    .attr('fill', colorForTemperature.get(
+                                        self.localSchedule[group.attr('id')].target))
                                     .attr('stroke', '#FFFFFF')
                                     .attr('stroke-width', 2)
                                     .attr('r', this.radius * 1.7)
@@ -383,8 +381,6 @@
 
                                 newTemp = newTemp + 0.1 * newDotTemp;
 
-                                console.log(newTemp);
-
                                 if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
                                     targetTspan.text(Math.floor(newTemp));
                                     dotTargetTspan.text(newDotTemp);
@@ -424,7 +420,7 @@
                                     .attr('cx', xpos)
                                     .attr('cy', ypos)
                                     .attr('r', this.radius)
-                                    .attr('fill', 'red');
+                                    .attr('fill', colorForTemperature.get(target));
 
                                 var textGroup = entryGroup.append('g')
                                     .attr('class', 'temp');
@@ -462,55 +458,61 @@
                                     .attr('fill-opacity', 0)
                                     .call(d3.behavior.drag()
                                         .on('dragstart', function(d) {
-                                            console.log("DRAG START");
                                             d3.event.sourceEvent.preventDefault();
                                             d3.event.sourceEvent.stopPropagation();
 
                                             var selectedNode = d3.select(this);
                                             var parentNode = selectedNode.node().parentNode;
                                             var secondAncestor = d3.select(parentNode).node().parentNode;
-                                            console.log("Selected: ", selectedNode);
-                                            console.log("ENTRY: ", self.selectedEntry);
-                                            if (self.inDetailedView && selectedNode !== self.selectedEntry) {
 
-                                                self.daySelector(secondAncestor);
-                                                self.entrySelector(self, parentNode);
-                                                self.dragging = true;
+                                            if (self.inDeleteView) {
+                                                var selectedEntry = d3.select(parentNode);
+                                                var index = selectedEntry.attr('id');
+                                                delete self.localSchedule[index];
+                                                selectedEntry.remove();
+                                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
+                                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
+                                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
+                                                self.selectedEntry = null;
+                                                self.inDeleteView = false;
 
-                                                var group = d3.select(parentNode);
-                                                var selection = group.select('circle');
-
-                                                var trX = d3.transform(group.attr("transform")).translate[0];
-                                                var trY = d3.transform(group.attr("transform")).translate[1];
-
-                                                d.dragstart = d3.mouse(this); // store this
-
-                                                var xpos = parseInt(selection.attr('cx')) + trX;
-                                                var ypos = parseInt(selection.attr('cy')) + trY;
-
-                                                var dayGroup = d3.select(secondAncestor);
-                                                dayGroup.insert('rect', 'g.entry')
-                                                    .attr('id', 'vpath')
-                                                    .attr('x', xpos - self.radius)
-                                                    .attr('y', 0)
-                                                    .attr('width', 2 * self.radius)
-                                                    .attr('height', 7 * self.height)
-                                                    .attr('fill-opacity', 0.5);
-                                                dayGroup.insert('rect', 'g.entry')
-                                                    .attr('id', 'hpath')
-                                                    .attr('x', 95)
-                                                    .attr('y', ypos - self.radius)
-                                                    .attr('width', 650)
-                                                    .attr('height', 2 * self.radius)
-                                                    .attr('fill-opacity', 0.5);
                                             } else {
-                                                /*   if (self.entriesToCopy !== null && secondAncestor !== self.selectedDay) {
-                                                self.copySchedule(self, secondAncestor);
-                                                self.entriesToCopy = null;
-                                            } else {*/
-                                                self.daySelector(secondAncestor);
-                                                self.inDetailedView = true;
-                                                //                                            }
+                                                if (self.inDetailedView && selectedNode !== self.selectedEntry) {
+
+                                                    self.daySelector(secondAncestor);
+                                                    self.entrySelector(self, parentNode);
+                                                    self.dragging = true;
+
+                                                    var group = d3.select(parentNode);
+                                                    var selection = group.select('circle');
+
+                                                    var trX = d3.transform(group.attr("transform")).translate[0];
+                                                    var trY = d3.transform(group.attr("transform")).translate[1];
+
+                                                    d.dragstart = d3.mouse(this); // store this
+
+                                                    var xpos = parseInt(selection.attr('cx')) + trX;
+                                                    var ypos = parseInt(selection.attr('cy')) + trY;
+
+                                                    var dayGroup = d3.select(secondAncestor);
+                                                    dayGroup.insert('rect', 'g.entry')
+                                                        .attr('id', 'vpath')
+                                                        .attr('x', xpos - self.radius)
+                                                        .attr('y', 0)
+                                                        .attr('width', 2 * self.radius)
+                                                        .attr('height', 7 * self.height)
+                                                        .attr('fill-opacity', 0.5);
+                                                    dayGroup.insert('rect', 'g.entry')
+                                                        .attr('id', 'hpath')
+                                                        .attr('x', 95)
+                                                        .attr('y', ypos - self.radius)
+                                                        .attr('width', 650)
+                                                        .attr('height', 2 * self.radius)
+                                                        .attr('fill-opacity', 0.5);
+                                                } else {
+                                                    self.daySelector(secondAncestor);
+                                                    self.inDetailedView = true;
+                                                }
                                             }
                                         })
                                         .on('drag', function(d) {
@@ -519,16 +521,17 @@
                                             }
                                         })
                                         .on('dragend', function(d) {
-                                            console.log("DRAGEND");
-                                            self.dragging = false;
-                                            self.lockOnVerticalDrag = false;
-                                            self.lockOnHorizontalDrag = false;
-                                            // Remove path rectangles
-                                            d3.select('#vpath').remove();
-                                            d3.select('#hpath').remove();
-                                            // Deselect entry
-                                            self.deselectEntry();
-                                            delete d.dragstart;
+                                            if (!self.inDeleteView) {
+                                                self.dragging = false;
+                                                self.lockOnVerticalDrag = false;
+                                                self.lockOnHorizontalDrag = false;
+                                                // Remove path rectangles
+                                                d3.select('#vpath').remove();
+                                                d3.select('#hpath').remove();
+                                                // Deselect entry
+                                                self.deselectEntry();
+                                                delete d.dragstart;
+                                            }
                                         })
                                     );
                             };
@@ -618,7 +621,6 @@
                                     self.nextId++;
 
                                     self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
-                                    // self.entrySelector(self, '#' + id);
                                 }
                             };
 
@@ -648,7 +650,6 @@
                                 }
 
                                 self.entriesToCopy.each(function() {
-                                    console.log("ENTRY: ", this);
 
                                     var entry = d3.select(this);
                                     var index = entry.attr('id');
@@ -671,12 +672,12 @@
                                 destDay.moveToFront();
                             };
 
-                            this.deleteEntryCallback = function(self) {
-                                if (self.selectedEntry !== null) {
-                                    var index = this.selectedEntry.attr('id');
-                                    delete self.localSchedule[index];
-                                    this.selectedEntry.remove();
-                                    self.selectedEntry = null;
+                            this.switchToDeleteView = function(self) {
+                                if (self.inDetailedView) {
+                                    self.inDeleteView = true;
+                                    d3.select('#schedule_column').attr('fill', '#C0C0C0');
+                                    d3.selectAll('rect.schedule-col').attr('fill', '#C0C0C0');
+                                    d3.select('#timeline_back').attr('fill', '#C0C0C0');
                                 }
                             };
 
@@ -712,9 +713,6 @@
                             };
 
                             this.save = function(self) {
-
-                                console.log(self.changed);
-
                                 self.syncFirebase();
                                 scope.goback({
                                     room: scope.roomid,
@@ -729,9 +727,7 @@
                             };
 
                             this.backToWeek = function(self) {
-                                console.log('BACK TO WEEK');
                                 self.syncFirebase();
-                                console.log(self.changed);
                                 this.inDetailedView = false;
                                 scope.reload({
                                     changedDay: self.changed
@@ -745,16 +741,14 @@
                             this.closeContextMenu = function() {
                                 // Delete copy and clear buttons
                                 var group = d3.select('g.copy-paste');
-                                console.log(" TO REMVE: ", group);
                                 group.remove();
                                 // Remove day highlight
-                                console.log("selected day: ", this.contextSelectedDay);
                                 var dayGroup = d3.select(this.contextSelectedDay);
-                                 // Remove highlight
+                                // Remove highlight
                                 dayGroup.selectAll('rect.label-col')
                                     .attr('fill', '#483e37');
                                 dayGroup.selectAll('rect.schedule-col')
-                                    .attr('fill', '#FFFFFF');    
+                                    .attr('fill', '#FFFFFF');
                                 dayGroup.selectAll('text')
                                     .attr('fill', '#FFFFFF');
 
@@ -775,7 +769,7 @@
 
                                 // Highlight the day
                                 dayGroup.selectAll('rect')
-                                    .attr('fill', '#ecf0f1');   
+                                    .attr('fill', '#ecf0f1');
                                 dayGroup.selectAll('text')
                                     .attr('fill', '#483e37');
 
@@ -788,7 +782,7 @@
                                     idx--;
                                 }
 
-                                var backWidth = (this.entriesToCopy !== null) ? 140: 100;
+                                var backWidth = (this.entriesToCopy !== null) ? 140 : 100;
 
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
@@ -822,7 +816,6 @@
                                     if (self.contextSelectedDay !== null) {
                                         self.entriesToCopy = d3.select(self.contextSelectedDay).selectAll('g.entry');
                                     }
-                                    console.log("To COPY: ", self.entriesToCopy);
                                     self.closeContextMenu();
                                 }
                                 copyButton.on('touchstart', copyDayCallback);
@@ -837,7 +830,6 @@
                                     .attr('x2', 40)
                                     .attr('y2', (idx + 1) * 30 - 4);
 
-                                console.log("ENTRIES TO COPY: ", this.entriesToCopy);
                                 if (this.entriesToCopy !== null) { // Add paste button
                                     var pasteText = copyPasteButtons.append('text')
                                         .attr('font-family', 'Helvetica Neue')
@@ -851,7 +843,6 @@
                                         .text("Paste");
 
                                     var pasteDayCallback = function() {
-                                        console.log("COPYING");
                                         d3.event.preventDefault();
                                         d3.event.stopPropagation();
                                         self.copySchedule(self, self.contextSelectedDay);
@@ -877,7 +868,7 @@
                                         .attr('y2', (idx + 1) * 30 - 4);
                                 }
 
-                                var clearBtnX = (this.entriesToCopy !== null) ? 85: 45;
+                                var clearBtnX = (this.entriesToCopy !== null) ? 85 : 45;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
                                     .attr('font-size', 10)
@@ -901,14 +892,12 @@
                                     d3.event.stopPropagation();
                                     self.clearDay(dayGroup);
                                     self.closeContextMenu();
-                                    console.log("CLICK ON CLEAR");
                                 };
                                 clearButton.on('touchstart', clearDayCallback);
                                 clearButton.on('mousedown', clearDayCallback);
                             };
 
                             this.attachListeners = function() {
-                                console.log("Attaching listeners");
                                 var self = this;
                                 var allDays = d3.selectAll('g.parent');
 
@@ -919,7 +908,6 @@
                                     d3.event.stopPropagation();
                                     if (!self.inContextMenu && !self.inDetailedView) {
                                         self.contextMenuSwitch = true;
-                                        console.log("MOUSE DOWN");
                                         var target = this;
                                         var mouse = d3.mouse(target);
 
@@ -927,12 +915,10 @@
                                             self.isClickValid = false;
                                             self.inContextMenu = true;
                                             self.contextSelectedDay = target;
-                                            console.log("TIMEOUT");
                                             // Show copy and clear
                                             self.renderCopyPasteButtons(target);
                                         }, 300);
                                     } else {
-                                        console.log("CLOSE CONTEXT MENU");
                                         self.closeContextMenu();
                                     }
                                 };
@@ -942,9 +928,7 @@
                                     d3.event.stopPropagation();
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
-                                        console.log("MOUSEUP VALID: ", self.isClickValid);
                                         if (self.isClickValid) {
-                                            console.log("CLICK CLICK");
                                             if (self.entriesToCopy !== null && this !== self.selectedDay) {
                                                 self.copySchedule(self, this);
                                                 self.entriesToCopy = null;
@@ -963,31 +947,27 @@
                                 allDays.on('mouseup', allDaysOnTouchEndCallback);
 
                                 var addButton = d3.select('#add');
-                                console.log("Add button: ", addButton);
                                 addButton.on('click', function() {
                                     self.addEntryCallback(self);
                                 });
 
                                 var weekButton = d3.select('#week');
-                                console.log("Add button: ", addButton);
                                 weekButton.on('click', function() {
                                     self.backToWeek(self);
                                 });
 
                                 var deleteButton = d3.select('#delete');
                                 deleteButton.on('click', function() {
-                                    self.deleteEntryCallback(self);
+                                    self.switchToDeleteView(self);
                                 });
 
                                 var saveButton = d3.select('#save');
                                 saveButton.on('click', function() {
-                                    console.log('save');
                                     self.save(self);
                                 });
 
                                 var cancelButton = d3.select('#cancel');
                                 cancelButton.on('click', function() {
-                                    console.log('clicked on cancel');
                                     self.cancel();
                                 });
                             };
@@ -1013,7 +993,7 @@
                                 <g id="monday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="25">Monday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="25">{{"MONDAY" | translate}}</tspan> \
                                     </text> \
                                     <rect class="schedule-col" id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
@@ -1021,42 +1001,42 @@
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="55">Tuesday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="55">{{"TUESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="85">Wednesday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="85">{{"WEDNESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
-                                        <tspan text-anchor="middle" x="47.5" y="115">Thursday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="115">{{"THURSDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="145">Friday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="145">{{"FRIDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
                                     <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="175">Saturday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="175">{{"SATURDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="95" height="30" x="0" y="180" /> \
+                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="180" /> \
                                     <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
-                                        <tspan text-anchor="middle" x="47.5" y="205">Sunday</tspan> \
+                                        <tspan text-anchor="middle" x="47.5" y="205">{{"SUNDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <rect fill="#483e37" width="95" height="20" x="0" y="210" /> \
