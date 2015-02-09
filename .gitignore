@@ -6,6 +6,7 @@ app/lib
 coverage
 platforms
 plugins
+engine
 *.swp
 *.swo
 *.log
