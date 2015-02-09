@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate', 'log', '$ionicLoading',
-        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate, log, $ionicLoading) {
+    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate', 'log', '$ionicLoading','$timeout',
+        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate, log, $ionicLoading,$timeout) {
 
             $ionicSideMenuDelegate.canDragContent(false);
 

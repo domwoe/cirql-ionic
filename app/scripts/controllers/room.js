@@ -35,7 +35,7 @@ angular.module('cirqlApp')
             window.screen.lockOrientation('portrait');
         }
 
-        $ionicLoading.hide();
+        $timeout($ionicLoading.hide,500);
 
         var translate = $filter('translate');
         var language = $translate.use();
