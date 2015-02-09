@@ -157,6 +157,16 @@ angular.module('cirqlApp')
         }
     })
 
+    .state('app.history', {
+        url: '/rooms/:roomId/history',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/history.html',
+                controller: 'HistoryCtrl'
+            }
+        }
+    })
+
     .state('app.room_settings', {
         url: '/rooms/:roomId/settings',
         views: {
@@ -287,7 +297,12 @@ angular.module('cirqlApp')
         THURSDAY: 'Thursday',
         FRIDAY: 'Friday',
         SATURDAY: 'Saturday',
-        SUNDAY: 'Sunday'
+        SUNDAY: 'Sunday',
+        HISTORY: 'History',
+        TEMPERATURE: 'Measured Temperature',
+        TARGET: 'Desired Temperature',
+        VALVE: 'Valve Opening'
+
 
 
 
@@ -370,7 +385,11 @@ angular.module('cirqlApp')
         THURSDAY: 'Donnerstag',
         FRIDAY: 'Freitag',
         SATURDAY: 'Samstag',
-        SUNDAY: 'Sonntag'
+        SUNDAY: 'Sonntag',
+        HISTORY: 'Verlauf',
+        TEMPERATURE: 'Gemessene Temperatur',
+        TARGET: 'Wunschtemperatur',
+        VALVE: 'Ventilöffnung'
     });
 
     $translateProvider.preferredLanguage('de');

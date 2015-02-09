@@ -1,13 +1,32 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup',
-        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup) {
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading',
+        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading) {
 
             $scope.logout = function() {
                 simpleLogin.logout();
                 $state.go('login');
             };
+
+            function showLoading() {
+                $ionicLoading.show({
+                    template: '<div class="sk-spinner sk-spinner-circle">' +
+                        '<div class="sk-circle1 sk-circle"></div>' +
+                        '<div class="sk-circle2 sk-circle"></div>' +
+                        '<div class="sk-circle3 sk-circle"></div>' +
+                        '<div class="sk-circle4 sk-circle"></div>' +
+                        '<div class="sk-circle5 sk-circle"></div>' +
+                        '<div class="sk-circle6 sk-circle"></div>' +
+                        '<div class="sk-circle7 sk-circle"></div>' +
+                        '<div class="sk-circle8 sk-circle"></div>' +
+                        '<div class="sk-circle9 sk-circle"></div>' +
+                        '<div class="sk-circle10 sk-circle"></div>' +
+                        '<div class="sk-circle11 sk-circle"></div>' +
+                        '<div class="sk-circle12 sk-circle"></div>' +
+                        '</div>'
+                });
+            }
 
             if (user) {
                 $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
@@ -178,6 +197,13 @@ angular.module('cirqlApp')
                     window.screen.lockOrientation('landscape');
                 }
                 $state.go('app.schedule', {
+                    roomId: $scope.room
+                });
+            };
+
+            $scope.goToHistory = function() {
+                showLoading();
+                $state.go('app.history', {
                     roomId: $scope.room
                 });
             };

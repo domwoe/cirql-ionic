@@ -10,7 +10,8 @@ angular.module('cirqlApp', [
     'pascalprecht.translate',
     'nsPopover',
     'ng.deviceDetector',
-    'ngCordova'
+    'ngCordova',
+    'highcharts-ng'
 ])
 
 .run(function($ionicPlatform, $ionicLoading, $translate, $rootScope, $cordovaSplashscreen, $timeout, $state) {
