@@ -81,7 +81,8 @@ angular.module('cirqlApp')
                                 name: name,
                                 data: [],
                                 type: name === translate('TARGET') ? 'line' : 'spline',
-                                step: name === translate('TARGET') ? true : false
+                                step: name === translate('TARGET') ? true : false,
+                                visible: name === translate('TEMPERATURE') ? true : false,
                             });
                             var index = series.length - 1;
 
