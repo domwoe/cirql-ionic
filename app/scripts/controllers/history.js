@@ -79,7 +79,9 @@ angular.module('cirqlApp')
 
                             series.push({
                                 name: name,
-                                data: []
+                                data: [],
+                                type: name === translate('TARGET') ? 'line' : 'spline',
+                                step: name === translate('TARGET') ? true : false
                             });
                             var index = series.length - 1;
 
@@ -120,6 +122,18 @@ angular.module('cirqlApp')
                         },
                         credits: {
                             enabled: false
+                        },
+                        plotOptions: {
+                            spline: {
+                                marker: {
+                                    enabled: false
+                                 }
+                            },
+                            line: {
+                                marker: {
+                                    enabled: false
+                                 }
+                            }
                         }
                     },
                     series: data

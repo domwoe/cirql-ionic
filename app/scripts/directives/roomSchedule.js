@@ -980,6 +980,7 @@
                                 scheduler.renderScheduleEntries();
                                 scheduler.attachListeners();
                                 scheduler.rendered = true;
+
                                 scope.hideloader();
                             }
                         };
