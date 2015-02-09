@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'flurry', 'log',
-    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, flurry, log) {
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'flurry', 'log','$ionicLoading',
+    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, flurry, log, $ionicLoading) {
 
         $ionicSideMenuDelegate.canDragContent(true);
 
@@ -34,6 +34,8 @@ angular.module('cirqlApp')
         if (window.screen && window.screen.lockOrientation) {
             window.screen.lockOrientation('portrait');
         }
+
+        $ionicLoading.hide();
 
         var translate = $filter('translate');
         var language = $translate.use();

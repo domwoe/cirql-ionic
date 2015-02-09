@@ -11,7 +11,8 @@
                         sync: "=",
                         roomid: "=",
                         goback: "&",
-                        reload: "&"
+                        reload: "&",
+                        hideloader: "&"
                     },
                     link: function(scope, element, attrs) {
 
@@ -278,8 +279,6 @@
                             };
 
                             this.deselectDay = function() {
-                                $rootScope.dayView = false;
-                                $rootScope.$apply();
                                 var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
                                 var previousRec1 = d3.select(previousRec[0]);
                                 var previousRec2 = d3.select(previousRec[1]);
@@ -981,6 +980,7 @@
                                 scheduler.renderScheduleEntries();
                                 scheduler.attachListeners();
                                 scheduler.rendered = true;
+                                scope.hideloader();
                             }
                         };
 

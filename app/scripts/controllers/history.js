@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('HistoryCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', 'log', '$ionicSideMenuDelegate', '$filter', '$translate',
-        function($rootScope, $scope, user, fbutil, $state, $ionicLoading, log, $ionicSideMenuDelegate, $filter, $translate) {
+    .controller('HistoryCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', 'log', '$ionicSideMenuDelegate', '$filter', '$translate','$timeout',
+        function($rootScope, $scope, user, fbutil, $state, $ionicLoading, log, $ionicSideMenuDelegate, $filter, $translate, $timeout) {
 
             if (window.screen && window.screen.lockOrientation) {
                 window.screen.lockOrientation('landscape');
             }
 
+            $timeout($ionicLoading.hide,2000);
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -23,9 +24,11 @@ angular.module('cirqlApp')
                 // if ($scope.activities && $scope.activities.hasOwnProperty('$destroy')) {
                 //     $scope.activities.$destroy();
                 // }
-                $state.go('app.room', {
-                    roomId: $rootScope.room
-                });
+                $timeout(function() {
+                    $state.go('app.room', {
+                        roomId: $rootScope.room
+                    });
+                },300);    
             };
 
             var translate = $filter('translate');
@@ -76,7 +79,6 @@ angular.module('cirqlApp')
                         }
 
                         cb(series);
-                        $ionicLoading.hide();
                     });
 
                 });
@@ -105,6 +107,7 @@ angular.module('cirqlApp')
                     },
                     series: data
                 };
+                $ionicLoading.hide();
             });
 
 

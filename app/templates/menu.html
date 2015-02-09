@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="true">
+<ion-side-menus>
 
   <ion-pane ion-side-menu-content>
     <ion-nav-bar class="bar-transparent">
@@ -28,10 +28,10 @@
           </div>
           <span show-alert><ion-toggle show-alert id="autoaway-toggle" style="margin-top:-35px" ng-if="isRoom()" ng-disabled="!hasBoundResidents()" ng-model="usesAutoAway.$value" toggle-class="toggle-balanced" ng-change="changeAutoAway()">AutoAway</ion-toggle></span>
 
-        <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ng-click="goToSchedule()">
+        <div translate class="item nav-clear"  ng-if="isRoom()" ng-click="goToSchedule()">
           SCHEDULE
         </div>
-          <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ng-click="goToHistory()">
+          <div translate class="item nav-clear"  ng-if="isRoom()" ng-click="goToHistory()">
           HISTORY
         </div>
         <!-- <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ui-sref="app.activity({roomId: room})">

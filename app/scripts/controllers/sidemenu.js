@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading',
-        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading) {
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading','$timeout','$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading, $timeout,$ionicSideMenuDelegate) {
 
             $scope.logout = function() {
                 simpleLogin.logout();
@@ -193,19 +193,23 @@ angular.module('cirqlApp')
             };
 
             $scope.goToSchedule = function() {
-                if (window.screen && window.screen.lockOrientation) {
-                    window.screen.lockOrientation('landscape');
-                }
-                $state.go('app.schedule', {
-                    roomId: $scope.room
-                });
+                showLoading();
+                $ionicSideMenuDelegate.toggleLeft();
+                $timeout(function() {
+                    $state.go('app.schedule', {
+                        roomId: $scope.room
+                    });
+                },300);    
             };
 
             $scope.goToHistory = function() {
                 showLoading();
-                $state.go('app.history', {
-                    roomId: $scope.room
-                });
+                $ionicSideMenuDelegate.toggleLeft();
+                $timeout(function() {
+                    $state.go('app.history', {
+                        roomId: $scope.room
+                    });
+                },300);    
             };
 
             $scope.netatmo = function() {
