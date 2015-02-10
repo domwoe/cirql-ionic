@@ -9,18 +9,10 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'flurry', 'log','$ionicLoading',
-    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, flurry, log, $ionicLoading) {
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log','$ionicLoading',
+    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, log, $ionicLoading) {
 
         $ionicSideMenuDelegate.canDragContent(true);
-
-        if ($rootScope.flurry === true) {
-            flurry.logPageView();
-            flurry.logEvent('view', {
-                view: 'room',
-                roomId: $rootScope.room
-            });
-        }
 
         log.event({
             homeid: user.uid,
