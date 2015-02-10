@@ -1,0 +1,30 @@
+<ion-view title="Add Netatmo">
+  
+  <ion-nav-buttons side="left">
+         <button translate class="button-clear" ng-click="goToRoom()">
+            <i class="ion-chevron-left"></i> ROOM
+        </button>
+  </ion-nav-buttons>
+
+  <ion-content class="has-header" scroll="false">
+    <ion-list>
+      <div ng-repeat="netatmo in netatmos">
+        <ion-item class="item-stable"
+                  ng-click="toggleGroup(netatmo)"
+                  ng-class="{active: isGroupShown(netatmo)}">
+            <i class="icon" ng-class="isGroupShown(netatmo) ? 'ion-minus' : 'ion-plus'"></i>
+          <!-- &nbsp; -->
+          {{netatmo.name}}
+        </ion-item>
+        <ion-item class="item-accordion"
+                  ng-repeat="(moduleId, module) in netatmo.modules"
+                  ng-show="isGroupShown(netatmo)"
+                  ng-click="addNetatmo(netatmo.$id,moduleId)">
+          {{module.name}}
+      </ion-item>
+    </ion-list>
+
+
+
+</ion-content>
+
