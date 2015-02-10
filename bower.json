@@ -8,7 +8,6 @@
     "ngstorage": "~0.3.0",
     "angular-translate": "~2.5.2",
     "firebase": "~2.1.0",
-    "nsPopover": "~0.6.7",
     "ngCordova": "~0.1.10-alpha",
     "ng-device-detector": "~1.1.0",
     "highcharts-ng": "~0.0.7",
