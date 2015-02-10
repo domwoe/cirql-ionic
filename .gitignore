@@ -10,5 +10,3 @@ engine
 *.swo
 *.log
 *.DS_Store
-
-app/scripts/config.js
