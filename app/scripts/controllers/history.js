@@ -56,6 +56,16 @@ angular.module('cirqlApp')
 
             var fbHistoryRef = 'homes/' + user.uid + '/histories/' + $rootScope.room;
 
+            Highcharts.setOptions({
+                // lang: {
+                //     months: ["Januar,Februar,März,April,Mayi,Juni,Juli,August,September,Oktober,November,DeZember"],
+                //     weekdays: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Frietag', 'Samstag', 'Sonntag']
+                // }
+                global: {
+                    useUTC: false
+                }    
+            });
+
             var getData = function(cb) {
                 fbutil.ref(fbHistoryRef).once('value', function(fbData) {
 
@@ -90,7 +100,7 @@ angular.module('cirqlApp')
                                 type: name === translate('TARGET') ? 'line' : 'spline',
                                 step: name === translate('TARGET') ? true : false,
                                 visible: name === translate('TEMPERATURE') ? true : false,
-                                yAxis : yAxis
+                                yAxis: yAxis
                             });
                             var index = series.length - 1;
 
