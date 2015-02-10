@@ -6,7 +6,7 @@ angular.module('cirqlApp').service('geo2', ['$q', '$log', 'simpleLogin', 'fbutil
         var user = null;
         var fbHome = null;
         var fbRegions = null;
-        var radius = [250, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
+        var radius = [300, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
         var initStarted = false;
         var monitorStarted = false;
         var receiveStarted = false;
