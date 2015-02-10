@@ -2,7 +2,9 @@
   "name": "Cirql",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "express": "~4.4.3"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "glob": "~4.0.5",
@@ -51,7 +53,6 @@
     "https://github.com/driftyco/ionic-plugins-keyboard.git",
     "org.apache.cordova.statusbar",
     "org.apache.cordova.console",
-    "https://github.com/driftyco/cordova-plugin-discovery.git",
     "net.yoik.cordova.plugins.screenorientation",
     "org.apache.cordova.inappbrowser",
     "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
