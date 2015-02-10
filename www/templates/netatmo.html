@@ -1,0 +1,56 @@
+<ion-view title="Netatmo">
+
+    <ion-nav-buttons side="left">
+        <button class="button-clear" ng-click="goToRoom()">
+            <i class="ion-chevron-left"></i> <span translate>ROOM</span>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="has-header" scroll="false">
+
+        <div class="list card opaque item-text-wrap">
+            <div class="item">
+                <div class="row">
+                    <div class="col">
+                        Station:
+                    </div>
+                    <div class="col">
+                        {{netatmo.station.name}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Module:
+                    </div>
+                    <div class="col">
+                        {{netatmo.module.obj.name}}
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col">
+                        Last Seen:
+                    </div>
+                    <div class="col">
+                        <i ng-show="alert" class="ion-alert-circled"></i>
+                        {{lastSeen(netatmo.module.obj.date)}}
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="item item-image">
+                <button translate class="button button-full button-assertive" ng-click="delNetatmo()">
+                    REMOVE
+                </button>
+            </div>
+
+        </div>
+    </ion-content>
+
+    <ion-footer-bar class="bar-footer">
+        <button class="button button-block button-assertive" ng-click="showConfirm()">
+            Disconnect from account
+        </button>
+    </div>    
+</ion-view>    
