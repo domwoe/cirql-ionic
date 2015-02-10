@@ -54,35 +54,6 @@ angular.module('cirqlApp')
         var templates = fbutil.syncArray('templates');
         $scope.categories = templates;
 
-
-
-        //var trvUrl = roomUrl + '/thermostats';
-        //var trvObj = fbutil.syncObject(trvUrl);
-
-        //$scope.hasThermostats = null;
-
-        //var trvIds = [];
-
-
-        // trvObj.$loaded(function(trvs) {
-        //     if (trvs.hasOwnProperty('$value') && trvs.$value === null) {
-        //         $scope.hasThermostats = false;
-        //         console.log($scope.hasThermostats);
-        //     } else {
-
-        //         angular.forEach(trvs, function(value, key) {
-
-        //             trvIds.push(key);
-
-        //         });
-
-        //         $scope.hasThermostats = true;
-
-        //     }
-        // });
-
-
-
         $scope.showNextTarget = function() {
             if ($scope.roomValues) {
                 return $scope.roomValues.mode === 'auto' && !($scope.roomValues.usesAutoAway && $scope.roomValues.isAway);
@@ -311,13 +282,6 @@ angular.module('cirqlApp')
             obj.name = $scope.residents.$getRecord(user.residentId).name;
             fbutil.ref(homeUrl + '/activity/' + $rootScope.room + '/raw').push(obj);
             console.log('Activity added:' + JSON.stringify(obj));
-        };
-
-        $scope.goBack = function() {
-            //$ionicSideMenuDelegate.canDragContent(true);
-            $state.go('app.room', {
-                roomId: $rootScope.room
-            });
         };
 
         $scope.goToActivity = function() {
