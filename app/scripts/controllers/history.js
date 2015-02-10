@@ -94,21 +94,21 @@ angular.module('cirqlApp')
                                 yAxis = 1;
                             }
 
-                            if (translate('TARGET') || translate('VALVE')) {
+                            if (name === translate('TARGET') || name === translate('VALVE')) {
                                 series.push({
                                     name: name,
                                     data: [],
-                                    type: name === 'line',
-                                    step: name === true,
-                                    visible: name === false,
+                                    type: 'line',
+                                    step: true,
+                                    visible: false,
                                     yAxis: yAxis
                                 });
                             } else {
                                 series.push({
                                     name: name,
                                     data: [],
-                                    type: name === 'spline',
-                                    step: name === false,
+                                    type: 'spline',
+                                    step: false,
                                     visible: name === translate('TEMPERATURE') ? true : false,
                                     yAxis: yAxis
                                 });
