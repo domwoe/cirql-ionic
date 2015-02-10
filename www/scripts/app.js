@@ -8,7 +8,6 @@ angular.module('cirqlApp', [
     'firebase.utils',
     'ngStorage',
     'pascalprecht.translate',
-    'nsPopover',
     'ng.deviceDetector',
     'ngCordova',
     'highcharts-ng'
