@@ -63,7 +63,7 @@ angular.module('cirqlApp')
                 // }
                 global: {
                     useUTC: false
-                }    
+                }
             });
 
             var getData = function(cb) {
@@ -94,14 +94,25 @@ angular.module('cirqlApp')
                                 yAxis = 1;
                             }
 
-                            series.push({
-                                name: name,
-                                data: [],
-                                type: name === translate('TARGET') ? 'line' : 'spline',
-                                step: name === translate('TARGET') ? true : false,
-                                visible: name === translate('TEMPERATURE') ? true : false,
-                                yAxis: yAxis
-                            });
+                            if (translate('TARGET') || translate('VALVE')) {
+                                series.push({
+                                    name: name,
+                                    data: [],
+                                    type: name === 'line',
+                                    step: name === true,
+                                    visible: name === false,
+                                    yAxis: yAxis
+                                });
+                            } else {
+                                series.push({
+                                    name: name,
+                                    data: [],
+                                    type: name === 'spline',
+                                    step: name === false,
+                                    visible: name === translate('TEMPERATURE') ? true : false,
+                                    yAxis: yAxis
+                                });
+                            }
                             var index = series.length - 1;
 
                             fbMeasure.forEach(function(fbDataPoint) {
