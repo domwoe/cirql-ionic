@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
     .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$ionicNavBarDelegate', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate','log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $ionicNavBarDelegate, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate,log) {
+        'geo', 'geo2', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate','log',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate,log) {
 
             $scope.finishedloading = false;
 
@@ -145,11 +145,6 @@ angular.module('cirqlApp')
                         success('Email changed');
                     })
                     .catch(error);
-            };
-
-
-            $scope.goBack = function() {
-                $ionicNavBarDelegate.back();
             };
 
             $scope.saveHome = function(home) {
