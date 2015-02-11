@@ -21,6 +21,8 @@ angular.module('cirqlApp')
                 roomid: $rootScope.room
             });
 
+            $scope.day = 0;
+
             $scope.goToRoom = function() {
                 // if ($scope.activities && $scope.activities.hasOwnProperty('$destroy')) {
                 //     $scope.activities.$destroy();
@@ -68,8 +70,6 @@ angular.module('cirqlApp')
                 }
             });
 
-
-            var day = 0;
 
             function getDate(deltaDay) {
 
@@ -268,34 +268,34 @@ angular.module('cirqlApp')
             
             function setAxis(next) {
 
-                if (next && day < 0) {
+                if (next && $scope.day < 0) {
 
-                    day++;
+                    $scope.day++;
 
                     myChart.xAxis[0].update({
-                        min: getDate(day),
-                        max: getDate(day+1) 
+                        min: getDate($scope.day),
+                        max: getDate($scope.day+1) 
                     });
 
 
                 }
 
-                else if (next && day >= 0) {
+                else if (next && $scope.day >= 0) {
                     console.log("Can't look into the future");
                 }
 
-                else if (!next && day >= -2) {
+                else if (!next && $scope.day >= -2) {
 
-                    day--;
+                    $scope.day--;
 
                     myChart.xAxis[0].update({
-                        min: getDate(day-1),
-                        max: getDate(day) 
+                        min: getDate($scope.day),
+                        max: getDate($scope.day+1) 
                     });
 
                 }
 
-                else if (!next && day < -2 ) {
+                else if (!next && $scope.day < -2 ) {
 
                     console.log('There is only data of the last 3 days');
 
@@ -306,7 +306,7 @@ angular.module('cirqlApp')
 
 
 
-            $scope.lastDay = function() {
+            $scope.previousDay = function() {
 
                 setAxis(false);
                 

@@ -5,9 +5,17 @@
             <i class="ion-chevron-left"></i>
             <span translate>BACK</span>
         </button>
+        <ion-nav-buttons side="right">
+        	 <button id="previous" ng-disabled="day < -2" class="button-clear" ng-click="previousDay()">
+                <span translate>PREVIOUS_DAY</span>
+            </button>
+            <button id="next" ng-disabled="day >= 0" class="button-clear" ng-click="nextDay()">
+                <span translate>NEXT_DAY</span>
+            </button>
+        </ion-nav-buttons>
     </ion-nav-buttons>
 
-    <ion-content class="has-header" scroll="false" data-tap-disabled="true" on-swipe-left="nextDay()" on-swipe-right="lastDay()">
+    <ion-content class="has-header" scroll="false" data-tap-disabled="true" on-swipe-left="nextDay()" on-swipe-right="previousDay()">
         <highchart id="chart" config="chartConfig"></highchart>
     </ion-content>
 </ion-view>
