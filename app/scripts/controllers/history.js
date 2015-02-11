@@ -8,6 +8,7 @@ angular.module('cirqlApp')
                 window.screen.lockOrientation('landscape');
             }
 
+
             $timeout($ionicLoading.hide, 2000);
 
             $ionicSideMenuDelegate.canDragContent(false);
@@ -56,6 +57,7 @@ angular.module('cirqlApp')
 
             var fbHistoryRef = 'homes/' + user.uid + '/histories/' + $rootScope.room;
 
+
             Highcharts.setOptions({
                 // lang: {
                 //     months: ["Januar,Februar,März,April,Mayi,Juni,Juli,August,September,Oktober,November,DeZember"],
@@ -65,6 +67,23 @@ angular.module('cirqlApp')
                     useUTC: false
                 }
             });
+
+
+            var day = 0;
+
+            function getDate(deltaDay) {
+
+                var today = new Date();
+                today.setHours(0);
+                today.setMinutes(0);
+                today.setSeconds(0);
+                var otherDay = new Date(today);
+                return otherDay.setDate(today.getDate() + deltaDay);
+
+            }
+
+            var myChart = null;
+
 
             var getData = function(cb) {
                 fbutil.ref(fbHistoryRef).once('value', function(fbData) {
@@ -137,6 +156,7 @@ angular.module('cirqlApp')
 
                 $scope.chartConfig = {
                     options: {
+                        useHighStocks: false,
                         chart: {
                             type: 'spline',
                             zoomType: 'x'
@@ -144,8 +164,13 @@ angular.module('cirqlApp')
                         title: {
                             text: ''
                         },
+                        exporting: {
+                            enabled: false
+                        },
                         xAxis: {
-                            type: 'datetime'
+                            type: 'datetime',
+                            min: getDate(0),
+                            max: getDate(1)
                         },
                         yAxis: [{ // Primary yAxis
                             minTickInterval: 0.5,
@@ -165,6 +190,8 @@ angular.module('cirqlApp')
 
                         }, { // Secondary yAxis
                             gridLineWidth: 0,
+                            min: 25,
+                            max: 85,
                             title: {
                                 text: translate('HUMIDITY'),
                                 style: {
@@ -214,9 +241,6 @@ angular.module('cirqlApp')
                             },
                             opposite: true
                         }],
-                        exporting: {
-                            enabled: false
-                        },
                         credits: {
                             enabled: false
                         },
@@ -233,10 +257,66 @@ angular.module('cirqlApp')
                             }
                         }
                     },
-                    series: data
+                    series: data,
+                    func: function(chart) {
+                        myChart = chart;
+                    }
                 };
                 $ionicLoading.hide();
             });
+
+            
+            function setAxis(next) {
+
+                if (next && day < 0) {
+
+                    day++;
+
+                    myChart.xAxis[0].update({
+                        min: getDate(day),
+                        max: getDate(day+1) 
+                    });
+
+
+                }
+
+                else if (next && day >= 0) {
+                    console.log("Can't look into the future");
+                }
+
+                else if (!next && day >= -2) {
+
+                    day--;
+
+                    myChart.xAxis[0].update({
+                        min: getDate(day-1),
+                        max: getDate(day) 
+                    });
+
+                }
+
+                else if (!next && day < -2 ) {
+
+                    console.log('There is only data of the last 3 days');
+
+                }
+
+
+            }
+
+
+
+            $scope.lastDay = function() {
+
+                setAxis(false);
+                
+            };
+
+            $scope.nextDay = function() {
+                
+                setAxis(true);
+            };
+
 
 
 
