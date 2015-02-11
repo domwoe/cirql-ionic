@@ -241,6 +241,15 @@
                                     .attr('height', 210)
                                     .attr('width', 650);
 
+                                var self = this;
+
+                                var scheduleColumnCallback = function() {
+                                    self.closeDeleteView();
+                                };
+
+                                scheduleCol.on('touchstart', scheduleColumnCallback);
+                                scheduleCol.on('mousedown', scheduleColumnCallback);
+
                                 var dayGroup = d3.select(day);
                                 var rectangles = dayGroup.selectAll('rect')[0];
                                 var rec1 = d3.select(rectangles[0]);
@@ -396,6 +405,22 @@
                                 this.updateTemp(obj, true);
                             };
 
+                            this.closeDeleteView = function() {
+                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
+                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
+                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
+                                this.selectedEntry = null;
+                                this.inDeleteView = false;
+                            }
+
+                            this.deleteSelectedEntry = function(parentNode) {
+                                var selectedEntry = d3.select(parentNode);
+                                var index = selectedEntry.attr('id');
+                                delete this.localSchedule[index];
+                                selectedEntry.remove();
+                               this.closeDeleteView();
+                            }
+
                             this.addEntry = function(dayGroup, id, xpos, ypos, target) {
                                 var numTarget = parseFloat(target);
                                 var dotTarget;
@@ -465,16 +490,7 @@
                                             var secondAncestor = d3.select(parentNode).node().parentNode;
 
                                             if (self.inDeleteView) {
-                                                var selectedEntry = d3.select(parentNode);
-                                                var index = selectedEntry.attr('id');
-                                                delete self.localSchedule[index];
-                                                selectedEntry.remove();
-                                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
-                                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
-                                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
-                                                self.selectedEntry = null;
-                                                self.inDeleteView = false;
-
+                                                self.deleteSelectedEntry(parentNode);
                                             } else {
                                                 if (self.inDetailedView && selectedNode !== self.selectedEntry) {
 
