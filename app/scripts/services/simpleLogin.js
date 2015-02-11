@@ -23,7 +23,7 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
     };
 })
 
-.factory('simpleLogin', function($firebaseAuth, fbutil, $q, $rootScope, $localStorage, createProfile, changeEmail) {
+.factory('simpleLogin', function($firebaseAuth, fbutil, $q, $rootScope, $localStorage, createProfile) {
     var auth = $firebaseAuth(fbutil.ref());
     var listeners = [];
 
@@ -110,7 +110,11 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
         },
 
         changeEmail: function(password, oldEmail, newEmail) {
-            return changeEmail(password, oldEmail, newEmail, this);
+            return auth.$changeEmail({
+                password: password,
+                oldEmail: oldEmail,
+                newEmail: newEmail
+            });
         },
 
         removeUser: function(email, pass) {
