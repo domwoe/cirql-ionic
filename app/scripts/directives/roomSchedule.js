@@ -870,7 +870,6 @@
                                         d3.event.preventDefault();
                                         d3.event.stopPropagation();
                                         self.copySchedule(self, self.contextSelectedDay);
-                                        self.entriesToCopy = null;
                                         self.closeContextMenu();
                                     };
                                     var pasteButton = copyPasteButtons.append('rect')
