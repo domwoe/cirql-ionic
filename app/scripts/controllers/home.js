@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
     .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate','log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate,log) {
+        'geo', 'geo2', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
 
             $scope.finishedloading = false;
 
@@ -130,26 +130,43 @@ angular.module('cirqlApp')
                 } else if (newPass !== confirm) {
                     error('Passwords do not match');
                 } else {
-                    simpleLogin.changePassword(user.email, oldPass, newPass)
+                    simpleLogin.changePassword(user.password.email, oldPass, newPass)
                         .then(function() {
                             success('Password changed');
+                            $state.go('app.home_settings');
                         }, error);
                 }
             };
 
+            function error(err) {
+                console.log(err);
+                alert(err);
+            }
+
+            function success(err) {
+                alert(err);
+            }
+
             $scope.changeEmail = function(pass, newEmail) {
                 $scope.err = null;
-                simpleLogin.changeEmail(pass, newEmail)
-                    .then(function(user) {
-                        loadHome(user);
-                        success('Email changed');
+                if (!newEmail) {
+                    $scope.errorMessage = 'Email is incorrect';
+                } else {
+                    simpleLogin.changeEmail(pass, user.password.email, newEmail)
+                    .then(function() {
+                        success('Email changed to ' + newEmail);
+                        //currently the user needs to login again after changing the email
+                        //TODO: reset user object without logout
+                        simpleLogin.logout();
+                        $state.go('login');
                     })
                     .catch(error);
+                }
             };
 
-            $scope.saveHome = function(home) {
+            $scope.saveLocation = function(home) {
                 home.$save();
-                $state.go('app.home');
+                $state.go('app.home_settings');
             };
         }
     ]);
