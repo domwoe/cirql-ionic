@@ -340,7 +340,9 @@ angular.module('cirqlApp')
         HISTORY: 'History',
         TEMPERATURE: 'Measured Temperature',
         TARGET: 'Desired Temperature',
-        VALVE: 'Valve Opening'
+        VALVE: 'Valve Opening',
+        NEXT_DAY: 'Next',
+        PREVIOUS_DAY: 'Previous'
 
 
 
@@ -437,7 +439,9 @@ angular.module('cirqlApp')
         HISTORY: 'Verlauf',
         TEMPERATURE: 'Gemessene Temperatur',
         TARGET: 'Wunschtemperatur',
-        VALVE: 'Ventilöffnung'
+        VALVE: 'Ventilöffnung',
+        NEXT_DAY: 'Nächster',
+        PREVIOUS_DAY: 'Vorheriger'
     });
 
     $translateProvider.preferredLanguage('de');
