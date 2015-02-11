@@ -1639,7 +1639,21 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003618;
+    font-family: \00003617;
+  }
+}
+
+.opaque .item-divider {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003622;
   }
 }
 
@@ -1659,7 +1673,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003628;
+    font-family: \00003632;
   }
 }
 
@@ -1673,7 +1687,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003637;
+    font-family: \00003641;
   }
 }
 
@@ -1691,7 +1705,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003645;
+    font-family: \00003649;
   }
 }
 
@@ -1706,7 +1720,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003651;
+    font-family: \00003655;
   }
 }
 
@@ -1721,7 +1735,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003658;
+    font-family: \00003662;
   }
 }
 
@@ -1736,7 +1750,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003665;
+    font-family: \00003669;
   }
 }
 
@@ -1753,7 +1767,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003676;
+    font-family: \00003680;
   }
 }
 
@@ -1768,7 +1782,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003685;
+    font-family: \00003689;
   }
 }
 
@@ -1785,7 +1799,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003690;
+    font-family: \00003694;
   }
 }
 
@@ -1803,7 +1817,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003696;
+    font-family: \00003700;
   }
 }
 
@@ -1828,7 +1842,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003709;
+    font-family: \00003713;
   }
 }
 
@@ -1843,7 +1857,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003713;
+    font-family: \00003717;
   }
 }
 
@@ -1858,7 +1872,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003717;
+    font-family: \00003721;
   }
 }
 
@@ -1873,7 +1887,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003721;
+    font-family: \00003725;
   }
 }
 
@@ -1888,7 +1902,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003725;
+    font-family: \00003729;
   }
 }
 
@@ -1903,7 +1917,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003729;
+    font-family: \00003733;
   }
 }
 
@@ -1918,7 +1932,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003733;
+    font-family: \00003737;
   }
 }
 
@@ -1933,7 +1947,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003737;
+    font-family: \00003741;
   }
 }
 
@@ -1948,7 +1962,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003741;
+    font-family: \00003745;
   }
 }
 
@@ -1963,7 +1977,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003745;
+    font-family: \00003749;
   }
 }
 
@@ -1978,7 +1992,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003749;
+    font-family: \00003753;
   }
 }
 
@@ -1993,7 +2007,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003753;
+    font-family: \00003757;
   }
 }
 
@@ -2008,7 +2022,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003756;
+    font-family: \00003760;
   }
 }
 
@@ -2023,7 +2037,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003759;
+    font-family: \00003763;
   }
 }
 
@@ -2038,7 +2052,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003762;
+    font-family: \00003766;
   }
 }
 
@@ -2053,7 +2067,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003765;
+    font-family: \00003769;
   }
 }
 
@@ -2068,7 +2082,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003768;
+    font-family: \00003772;
   }
 }
 
@@ -2083,7 +2097,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003771;
+    font-family: \00003775;
   }
 }
 
@@ -2098,7 +2112,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003774;
+    font-family: \00003778;
   }
 }
 
@@ -2113,7 +2127,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003777;
+    font-family: \00003781;
   }
 }
 
@@ -2128,7 +2142,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003780;
+    font-family: \00003784;
   }
 }
 
@@ -2143,7 +2157,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003783;
+    font-family: \00003787;
   }
 }
 
@@ -2182,7 +2196,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003801;
+    font-family: \00003805;
   }
 }
 
@@ -2211,7 +2225,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003833;
+    font-family: \00003837;
   }
 }
 
@@ -2226,7 +2240,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003842;
+    font-family: \00003846;
   }
 }
 
@@ -2241,7 +2255,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003856;
+    font-family: \00003860;
   }
 }
 

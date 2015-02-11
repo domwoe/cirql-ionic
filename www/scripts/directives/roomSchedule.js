@@ -241,13 +241,19 @@
                                     .attr('height', 210)
                                     .attr('width', 650);
 
+                                var self = this;
+
+                                var scheduleColumnCallback = function() {
+                                    self.closeDeleteView();
+                                };
+
+                                scheduleCol.on('touchstart', scheduleColumnCallback);
+                                scheduleCol.on('mousedown', scheduleColumnCallback);
+
                                 var dayGroup = d3.select(day);
                                 var rectangles = dayGroup.selectAll('rect')[0];
-                                var rec1 = d3.select(rectangles[0]);
-                                var rec2 = d3.select(rectangles[1]);
-                                rec1.attr('fill-opacity', 1);
-                                rec2.attr('fill-opacity', 1);
-                                rec2.attr('stroke-width', 0);
+                                var recSchedule = d3.select(rectangles[1]);
+                                recSchedule.style('visibility', 'hidden');
 
                                 var scheduleEntries = dayGroup.selectAll('g.entry');
                                 if (scheduleEntries[0]) {
@@ -276,6 +282,7 @@
                                 }
                                 // Move to front
                                 dayGroup.moveToFront();
+                                this.selectedDay = day;
                             };
 
                             this.deselectDay = function() {
@@ -284,19 +291,30 @@
                                 var previousRec2 = d3.select(previousRec[1]);
                                 previousRec1.attr('fill', '#483e37');
                                 previousRec2.attr('fill', '#FFFFFF');
-                            };
 
-                            this.daySelector = function(day) {
-                                if (this.selectedDay !== null) {
-                                    if (this.selectedDay !== day) {
-                                        this.deselectEntry();
+                                d3.select('#week_column').remove();
+                                d3.select('#schedule_column').remove();
+
+                                var dayGroup = d3.select(this.selectedDay);
+                                var rectangles = dayGroup.selectAll('rect')[0];
+                                var recSchedule = d3.select(rectangles[1]);
+                                recSchedule.style('visibility', 'visible');
+
+                                var scheduleEntries = dayGroup.selectAll('g.entry');
+                                scheduleEntries.remove();
+
+                                if (scheduleEntries[0]) {
+                                    for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                        var entryNode = d3.select(scheduleEntries[0][i]);
+                                        var index = entryNode.attr('id');
+                                        var entry = this.localSchedule[index];
+                                        var xpos = this.timeToPixelOffset(entry.hour, entry.minute);
+                                        var ypos = this.height * (entry.weekday - 1) + this.height / 2;
+                                        this.addEntry(dayGroup, index, xpos, ypos, entry.target);
                                     }
-                                    this.deselectDay();
                                 }
-                                if (this.selectedDay !== day) {
-                                    this.selectDay(day);
-                                    this.selectedDay = day;
-                                }
+
+                                this.selectedDay = null;
                             };
 
                             this.deselectEntry = function() {
@@ -396,6 +414,22 @@
                                 this.updateTemp(obj, true);
                             };
 
+                            this.closeDeleteView = function() {
+                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
+                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
+                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
+                                this.selectedEntry = null;
+                                this.inDeleteView = false;
+                            }
+
+                            this.deleteSelectedEntry = function(parentNode) {
+                                var selectedEntry = d3.select(parentNode);
+                                var index = selectedEntry.attr('id');
+                                delete this.localSchedule[index];
+                                selectedEntry.remove();
+                               this.closeDeleteView();
+                            }
+
                             this.addEntry = function(dayGroup, id, xpos, ypos, target) {
                                 var numTarget = parseFloat(target);
                                 var dotTarget;
@@ -465,20 +499,11 @@
                                             var secondAncestor = d3.select(parentNode).node().parentNode;
 
                                             if (self.inDeleteView) {
-                                                var selectedEntry = d3.select(parentNode);
-                                                var index = selectedEntry.attr('id');
-                                                delete self.localSchedule[index];
-                                                selectedEntry.remove();
-                                                d3.select('#schedule_column').attr('fill', '#FFFFFF');
-                                                d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
-                                                d3.select('#timeline_back').attr('fill', '#FFFFFF');
-                                                self.selectedEntry = null;
-                                                self.inDeleteView = false;
-
+                                                self.deleteSelectedEntry(parentNode);
                                             } else {
                                                 if (self.inDetailedView && selectedNode !== self.selectedEntry) {
 
-                                                    self.daySelector(secondAncestor);
+                                                    self.selectDay(secondAncestor);
                                                     self.entrySelector(self, parentNode);
                                                     self.dragging = true;
 
@@ -509,7 +534,7 @@
                                                         .attr('height', 2 * self.radius)
                                                         .attr('fill-opacity', 0.5);
                                                 } else {
-                                                    self.daySelector(secondAncestor);
+                                                    self.selectDay(secondAncestor);
                                                     self.inDetailedView = true;
                                                 }
                                             }
@@ -725,12 +750,12 @@
                                 });
                             };
 
-                            this.backToWeek = function(self) {
-                                self.syncFirebase();
+                            this.backToWeek = function() {
+                                this.syncFirebase();
+                                this.deselectDay();
                                 this.inDetailedView = false;
-                                scope.reload({
-                                    changedDay: self.changed
-                                });
+                                $rootScope.dayView = false;
+                                $rootScope.$apply();
                             };
 
                             this.getIndexForDay = function(day) {
@@ -773,20 +798,25 @@
                                     .attr('fill', '#483e37');
 
                                 var idx = this.getIndexForDay(day);
-                                if (idx === 0) {
-                                    idx = 1;
+                                var needOffset = false;
+                                if (idx === 0 || idx === 1) {
+                                    idx++;
+                                    needOffset = true;
                                 } else if (idx === 6) {
                                     idx = 5;
                                 } else {
                                     idx--;
                                 }
 
-                                var backWidth = (this.entriesToCopy !== null) ? 140 : 100;
+                                var backWidth = (this.entriesToCopy !== null) ? 225 : 150;
+                                var backY = needOffset ? idx * 30: idx * 30 - 5;
+                                var tSpanY = needOffset ? idx * 30 + 23: idx * 30 + 18;
+                                var sepY = needOffset ? idx * 30 + 3: idx * 30 - 2;
 
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
+                                    .attr('y', backY)
+                                    .attr('height', 35)
                                     .attr('width', backWidth)
                                     .attr('rx', 5)
                                     .attr('ry', 5)
@@ -794,20 +824,20 @@
 
                                 var copyText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
-                                    .attr('font-size', 10)
-                                    .attr('font-weight', 400)
+                                    .attr('font-size', 14)
+                                    .attr('font-weight', 600)
                                     .attr('fill', '#FFFFFF');
                                 var copyTspan = copyText.append('tspan')
                                     .attr('text-anchor', 'middle')
-                                    .attr('x', 20)
-                                    .attr('y', idx * 30 + 18)
+                                    .attr('x', 30)
+                                    .attr('y', tSpanY)
                                     .text("Copy");
                                 // Copy day button
                                 var copyButton = copyPasteButtons.append('rect')
                                     .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
-                                    .attr('width', 40)
+                                    .attr('y', idx * 30 - 5)
+                                    .attr('height', 35)
+                                    .attr('width', 60)
                                     .attr('fill-opacity', 0);
                                 var copyDayCallback = function() {
                                     d3.event.preventDefault();
@@ -824,35 +854,34 @@
                                 var sep = copyPasteButtons.append('line')
                                     .style("stroke", "white")
                                     .style('stroke-opacity', 0.4)
-                                    .attr("x1", 40)
-                                    .attr('y1', 4 + idx * 30)
-                                    .attr('x2', 40)
-                                    .attr('y2', (idx + 1) * 30 - 4);
+                                    .attr("x1", 65)
+                                    .attr('y1', sepY)
+                                    .attr('x2', 65)
+                                    .attr('y2', sepY + 30);
 
                                 if (this.entriesToCopy !== null) { // Add paste button
                                     var pasteText = copyPasteButtons.append('text')
                                         .attr('font-family', 'Helvetica Neue')
-                                        .attr('font-size', 10)
-                                        .attr('font-weight', 400)
+                                        .attr('font-size', 14)
+                                        .attr('font-weight', 600)
                                         .attr('fill', '#FFFFFF');
                                     var pasteTspan = pasteText.append('tspan')
                                         .attr('text-anchor', 'left')
-                                        .attr('x', 46)
-                                        .attr('y', idx * 30 + 18)
+                                        .attr('x', 85)
+                                        .attr('y', tSpanY)
                                         .text("Paste");
 
                                     var pasteDayCallback = function() {
                                         d3.event.preventDefault();
                                         d3.event.stopPropagation();
                                         self.copySchedule(self, self.contextSelectedDay);
-                                        self.entriesToCopy = null;
                                         self.closeContextMenu();
                                     };
                                     var pasteButton = copyPasteButtons.append('rect')
-                                        .attr('x', 42)
-                                        .attr('y', 1 + idx * 30)
-                                        .attr('height', 28)
-                                        .attr('width', 40)
+                                        .attr('x', 70)
+                                        .attr('y', idx * 30 - 5)
+                                        .attr('height', 35)
+                                        .attr('width', 60)
                                         .attr('fill-opacity', 0);
                                     pasteButton.on('mousedown', pasteDayCallback);
                                     pasteButton.on('touchstart', pasteDayCallback);
@@ -861,29 +890,29 @@
                                     var pasteSep = copyPasteButtons.append('line')
                                         .style("stroke", "white")
                                         .style('stroke-opacity', 0.4)
-                                        .attr("x1", 80)
-                                        .attr('y1', 4 + idx * 30)
-                                        .attr('x2', 80)
-                                        .attr('y2', (idx + 1) * 30 - 4);
+                                        .attr("x1", 135)
+                                        .attr('y1', sepY)
+                                        .attr('x2', 135)
+                                        .attr('y2', sepY + 30);
                                 }
 
-                                var clearBtnX = (this.entriesToCopy !== null) ? 85 : 45;
+                                var clearBtnX = (this.entriesToCopy !== null) ? 140 : 70;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
-                                    .attr('font-size', 10)
-                                    .attr('font-weight', 400)
+                                    .attr('font-size', 14)
+                                    .attr('font-weight', 600)
                                     .attr('fill', '#FFFFFF');
                                 var clearTspan = clearText.append('tspan')
                                     .attr('text-anchor', 'left')
-                                    .attr('x', clearBtnX)
-                                    .attr('y', idx * 30 + 18)
+                                    .attr('x', clearBtnX + 10)
+                                    .attr('y', tSpanY)
                                     .text("Clear day");
                                 // Clear day button
                                 var clearButton = copyPasteButtons.append('rect')
                                     .attr('x', clearBtnX)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('width', 50)
-                                    .attr('height', 28)
+                                    .attr('y', idx * 30 - 5)
+                                    .attr('width', 85)
+                                    .attr('height', 35)
                                     .attr('fill-opacity', 0);
                                 // Attach listener for clear
                                 var clearDayCallback = function() {
@@ -932,7 +961,7 @@
                                                 self.copySchedule(self, this);
                                                 self.entriesToCopy = null;
                                             } else {
-                                                self.daySelector(this);
+                                                self.selectDay(this);
                                                 self.inDetailedView = true;
                                             }
                                         }
@@ -952,7 +981,7 @@
 
                                 var weekButton = d3.select('#week');
                                 weekButton.on('click', function() {
-                                    self.backToWeek(self);
+                                    self.backToWeek();
                                 });
 
                                 var deleteButton = d3.select('#delete');
@@ -992,50 +1021,50 @@
                     template: '<svg id="room-schedule" overflow="visible" width="100%" height="100%" viewBox="0 0 742 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">\
                             <g id="weekdays"> \
                                 <g id="monday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="0" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="0" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="25">{{"MONDAY" | translate}}</tspan> \
                                     </text> \
-                                    <rect class="schedule-col" id="r1" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
+                                    <rect class="schedule-col" id="r1" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="0" /> \
                                 </g> \
                                 <g id="tuesday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="30" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="30" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="30" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="55">{{"TUESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="wednesday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="60" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity=1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="60" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="60" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="85">{{"WEDNESDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="thursday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="90" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="90" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="90" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF "> \
                                         <tspan text-anchor="middle" x="47.5" y="115">{{"THURSDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="friday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="120" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="120" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="120" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="145">{{"FRIDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="saturday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="150" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="150" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="150" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="175">{{"SATURDAY" | translate}}</tspan> \
                                     </text> \
                                 </g> \
                                 <g id="sunday" class="parent"> \
-                                    <rect class="label-col" fill="#483e37" fill-opacity="1" width="95" height="30" x="0" y="180" /> \
-                                    <rect class="schedule-col" fill="#FFFFFF" fill-opacity="1" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
+                                    <rect class="label-col" fill="#483e37" width="95" height="30" x="0" y="180" /> \
+                                    <rect class="schedule-col" fill="#FFFFFF" stroke="#BFBFBF" stroke-width="1" width="650" height="30" x="95" y="180" /> \
                                     <text font-family="Helvetica Neue" font-size="16" font-weight="300" fill="#FFFFFF"> \
                                         <tspan text-anchor="middle" x="47.5" y="205">{{"SUNDAY" | translate}}</tspan> \
                                     </text> \

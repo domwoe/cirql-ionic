@@ -4,7 +4,6 @@ angular.module('cirqlApp', [
     'ionic',
     'config',
     'simpleLogin',
-    'changeEmail',
     'firebase.utils',
     'ngStorage',
     'pascalprecht.translate',
@@ -17,7 +16,6 @@ angular.module('cirqlApp', [
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
-        // 
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
