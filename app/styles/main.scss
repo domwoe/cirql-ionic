@@ -613,6 +613,10 @@ input:-ms-input-placeholder {
 .opaque {
     background: rgba(0, 0, 0, 0.25);
 }
+
+.opaque .item-divider {
+    background: rgba(0, 0, 0, 0.3);
+}
 // FOOTER FOR THERMOSTATS SCREN
 // -------------------------------
 .bar-footer {

@@ -97,6 +97,36 @@ angular.module('cirqlApp')
         }
     })
 
+    .state('app.home_settings_location', {
+        url: '/settings/location',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/home_settings_location.html',
+                controller: 'HomeCtrl'
+            }
+        }
+    })
+
+    .state('app.home_settings_email', {
+        url: '/settings/email',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/home_settings_email.html',
+                controller: 'HomeCtrl'
+            }
+        }
+    })
+
+    .state('app.home_settings_password', {
+        url: '/settings/password',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/home_settings_password.html',
+                controller: 'HomeCtrl'
+            }
+        }
+    })
+
     .state('app.resident', {
         url: '/resident',
         views: {
@@ -243,10 +273,19 @@ angular.module('cirqlApp')
         ADD_ROOM: 'Add Room',
         CREATE_ACCOUNT_TITLE: 'Create account',
         CREATE_ACCOUNT_HEADER: 'Create your account',
+        EMAIL: 'Email',
+        CHANGE_EMAIL: 'Change email',
+        NEW_EMAIL: 'New email',
         PASSWORD: 'Password',
+        OLD_PASSWORD: 'Old password',
+        NEW_PASSWORD: 'New password',
+        CHANGE_PASSWORD: 'Change Password',
         RETYPE_PASSWORD: 'Retype Password',
         ABOUT_YOUR_HOME: 'Tell us about your home',
         GIVE_HOME_NAME: 'Give your home a name',
+        LOCATION: 'location',
+        CHANGE_LOCATION: 'Change location',
+        CHANGE: 'change',
         HOME_ADDRESS: 'Address',
         HOME_CITY: 'City',
         HOME_POSTCODE: 'Postcode',
@@ -331,10 +370,19 @@ angular.module('cirqlApp')
         ADD_ROOM: 'Raum anlegen',
         CREATE_ACCOUNT_TITLE: 'Neues Konto',
         CREATE_ACCOUNT_HEADER: 'Lege ein neues Konto an',
+        EMAIL: 'Email',
+        CHANGE_EMAIL: 'Email ändern',
+        NEW_EMAIL: 'Neue Email',
         PASSWORD: 'Passwort',
+        OLD_PASSWORD: 'Altes Passwort',
+        NEW_PASSWORD: 'Neues Passwort',
+        CHANGE_PASSWORD: 'Passwort ändern',
         RETYPE_PASSWORD: 'Wiederhole Passwort',
         ABOUT_YOUR_HOME: 'Wo bist du zuhause?',
         GIVE_HOME_NAME: 'Gib deinem Zuhause einen Namen',
+        LOCATION: 'Adresse',
+        CHANGE_LOCATION: 'Adresse ändern',
+        CHANGE: 'ändern',
         HOME_ADDRESS: 'Strasse und Hausnummer',
         HOME_CITY: 'Ort',
         HOME_POSTCODE: 'PLZ',
