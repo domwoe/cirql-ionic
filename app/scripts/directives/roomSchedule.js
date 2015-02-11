@@ -798,20 +798,25 @@
                                     .attr('fill', '#483e37');
 
                                 var idx = this.getIndexForDay(day);
-                                if (idx === 0) {
-                                    idx = 1;
+                                var needOffset = false;
+                                if (idx === 0 || idx === 1) {
+                                    idx++;
+                                    needOffset = true;
                                 } else if (idx === 6) {
                                     idx = 5;
                                 } else {
                                     idx--;
                                 }
 
-                                var backWidth = (this.entriesToCopy !== null) ? 140 : 100;
+                                var backWidth = (this.entriesToCopy !== null) ? 225 : 150;
+                                var backY = needOffset ? idx * 30: idx * 30 - 5;
+                                var tSpanY = needOffset ? idx * 30 + 23: idx * 30 + 18;
+                                var sepY = needOffset ? idx * 30 + 3: idx * 30 - 2;
 
                                 var backRect = copyPasteButtons.append('rect')
                                     .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
+                                    .attr('y', backY)
+                                    .attr('height', 35)
                                     .attr('width', backWidth)
                                     .attr('rx', 5)
                                     .attr('ry', 5)
@@ -819,20 +824,20 @@
 
                                 var copyText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
-                                    .attr('font-size', 10)
-                                    .attr('font-weight', 400)
+                                    .attr('font-size', 14)
+                                    .attr('font-weight', 600)
                                     .attr('fill', '#FFFFFF');
                                 var copyTspan = copyText.append('tspan')
                                     .attr('text-anchor', 'middle')
-                                    .attr('x', 20)
-                                    .attr('y', idx * 30 + 18)
+                                    .attr('x', 30)
+                                    .attr('y', tSpanY)
                                     .text("Copy");
                                 // Copy day button
                                 var copyButton = copyPasteButtons.append('rect')
                                     .attr('x', 1)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('height', 28)
-                                    .attr('width', 40)
+                                    .attr('y', idx * 30 - 5)
+                                    .attr('height', 35)
+                                    .attr('width', 60)
                                     .attr('fill-opacity', 0);
                                 var copyDayCallback = function() {
                                     d3.event.preventDefault();
@@ -849,21 +854,21 @@
                                 var sep = copyPasteButtons.append('line')
                                     .style("stroke", "white")
                                     .style('stroke-opacity', 0.4)
-                                    .attr("x1", 40)
-                                    .attr('y1', 4 + idx * 30)
-                                    .attr('x2', 40)
-                                    .attr('y2', (idx + 1) * 30 - 4);
+                                    .attr("x1", 65)
+                                    .attr('y1', sepY)
+                                    .attr('x2', 65)
+                                    .attr('y2', sepY + 30);
 
                                 if (this.entriesToCopy !== null) { // Add paste button
                                     var pasteText = copyPasteButtons.append('text')
                                         .attr('font-family', 'Helvetica Neue')
-                                        .attr('font-size', 10)
-                                        .attr('font-weight', 400)
+                                        .attr('font-size', 14)
+                                        .attr('font-weight', 600)
                                         .attr('fill', '#FFFFFF');
                                     var pasteTspan = pasteText.append('tspan')
                                         .attr('text-anchor', 'left')
-                                        .attr('x', 46)
-                                        .attr('y', idx * 30 + 18)
+                                        .attr('x', 85)
+                                        .attr('y', tSpanY)
                                         .text("Paste");
 
                                     var pasteDayCallback = function() {
@@ -873,10 +878,10 @@
                                         self.closeContextMenu();
                                     };
                                     var pasteButton = copyPasteButtons.append('rect')
-                                        .attr('x', 42)
-                                        .attr('y', 1 + idx * 30)
-                                        .attr('height', 28)
-                                        .attr('width', 40)
+                                        .attr('x', 70)
+                                        .attr('y', idx * 30 - 5)
+                                        .attr('height', 35)
+                                        .attr('width', 60)
                                         .attr('fill-opacity', 0);
                                     pasteButton.on('mousedown', pasteDayCallback);
                                     pasteButton.on('touchstart', pasteDayCallback);
@@ -885,29 +890,29 @@
                                     var pasteSep = copyPasteButtons.append('line')
                                         .style("stroke", "white")
                                         .style('stroke-opacity', 0.4)
-                                        .attr("x1", 80)
-                                        .attr('y1', 4 + idx * 30)
-                                        .attr('x2', 80)
-                                        .attr('y2', (idx + 1) * 30 - 4);
+                                        .attr("x1", 135)
+                                        .attr('y1', sepY)
+                                        .attr('x2', 135)
+                                        .attr('y2', sepY + 30);
                                 }
 
-                                var clearBtnX = (this.entriesToCopy !== null) ? 85 : 45;
+                                var clearBtnX = (this.entriesToCopy !== null) ? 140 : 70;
                                 var clearText = copyPasteButtons.append('text')
                                     .attr('font-family', 'Helvetica Neue')
-                                    .attr('font-size', 10)
-                                    .attr('font-weight', 400)
+                                    .attr('font-size', 14)
+                                    .attr('font-weight', 600)
                                     .attr('fill', '#FFFFFF');
                                 var clearTspan = clearText.append('tspan')
                                     .attr('text-anchor', 'left')
-                                    .attr('x', clearBtnX)
-                                    .attr('y', idx * 30 + 18)
+                                    .attr('x', clearBtnX + 10)
+                                    .attr('y', tSpanY)
                                     .text("Clear day");
                                 // Clear day button
                                 var clearButton = copyPasteButtons.append('rect')
                                     .attr('x', clearBtnX)
-                                    .attr('y', 1 + idx * 30)
-                                    .attr('width', 50)
-                                    .attr('height', 28)
+                                    .attr('y', idx * 30 - 5)
+                                    .attr('width', 85)
+                                    .attr('height', 35)
                                     .attr('fill-opacity', 0);
                                 // Attach listener for clear
                                 var clearDayCallback = function() {
