@@ -290,5 +290,12 @@ angular.module('cirqlApp')
             });
         };
 
+        $scope.goBack = function() {
+            //$ionicSideMenuDelegate.canDragContent(true);
+            $state.go('app.room', {
+                roomId: $rootScope.room
+            });
+        };
+
     }
 ]);
