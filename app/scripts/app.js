@@ -85,6 +85,15 @@ angular.module('cirqlApp', [
         $ionicPlatform.on('offline', showOffline);
         $ionicPlatform.on('online', hideOffline);
 
+        fbutil.ref('.info/connected').on('value', function(snap) {
+            if (snap.val() !== true) {
+                console.log('Firebase connection lost. Re-establish connection...');
+                Firebase.goOnline();
+            }
+        });
+
+
+
 
         $ionicPlatform.on('resume', function() {
             var posOptions = {

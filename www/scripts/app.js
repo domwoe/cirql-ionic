@@ -16,6 +16,7 @@ angular.module('cirqlApp', [
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
+        // 
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -84,6 +85,15 @@ angular.module('cirqlApp', [
         $ionicPlatform.on('offline', showOffline);
         $ionicPlatform.on('online', hideOffline);
 
+        fbutil.ref('.info/connected').on('value', function(snap) {
+            if (snap.val() !== true) {
+                console.log('Firebase connection lost. Re-establish connection...');
+                Firebase.goOnline();
+            }
+        });
+
+
+
 
         $ionicPlatform.on('resume', function() {
             var posOptions = {
@@ -95,7 +105,6 @@ angular.module('cirqlApp', [
                 var long = position.coords.longitude;
                 //console.log('Current position is: ' + lat + ' and ' + long);
                 simpleLogin.getUser().then(function(user) {
-                    console.log(user);
                     if (user.uid !== null && user.uid !== undefined) {
                         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
 

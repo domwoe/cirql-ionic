@@ -8,9 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$cordovaGeolocation', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log', 'geo','geo2', 'deviceDetector',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log, geo, geo2, deviceDetector) {
 
             $scope.finishedloading = false;
 
@@ -105,7 +104,7 @@ angular.module('cirqlApp')
                         } else if (deviceDetector.os === 'android') {
                             if (window.geofence) {
                                 console.log('trigger geolocation service for Android');
-                    
+
                                 geo2.init();
 
                                 geo2.monitorRegion();
