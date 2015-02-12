@@ -16,7 +16,6 @@ angular.module('cirqlApp', [
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
-        // 
 
         if (window.screen.hasOwnProperty('lockOrientation')) {
             window.screen.lockOrientation('portrait');
@@ -96,6 +95,7 @@ angular.module('cirqlApp', [
                 var long = position.coords.longitude;
                 //console.log('Current position is: ' + lat + ' and ' + long);
                 simpleLogin.getUser().then(function(user) {
+                    console.log(user);
                     if (user.uid !== null && user.uid !== undefined) {
                         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
 

@@ -13,6 +13,11 @@ angular.module('cirqlApp')
 
             var pairingPopup;
 
+            if (!$rootScope.room) {
+                $rootScope.room = $state.params.roomId;
+            }
+
+
             var room = $rootScope.room;
 
             $scope.hasThermostat = true;
@@ -124,7 +129,7 @@ angular.module('cirqlApp')
             $scope.delThermostat = function(thermostat) {
 
                 thermostatService.deleteFromRoom(user, thermostat.$id, room).then(function() {
-                    
+
                     //Change to add view
                     $scope.isAddView = true;
                     $scope.thermostatFilter = {
