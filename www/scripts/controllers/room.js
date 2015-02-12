@@ -12,6 +12,10 @@ angular.module('cirqlApp')
 .controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log','$ionicLoading',
     function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, log, $ionicLoading) {
 
+        if (!$rootScope.room) {
+            $rootScope.room = $state.params.roomId;
+        }
+
         $ionicSideMenuDelegate.canDragContent(true);
 
         log.event({

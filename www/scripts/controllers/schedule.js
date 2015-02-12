@@ -8,14 +8,18 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate', 'log', '$ionicLoading','$timeout',
-        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate, log, $ionicLoading,$timeout) {
+    .controller('ScheduleCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicSideMenuDelegate', 'log', '$ionicLoading', '$timeout',
+        function($rootScope, $scope, user, fbutil, $state, $ionicSideMenuDelegate, log, $ionicLoading, $timeout) {
 
             $ionicSideMenuDelegate.canDragContent(false);
 
 
             if (window.screen && window.screen.lockOrientation) {
                 window.screen.lockOrientation('landscape');
+            }
+
+            if (!$rootScope.room) {
+                $rootScope.room = $state.params.roomId;
             }
 
 
@@ -90,7 +94,7 @@ angular.module('cirqlApp')
                     $state.go('app.room', {
                         roomId: room
                     });
-                },300);    
+                }, 300);
             };
 
             $scope.reload = function(changedDay) {

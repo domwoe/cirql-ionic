@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('ActivityCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate','log',
+    .controller('ActivityCtrl', ['$rootScope', '$scope', 'user', 'fbutil', '$state', '$ionicLoading', '$translate', 'log',
         function($rootScope, $scope, user, fbutil, $state, $ionicLoading, $translate, log) {
+
+            if (!$rootScope.room) {
+                $rootScope.room = $state.params.roomId;
+            }
 
             var language = $translate.use();
 

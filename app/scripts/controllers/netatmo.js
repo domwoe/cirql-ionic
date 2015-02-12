@@ -12,6 +12,10 @@ angular.module('cirqlApp')
 
         function($rootScope, $scope, $state, user, fbutil, netatmoService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading) {
 
+            if (!$rootScope.room) {
+                $rootScope.room = $state.params.roomId;
+            }
+
             $ionicLoading.show({
                 template: '<div class="sk-spinner sk-spinner-circle">' +
                     '<div class="sk-circle1 sk-circle"></div>' +

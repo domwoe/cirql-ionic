@@ -8,6 +8,10 @@ angular.module('cirqlApp')
                 window.screen.lockOrientation('landscape');
             }
 
+            if (!$rootScope.room) {
+                $rootScope.room = $state.params.roomId;
+            }
+
 
             $timeout($ionicLoading.hide, 2000);
 
@@ -265,7 +269,7 @@ angular.module('cirqlApp')
                 $ionicLoading.hide();
             });
 
-            
+
             function setAxis(next) {
 
                 if (next && $scope.day < 0) {
@@ -274,28 +278,22 @@ angular.module('cirqlApp')
 
                     myChart.xAxis[0].update({
                         min: getDate($scope.day),
-                        max: getDate($scope.day+1) 
+                        max: getDate($scope.day + 1)
                     });
 
 
-                }
-
-                else if (next && $scope.day >= 0) {
+                } else if (next && $scope.day >= 0) {
                     console.log("Can't look into the future");
-                }
-
-                else if (!next && $scope.day >= -2) {
+                } else if (!next && $scope.day >= -2) {
 
                     $scope.day--;
 
                     myChart.xAxis[0].update({
                         min: getDate($scope.day),
-                        max: getDate($scope.day+1) 
+                        max: getDate($scope.day + 1)
                     });
 
-                }
-
-                else if (!next && $scope.day < -2 ) {
+                } else if (!next && $scope.day < -2) {
 
                     console.log('There is only data of the last 3 days');
 
@@ -309,11 +307,11 @@ angular.module('cirqlApp')
             $scope.previousDay = function() {
 
                 setAxis(false);
-                
+
             };
 
             $scope.nextDay = function() {
-                
+
                 setAxis(true);
             };
 
