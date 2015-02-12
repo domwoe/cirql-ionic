@@ -93,34 +93,61 @@ angular.module('cirqlApp', [
         });
 
 
+        function alertDismissed() {}
 
-
-        $ionicPlatform.on('resume', function() {
+        function getLocationAndCheckPermission() {
             var posOptions = {
                 timeout: 10000,
                 enableHighAccuracy: false
             };
-            $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
-                var lat = position.coords.latitude;
-                var long = position.coords.longitude;
-                //console.log('Current position is: ' + lat + ' and ' + long);
-                simpleLogin.getUser().then(function(user) {
-                    if (user.uid !== null && user.uid !== undefined) {
-                        if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+            simpleLogin.getUser().then(function(user) {
+                if (user.uid !== null && user.uid !== undefined) {
+                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').once('value', function(fbAllowsGeo) {
+                            if (fbAllowsGeo.val() === true) {
+                                $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
 
-                            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
-                                lat: lat,
-                                lng: long
-                            });
-                        }
+                                        $rootScope.geoPermission = true;
+                                        var lat = position.coords.latitude;
+                                        var long = position.coords.longitude;
+                                        //console.log('Current position is: ' + lat + ' and ' + long);
+
+                                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
+                                            lat: lat,
+                                            lng: long
+                                        });
+
+                                    },
+                                    function(err) {
+                                        console.log('Current position is not available');
+                                        if (err.code === 1) {
+                                            $rootScope.geoPermission = false;
+                                            navigator.notification.alert(
+                                                'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
+                                                alertDismissed, // callback
+                                                'Cirql', // title
+                                                'OK' // buttonName
+                                            );
+                                        }
+
+                                    });
+                            }
+                        });
                     }
-                });
-
-            }, function(err) {
-                console.log('Current position is not available');
+                }
 
             });
+        }
 
+        $timeout(getLocationAndCheckPermission,3000);
+
+        $ionicPlatform.on('resume', function() {
+
+            getLocationAndCheckPermission();
         });
+
+
+
+
     });
 });
