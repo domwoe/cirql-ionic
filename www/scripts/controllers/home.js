@@ -10,7 +10,7 @@
 angular.module('cirqlApp')
     .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
         'geo', 'geo2', '$cordovaGeolocation', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $cordovaGeolocation, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
 
             $scope.finishedloading = false;
 
@@ -92,6 +92,19 @@ angular.module('cirqlApp')
                         //if (!$rootScope.isGeoStarted) {
                         if (deviceDetector.os === 'ios') {
                             if (window.plugins && window.plugins.DGGeofencing) {
+                                // var posOptions = {
+                                //     timeout: 10000,
+                                //     enableHighAccuracy: false
+                                // };
+                                // $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+                                //         var lat = position.coords.latitude
+                                //         var long = position.coords.longitude
+                                //         console.log('Current position is: ' + lat + ' and ' + long);
+                                //     }, function(err) {
+                                //         console.log('Current position is not available');
+
+                                //     });
+
                                 console.log('trigger geolocation service for iOS');
 
                                 geo.init();
@@ -105,7 +118,19 @@ angular.module('cirqlApp')
                         } else if (deviceDetector.os === 'android') {
                             if (window.geofence) {
                                 console.log('trigger geolocation service for Android');
-                    
+                                // var posOptions = {
+                                //     timeout: 10000,
+                                //     enableHighAccuracy: false
+                                // };
+                                // $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+                                //         var lat = position.coords.latitude
+                                //         var long = position.coords.longitude
+                                //         console.log('Current position is: ' + lat + ' and ' + long);
+                                //     }, function(err) {
+                                //         console.log('Current position is not available');
+
+                                //     });
+
                                 geo2.init();
 
                                 geo2.monitorRegion();
