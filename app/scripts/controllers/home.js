@@ -8,11 +8,14 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$cordovaGeolocation', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log', 'geo',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log, geo) {
 
             $scope.finishedloading = false;
+
+            if ($rootScope.geo !== true) {
+                geo.init();
+            }
 
             log.event({
                 homeid: user.uid,
@@ -87,39 +90,39 @@ angular.module('cirqlApp')
                     }
                 });
 
-                if (user.uid !== null && user.uid !== undefined) {
-                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                        //if (!$rootScope.isGeoStarted) {
-                        if (deviceDetector.os === 'ios') {
-                            if (window.plugins && window.plugins.DGGeofencing) {
-                                console.log('trigger geolocation service for iOS');
+            //     if (user.uid !== null && user.uid !== undefined) {
+            //         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+            //             //if (!$rootScope.isGeoStarted) {
+            //             if (deviceDetector.os === 'ios') {
+            //                 if (window.plugins && window.plugins.DGGeofencing) {
+            //                     //console.log('trigger geolocation service for iOS');
 
-                                geo.init();
+            //                     //geo.init();
 
-                                //geo.removeRegion();
-                                geo.monitorRegion();
+            //                     //geo.removeRegion();
+            //                     //geo.monitorRegion();
 
-                                //geo.stopMonitoringSignificantLocationChanges();
-                                geo.startMonitoringSignificantLocationChanges();
-                            }
-                        } else if (deviceDetector.os === 'android') {
-                            if (window.geofence) {
-                                console.log('trigger geolocation service for Android');
+            //                     //geo.stopMonitoringSignificantLocationChanges();
+            //                     //geo.startMonitoringSignificantLocationChanges();
+            //                 }
+            //             } else if (deviceDetector.os === 'android') {
+            //                 if (window.geofence) {
+            //                     console.log('trigger geolocation service for Android');
                     
-                                geo2.init();
+            //                     geo2.init();
 
-                                geo2.monitorRegion();
-                            }
-                        } else {
-                            console.log('Othero OS: ' + deviceDetector.os);
-                        }
+            //                     geo2.monitorRegion();
+            //                 }
+            //             } else {
+            //                 console.log('Othero OS: ' + deviceDetector.os);
+            //             }
 
-                    } else {
-                        console.log('user.residentId is not found');
-                    }
-                } else {
-                    console.log('user.uid is not found');
-                }
+            //         } else {
+            //             console.log('user.residentId is not found');
+            //         }
+            //     } else {
+            //         console.log('user.uid is not found');
+            //     }
             }
             loadHome(user);
 

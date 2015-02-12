@@ -8,11 +8,14 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', 'deviceDetector',
-        'geo', 'geo2', '$cordovaGeolocation', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
-        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, deviceDetector, geo, geo2, $cordovaGeolocation, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
+    .controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log', 'geo',
+        function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log, geo) {
 
             $scope.finishedloading = false;
+
+            if ($rootScope.geo !== true) {
+                geo.init();
+            }
 
             log.event({
                 homeid: user.uid,
@@ -87,64 +90,39 @@ angular.module('cirqlApp')
                     }
                 });
 
-                if (user.uid !== null && user.uid !== undefined) {
-                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                        //if (!$rootScope.isGeoStarted) {
-                        if (deviceDetector.os === 'ios') {
-                            if (window.plugins && window.plugins.DGGeofencing) {
-                                // var posOptions = {
-                                //     timeout: 10000,
-                                //     enableHighAccuracy: false
-                                // };
-                                // $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
-                                //         var lat = position.coords.latitude
-                                //         var long = position.coords.longitude
-                                //         console.log('Current position is: ' + lat + ' and ' + long);
-                                //     }, function(err) {
-                                //         console.log('Current position is not available');
+            //     if (user.uid !== null && user.uid !== undefined) {
+            //         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+            //             //if (!$rootScope.isGeoStarted) {
+            //             if (deviceDetector.os === 'ios') {
+            //                 if (window.plugins && window.plugins.DGGeofencing) {
+            //                     //console.log('trigger geolocation service for iOS');
 
-                                //     });
+            //                     //geo.init();
 
-                                console.log('trigger geolocation service for iOS');
+            //                     //geo.removeRegion();
+            //                     //geo.monitorRegion();
 
-                                geo.init();
+            //                     //geo.stopMonitoringSignificantLocationChanges();
+            //                     //geo.startMonitoringSignificantLocationChanges();
+            //                 }
+            //             } else if (deviceDetector.os === 'android') {
+            //                 if (window.geofence) {
+            //                     console.log('trigger geolocation service for Android');
+                    
+            //                     geo2.init();
 
-                                //geo.removeRegion();
-                                geo.monitorRegion();
+            //                     geo2.monitorRegion();
+            //                 }
+            //             } else {
+            //                 console.log('Othero OS: ' + deviceDetector.os);
+            //             }
 
-                                //geo.stopMonitoringSignificantLocationChanges();
-                                geo.startMonitoringSignificantLocationChanges();
-                            }
-                        } else if (deviceDetector.os === 'android') {
-                            if (window.geofence) {
-                                console.log('trigger geolocation service for Android');
-                                // var posOptions = {
-                                //     timeout: 10000,
-                                //     enableHighAccuracy: false
-                                // };
-                                // $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
-                                //         var lat = position.coords.latitude
-                                //         var long = position.coords.longitude
-                                //         console.log('Current position is: ' + lat + ' and ' + long);
-                                //     }, function(err) {
-                                //         console.log('Current position is not available');
-
-                                //     });
-
-                                geo2.init();
-
-                                geo2.monitorRegion();
-                            }
-                        } else {
-                            console.log('Othero OS: ' + deviceDetector.os);
-                        }
-
-                    } else {
-                        console.log('user.residentId is not found');
-                    }
-                } else {
-                    console.log('user.uid is not found');
-                }
+            //         } else {
+            //             console.log('user.residentId is not found');
+            //         }
+            //     } else {
+            //         console.log('user.uid is not found');
+            //     }
             }
             loadHome(user);
 

@@ -12,7 +12,7 @@ angular.module('cirqlApp', [
     'highcharts-ng'
 ])
 
-.run(function($ionicPlatform, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state) {
+.run(function($ionicPlatform, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state, geo) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -30,13 +30,13 @@ angular.module('cirqlApp', [
             StatusBar.styleLightContent();
         }
 
-        if (window.plugins && window.plugins.DGGeofencing) {
-            console.log('Radshag Geofencing plugin for IOS is available');
-        }
+        // if (window.plugins && window.plugins.DGGeofencing) {
+        //     console.log('Radshag Geofencing plugin for IOS is available');
+        // }
 
-        if (window.geofence) {
-            console.log('Cowbell Geofencing plugin for Android is available');
-        }
+        // if (window.geofence) {
+        //     console.log('Cowbell Geofencing plugin for Android is available');
+        // }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
@@ -51,8 +51,6 @@ angular.module('cirqlApp', [
         $rootScope.splashTimeout = $timeout(function() {
             $cordovaSplashscreen.hide();
         }, 1000);
-
-        //$state.go('app.home');
 
         function showOffline() {
             console.log('Offline');
@@ -85,7 +83,6 @@ angular.module('cirqlApp', [
         $ionicPlatform.on('offline', showOffline);
         $ionicPlatform.on('online', hideOffline);
 
-
         $ionicPlatform.on('resume', function() {
             var posOptions = {
                 timeout: 10000,
@@ -108,10 +105,13 @@ angular.module('cirqlApp', [
                 });
 
             }, function(err) {
-                console.log('Current position is not available');
+                console.log('Current position is not available: '+err);
 
             });
 
         });
+
+        $state.go('app.home');
+
     });
 });

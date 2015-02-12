@@ -1,31 +1,44 @@
 'use strict';
 
-angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil',
-    function($q, $log, simpleLogin, fbutil) {
+angular.module('cirqlApp').service('geo', ['$rootScope', '$q', '$log', 'simpleLogin', 'fbutil',
+    function($rootScope, $q, $log, simpleLogin, fbutil) {
 
-        fbutil.ref('test').on('child_added', function(fbTest) {
-            console.log('FIREBASE TEST: '+JSON.stringify(fbTest.val()));
-        });
         var user = null;
-        var fbHome = null;
+        var home = null;
         var fbLocation = null;
         var fbRegions = null;
-        var radius = [300, 3000, 7500, 10000, 15000, 25000, 35000, 45000, 55000, 70000, 90000, 120000, 150000, 200000];
-        var initStarted = false;
+        var radius = null;
         var monitorStarted = false;
-        var removeStarted = false;
         var signStarted = false;
+        var allowsGeo = null;
+        var regionMonitoringStarted = false;
+        var regions = [];
 
-        var service = {
-            init: function() {
-                var deferred = $q.defer();
-                if (!initStarted) {
-                    initStarted = true;
+
+        function fbInit(deferred) {
+
+            console.log('GEO SERVICE: Initializing...');
+
+            fbutil.ref('homes/' + user.uid + '/homelocation').once('value', function(fbHome) {
+                if (fbHome.val()) {
+                    console.log('GEO SERVICE: Got Homelocation');
+                    home = fbHome.val();
+                }
+            });
+
+            fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
+            fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
+
+            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').on('value', function(fbAllowsGeo) {
+
+                console.log('GEO SERVICE: Geolocation allowed is set to ' + fbAllowsGeo.val());
+                if (fbAllowsGeo.val() === true) {
+
+                    allowsGeo = true;
 
                     window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
                         function(result) {
                             //console.log('RESULTS: ' + JSON.stringify(result));
-                            console.log('Radshag Geo initialized');
 
                             var callbacktype = result.callbacktype;
                             var regionId = result.regionId;
@@ -54,7 +67,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                             } else if (callbacktype === 'monitorremoved') { // monitor for region with id fid removed
 
-                                console.log('monitorfail');
+                                console.log('monitorremoved');
                                 // fbRegions.lastMsg = {
                                 //     'type': 'monitorremoved',
                                 //     'date': date
@@ -71,7 +84,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                 // fbRegions.$save();
 
                             } else if (callbacktype === 'monitorstart') { // monitor for region with id fid succeeded
-
+                                regionMonitoringStarted = true;
                                 console.log('monitorstart');
                                 // fbRegions.lastMsg = {
                                 //     'type': 'monitorstart',
@@ -122,171 +135,206 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                             console.log('Init-Geo: Error');
                             signStarted = false;
                             monitorStarted = false;
-                            deferred.reject(error);
+                            deferred.reject();
 
+                        });
+
+                    signStarted = true;
+                    window.plugins.DGGeofencing.startMonitoringSignificantLocationChanges(
+                        function(result) {
+                            console.log('GEO SERVICE: start monitoring significant location changes');
+
+                        },
+                        function(error) {
+                            console.log('GEO SERVICE: Error when starting significant location changes monitoring with error: ' + error);
+                            signStarted = false;
+                            deferred.reject();
 
                         });
 
-                    console.log('Geo:  callback return promise');
-                }
-                return deferred.promise;
-            },
 
-            monitorRegion: function(params) {
-                var deferred = $q.defer();
-                if (monitorStarted === false) {
-                    if (fbRegions === null) {
-                        user = simpleLogin.getUserObject();
-                        console.log('User: ' + JSON.stringify(user));
-                        if (user.uid !== null && user.uid !== undefined) {
-                            console.log('residentid: ' + user.residentId);
-                            if (user.residentId !== null && user.residentId !== undefined) {
-                                fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
-                                fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-                                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
-                                console.log('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-                            }
+                    var fbRefRegions = fbutil.ref('geolocation/regions');
+
+                    fbRefRegions.on('child_added', function(fbRegion) {
+
+                        if (fbRegion.val()) {
+
+                            regions.push(fbRegion);
+
+                            //console.log(fbRegion.val());
+
+                            addRegion(fbRegion);
+
                         }
-                    }
-                    if (fbRegions !== null) {
 
-                        fbHome.$loaded(function(data) {
 
-                            if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
-                                var lat = data.lat + '';
-                                var lng = data.lng + '';
-                                console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
-                                monitorStarted = true;
+                    });
 
-                                console.log('Regions will be set now: ');
-                                for (var i = 1; i <= radius.length; i++) {
+                    fbRefRegions.on('child_changed', function(fbRegion) {
 
-                                    var params = ['' + i, lat, lng, radius[i - 1]];
+                        console.log('child_changed');
 
-                                    window.plugins.DGGeofencing.startMonitoringRegion(params,
-                                        function(result) {
-                                            console.log('Geo: added new region ' + params);
-                                            deferred.resolve(result);
-                                        },
-                                        function(error) {
-                                            console.log('Monitor-Geo: error with ' + params);
-                                            deferred.reject(error);
-                                        });
-                                }
+                        if (fbRegion.val()) {
 
-                            } else {
-                                console.log('HomeRegion could not be set');
-                                console.log('Regions can not be set');
-                                monitorStarted = false;
-                            }
+                            removeRegion(fbRegion);
+                            addRegion(fbRegion);
 
-                        });
-                        console.log('Geo: monitorregion return promise');
-                    }
-                }
-                return deferred.promise;
-
-            },
-
-            removeRegion: function(params) {
-                var deferred = $q.defer();
-
-                // if (removeStarted === false) {
-                //     if (fbRegions) {
-                //         fbHome.$loaded(function(data) {
-
-                //             if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
-                //                 var lat = data.lat + '';
-                //                 var lng = data.lng + '';
-                //                 console.log('HomeRegion set to lat: ' + lat + ' and lng: ' + lng);
-                //                 removeStarted = true;
-
-                //                 console.log('Regions will be set now: ');
-                //                 for (var i = 1; i <= radius.length; i++) {
-
-                //                     var params = ['' + i, lat, lng, radius[i - 1]];
-
-                //                     window.plugins.DGGeofencing.stopMonitoringRegion(params,
-                //                         function(result) {
-                //                             console.log('Geo: removed new region ' + params);
-                //                             deferred.resolve(result);
-                //                         },
-                //                         function(error) {
-                //                             console.log('Remove-Geo: error with ' + params);
-                //                             deferred.reject(error);
-                //                         });
-                //                 }
-
-                //             } else {
-                //                 console.log('RemoveOperation: HomeRegion could not be set');
-                //                 console.log('RemoveOperation: Regions could not be set');
-                //             }
-
-                //         });
-                //         console.log('Geo: removeregion return promise');
-                //     }
-                // }
-                return deferred.promise;
-
-            },
-
-            startMonitoringSignificantLocationChanges: function() {
-                var deferred = $q.defer();
-                if (!signStarted) {
-                    if (fbLocation === null) {
-                        user = simpleLogin.getUserObject();
-                        if (user.uid !== null && user.uid !== undefined) {
-                            if (user.residentId !== null && user.residentId !== undefined) {
-                                fbHome = fbutil.syncObject('homes/' + user.uid + '/homelocation');
-                                fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-                                fbRegions = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions');
-                                console.log('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
-                            }
                         }
-                    }
-                    if (fbLocation !== null) {
-                        console.log('Significant-Geo: ready');
-                        signStarted = true;
-                        window.plugins.DGGeofencing.startMonitoringSignificantLocationChanges(
+
+
+                    });
+
+
+                } else if (fbAllowsGeo.val() === false) {
+
+                    allowsGeo = false;
+
+                    if (signStarted) {
+
+                        window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
                             function(result) {
-                                console.log('Geo: start monitoring significant location changes');
-                                deferred.resolve(result);
+                                console.log('Geo: Stop monitoring significant location changes');
 
                             },
                             function(error) {
-                                console.log('Significant-Geo: error');
-                                signStarted = false;
-                                deferred.reject(error);
+                                console.log(' Geo: error');
 
                             });
-
                     }
-                }
-                return deferred.promise;
-            },
 
-            stopMonitoringSignificantLocationChanges: function() {
+                    if (regionMonitoringStarted) {
+
+                        for (var i = 0, j = regions.length; i < j; i++) {
+
+                            removeRegion(regions[i]);
+                            regions[i] = null;
+                        }
+
+                        //console.log(fbRegion.val());
+                    }
+
+
+                }
+            });
+
+        }
+
+        function addRegion(region) {
+            console.log('----------------------------');
+            console.log('GEO SERVICE: Adding region');
+
+            var deferred = $q.defer();
+
+            if (home && home.lat && home.lng) {
+
+                console.log('GEO SERVICE: Region Id:' + region.key());
+                console.log('GEO SERVICE: Latitude:' + home.lat);
+                console.log('GEO SERVICE: Longitude:' + home.lng);
+                console.log('GEO SERVICE: Radius:' + region.child('radius').val());
+                console.log('----------------------------');
+
+                var params = [region.key(), home.lat, home.lng, region.child('radius').val()];
+
+                window.plugins.DGGeofencing.startMonitoringRegion(params,
+                    function(result) {
+                        console.log('Geo: added new region ' + params);
+                        deferred.resolve(result);
+                    },
+                    function(error) {
+                        console.log('Monitor-Geo: error with ' + params);
+                        deferred.reject(error);
+                    });
+            }
+
+            return deferred.promise;
+
+        }
+
+        function removeRegion(region) {
+
+            var deferred = $q.defer();
+
+            if (home && home.lat && home.lng) {
+
+                var params = [region.key(), home.lat, home.lng];
+
+                window.plugins.DGGeofencing.stopMonitoringRegion(params,
+                    function(result) {
+                        console.log('Geo: removed region ' + params);
+                        deferred.resolve(result);
+                    },
+                    function(error) {
+                        console.log('Monitor-Geo: error with ' + params);
+                        deferred.reject(error);
+                    });
+            }
+
+            return deferred.promise;
+
+        }
+
+        function initUser() {
+
+            var deferred = $q.defer();
+
+            simpleLogin.getUser().then(function(user) {
+
+
+
+                console.log('GEO SERVICE: User resolved');
+
+                if (user && user.uid) {
+                    if (user.residentId) {
+
+                        console.log('GEO SERVICE: User: ' + user.uid);
+                        console.log('GEO SERVICE: User: ' + user.residentId);
+
+                        deferred.resolve(user);
+
+                    } else {
+                        console.log('GEO SERVICE: No residentId');
+                        deferred.reject();
+                    }
+
+
+
+                    // fbRef.on('child_added', function(fbTest) {
+                    //     console.log('FIREBASE TEST');
+                    // });
+
+                } else {
+                    console.log('GEO SERVICE: No userId');
+                    deferred.reject();
+                }
+
+            });
+
+            return deferred.promise;
+        }
+
+
+
+
+        var service = {
+            init: function() {
+
                 var deferred = $q.defer();
-                if (fbLocation !== null) {
-                    console.log('Stop significant geo');
-                    signStarted = false;
-                    window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
-                        function(result) {
-                            console.log('Geo: start monitoring significant location changes');
-                            deferred.resolve(result);
-                        },
-                        function(error) {
-                            console.log(' Geo: error');
-                            signStarted = false;
-                            deferred.reject(error);
 
-                        });
+                initUser().then(function(cUser) {
 
-                    console.log('Geo: return promise');
-                }
+                    user = cUser;
+
+                    fbInit(deferred);
+
+                });
+
+                $rootScope.geo = true;
+
                 return deferred.promise;
+
             }
         };
+
 
         return service;
 
