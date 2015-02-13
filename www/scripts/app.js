@@ -12,7 +12,7 @@ angular.module('cirqlApp', [
     'highcharts-ng'
 ])
 
-.run(function($ionicPlatform, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state) {
+.run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -96,50 +96,52 @@ angular.module('cirqlApp', [
         function alertDismissed() {}
 
         function getLocationAndCheckPermission() {
-            var posOptions = {
-                timeout: 10000,
-                enableHighAccuracy: false
-            };
-            simpleLogin.getUser().then(function(user) {
-                if (user.uid !== null && user.uid !== undefined) {
-                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').once('value', function(fbAllowsGeo) {
-                            if (fbAllowsGeo.val() === true) {
-                                $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+            if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
+                var posOptions = {
+                    timeout: 10000,
+                    enableHighAccuracy: false
+                };
+                simpleLogin.getUser().then(function(user) {
+                    if (user.uid !== null && user.uid !== undefined) {
+                        if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+                            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').once('value', function(fbAllowsGeo) {
+                                if (fbAllowsGeo.val() === true) {
+                                    $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
 
-                                        $rootScope.geoPermission = true;
-                                        var lat = position.coords.latitude;
-                                        var long = position.coords.longitude;
-                                        //console.log('Current position is: ' + lat + ' and ' + long);
+                                            $rootScope.geoPermission = true;
+                                            var lat = position.coords.latitude;
+                                            var long = position.coords.longitude;
+                                            //console.log('Current position is: ' + lat + ' and ' + long);
 
-                                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
-                                            lat: lat,
-                                            lng: long
+                                            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
+                                                lat: lat,
+                                                lng: long
+                                            });
+
+                                        },
+                                        function(err) {
+                                            console.log('Current position is not available');
+                                            if (err.code === 1) {
+                                                $rootScope.geoPermission = false;
+                                                navigator.notification.alert(
+                                                    'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
+                                                    alertDismissed, // callback
+                                                    'Cirql', // title
+                                                    'OK' // buttonName
+                                                );
+                                            }
+
                                         });
-
-                                    },
-                                    function(err) {
-                                        console.log('Current position is not available');
-                                        if (err.code === 1) {
-                                            $rootScope.geoPermission = false;
-                                            navigator.notification.alert(
-                                                'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
-                                                alertDismissed, // callback
-                                                'Cirql', // title
-                                                'OK' // buttonName
-                                            );
-                                        }
-
-                                    });
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
-                }
 
-            });
+                });
+            }
         }
 
-        $timeout(getLocationAndCheckPermission,3000);
+        $timeout(getLocationAndCheckPermission, 3000);
 
         $ionicPlatform.on('resume', function() {
 
