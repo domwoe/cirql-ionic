@@ -223,98 +223,103 @@
                             };
 
                             this.selectDay = function(day) {
-                                $rootScope.dayView = true;
-                                $rootScope.$apply();
-                                var weekdays = d3.select('#weekdays');
-                                var weekCol = weekdays.append('rect')
-                                    .attr('id', 'week_column')
-                                    .attr('fill', '#483e37')
-                                    .attr('x', 0)
-                                    .attr('y', 0)
-                                    .attr('height', 230)
-                                    .attr('width', 95);
-                                var scheduleCol = weekdays.append('rect')
-                                    .attr('id', 'schedule_column')
-                                    .attr('fill', '#FFFFFF')
-                                    .attr('x', 95)
-                                    .attr('y', 0)
-                                    .attr('height', 210)
-                                    .attr('width', 650);
+                                if (day !== this.selectedDay) {
+                                    console.log("SELECT DAY: ", day);
+                                    $rootScope.dayView = true;
+                                    $rootScope.$apply();
+                                    var weekdays = d3.select('#weekdays');
+                                    var weekCol = weekdays.append('rect')
+                                        .attr('id', 'week_column')
+                                        .attr('fill', '#483e37')
+                                        .attr('x', 0)
+                                        .attr('y', 0)
+                                        .attr('height', 230)
+                                        .attr('width', 95);
+                                    var scheduleCol = weekdays.append('rect')
+                                        .attr('id', 'schedule_column')
+                                        .attr('fill', '#FFFFFF')
+                                        .attr('x', 95)
+                                        .attr('y', 0)
+                                        .attr('height', 210)
+                                        .attr('width', 650);
 
-                                var self = this;
+                                    var self = this;
 
-                                var scheduleColumnCallback = function() {
-                                    self.closeDeleteView();
-                                };
+                                    var scheduleColumnCallback = function() {
+                                        self.closeDeleteView();
+                                    };
 
-                                scheduleCol.on('touchstart', scheduleColumnCallback);
-                                scheduleCol.on('mousedown', scheduleColumnCallback);
+                                    scheduleCol.on('touchstart', scheduleColumnCallback);
+                                    scheduleCol.on('mousedown', scheduleColumnCallback);
 
-                                var dayGroup = d3.select(day);
-                                var rectangles = dayGroup.selectAll('rect')[0];
-                                var recSchedule = d3.select(rectangles[1]);
-                                recSchedule.style('visibility', 'hidden');
+                                    var dayGroup = d3.select(day);
+                                    var rectangles = dayGroup.selectAll('rect')[0];
+                                    var recSchedule = d3.select(rectangles[1]);
+                                    recSchedule.style('visibility', 'hidden');
 
-                                var scheduleEntries = dayGroup.selectAll('g.entry');
-                                if (scheduleEntries[0]) {
-                                    for (var i = 0; i < scheduleEntries[0].length; i++) {
-                                        var currEntry = d3.select(scheduleEntries[0][i]);
-                                        var index = currEntry.attr('id');
+                                    var scheduleEntries = dayGroup.selectAll('g.entry');
+                                    if (scheduleEntries[0]) {
+                                        for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                            var currEntry = d3.select(scheduleEntries[0][i]);
+                                            var index = currEntry.attr('id');
 
-                                        var tempOffset = this.tempToPixelOffset(
-                                            this.localSchedule[index].target,
-                                            parseInt(weekCol.attr('height'))
-                                        );
+                                            var tempOffset = this.tempToPixelOffset(
+                                                this.localSchedule[index].target,
+                                                parseInt(weekCol.attr('height'))
+                                            );
 
-                                        var circle = currEntry.select('circle');
-                                        var posX = parseInt(circle.attr('cx'));
-                                        var offsetY = tempOffset - parseInt(circle.attr('cy'));
+                                            var circle = currEntry.select('circle');
+                                            var posX = parseInt(circle.attr('cx'));
+                                            var offsetY = tempOffset - parseInt(circle.attr('cy'));
 
-                                        currEntry.remove();
-                                        this.addDetailedEntry(
-                                            dayGroup,
-                                            index,
-                                            posX,
-                                            tempOffset,
-                                            this.localSchedule[index].target
-                                        );
+                                            currEntry.remove();
+                                            this.addDetailedEntry(
+                                                dayGroup,
+                                                index,
+                                                posX,
+                                                tempOffset,
+                                                this.localSchedule[index].target
+                                            );
+                                        }
                                     }
-                                }
-                                // Move to front
-                                dayGroup.moveToFront();
-                                this.selectedDay = day;
+                                    // Move to front
+                                    dayGroup.moveToFront();
+                                    this.selectedDay = day;
+                               }
                             };
 
                             this.deselectDay = function() {
-                                var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
-                                var previousRec1 = d3.select(previousRec[0]);
-                                var previousRec2 = d3.select(previousRec[1]);
-                                previousRec1.attr('fill', '#483e37');
-                                previousRec2.attr('fill', '#FFFFFF');
+                                if (this.selectedDay !== null) {
+                                    var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
+                                    var previousRec1 = d3.select(previousRec[0]);
+                                    var previousRec2 = d3.select(previousRec[1]);
+                                    previousRec1.attr('fill', '#483e37');
+                                    previousRec2.attr('fill', '#FFFFFF');
 
-                                d3.select('#week_column').remove();
-                                d3.select('#schedule_column').remove();
+                                    d3.select('#week_column').remove();
+                                    d3.select('#schedule_column').remove();
 
-                                var dayGroup = d3.select(this.selectedDay);
-                                var rectangles = dayGroup.selectAll('rect')[0];
-                                var recSchedule = d3.select(rectangles[1]);
-                                recSchedule.style('visibility', 'visible');
+                                    var dayGroup = d3.select(this.selectedDay);
+                                    var rectangles = dayGroup.selectAll('rect')[0];
+                                    var recSchedule = d3.select(rectangles[1]);
+                                    recSchedule.style('visibility', 'visible');
+    
+                                    var scheduleEntries = dayGroup.selectAll('g.entry');
+                                    scheduleEntries.remove();
 
-                                var scheduleEntries = dayGroup.selectAll('g.entry');
-                                scheduleEntries.remove();
-
-                                if (scheduleEntries[0]) {
-                                    for (var i = 0; i < scheduleEntries[0].length; i++) {
-                                        var entryNode = d3.select(scheduleEntries[0][i]);
-                                        var index = entryNode.attr('id');
-                                        var entry = this.localSchedule[index];
-                                        var xpos = this.timeToPixelOffset(entry.hour, entry.minute);
-                                        var ypos = this.height * (entry.weekday - 1) + this.height / 2;
-                                        this.addEntry(dayGroup, index, xpos, ypos, entry.target);
+                                    if (scheduleEntries[0]) {
+                                        for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                            var entryNode = d3.select(scheduleEntries[0][i]);
+                                            var index = entryNode.attr('id');
+                                            var entry = this.localSchedule[index];
+                                            var xpos = this.timeToPixelOffset(entry.hour, entry.minute);
+                                            var ypos = this.height * (entry.weekday - 1) + this.height / 2;
+                                            this.addEntry(dayGroup, index, xpos, ypos, entry.target);
+                                        }
                                     }
-                                }
 
-                                this.selectedDay = null;
+                                    this.selectedDay = null;
+                                }
                             };
 
                             this.deselectEntry = function() {
@@ -362,56 +367,6 @@
                                 group.select('g.temp').attr('visibility', 'hidden');
 
                                 this.selectedEntry = group;
-                            };
-
-                            // true for increase, false for decrease
-                            this.updateTemp = function(obj, increaseOrDecrease) {
-                                var recObj = d3.select(obj);
-                                var parentNode = d3.select(recObj.node().parentNode);
-                                var targetTspan = parentNode.select('tspan');
-
-                                var dotTargetTspan = parentNode.select('g').select('tspan');
-
-                                var currentTemp = parseInt(targetTspan.text());
-                                var currentDotTemp = parseInt(dotTargetTspan.text());
-                                var newTemp = 0;
-                                var newDotTemp;
-
-                                if (increaseOrDecrease) {
-                                    if (currentDotTemp === 5) {
-                                        newTemp = currentTemp + 1;
-                                        newDotTemp = 0;
-                                    } else if (currentDotTemp === 0) {
-                                        newDotTemp = 5;
-                                        newTemp = currentTemp;
-                                    }
-                                } else {
-                                    if (currentDotTemp === 0) {
-                                        newTemp = currentTemp - 1;
-                                        newDotTemp = 5;
-                                    } else if (currentDotTemp === 5) {
-                                        newDotTemp = 0;
-                                        newTemp = currentTemp;
-                                    }
-
-                                }
-
-                                newTemp = newTemp + 0.1 * newDotTemp;
-
-                                if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
-                                    targetTspan.text(Math.floor(newTemp));
-                                    dotTargetTspan.text(newDotTemp);
-                                    var index = parentNode.attr('id');
-                                    this.localSchedule[index].target = newTemp;
-                                }
-                            };
-
-                            this.decrementTemp = function(obj) {
-                                this.updateTemp(obj, false);
-                            };
-
-                            this.incrementTemp = function(obj) {
-                                this.updateTemp(obj, true);
                             };
 
                             this.closeDeleteView = function() {
@@ -501,8 +456,7 @@
                                             if (self.inDeleteView) {
                                                 self.deleteSelectedEntry(parentNode);
                                             } else {
-                                                if (self.inDetailedView && selectedNode !== self.selectedEntry) {
-
+                                                if (self.inDetailedView) {
                                                     self.selectDay(secondAncestor);
                                                     self.entrySelector(self, parentNode);
                                                     self.dragging = true;
@@ -957,13 +911,8 @@
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
                                         if (self.isClickValid) {
-                                            if (self.entriesToCopy !== null && this !== self.selectedDay) {
-                                                self.copySchedule(self, this);
-                                                self.entriesToCopy = null;
-                                            } else {
-                                                self.selectDay(this);
-                                                self.inDetailedView = true;
-                                            }
+                                            self.selectDay(this);
+                                            self.inDetailedView = true;
                                         }
                                     }
                                     self.contextMenuSwitch = true;
