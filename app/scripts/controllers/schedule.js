@@ -13,7 +13,6 @@ angular.module('cirqlApp')
 
             $ionicSideMenuDelegate.canDragContent(false);
 
-
             if (window.screen && window.screen.lockOrientation) {
                 window.screen.lockOrientation('landscape');
             }
@@ -22,7 +21,6 @@ angular.module('cirqlApp')
                 $rootScope.room = $state.params.roomId;
             }
 
-
             log.event({
                 homeid: user.uid,
                 residentid: user.residentId,
@@ -30,7 +28,6 @@ angular.module('cirqlApp')
                 view: 'schedule',
                 roomid: $rootScope.room
             });
-
 
             // Use rootscope to inject in directive and back to schedule.html template
             $rootScope.dayView = false;
@@ -52,15 +49,17 @@ angular.module('cirqlApp')
             $scope.roomId = $rootScope.room;
             $scope.radius = 14;
 
-            function addRawActivity(obj) {
+            $scope.addRawActivity = function(object) {
+                console.log("raw called in controller: ", object);
                 var date = new Date();
-                obj.date = date.toString();
-                obj.name = $scope.residents.$getRecord(user.residentId).name;
-                activities.$add(obj);
-                console.log('Activity added:' + JSON.stringify(obj));
+                object.date = date.toString();
+                object.name = $scope.residents.$getRecord(user.residentId).name;
+                activities.$add(object);
+                console.log("Activity obj: ", object);
+                console.log('Activity added:' + JSON.stringify(object));
             }
 
-            $scope.goback = function(room, changedDay) {
+            $scope.goback = function(room) {
 
                 $ionicLoading.show({
                     template: '<div class="sk-spinner sk-spinner-circle">' +
@@ -79,39 +78,11 @@ angular.module('cirqlApp')
                         '</div>'
                 });
 
-                console.log('SCHEDULE CHANGED: ' + changedDay);
-
-                if (changedDay) {
-
-                    addRawActivity({
-                        type: 'change-schedule',
-                        day: changedDay
-                    });
-
-                }
-
                 $timeout(function() {
                     $state.go('app.room', {
                         roomId: room
                     });
                 }, 300);
-            };
-
-            $scope.reload = function(changedDay) {
-                console.log('SCHEDULE CHANGED: ' + changedDay);
-
-                if (changedDay) {
-
-                    addRawActivity({
-                        type: 'change-schedule',
-                        day: changedDay
-                    });
-
-                }
-
-                $state.go($state.current, {}, {
-                    reload: true
-                });
             };
         }
     ]);
