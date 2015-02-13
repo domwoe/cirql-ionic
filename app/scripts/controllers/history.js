@@ -317,7 +317,6 @@ angular.module('cirqlApp')
             getData(function(data) {
                 $scope.chartConfig.series = data;
                 $ionicLoading.hide();
-                console.log($scope.chartConfig);
             });
 
 
