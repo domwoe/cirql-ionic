@@ -47,12 +47,10 @@ angular.module('cirqlApp')
                 }
             }
             loadResident();
-            console.log($scope.resident);
 
 
 
             $scope.select = function(resident) {
-                console.log($localStorage.user);
                 $localStorage.user.residentId = resident.$id;
                 $state.go('app.home');
             };

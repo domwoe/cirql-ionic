@@ -11,7 +11,7 @@
                         sync: "=",
                         roomid: "=",
                         goback: "&",
-                        reload: "&",
+                        addrawactivity: "&",
                         hideloader: "&"
                     },
                     link: function(scope, element, attrs) {
@@ -34,6 +34,7 @@
                             this.entriesToCopy = null;
                             this.weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
                             this.localSchedule = {};
+                            this.dayScheduleBuffer = {};
                             this.dragging = false;
                             this.lockOnHorizontalDrag = false;
                             this.lockOnVerticalDrag = false;
@@ -151,8 +152,8 @@
                                         // Update time
                                         var time = this.pixelOffsetToTime(newposX);
 
-                                        // Update the times in the local schedule
-                                        var entry = this.localSchedule[circleIndex];
+                                        // Update the times in the day schedule buffer
+                                        var entry = this.dayScheduleBuffer[circleIndex];
                                         entry.hour = time[0];
                                         entry.minute = time[1];
 
@@ -169,7 +170,7 @@
                                         );
 
                                         // Flag for schedule change
-                                        this.changed = this.weekDays[entry.weekday + 1];
+                                        this.changed = this.weekDays[entry.weekday - 1];
 
                                     } else if (this.lockOnVerticalDrag) {
                                         // Update temperature
@@ -186,9 +187,9 @@
                                             var dotTarget = (newTemp - target < 0.5) ? 0 : 5;
                                             group.select('tspan.target').text(target);
                                             group.select('tspan.dot_target').text(dotTarget);
-                                            this.localSchedule[circleIndex].target = newTemp;
+                                            this.dayScheduleBuffer[circleIndex].target = newTemp;
                                             // Flag for schedule change
-                                            this.changed = this.weekDays[this.localSchedule[circleIndex].weekday + 1];
+                                            this.changed = this.weekDays[this.dayScheduleBuffer[circleIndex].weekday - 1];
                                         }
                                     }
                                 }
@@ -200,7 +201,7 @@
                                 });
                             };
 
-                            this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target) {
+                            this.addDetailedEntry = function(dayGroup, id, xpos, ypos, target, addNewEntry) {
                                 this.addEntry(dayGroup, id, xpos, ypos, target);
                                 var entryGroup = dayGroup.select('#' + id);
                                 var textGroup = entryGroup.append('g')
@@ -212,109 +213,130 @@
                                     .attr('font-weight', 600)
                                     .attr('fill', '#483e37');
 
+                                var entry = addNewEntry ? this.dayScheduleBuffer[id]: this.localSchedule[id];
+
                                 var tspan = text.append('tspan')
                                     .attr('text-anchor', 'middle')
                                     .attr('x', xpos)
                                     .attr('y', ypos + 1.75 * this.radius)
                                     .text(
-                                        this.pad(this.localSchedule[id].hour, 2) + ':' +
-                                        this.pad(this.localSchedule[id].minute, 2)
+                                        this.pad(entry.hour, 2) + ':' +
+                                        this.pad(entry.minute, 2)
                                     );
                             };
 
                             this.selectDay = function(day) {
-                                $rootScope.dayView = true;
-                                $rootScope.$apply();
-                                var weekdays = d3.select('#weekdays');
-                                var weekCol = weekdays.append('rect')
-                                    .attr('id', 'week_column')
-                                    .attr('fill', '#483e37')
-                                    .attr('x', 0)
-                                    .attr('y', 0)
-                                    .attr('height', 230)
-                                    .attr('width', 95);
-                                var scheduleCol = weekdays.append('rect')
-                                    .attr('id', 'schedule_column')
-                                    .attr('fill', '#FFFFFF')
-                                    .attr('x', 95)
-                                    .attr('y', 0)
-                                    .attr('height', 210)
-                                    .attr('width', 650);
 
-                                var self = this;
+                                if (day !== this.selectedDay) {
+                                    $rootScope.dayView = true;
+                                    $rootScope.$apply();
+                                    var weekdays = d3.select('#weekdays');
+                                    var weekCol = weekdays.append('rect')
+                                        .attr('id', 'week_column')
+                                        .attr('fill', '#483e37')
+                                        .attr('x', 0)
+                                        .attr('y', 0)
+                                        .attr('height', 210)
+                                        .attr('width', 95);
+                                    var scheduleCol = weekdays.append('rect')
+                                        .attr('id', 'schedule_column')
+                                        .attr('fill', '#FFFFFF')
+                                        .attr('x', 95)
+                                        .attr('y', 0)
+                                        .attr('height', 210)
+                                        .attr('width', 650);
 
-                                var scheduleColumnCallback = function() {
-                                    self.closeDeleteView();
-                                };
+                                    var self = this;
 
-                                scheduleCol.on('touchstart', scheduleColumnCallback);
-                                scheduleCol.on('mousedown', scheduleColumnCallback);
+                                    var scheduleColumnCallback = function() {
+                                        self.closeDeleteView();
+                                    };
 
-                                var dayGroup = d3.select(day);
-                                var rectangles = dayGroup.selectAll('rect')[0];
-                                var recSchedule = d3.select(rectangles[1]);
-                                recSchedule.style('visibility', 'hidden');
+                                    scheduleCol.on('touchstart', scheduleColumnCallback);
+                                    scheduleCol.on('mousedown', scheduleColumnCallback);
 
-                                var scheduleEntries = dayGroup.selectAll('g.entry');
-                                if (scheduleEntries[0]) {
-                                    for (var i = 0; i < scheduleEntries[0].length; i++) {
-                                        var currEntry = d3.select(scheduleEntries[0][i]);
-                                        var index = currEntry.attr('id');
+                                    var dayGroup = d3.select(day);
+                                    var rectangles = dayGroup.selectAll('rect')[0];
+                                    var recSchedule = d3.select(rectangles[1]);
+                                    recSchedule.style('visibility', 'hidden');
 
-                                        var tempOffset = this.tempToPixelOffset(
-                                            this.localSchedule[index].target,
-                                            parseInt(weekCol.attr('height'))
-                                        );
+                                    // Reset the day schedule buffer when selecting new day
+                                    this.dayScheduleBuffer = {};
 
-                                        var circle = currEntry.select('circle');
-                                        var posX = parseInt(circle.attr('cx'));
-                                        var offsetY = tempOffset - parseInt(circle.attr('cy'));
+                                    var scheduleEntries = dayGroup.selectAll('g.entry');
+                                    if (scheduleEntries[0]) {
+                                        for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                            var currEntry = d3.select(scheduleEntries[0][i]);
+                                            var index = currEntry.attr('id');
+                                            var schEntry = this.localSchedule[index];
 
-                                        currEntry.remove();
-                                        this.addDetailedEntry(
-                                            dayGroup,
-                                            index,
-                                            posX,
-                                            tempOffset,
-                                            this.localSchedule[index].target
-                                        );
+                                            var tempOffset = this.tempToPixelOffset(
+                                                this.localSchedule[index].target,
+                                                parseInt(weekCol.attr('height'))
+                                            );
+
+                                            var circle = currEntry.select('circle');
+                                            var posX = parseInt(circle.attr('cx'));
+                                            var offsetY = tempOffset - parseInt(circle.attr('cy'));
+
+                                            currEntry.remove();
+                                            this.addDetailedEntry(
+                                                dayGroup,
+                                                index,
+                                                posX,
+                                                tempOffset,
+                                                schEntry.target,
+                                                false
+                                            );
+
+                                            this.updateSchedule(
+                                                this.dayScheduleBuffer,
+                                                index,
+                                                schEntry.hour,
+                                                schEntry.minute,
+                                                schEntry.target,
+                                                schEntry.weekday
+                                            );
+                                        }
                                     }
-                                }
-                                // Move to front
-                                dayGroup.moveToFront();
-                                this.selectedDay = day;
+                                    // Move to front
+                                    dayGroup.moveToFront();
+                                    this.selectedDay = day;
+                               }
                             };
 
                             this.deselectDay = function() {
-                                var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
-                                var previousRec1 = d3.select(previousRec[0]);
-                                var previousRec2 = d3.select(previousRec[1]);
-                                previousRec1.attr('fill', '#483e37');
-                                previousRec2.attr('fill', '#FFFFFF');
+                                if (this.selectedDay !== null) {
+                                    var previousRec = d3.select(this.selectedDay).selectAll('rect')[0];
+                                    var previousRec1 = d3.select(previousRec[0]);
+                                    var previousRec2 = d3.select(previousRec[1]);
+                                    previousRec1.attr('fill', '#483e37');
+                                    previousRec2.attr('fill', '#FFFFFF');
 
-                                d3.select('#week_column').remove();
-                                d3.select('#schedule_column').remove();
+                                    d3.select('#week_column').remove();
+                                    d3.select('#schedule_column').remove();
 
-                                var dayGroup = d3.select(this.selectedDay);
-                                var rectangles = dayGroup.selectAll('rect')[0];
-                                var recSchedule = d3.select(rectangles[1]);
-                                recSchedule.style('visibility', 'visible');
+                                    var dayGroup = d3.select(this.selectedDay);
+                                    var rectangles = dayGroup.selectAll('rect')[0];
+                                    var recSchedule = d3.select(rectangles[1]);
+                                    recSchedule.style('visibility', 'visible');
+    
+                                    var scheduleEntries = dayGroup.selectAll('g.entry');
+                                    scheduleEntries.remove();
 
-                                var scheduleEntries = dayGroup.selectAll('g.entry');
-                                scheduleEntries.remove();
-
-                                if (scheduleEntries[0]) {
-                                    for (var i = 0; i < scheduleEntries[0].length; i++) {
-                                        var entryNode = d3.select(scheduleEntries[0][i]);
-                                        var index = entryNode.attr('id');
-                                        var entry = this.localSchedule[index];
-                                        var xpos = this.timeToPixelOffset(entry.hour, entry.minute);
-                                        var ypos = this.height * (entry.weekday - 1) + this.height / 2;
-                                        this.addEntry(dayGroup, index, xpos, ypos, entry.target);
+                                    if (scheduleEntries[0]) {
+                                        for (var i = 0; i < scheduleEntries[0].length; i++) {
+                                            var entryNode = d3.select(scheduleEntries[0][i]);
+                                            var index = entryNode.attr('id');
+                                            var entry = this.localSchedule[index];
+                                            var xpos = this.timeToPixelOffset(entry.hour, entry.minute);
+                                            var ypos = this.height * (entry.weekday - 1) + this.height / 2;
+                                            this.addEntry(dayGroup, index, xpos, ypos, entry.target);
+                                        }
                                     }
-                                }
 
-                                this.selectedDay = null;
+                                    this.selectedDay = null;
+                                }
                             };
 
                             this.deselectEntry = function() {
@@ -335,7 +357,7 @@
                                 var label_back = group.append('circle')
                                     .attr('class', 'label_back')
                                     .attr('fill', colorForTemperature.get(
-                                        self.localSchedule[group.attr('id')].target))
+                                        self.dayScheduleBuffer[group.attr('id')].target))
                                     .attr('stroke', '#FFFFFF')
                                     .attr('stroke-width', 2)
                                     .attr('r', this.radius * 1.7)
@@ -364,56 +386,6 @@
                                 this.selectedEntry = group;
                             };
 
-                            // true for increase, false for decrease
-                            this.updateTemp = function(obj, increaseOrDecrease) {
-                                var recObj = d3.select(obj);
-                                var parentNode = d3.select(recObj.node().parentNode);
-                                var targetTspan = parentNode.select('tspan');
-
-                                var dotTargetTspan = parentNode.select('g').select('tspan');
-
-                                var currentTemp = parseInt(targetTspan.text());
-                                var currentDotTemp = parseInt(dotTargetTspan.text());
-                                var newTemp = 0;
-                                var newDotTemp;
-
-                                if (increaseOrDecrease) {
-                                    if (currentDotTemp === 5) {
-                                        newTemp = currentTemp + 1;
-                                        newDotTemp = 0;
-                                    } else if (currentDotTemp === 0) {
-                                        newDotTemp = 5;
-                                        newTemp = currentTemp;
-                                    }
-                                } else {
-                                    if (currentDotTemp === 0) {
-                                        newTemp = currentTemp - 1;
-                                        newDotTemp = 5;
-                                    } else if (currentDotTemp === 5) {
-                                        newDotTemp = 0;
-                                        newTemp = currentTemp;
-                                    }
-
-                                }
-
-                                newTemp = newTemp + 0.1 * newDotTemp;
-
-                                if (newTemp >= this.minTemp && newTemp <= this.maxTemp) {
-                                    targetTspan.text(Math.floor(newTemp));
-                                    dotTargetTspan.text(newDotTemp);
-                                    var index = parentNode.attr('id');
-                                    this.localSchedule[index].target = newTemp;
-                                }
-                            };
-
-                            this.decrementTemp = function(obj) {
-                                this.updateTemp(obj, false);
-                            };
-
-                            this.incrementTemp = function(obj) {
-                                this.updateTemp(obj, true);
-                            };
-
                             this.closeDeleteView = function() {
                                 d3.select('#schedule_column').attr('fill', '#FFFFFF');
                                 d3.selectAll('rect.schedule-col').attr('fill', '#FFFFFF');
@@ -425,9 +397,11 @@
                             this.deleteSelectedEntry = function(parentNode) {
                                 var selectedEntry = d3.select(parentNode);
                                 var index = selectedEntry.attr('id');
-                                delete this.localSchedule[index];
+                                this.changed = this.dayScheduleBuffer[index].weekday;
+                                // Mark for deletion in buffer
+                                this.dayScheduleBuffer[index].del = true;
                                 selectedEntry.remove();
-                               this.closeDeleteView();
+                                this.closeDeleteView();
                             }
 
                             this.addEntry = function(dayGroup, id, xpos, ypos, target) {
@@ -501,8 +475,7 @@
                                             if (self.inDeleteView) {
                                                 self.deleteSelectedEntry(parentNode);
                                             } else {
-                                                if (self.inDetailedView && selectedNode !== self.selectedEntry) {
-
+                                                if (self.inDetailedView) {
                                                     self.selectDay(secondAncestor);
                                                     self.entrySelector(self, parentNode);
                                                     self.dragging = true;
@@ -603,6 +576,7 @@
                                     var deepCopy = angular.copy(scope.schedule[i]);
 
                                     this.updateSchedule(
+                                        this.localSchedule,
                                         deepCopy.$id,
                                         deepCopy.hour,
                                         deepCopy.minute,
@@ -624,8 +598,8 @@
                                 }
                             };
 
-                            this.updateSchedule = function(id, hour, minute, target, weekday) {
-                                this.localSchedule[id] = {
+                            this.updateSchedule = function(schedule, id, hour, minute, target, weekday) {
+                                schedule[id] = {
                                     'hour': hour,
                                     'minute': minute,
                                     'target': target,
@@ -641,10 +615,10 @@
                                     var id = 'c' + self.nextId;
 
                                     // Update local schedule
-                                    self.updateSchedule(id, 0, 0, self.defaultTemperature, index + 1);
+                                    self.updateSchedule(self.dayScheduleBuffer, id, 0, 0, self.defaultTemperature, index + 1);
                                     self.nextId++;
 
-                                    self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature);
+                                    self.addDetailedEntry(dayGroup, id, self.leftBound, ypos, self.defaultTemperature, true);
                                 }
                             };
 
@@ -689,11 +663,12 @@
                                     self.addEntry(destDay, id, xpos, ypos, target);
 
                                     // Update local schedule
-                                    self.updateSchedule(id, schEntry.hour, schEntry.minute, schEntry.target, factor + 1);
+                                    self.updateSchedule(self.localSchedule, id, schEntry.hour, schEntry.minute, schEntry.target, factor + 1);
                                     self.nextId++;
                                 });
                                 self.deselectEntry();
                                 destDay.moveToFront();
+                                self.changed = destDay.attr('id');
                             };
 
                             this.switchToDeleteView = function(self) {
@@ -706,7 +681,6 @@
                             };
 
                             this.syncFirebase = function() {
-
                                 // Check what we have to delete first
                                 for (var i = 0; i < scope.schedule.length; i++) {
                                     var entry = scope.schedule[i];
@@ -714,7 +688,6 @@
                                         scope.schedule.$remove(entry);
                                     }
                                 }
-
                                 // Push or update rest
                                 for (var key in this.localSchedule) {
                                     var found = false;
@@ -732,28 +705,60 @@
                                         scope.schedule.$add(this.localSchedule[key]);
                                     }
                                 }
-
                                 scope.$apply();
                             };
 
-                            this.save = function(self) {
-                                self.syncFirebase();
-                                scope.goback({
-                                    room: scope.roomid,
-                                    changedDay: self.changed
-                                });
+                            this.addRawActivity = function() {
+                                console.log("Calling raw");
+                                console.log("this.changed: ", this.changed);
+                                if (this.changed) {
+                                    var obj = {
+                                        type: "change-schedule",
+                                        day: this.changed
+                                    };
+                                    console.log("OBJ: ", obj);
+                                    scope.addrawactivity({
+                                        object: obj
+                                    });
+                                }
                             };
 
-                            this.cancel = function() {
+                            this.save = function() {
+                                this.syncFirebase();
+                                this.addRawActivity();
                                 scope.goback({
                                     room: scope.roomid
                                 });
                             };
 
+                            this.cancel = function() {
+                                console.log("Called Cancel");
+                                this.deselectDay();
+                                this.inDetailedView = false;
+                                $rootScope.dayView = false;
+                                $rootScope.$apply();
+                            };
+
+                            this.updateScheduleFromBuffer = function() {
+                                for (var key in this.dayScheduleBuffer) {
+                                    if (this.dayScheduleBuffer.hasOwnProperty(key)) {
+                                        var buffEntry = this.dayScheduleBuffer[key];
+                                        if (buffEntry.del) { // Delete entry
+                                            delete this.localSchedule[key];
+                                        } else { // Update entry
+                                            this.localSchedule[key] = buffEntry;
+                                        }
+                                    }
+                                }
+                            };
+
                             this.backToWeek = function() {
+                                this.addRawActivity();
+                                this.updateScheduleFromBuffer();
                                 this.syncFirebase();
                                 this.deselectDay();
                                 this.inDetailedView = false;
+                                this.changed = false;
                                 $rootScope.dayView = false;
                                 $rootScope.$apply();
                             };
@@ -875,6 +880,7 @@
                                         d3.event.preventDefault();
                                         d3.event.stopPropagation();
                                         self.copySchedule(self, self.contextSelectedDay);
+                                        self.addRawActivity();
                                         self.closeContextMenu();
                                     };
                                     var pasteButton = copyPasteButtons.append('rect')
@@ -957,13 +963,8 @@
                                     if (!self.inContextMenu && self.contextMenuSwitch && !self.inDetailedView) {
                                         clearTimeout(timeoutId);
                                         if (self.isClickValid) {
-                                            if (self.entriesToCopy !== null && this !== self.selectedDay) {
-                                                self.copySchedule(self, this);
-                                                self.entriesToCopy = null;
-                                            } else {
-                                                self.selectDay(this);
-                                                self.inDetailedView = true;
-                                            }
+                                            self.selectDay(this);
+                                            self.inDetailedView = true;
                                         }
                                     }
                                     self.contextMenuSwitch = true;
@@ -991,11 +992,13 @@
 
                                 var saveButton = d3.select('#save');
                                 saveButton.on('click', function() {
-                                    self.save(self);
+                                    self.save();
                                 });
 
                                 var cancelButton = d3.select('#cancel');
+                                console.log("cancelBTN: ", cancelButton);
                                 cancelButton.on('click', function() {
+                                    console.log("called Cancel");
                                     self.cancel();
                                 });
                             };
