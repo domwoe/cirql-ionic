@@ -99,7 +99,7 @@ angular.module('cirqlApp', [
             if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
                 var posOptions = {
                     timeout: 10000,
-                    enableHighAccuracy: false
+                    enableHighAccuracy: true
                 };
                 simpleLogin.getUser().then(function(user) {
                     if (user.uid !== null && user.uid !== undefined) {
@@ -120,7 +120,7 @@ angular.module('cirqlApp', [
 
                                         },
                                         function(err) {
-                                            console.log('Current position is not available');
+                                            console.log('Cordova Geolocation failed with error code: '+err.code +' and message: '+err.message);
                                             if (err.code === 1) {
                                                 $rootScope.geoPermission = false;
                                                 navigator.notification.alert(
@@ -129,6 +129,9 @@ angular.module('cirqlApp', [
                                                     'Cirql', // title
                                                     'OK' // buttonName
                                                 );
+                                            }
+                                            else {
+                                                $rootScope.geoPermission = true;
                                             }
 
                                         });
@@ -140,6 +143,7 @@ angular.module('cirqlApp', [
                 });
             }
         }
+
 
         $timeout(getLocationAndCheckPermission, 3000);
 
