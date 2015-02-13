@@ -15,10 +15,6 @@ angular.module('cirqlApp')
 
         $scope.finishedloading = false;
 
-        if ($rootScope.geo !== true) {
-            geo.init();
-        }
-
         log.event({
             homeid: user.uid,
             residentid: user.residentId,
@@ -92,7 +88,7 @@ angular.module('cirqlApp')
                 }
             });
 
-            if ($rootScope.geoPermission) {
+            if ($rootScope.geoPermission && $rootScope.geoInitialized !== true) {
 
                 if (user.uid !== null && user.uid !== undefined) {
                     if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {

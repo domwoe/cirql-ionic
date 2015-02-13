@@ -111,7 +111,7 @@ angular.module('cirqlApp', [
                                             $rootScope.geoPermission = true;
                                             var lat = position.coords.latitude;
                                             var long = position.coords.longitude;
-                                            //console.log('Current position is: ' + lat + ' and ' + long);
+                                            console.log('Current position is: ' + lat + ' and ' + long);
 
                                             fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
                                                 lat: lat,
@@ -148,7 +148,7 @@ angular.module('cirqlApp', [
             }
         }
 
-        getLocationAndCheckPermission()
+        //getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
 
