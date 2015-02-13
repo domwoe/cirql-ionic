@@ -37,7 +37,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                     allowsGeo = true;
 
-                    if (deviceDetector.os === 'ios') {
+                    if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
                         if (window.plugins.DGGeofencing) {
                             window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
                                 function(result) {
@@ -58,7 +58,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                                     } else if (callbacktype === 'monitorfail') {
 
-                                         $rootScope.geoInitialized = false;
+                                        $rootScope.geoInitialized = false;
 
                                         console.log('monitorfail');
 
@@ -74,7 +74,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                                     } else if (callbacktype === 'exit') {
 
-                                         console.log('exit');
+                                        console.log('exit');
 
                                     }
 
@@ -128,7 +128,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                         if (fbRegion.val()) {
 
-                            if (deviceDetector.os === 'ios') {
+                            if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
                                 removeRegion(fbRegion);
                             }
 
@@ -139,33 +139,45 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                     });
 
-
+                    // Stop Everything
                 } else if (fbAllowsGeo.val() === false) {
 
                     allowsGeo = false;
 
-                    if (signStarted) {
+                    if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
 
-                        window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
-                            function(result) {
-                                console.log('Geo: Stop monitoring significant location changes');
+                        if (signStarted) {
 
-                            },
-                            function(error) {
-                                console.log(' Geo: error');
+                            window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
+                                function(result) {
+                                    console.log('Geo: Stop monitoring significant location changes');
 
-                            });
-                    }
+                                },
+                                function(error) {
+                                    console.log(' Geo: error');
 
-                    if (regionMonitoringStarted) {
-
-                        for (var i = 0, j = regions.length; i < j; i++) {
-
-                            removeRegion(regions[i]);
-                            regions[i] = null;
+                                });
                         }
 
-                        //console.log(fbRegion.val());
+                        if (regionMonitoringStarted) {
+
+                            for (var i = 0, j = regions.length; i < j; i++) {
+
+                                removeRegion(regions[i]);
+                                regions[i] = null;
+                            }
+
+                            //console.log(fbRegion.val());
+                        }
+                    } else if (deviceDetector.os === 'android' && window.geofence) {
+
+                        window.geofence.removeAll()
+                            .then(function() {
+                                console.log('GEO SERVICE: All geofences successfully removed.');
+                            }, function(reason) {
+                                console.log('GEO SERVICE: Removing geofences failed', reason);
+                            });
+
                     }
 
 
@@ -192,7 +204,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                 console.log('GEO SERVICE: Radius:' + radius);
                 console.log('----------------------------');
 
-                if (deviceDetector.os === 'ios') {
+                if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
 
                     var params = [region.key(), home.lat, home.lng, radius];
 
@@ -205,7 +217,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             console.log('Monitor-Geo: error with ' + params);
                             deferred.reject(error);
                         });
-                } else if (deviceDetector.os === 'android') {
+                } else if (deviceDetector.os === 'android' && window.geofence) {
 
                     var reg = new RegExp('^[0-9]+$');
                     var id = reg.match(region.key());
@@ -216,7 +228,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                         latitude: home.lat,
                         longitude: home.lng,
                         radius: radius,
-                        transitionType: 'TransitionType.ENTER',
+                        transitionType: TransitionType.ENTER,
                         notification: {
                             id: id,
                             title: radius + '-enter',
@@ -232,7 +244,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                         latitude: home.lat,
                         longitude: home.lng,
                         radius: radius,
-                        transitionType: 'TransitionType.EXIT',
+                        transitionType: TransitionType.EXIT,
                         notification: {
                             id: id,
                             title: radius + "-exit",
