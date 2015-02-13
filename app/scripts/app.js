@@ -148,7 +148,7 @@ angular.module('cirqlApp', [
             }
         }
 
-        $timeout(getLocationAndCheckPermission, 3000);
+        getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
 

@@ -123,12 +123,16 @@ angular.module('cirqlApp', [
                                             console.log('Cordova Geolocation failed with error code: '+err.code +' and message: '+err.message);
                                             if (err.code === 1) {
                                                 $rootScope.geoPermission = false;
+                                                if (navigator.notification && navigator.notification.alert) {
                                                 navigator.notification.alert(
                                                     'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
                                                     alertDismissed, // callback
                                                     'Cirql', // title
                                                     'OK' // buttonName
                                                 );
+                                            } else {
+                                                console.log("Can't find cordova dialog plugin");
+                                            }
                                             }
                                             else {
                                                 $rootScope.geoPermission = true;
@@ -144,7 +148,7 @@ angular.module('cirqlApp', [
             }
         }
 
-        $timeout(getLocationAndCheckPermission, 3000);
+        getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
 

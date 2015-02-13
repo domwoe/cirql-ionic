@@ -37,7 +37,7 @@ function($rootScope, $q, simpleLogin, fbutil, deviceDetector) {
 
                 allowsGeo = true;
 
-                if (deviceDetector === 'ios') {
+                if (deviceDetector.os === 'ios') {
 
                     window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
                         function(result) {
@@ -170,13 +170,15 @@ function($rootScope, $q, simpleLogin, fbutil, deviceDetector) {
 
         if (home && home.lat && home.lng && region.child('radius').val()) {
 
+            
+
+            var radius = parseInt(region.child('radius').val());
+
             console.log('GEO SERVICE: Region Id:' + region.key());
             console.log('GEO SERVICE: Latitude:' + home.lat);
             console.log('GEO SERVICE: Longitude:' + home.lng);
-            console.log('GEO SERVICE: Radius:' + region.child('radius').val());
+            console.log('GEO SERVICE: Radius:' + radius);
             console.log('----------------------------');
-
-            var radius = region.child('radius').val();
 
             if (deviceDetector.os === 'ios') {
 
@@ -191,7 +193,7 @@ function($rootScope, $q, simpleLogin, fbutil, deviceDetector) {
                         console.log('Monitor-Geo: error with ' + params);
                         deferred.reject(error);
                     });
-            } else if (deviceDetector === 'android') {
+            } else if (deviceDetector.os === 'android') {
 
                 var reg = new RegExp('^[0-9]+$');
                 var id = reg.match(region.key());
@@ -313,7 +315,7 @@ var service = {
 
         var deferred = $q.defer();
 
-        if (deviceDetector === 'android') {
+        if (deviceDetector.os === 'android') {
             if (window.geofence && window.geofence.initialize) {
 
                 console.log('GEO SERVICE: Initializing...');
