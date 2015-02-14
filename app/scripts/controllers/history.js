@@ -142,6 +142,7 @@ angular.module('cirqlApp')
                     var yAxis;
                     var color;
                     var temperatureAxis = null;
+                    var percentAxis = null;
 
                     fbData.forEach(function(fbMeasure) {
 
@@ -155,7 +156,7 @@ angular.module('cirqlApp')
                                     min: 350,
                                     //max: 3000,
                                     title: {
-                                        text: 'CO2',
+                                        text: '',
                                         style: {
                                             color: '#3FC380'
                                         }
@@ -172,26 +173,31 @@ angular.module('cirqlApp')
                                 color = '#3FC380';
                             } else if (fbMeasure.key() === 'humidity') {
                                 name = translate('HUMIDITY');
-                                $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
-                                    gridLineWidth: 0,
-                                    min: 25,
-                                    max: 85,
-                                    title: {
-                                        text: translate('HUMIDITY'),
-                                        style: {
-                                            color: '#19B5FE'
-                                        }
-                                    },
-                                    labels: {
-                                        format: '{value} %',
-                                        style: {
-                                            color: '#19B5FE'
-                                        }
-                                    },
-                                    opposite: true
+                                if (percentAxis) {
+                                    yAxis = percentAxis;
+                                } else {
+                                    $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
+                                        gridLineWidth: 0,
+                                        min: 0,
+                                        max: 100,
+                                        title: {
+                                            text: '',
+                                            style: {
+                                                color: '#19B5FE'
+                                            }
+                                        },
+                                        labels: {
+                                            format: '{value} %',
+                                            style: {
+                                                color: '#19B5FE'
+                                            }
+                                        },
+                                        opposite: true
 
-                                });
-                                yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                    });
+                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                    percentAxis = yAxis;
+                                }
                                 color = '#19B5FE';
                             } else if (fbMeasure.key() === 'temperature') {
                                 name = translate('TEMPERATURE');
@@ -207,7 +213,7 @@ angular.module('cirqlApp')
                                             }
                                         },
                                         title: {
-                                            text: translate('TEMPERATURE'),
+                                            text: '',
                                             style: {
                                                 color: '#F9690E'
                                             }
@@ -233,7 +239,7 @@ angular.module('cirqlApp')
                                             }
                                         },
                                         title: {
-                                            text: translate('TEMPERATURE'),
+                                            text: '',
                                             style: {
                                                 color: '#F9690E'
                                             }
@@ -247,27 +253,35 @@ angular.module('cirqlApp')
                                 color = '#F9690E';
                             } else if (fbMeasure.key() === 'valve') {
                                 name = translate('VALVE');
-                                $scope.chartConfig.options.yAxis.push({ // Tertiary yAxis
-                                    gridLineWidth: 0,
-                                    min: 0,
-                                    max: 100,
-                                    title: {
-                                        text: translate('VALVE'),
-                                        style: {
-                                            color: '#22313F'
-                                        }
-                                    },
-                                    labels: {
-                                        format: '{value} %',
-                                        style: {
-                                            color: '#22313F'
-                                        }
-                                    },
-                                    opposite: true
-                                });
-                                yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                if (percentAxis) {
+                                    yAxis = percentAxis;
+                                } else {
+                                    $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
+                                        gridLineWidth: 0,
+                                        min: 0,
+                                        max: 100,
+                                        title: {
+                                            text: '',
+                                            style: {
+                                                color: '#19B5FE'
+                                            }
+                                        },
+                                        labels: {
+                                            format: '{value} %',
+                                            style: {
+                                                color: '#19B5FE'
+                                            }
+                                        },
+                                        opposite: true
+
+                                    });
+                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                    percentAxis = yAxis;
+                                }
                                 color = '#22313F';
+
                             }
+
 
                             if (name === translate('TARGET') || name === translate('VALVE')) {
                                 series.push({
@@ -304,6 +318,12 @@ angular.module('cirqlApp')
                                 }
 
                             });
+
+                            var lastValue = series[index].data[series[index].data.length-1][1];
+                            var timestamp = Date.now();
+                            series[index].data.push([timestamp, lastValue]);
+
+
 
 
                         }
