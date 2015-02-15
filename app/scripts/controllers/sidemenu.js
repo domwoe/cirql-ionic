@@ -33,7 +33,6 @@ angular.module('cirqlApp')
 
                 $scope.resident = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId);
 
-
                 $scope.room = $state.params.roomId;
 
                 $rootScope.$watch('room', function(room) {
