@@ -352,9 +352,8 @@ input:-ms-input-placeholder {
     overflow: auto;
     margin-left: auto;
     margin-right: auto;
-
-
 }
+
 .logo {
     float: left;
     width: 40px;
@@ -862,4 +861,28 @@ input:-ms-input-placeholder {
     position:absolute;
 }
 
+
+
+ .room-button-block {
+    
+    margin-top: 10px;
+    padding: 0px;
+  }  
+
+.button-right {
+  display: inline;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-left: 0px;
+  width: 140px;
+
+}
+
+.button-left {
+  display: inline;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: 0px;
+  width: 140px;
+}
 
