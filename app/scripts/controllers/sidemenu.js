@@ -204,16 +204,6 @@ angular.module('cirqlApp')
                 },300);    
             };
 
-            $scope.goToHistory = function() {
-                showLoading();
-                $ionicSideMenuDelegate.toggleLeft();
-                $timeout(function() {
-                    $state.go('app.history', {
-                        roomId: $scope.room
-                    });
-                },300);    
-            };
-
             $scope.netatmo = function() {
 
 

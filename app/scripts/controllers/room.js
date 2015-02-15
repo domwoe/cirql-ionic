@@ -9,11 +9,30 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log','$ionicLoading',
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log', '$ionicLoading',
     function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, log, $ionicLoading) {
 
         if (!$rootScope.room) {
             $rootScope.room = $state.params.roomId;
+        }
+
+        function showLoading() {
+            $ionicLoading.show({
+                template: '<div class="sk-spinner sk-spinner-circle">' +
+                    '<div class="sk-circle1 sk-circle"></div>' +
+                    '<div class="sk-circle2 sk-circle"></div>' +
+                    '<div class="sk-circle3 sk-circle"></div>' +
+                    '<div class="sk-circle4 sk-circle"></div>' +
+                    '<div class="sk-circle5 sk-circle"></div>' +
+                    '<div class="sk-circle6 sk-circle"></div>' +
+                    '<div class="sk-circle7 sk-circle"></div>' +
+                    '<div class="sk-circle8 sk-circle"></div>' +
+                    '<div class="sk-circle9 sk-circle"></div>' +
+                    '<div class="sk-circle10 sk-circle"></div>' +
+                    '<div class="sk-circle11 sk-circle"></div>' +
+                    '<div class="sk-circle12 sk-circle"></div>' +
+                    '</div>'
+            });
         }
 
         $ionicSideMenuDelegate.canDragContent(true);
@@ -31,7 +50,7 @@ angular.module('cirqlApp')
             window.screen.lockOrientation('portrait');
         }
 
-        $timeout($ionicLoading.hide,500);
+        $timeout($ionicLoading.hide, 500);
 
         var translate = $filter('translate');
         var language = $translate.use();
@@ -292,6 +311,14 @@ angular.module('cirqlApp')
             $state.go('app.activity', {
                 roomId: $rootScope.room
             });
+        };
+
+        $scope.goToHistory = function() {
+            showLoading();
+            $state.go('app.history', {
+                roomId: $rootScope.room
+            });
+
         };
 
         $scope.goBack = function() {
