@@ -342,7 +342,8 @@ angular.module('cirqlApp')
         TARGET: 'Desired Temperature',
         VALVE: 'Valve Opening',
         NEXT_DAY: 'Next',
-        PREVIOUS_DAY: 'Previous'
+        PREVIOUS_DAY: 'Previous',
+        EXPERT: 'Expertmode'
 
 
 
@@ -441,7 +442,8 @@ angular.module('cirqlApp')
         TARGET: 'Wunschtemperatur',
         VALVE: 'Ventilöffnung',
         NEXT_DAY: 'Nächster',
-        PREVIOUS_DAY: 'Vorheriger'
+        PREVIOUS_DAY: 'Vorheriger',
+        EXPERT: 'Expertenmodus'
     });
 
     $translateProvider.preferredLanguage('de');

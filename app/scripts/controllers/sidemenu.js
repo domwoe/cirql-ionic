@@ -31,6 +31,8 @@ angular.module('cirqlApp')
             if (user) {
                 $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
 
+                $scope.resident = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId);
+
 
                 $scope.room = $state.params.roomId;
 

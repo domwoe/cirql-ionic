@@ -190,7 +190,7 @@ angular.module('cirqlApp')
                                 targetIcon = d3.select('#targetIcon' + scope.ishome + scope.roomid),
                                 flame = d3.select('#flame' + scope.ishome + scope.roomid);
 
-                            if (scope.displaytarget) {
+                            if (scope.ishome === 'false') {
                                 bgTargetHandle.call(d3.behavior.drag()
                                     .on('dragstart', function() {
                                         event.stopPropagation();
@@ -262,39 +262,6 @@ angular.module('cirqlApp')
                                 'fill': scope.bgcolor,
                                 'fill-opacity': 0.3
                             });
-
-                            // Show UI info
-                            // ring_background.on('click', function() {
-                            //     d3.selectAll('.info').remove();
-                            //     var x = bgTargetIcon.attr('cx');
-                            //     var y = bgTargetIcon.attr('cy');
-                            //     // Show only if not currently away
-                            //     if (!(scope.isaway && scope.mode === 'auto' && scope.usesautoaway)) {
-                            //         scalingContainer.append('text')
-                            //             .text('Move me!')
-                            //             .attr('font-weight', 600)
-                            //             .attr('fill', '#ffffff')
-                            //             .attr('class', 'info target')
-                            //             .attr('x', x)
-                            //             .attr('y', y - 20)
-                            //             .attr('text-anchor', 'middle');
-                            //     }
-                            //     scalingContainer.append('text')
-                            //         .text('Swipe me!')
-                            //         .attr('font-weight', 600)
-                            //         .attr('fill', '#ffffff')
-                            //         .attr('class', 'info')
-                            //         .attr('x', 125)
-                            //         .attr('y', 170)
-                            //         .attr('text-anchor', 'middle');
-
-                            //     d3.selectAll('.info')
-                            //         .transition()
-                            //         .style('opacity', 0)
-                            //         .duration(1000)
-                            //         .delay(1500);
-
-                            // });
 
                             flame.select('rect')
                                 .on('click', function() {
@@ -421,23 +388,6 @@ angular.module('cirqlApp')
                             }
                         //});
                     };
-
-                    function showWarning(msg) {
-
-                        d3.select('#scaling' + scope.ishome + scope.roomid)
-                            .append('text')
-                            .attr('class', 'warning')
-                            .attr('fill', '#FFF')
-                            .attr('font-weight', '600')
-                            .append('tspan')
-                            .attr('x', '125')
-                            .attr('y', '180')
-                            .attr('text-anchor', 'middle')
-                            .text(msg)
-
-                        $timeout(scope.$apply);
-
-                    }
 
                     function showAwayOrTarget() {
                         if (scope.isaway && scope.usesautoaway) {

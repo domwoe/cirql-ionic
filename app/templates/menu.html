@@ -37,16 +37,16 @@
         <!-- <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ui-sref="app.activity({roomId: room})">
           ACTIVITY
         </div> -->
-        <div translate class="item menu-toggle" ng-if="isRoom()" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
+        <div translate class="item menu-toggle" ng-if="isRoom() && resident.expertMode" ui-sref="app.thermostats({roomId: room, fromRoom: true})">
           THERMOSTATS
         </div>
-        <div class="item nav-clear menu-toggle" ng-if="isRoom()" ng-click="netatmo()">
+        <div class="item nav-clear menu-toggle" ng-if="isRoom() && resident.expertMode" ng-click="netatmo()">
           Netatmo
         </div>
         <div translate class="item nav-clear menu-toggle"  ng-if="isRoom()" ui-sref="app.room_settings({roomId: room})">
           ROOM_SETTINGS
         </div>
-        <div class="item menu-toggle"  ng-if="isHome()" ui-sref="app.gateway({home: true})">
+        <div class="item menu-toggle"  ng-if="isHome() && resident.expertMode" ui-sref="app.gateway({home: true})">
           Gateway
         </div>
         <div translate class="item nav-clear menu-toggle"  ng-if="isHome()" ui-sref="app.resident_settings">
