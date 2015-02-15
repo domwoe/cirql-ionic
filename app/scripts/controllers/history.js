@@ -63,7 +63,6 @@ angular.module('cirqlApp')
 
             var fbHistoryRef = 'homes/' + user.uid + '/histories/' + $rootScope.room;
 
-
             Highcharts.setOptions({
                 // lang: {
                 //     months: ["Januar,Februar,März,April,Mayi,Juni,Juli,August,September,Oktober,November,DeZember"],
@@ -137,205 +136,217 @@ angular.module('cirqlApp')
                 }
             };
 
-
+            fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/expertMode');
             var getData = function(cb) {
                 fbutil.ref(fbHistoryRef).once('value', function(fbData) {
 
-                    var series = [];
+                    var expertMode;
 
-                    $scope.chartConfig.options.yAxis = [];
+                    fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/expertMode').once('value', function(fbExpert) {
+                        expertMode = fbExpert.val();
 
-                    var name;
-                    var yAxis;
-                    var color;
-                    var temperatureAxis = null;
-                    var percentAxis = null;
+                        var series = [];
 
-                    fbData.forEach(function(fbMeasure) {
+                        $scope.chartConfig.options.yAxis = [];
 
-                        if (fbMeasure.val()) {
+                        var name;
+                        var yAxis;
+                        var color;
+                        var temperatureAxis = null;
+                        var percentAxis = null;
+
+                        fbData.forEach(function(fbMeasure) {
+
+                            if (fbMeasure.val()) {
+
+                                if (fbMeasure.key() === 'valve' && !expertMode) {
+
+                                } else {
 
 
-                            if (fbMeasure.key() === 'co2') {
-                                name = translate('AIR_QUALITY');
-                                $scope.chartConfig.options.yAxis.push({ // Tertiary yAxis
-                                    gridLineWidth: 0,
-                                    min: 350,
-                                    //max: 3000,
-                                    title: {
-                                        text: '',
-                                        style: {
-                                            color: '#3FC380'
+                                    if (fbMeasure.key() === 'co2') {
+                                        name = translate('AIR_QUALITY');
+                                        $scope.chartConfig.options.yAxis.push({ // Tertiary yAxis
+                                            gridLineWidth: 0,
+                                            min: 350,
+                                            //max: 3000,
+                                            title: {
+                                                text: '',
+                                                style: {
+                                                    color: '#3FC380'
+                                                }
+                                            },
+                                            labels: {
+                                                format: '{value} ppm',
+                                                style: {
+                                                    color: '#3FC380'
+                                                }
+                                            },
+                                            opposite: false
+                                        });
+                                        yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                        color = '#3FC380';
+                                    } else if (fbMeasure.key() === 'humidity') {
+                                        name = translate('HUMIDITY');
+                                        if (percentAxis) {
+                                            yAxis = percentAxis;
+                                        } else {
+                                            $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
+                                                gridLineWidth: 0,
+                                                min: 0,
+                                                max: 100,
+                                                title: {
+                                                    text: '',
+                                                    style: {
+                                                        color: '#19B5FE'
+                                                    }
+                                                },
+                                                labels: {
+                                                    format: '{value} %',
+                                                    style: {
+                                                        color: '#19B5FE'
+                                                    }
+                                                },
+                                                opposite: true
+
+                                            });
+                                            yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                            percentAxis = yAxis;
                                         }
-                                    },
-                                    labels: {
-                                        format: '{value} ppm',
-                                        style: {
-                                            color: '#3FC380'
+                                        color = '#19B5FE';
+                                    } else if (fbMeasure.key() === 'temperature') {
+                                        name = translate('TEMPERATURE');
+                                        if (temperatureAxis) {
+                                            yAxis = temperatureAxis;
+                                        } else {
+                                            $scope.chartConfig.options.yAxis.push({ // Primary yAxis
+                                                minTickInterval: 0.5,
+                                                labels: {
+                                                    format: '{value}°C',
+                                                    style: {
+                                                        color: '#F9690E'
+                                                    }
+                                                },
+                                                title: {
+                                                    text: '',
+                                                    style: {
+                                                        color: '#F9690E'
+                                                    }
+                                                },
+                                                opposite: false
+
+                                            });
+                                            yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                            temperatureAxis = yAxis;
                                         }
-                                    },
-                                    opposite: false
-                                });
-                                yAxis = $scope.chartConfig.options.yAxis.length - 1;
-                                color = '#3FC380';
-                            } else if (fbMeasure.key() === 'humidity') {
-                                name = translate('HUMIDITY');
-                                if (percentAxis) {
-                                    yAxis = percentAxis;
-                                } else {
-                                    $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
-                                        gridLineWidth: 0,
-                                        min: 0,
-                                        max: 100,
-                                        title: {
-                                            text: '',
-                                            style: {
-                                                color: '#19B5FE'
-                                            }
-                                        },
-                                        labels: {
-                                            format: '{value} %',
-                                            style: {
-                                                color: '#19B5FE'
-                                            }
-                                        },
-                                        opposite: true
+                                        color = '#F9690E';
+                                    } else if (fbMeasure.key() === 'target') {
+                                        name = translate('TARGET');
+                                        if (temperatureAxis) {
+                                            yAxis = temperatureAxis;
+                                        } else {
+                                            $scope.chartConfig.options.yAxis.push({ // Primary yAxis
+                                                minTickInterval: 0.5,
+                                                labels: {
+                                                    format: '{value}°C',
+                                                    style: {
+                                                        color: '#F9690E'
+                                                    }
+                                                },
+                                                title: {
+                                                    text: '',
+                                                    style: {
+                                                        color: '#F9690E'
+                                                    }
+                                                },
+                                                opposite: false
+
+                                            });
+                                            yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                            temperatureAxis = yAxis;
+                                        }
+                                        color = '#F9690E';
+                                    } else if (fbMeasure.key() === 'valve') {
+                                        name = translate('VALVE');
+                                        if (percentAxis) {
+                                            yAxis = percentAxis;
+                                        } else {
+                                            $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
+                                                gridLineWidth: 0,
+                                                min: 0,
+                                                max: 100,
+                                                title: {
+                                                    text: '',
+                                                    style: {
+                                                        color: '#19B5FE'
+                                                    }
+                                                },
+                                                labels: {
+                                                    format: '{value} %',
+                                                    style: {
+                                                        color: '#19B5FE'
+                                                    }
+                                                },
+                                                opposite: true
+
+                                            });
+                                            yAxis = $scope.chartConfig.options.yAxis.length - 1;
+                                            percentAxis = yAxis;
+                                        }
+                                        color = '#22313F';
+
+                                    }
+
+
+                                    if (name === translate('TARGET') || name === translate('VALVE')) {
+                                        series.push({
+                                            name: name,
+                                            data: [],
+                                            type: 'line',
+                                            step: true,
+                                            visible: false,
+                                            yAxis: yAxis,
+                                            color: color,
+                                            lineWidth: 3,
+                                            enableMouseTracking: false
+                                        });
+                                    } else {
+                                        series.push({
+                                            name: name,
+                                            data: [],
+                                            type: 'spline',
+                                            step: false,
+                                            visible: name === translate('TEMPERATURE') ? true : false,
+                                            yAxis: yAxis,
+                                            color: color,
+                                            lineWidth: 3,
+                                            enableMouseTracking: false
+                                        });
+                                    }
+                                    var index = series.length - 1;
+
+                                    fbMeasure.forEach(function(fbDataPoint) {
+
+                                        if (fbDataPoint.val()) {
+                                            var dataPoint = fbDataPoint.val();
+                                            series[index].data.push([dataPoint.timestamp, dataPoint.value]);
+                                        }
 
                                     });
-                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
-                                    percentAxis = yAxis;
-                                }
-                                color = '#19B5FE';
-                            } else if (fbMeasure.key() === 'temperature') {
-                                name = translate('TEMPERATURE');
-                                if (temperatureAxis) {
-                                    yAxis = temperatureAxis;
-                                } else {
-                                    $scope.chartConfig.options.yAxis.push({ // Primary yAxis
-                                        minTickInterval: 0.5,
-                                        labels: {
-                                            format: '{value}°C',
-                                            style: {
-                                                color: '#F9690E'
-                                            }
-                                        },
-                                        title: {
-                                            text: '',
-                                            style: {
-                                                color: '#F9690E'
-                                            }
-                                        },
-                                        opposite: false
 
-                                    });
-                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
-                                    temperatureAxis = yAxis;
-                                }
-                                color = '#F9690E';
-                            } else if (fbMeasure.key() === 'target') {
-                                name = translate('TARGET');
-                                if (temperatureAxis) {
-                                    yAxis = temperatureAxis;
-                                } else {
-                                    $scope.chartConfig.options.yAxis.push({ // Primary yAxis
-                                        minTickInterval: 0.5,
-                                        labels: {
-                                            format: '{value}°C',
-                                            style: {
-                                                color: '#F9690E'
-                                            }
-                                        },
-                                        title: {
-                                            text: '',
-                                            style: {
-                                                color: '#F9690E'
-                                            }
-                                        },
-                                        opposite: false
+                                    var lastValue = series[index].data[series[index].data.length - 1][1];
+                                    var timestamp = Date.now();
+                                    series[index].data.push([timestamp, lastValue]);
 
-                                    });
-                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
-                                    temperatureAxis = yAxis;
                                 }
-                                color = '#F9690E';
-                            } else if (fbMeasure.key() === 'valve') {
-                                name = translate('VALVE');
-                                if (percentAxis) {
-                                    yAxis = percentAxis;
-                                } else {
-                                    $scope.chartConfig.options.yAxis.push({ // Secondary yAxis
-                                        gridLineWidth: 0,
-                                        min: 0,
-                                        max: 100,
-                                        title: {
-                                            text: '',
-                                            style: {
-                                                color: '#19B5FE'
-                                            }
-                                        },
-                                        labels: {
-                                            format: '{value} %',
-                                            style: {
-                                                color: '#19B5FE'
-                                            }
-                                        },
-                                        opposite: true
 
-                                    });
-                                    yAxis = $scope.chartConfig.options.yAxis.length - 1;
-                                    percentAxis = yAxis;
-                                }
-                                color = '#22313F';
+
+
 
                             }
 
-
-                            if (name === translate('TARGET') || name === translate('VALVE')) {
-                                series.push({
-                                    name: name,
-                                    data: [],
-                                    type: 'line',
-                                    step: true,
-                                    visible: false,
-                                    yAxis: yAxis,
-                                    color: color,
-                                    lineWidth: 3,
-                                    enableMouseTracking: false
-                                });
-                            } else {
-                                series.push({
-                                    name: name,
-                                    data: [],
-                                    type: 'spline',
-                                    step: false,
-                                    visible: name === translate('TEMPERATURE') ? true : false,
-                                    yAxis: yAxis,
-                                    color: color,
-                                    lineWidth: 3,
-                                    enableMouseTracking: false
-                                });
-                            }
-                            var index = series.length - 1;
-
-                            fbMeasure.forEach(function(fbDataPoint) {
-
-                                if (fbDataPoint.val()) {
-                                    var dataPoint = fbDataPoint.val();
-                                    series[index].data.push([dataPoint.timestamp, dataPoint.value]);
-                                }
-
-                            });
-
-                            var lastValue = series[index].data[series[index].data.length-1][1];
-                            var timestamp = Date.now();
-                            series[index].data.push([timestamp, lastValue]);
-
-
-
-
-                        }
-
-                        cb(series);
+                            cb(series);
+                        });
                     });
 
                 });
