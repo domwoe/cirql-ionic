@@ -154,6 +154,7 @@ angular.module('cirqlApp')
                         var color;
                         var temperatureAxis = null;
                         var percentAxis = null;
+                        var style = 'none';
 
                         fbData.forEach(function(fbMeasure) {
 
@@ -264,6 +265,7 @@ angular.module('cirqlApp')
                                             });
                                             yAxis = $scope.chartConfig.options.yAxis.length - 1;
                                             temperatureAxis = yAxis;
+                                            style = 'dot';
                                         }
                                         color = '#E74C3C';
                                     } else if (fbMeasure.key() === 'valve') {
@@ -294,6 +296,7 @@ angular.module('cirqlApp')
                                             percentAxis = yAxis;
                                         }
                                         color = '#22313F';
+                                        style = 'none';
 
                                     }
 
@@ -309,7 +312,7 @@ angular.module('cirqlApp')
                                             color: color,
                                             lineWidth: 3,
                                             enableMouseTracking: false,
-                                            dashStyle: 'longdash'
+                                            dashStyle: style
                                         });
                                     } else {
                                         series.push({
