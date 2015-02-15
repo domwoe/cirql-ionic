@@ -89,6 +89,13 @@ angular.module('cirqlApp')
             var myChart = null;
 
             $scope.chartConfig = {
+                chart: {
+                    events: {
+                        load: function() {
+                            $ionicLoading.hide();
+                        }
+                    }
+                },
                 options: {
                     useHighStocks: false,
                     chart: {
@@ -292,7 +299,7 @@ angular.module('cirqlApp')
                                     visible: false,
                                     yAxis: yAxis,
                                     color: color,
-                                    lineWidth: 5,
+                                    lineWidth: 3,
                                     enableMouseTracking: false
                                 });
                             } else {
@@ -304,7 +311,7 @@ angular.module('cirqlApp')
                                     visible: name === translate('TEMPERATURE') ? true : false,
                                     yAxis: yAxis,
                                     color: color,
-                                    lineWidth: 5,
+                                    lineWidth: 3,
                                     enableMouseTracking: false
                                 });
                             }
@@ -336,7 +343,6 @@ angular.module('cirqlApp')
 
             getData(function(data) {
                 $scope.chartConfig.series = data;
-                $ionicLoading.hide();
             });
 
 

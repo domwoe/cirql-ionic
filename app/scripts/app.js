@@ -13,6 +13,7 @@ angular.module('cirqlApp', [
 ])
 
 .run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state) {
+
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -120,7 +121,7 @@ angular.module('cirqlApp', [
 
                                         },
                                         function(err) {
-                                            console.log('Cordova Geolocation failed with error code: '+err.code +' and message: '+err.message);
+                                            console.log('Cordova Geolocation failed with error code: ' + err.code + ' and message: ' + err.message);
                                             if (err.code === 1) {
                                                 $rootScope.geoPermission = false;
                                                 navigator.notification.alert(
@@ -129,8 +130,7 @@ angular.module('cirqlApp', [
                                                     'Cirql', // title
                                                     'OK' // buttonName
                                                 );
-                                            }
-                                            else {
+                                            } else {
                                                 $rootScope.geoPermission = true;
                                             }
 
