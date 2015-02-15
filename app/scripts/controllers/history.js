@@ -224,13 +224,13 @@ angular.module('cirqlApp')
                                                 labels: {
                                                     format: '{value}°C',
                                                     style: {
-                                                        color: '#F9690E'
+                                                        color: '#E74C3C'
                                                     }
                                                 },
                                                 title: {
                                                     text: '',
                                                     style: {
-                                                        color: '#F9690E'
+                                                        color: '#E74C3C'
                                                     }
                                                 },
                                                 opposite: false
@@ -239,7 +239,7 @@ angular.module('cirqlApp')
                                             yAxis = $scope.chartConfig.options.yAxis.length - 1;
                                             temperatureAxis = yAxis;
                                         }
-                                        color = '#F9690E';
+                                        color = '#E74C3C';
                                     } else if (fbMeasure.key() === 'target') {
                                         name = translate('TARGET');
                                         if (temperatureAxis) {
@@ -250,13 +250,13 @@ angular.module('cirqlApp')
                                                 labels: {
                                                     format: '{value}°C',
                                                     style: {
-                                                        color: '#F9690E'
+                                                        color: '#E74C3C'
                                                     }
                                                 },
                                                 title: {
                                                     text: '',
                                                     style: {
-                                                        color: '#F9690E'
+                                                        color: '#E74C3C'
                                                     }
                                                 },
                                                 opposite: false
@@ -265,7 +265,7 @@ angular.module('cirqlApp')
                                             yAxis = $scope.chartConfig.options.yAxis.length - 1;
                                             temperatureAxis = yAxis;
                                         }
-                                        color = '#F9690E';
+                                        color = '#E74C3C';
                                     } else if (fbMeasure.key() === 'valve') {
                                         name = translate('VALVE');
                                         if (percentAxis) {
@@ -308,7 +308,8 @@ angular.module('cirqlApp')
                                             yAxis: yAxis,
                                             color: color,
                                             lineWidth: 3,
-                                            enableMouseTracking: false
+                                            enableMouseTracking: false,
+                                            dashStyle: 'longdash'
                                         });
                                     } else {
                                         series.push({
