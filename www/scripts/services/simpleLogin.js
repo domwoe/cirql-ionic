@@ -125,7 +125,6 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
         },
 
         resetPassword: function(email) {
-
             return auth.$resetPassword({
                 email: email
             });
