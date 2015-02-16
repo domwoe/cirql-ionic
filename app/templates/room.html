@@ -55,7 +55,7 @@
 
         </div>
 
-         <div id="roomclimate" class="field-group" ng-cloak>
+         <div id="roomclimate" class="field-group {{(showNextTarget() && roomValues.nextTarget) ? 'has-next-target' : ''}}" ng-cloak>
 
             <div ng-if="roomValues.co2" class="field" ng-click="openAirQualityPopover()" stop-event="click">
                 <climateindicator ng-click="openAirQualityPopover($event)" class="logo" type="airquality" cssclass="logo" value="roomValues.co2" thresholds="roomValues.thresholds.co2" stop-event="click"></climateindicator>

@@ -528,7 +528,7 @@ input:-ms-input-placeholder {
   height: 100% !important;
 }
 #roomclimate {
-    margin-top: -60px;
+    margin-top: -50px;
 }
 #modeSlider {
     position: relative;
@@ -593,6 +593,10 @@ input:-ms-input-placeholder {
     left: 100px;
     margin-bottom: -75px;
     z-index: -1;
+}
+
+.has-next-target {
+  margin-top: -125px !important;
 }
 
 // CARDS
