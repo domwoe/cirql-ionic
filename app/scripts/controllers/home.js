@@ -170,5 +170,10 @@ angular.module('cirqlApp')
                 home.$save();
                 $state.go('app.home_settings');
             };
+
+            $scope.logout = function() {
+                simpleLogin.logout();
+                $state.go('login');
+            };
         }
     ]);
