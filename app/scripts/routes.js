@@ -21,6 +21,12 @@ angular.module('cirqlApp')
         controller: 'LoginCtrl'
     })
 
+    .state('pwreset', {
+        url: '/reset',
+        templateUrl: 'templates/reset_password.html',
+        controller: 'LoginCtrl'
+    })
+
     .state('wizard', {
         url: '/wizard',
         abstract: true,
@@ -375,8 +381,10 @@ angular.module('cirqlApp')
         PREVIOUS_DAY: 'Previous',
         EXPERT: 'Expertmode',
         CHAT: 'Messages',
-        TYPE_MESSAGE: 'Type your message'
-
+        TYPE_MESSAGE: 'Type your message',
+        RESET_PASSWORD: 'Reset Password',
+        FORGOT_PASSWORD: 'Help! I forgot my password',
+        SEND_PASSWORD: 'Send new Password'
 
 
 
@@ -478,7 +486,10 @@ angular.module('cirqlApp')
         PREVIOUS_DAY: 'Vorheriger',
         EXPERT: 'Expertenmodus',
         CHAT: 'Mittleiungen',
-        TYPE_MESSAGE: 'Schreib eine Nachricht'
+        TYPE_MESSAGE: 'Schreib eine Nachricht',
+        RESET_PASSWORD: 'Passwort zurücksetzen',
+        FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',
+        SEND_PASSWORD: 'Neues Passwort zuschicken'
 
     });
 
