@@ -339,9 +339,6 @@ input:-ms-input-placeholder {
     font-weight:bold;
     line-height: 34px;
     text-align: center;
-    //margin-top: 50px;
-    margin-left: 0px;
-
 }
 .field {
     border-radius: 24px;
@@ -349,12 +346,14 @@ input:-ms-input-placeholder {
     border-color: transparent;
     margin-top: 10px;
     text-align: left;
-    display: inline-block;
+    display: block;
     vertical-align: middle;
     width: 280px;
     overflow: auto;
-
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .logo {
     float: left;
     width: 40px;
@@ -529,8 +528,7 @@ input:-ms-input-placeholder {
   height: 100% !important;
 }
 #roomclimate {
-    position: absolute;
-    margin-top: -60px;
+    margin-top: -50px;
 }
 #modeSlider {
     position: relative;
@@ -595,6 +593,10 @@ input:-ms-input-placeholder {
     left: 100px;
     margin-bottom: -75px;
     z-index: -1;
+}
+
+.has-next-target {
+  margin-top: -125px !important;
 }
 
 // CARDS
@@ -854,6 +856,7 @@ input:-ms-input-placeholder {
 }
 
 
+
 // HISTORY
 // ----------------------
 
@@ -863,4 +866,50 @@ input:-ms-input-placeholder {
     position:absolute;
 }
 
+
+
+ .room-button-block {
+    
+    margin-top: 10px;
+    padding: 0px;
+  }  
+
+.button-right {
+  display: inline;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-left: 0px;
+  width: 140px;
+
+}
+
+.button-left {
+  display: inline;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: 0px;
+  width: 140px;
+}
+
+
+// Chat
+// -------------------------------
+
+
+.messaging-view {
+    .scroll { min-height:100%; padding:10px 0 50px; }
+    .message { padding:0 10px 10px;
+        .avatar { height:35px; width:35px; background-size:contain; background-repeat:no-repeat; float:left;
+            .resident-name {text-align: center;padding-top: 40px;}
+        }
+        .message { overflow:hidden; padding:5px 5px 0; text-align:left;
+            span { padding:10px; display:inline-block; text-align:left; }
+        }
+        &.other {
+            .avatar { float:right; }
+            .message { text-align:right; }
+        }
+    }
+    .bar-footer { height:initial !important; }
+}
 

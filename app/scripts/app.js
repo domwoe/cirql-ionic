@@ -52,8 +52,6 @@ angular.module('cirqlApp', [
             $cordovaSplashscreen.hide();
         }, 1000);
 
-        //$state.go('app.home');
-
         function showOffline() {
             console.log('Offline');
             $ionicLoading.show({
@@ -120,7 +118,8 @@ angular.module('cirqlApp', [
 
                                         },
                                         function(err) {
-                                            console.log('Cordova Geolocation failed with error code: '+err.code +' and message: '+err.message);
+
+                                            console.log('Cordova Geolocation failed with error code: ' + err.code + ' and message: ' + err.message);
                                             if (err.code === 1) {
                                                 $rootScope.geoPermission = false;
                                                 navigator.notification.alert(
@@ -129,11 +128,10 @@ angular.module('cirqlApp', [
                                                     'Cirql', // title
                                                     'OK' // buttonName
                                                 );
-                                            }
-                                            else {
+                                            } else {
                                                 $rootScope.geoPermission = true;
                                             }
-
+                                
                                         });
                                 }
                             });
@@ -143,6 +141,7 @@ angular.module('cirqlApp', [
                 });
             }
         }
+
 
         $timeout(getLocationAndCheckPermission, 3000);
 

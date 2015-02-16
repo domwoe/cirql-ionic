@@ -124,6 +124,13 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'ngStorage'])
             });
         },
 
+        resetPassword: function(email) {
+
+            return auth.$resetPassword({
+                email: email
+            });
+        },
+
         watch: function(cb, $scope) {
             fns.getUser().then(function(user) {
                 cb(user);

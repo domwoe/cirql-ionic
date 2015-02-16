@@ -3,9 +3,6 @@
 angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil',
     function($q, $log, simpleLogin, fbutil) {
 
-        fbutil.ref('test').on('child_added', function(fbTest) {
-            console.log('FIREBASE TEST: '+JSON.stringify(fbTest.val()));
-        });
         var user = null;
         var fbHome = null;
         var fbLocation = null;
@@ -28,7 +25,11 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                             console.log('Radshag Geo initialized');
 
                             var callbacktype = result.callbacktype;
-                            var regionId = result.regionId;
+                            var regionString = result.regionId;
+                            var regionId = null;
+                            if (regionString) {
+                                regionId = regionString.substring(regionString.indexOf('$') + 1);
+                            }
 
                             var date = new Date();
                             date = date + '';
@@ -63,7 +64,11 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                             } else if (callbacktype === 'monitorfail') { // monitor for region with id fid failed
 
-                                console.log('monitorfail');
+
+                                console.log('monitorfail ');
+                                if (regionId) {
+                                    console.log('monitorfailed for ' + regionId);
+                                }
                                 // fbRegions.lastMsg = {
                                 //     'type': 'monitorfail',
                                 //     'date': date
@@ -84,13 +89,13 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                     console.log('enter region ' + regionId);
                                     if (regionId) {
                                         if (radius[regionId - 1]) {
-                                            fbRegions['reg' + regionId] = {
-                                                'isInside': true,
-                                                'radius': radius[regionId - 1],
-                                                'date': date
-                                            };
+                                            // fbRegions['reg' + regionId] = {
+                                            //     'isInside': true,
+                                            //     'radius': radius[regionId - 1],
+                                            //     'date': date
+                                            // };
 
-                                            fbRegions.$save();
+                                            // fbRegions.$save();
                                         } else {
                                             console.log('something wrong here1');
                                         }
@@ -102,13 +107,13 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                     console.log('exit region ' + regionId);
                                     if (regionId) {
                                         if (radius[regionId - 1]) {
-                                            fbRegions['reg' + regionId] = {
-                                                'isInside': false,
-                                                'radius': radius[regionId - 1],
-                                                'date': date
-                                            };
+                                            // fbRegions['reg' + regionId] = {
+                                            //     'isInside': false,
+                                            //     'radius': radius[regionId - 1],
+                                            //     'date': date
+                                            // };
 
-                                            fbRegions.$save();
+                                            // fbRegions.$save();
                                         } else {
                                             console.log('something wrong here2');
                                         }
@@ -151,7 +156,7 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                     if (fbRegions !== null) {
 
                         fbHome.$loaded(function(data) {
-
+                            var regionsURL = 'homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions';
                             if (data.hasOwnProperty('lat') && data.hasOwnProperty('lng')) {
                                 var lat = data.lat + '';
                                 var lng = data.lng + '';
@@ -160,8 +165,8 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
 
                                 console.log('Regions will be set now: ');
                                 for (var i = 1; i <= radius.length; i++) {
-
-                                    var params = ['' + i, lat, lng, radius[i - 1]];
+                                    //console.log('add now region: ' + regionsURL + '$' + i);
+                                    var params = [regionsURL+'#'+ radius[i-1] +'$' + i, lat, lng, radius[i - 1]];
 
                                     window.plugins.DGGeofencing.startMonitoringRegion(params,
                                         function(result) {
@@ -173,7 +178,6 @@ angular.module('cirqlApp').service('geo', ['$q', '$log', 'simpleLogin', 'fbutil'
                                             deferred.reject(error);
                                         });
                                 }
-
                             } else {
                                 console.log('HomeRegion could not be set');
                                 console.log('Regions can not be set');

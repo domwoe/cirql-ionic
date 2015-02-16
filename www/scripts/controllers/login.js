@@ -63,7 +63,7 @@ angular.module('cirqlApp')
 
                 simpleLogin.login($scope.user.email, $scope.user.password)
                     .then(function() {
-                        $state.go('app.home');
+                        $state.go('resident');
                     })
                     .catch(handleLoginError);
             };

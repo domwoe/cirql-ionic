@@ -26,9 +26,8 @@
                     <div class="row" ng-click="goToRoom(room.$id)" ng-repeat="room in rooms" ng-if="room.name">
                         <div class="left">{{room.name}}
                             <hr/>
-                            <div ns-popover ns-popover-template="popover" ns-popover-theme="ns-popover-custom-theme" ns-popover-trigger="click" ns-popover-placement="bottom"  stop-event="click">
                                 <climateindicator ng-if="room.co2" ng-click="openAirQualityPopover()" class="logo-home logo-margin" type="airquality" cssclass="logo-home" value="room.co2" thresholds="room.thresholds.co2"></climateindicator>
-                            </div>
+            
                             <climateindicator ng-if="room.humidity" ng-click="openAirQualityPopover()" class="logo-home logo-margin" type="humidity" cssclass="logo-home" value="room.humidity" thresholds="room.thresholds.humidity" stop-event="click"></climateindicator>
                         </div>
 
@@ -53,9 +52,3 @@
     </div>
 
 </ion-view>
-
-<script type="text/ng-template" id="popover">
-    <ul>
-    <li ><a>blubb</a></li>
-  </ul>
-</script>

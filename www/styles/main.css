@@ -955,7 +955,6 @@ input:-ms-input-placeholder {
   font-weight: bold;
   line-height: 34px;
   text-align: center;
-  margin-left: 0px;
 }
 
 @media -sass-debug-info {
@@ -964,7 +963,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003346;
+    font-family: \00003343;
   }
 }
 
@@ -974,10 +973,12 @@ input:-ms-input-placeholder {
   border-color: transparent;
   margin-top: 10px;
   text-align: left;
-  display: inline-block;
+  display: block;
   vertical-align: middle;
   width: 280px;
   overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media -sass-debug-info {
@@ -986,7 +987,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003358;
+    font-family: \00003357;
   }
 }
 
@@ -1003,7 +1004,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003365;
+    font-family: \00003364;
   }
 }
 
@@ -1020,7 +1021,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003372;
+    font-family: \00003371;
   }
 }
 
@@ -1035,7 +1036,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003377;
+    font-family: \00003376;
   }
 }
 
@@ -1049,7 +1050,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003380;
+    font-family: \00003379;
   }
 }
 
@@ -1063,7 +1064,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003383;
+    font-family: \00003382;
   }
 }
 
@@ -1077,7 +1078,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003387;
+    font-family: \00003386;
   }
 }
 
@@ -1092,7 +1093,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003392;
+    font-family: \00003391;
   }
 }
 
@@ -1114,7 +1115,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003407;
+    font-family: \00003406;
   }
 }
 
@@ -1129,7 +1130,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003414;
+    font-family: \00003413;
   }
 }
 
@@ -1145,7 +1146,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003420;
+    font-family: \00003419;
   }
 }
 
@@ -1160,7 +1161,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003425;
+    font-family: \00003424;
   }
 }
 
@@ -1175,7 +1176,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003434;
+    font-family: \00003433;
   }
 }
 
@@ -1189,7 +1190,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003437;
+    font-family: \00003436;
   }
 }
 
@@ -1203,7 +1204,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003440;
+    font-family: \00003439;
   }
 }
 
@@ -1217,7 +1218,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003444;
+    font-family: \00003443;
   }
 }
 
@@ -1231,7 +1232,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003447;
+    font-family: \00003446;
   }
 }
 
@@ -1246,7 +1247,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003451;
+    font-family: \00003450;
   }
 }
 
@@ -1263,7 +1264,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003457;
+    font-family: \00003456;
   }
 }
 
@@ -1281,7 +1282,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003464;
+    font-family: \00003463;
   }
 }
 
@@ -1295,7 +1296,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003468;
+    font-family: \00003467;
   }
 }
 
@@ -1325,7 +1326,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003500;
+    font-family: \00003499;
   }
 }
 
@@ -1339,7 +1340,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003504;
+    font-family: \00003503;
   }
 }
 
@@ -1353,7 +1354,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003507;
+    font-family: \00003506;
   }
 }
 
@@ -1367,7 +1368,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003510;
+    font-family: \00003509;
   }
 }
 
@@ -1382,7 +1383,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003514;
+    font-family: \00003513;
   }
 }
 
@@ -1396,7 +1397,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003524;
+    font-family: \00003523;
   }
 }
 
@@ -1410,7 +1411,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003528;
+    font-family: \00003527;
   }
 }
 
@@ -1424,13 +1425,12 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003531;
+    font-family: \00003530;
   }
 }
 
 #roomclimate {
-  position: absolute;
-  margin-top: -60px;
+  margin-top: -50px;
 }
 
 @media -sass-debug-info {
@@ -1439,7 +1439,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003535;
+    font-family: \00003533;
   }
 }
 
@@ -1462,7 +1462,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003548;
+    font-family: \00003546;
   }
 }
 
@@ -1476,7 +1476,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003553;
+    font-family: \00003551;
   }
 }
 
@@ -1493,7 +1493,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003560;
+    font-family: \00003558;
   }
 }
 
@@ -1507,7 +1507,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003564;
+    font-family: \00003562;
   }
 }
 
@@ -1523,7 +1523,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003571;
+    font-family: \00003569;
   }
 }
 
@@ -1540,7 +1540,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003578;
+    font-family: \00003576;
   }
 }
 
@@ -1557,7 +1557,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003585;
+    font-family: \00003583;
   }
 }
 
@@ -1582,7 +1582,21 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003602;
+    font-family: \00003598;
+  }
+}
+
+.has-next-target {
+  margin-top: -125px !important;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003604;
   }
 }
 
@@ -1596,7 +1610,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003605;
+    font-family: \00003607;
   }
 }
 
@@ -1611,7 +1625,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003609;
+    font-family: \00003611;
   }
 }
 
@@ -1625,7 +1639,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003613;
+    font-family: \00003615;
   }
 }
 
@@ -1639,7 +1653,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003617;
+    font-family: \00003619;
   }
 }
 
@@ -1653,7 +1667,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003622;
+    font-family: \00003624;
   }
 }
 
@@ -1673,7 +1687,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003632;
+    font-family: \00003634;
   }
 }
 
@@ -1687,7 +1701,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003641;
+    font-family: \00003643;
   }
 }
 
@@ -1705,7 +1719,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003649;
+    font-family: \00003651;
   }
 }
 
@@ -1720,7 +1734,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003655;
+    font-family: \00003657;
   }
 }
 
@@ -1735,7 +1749,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003662;
+    font-family: \00003664;
   }
 }
 
@@ -1750,7 +1764,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003669;
+    font-family: \00003671;
   }
 }
 
@@ -1767,7 +1781,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003680;
+    font-family: \00003682;
   }
 }
 
@@ -1782,7 +1796,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003689;
+    font-family: \00003691;
   }
 }
 
@@ -1799,7 +1813,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003694;
+    font-family: \00003696;
   }
 }
 
@@ -1817,7 +1831,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003700;
+    font-family: \00003702;
   }
 }
 
@@ -1842,7 +1856,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003713;
+    font-family: \00003715;
   }
 }
 
@@ -1857,7 +1871,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003717;
+    font-family: \00003719;
   }
 }
 
@@ -1872,7 +1886,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003721;
+    font-family: \00003723;
   }
 }
 
@@ -1887,7 +1901,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003725;
+    font-family: \00003727;
   }
 }
 
@@ -1902,7 +1916,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003729;
+    font-family: \00003731;
   }
 }
 
@@ -1917,7 +1931,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003733;
+    font-family: \00003735;
   }
 }
 
@@ -1932,7 +1946,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003737;
+    font-family: \00003739;
   }
 }
 
@@ -1947,7 +1961,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003741;
+    font-family: \00003743;
   }
 }
 
@@ -1962,7 +1976,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003745;
+    font-family: \00003747;
   }
 }
 
@@ -1977,7 +1991,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003749;
+    font-family: \00003751;
   }
 }
 
@@ -1992,7 +2006,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003753;
+    font-family: \00003755;
   }
 }
 
@@ -2007,7 +2021,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003757;
+    font-family: \00003759;
   }
 }
 
@@ -2022,7 +2036,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003760;
+    font-family: \00003762;
   }
 }
 
@@ -2037,7 +2051,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003763;
+    font-family: \00003765;
   }
 }
 
@@ -2052,7 +2066,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003766;
+    font-family: \00003768;
   }
 }
 
@@ -2067,7 +2081,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003769;
+    font-family: \00003771;
   }
 }
 
@@ -2082,7 +2096,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003772;
+    font-family: \00003774;
   }
 }
 
@@ -2097,7 +2111,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003775;
+    font-family: \00003777;
   }
 }
 
@@ -2112,7 +2126,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003778;
+    font-family: \00003780;
   }
 }
 
@@ -2127,7 +2141,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003781;
+    font-family: \00003783;
   }
 }
 
@@ -2142,7 +2156,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003784;
+    font-family: \00003786;
   }
 }
 
@@ -2157,7 +2171,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003787;
+    font-family: \00003789;
   }
 }
 
@@ -2196,7 +2210,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003805;
+    font-family: \00003807;
   }
 }
 
@@ -2225,7 +2239,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003837;
+    font-family: \00003839;
   }
 }
 
@@ -2240,7 +2254,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003846;
+    font-family: \00003848;
   }
 }
 
@@ -2255,7 +2269,7 @@ input:-ms-input-placeholder {
   }
 
   line {
-    font-family: \00003860;
+    font-family: \00003863;
   }
 }
 
@@ -2263,4 +2277,191 @@ input:-ms-input-placeholder {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003871;
+  }
+}
+
+.room-button-block {
+  margin-top: 10px;
+  padding: 0px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003877;
+  }
+}
+
+.button-right {
+  display: inline;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-left: 0px;
+  width: 140px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003886;
+  }
+}
+
+.button-left {
+  display: inline;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: 0px;
+  width: 140px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003900;
+  }
+}
+
+.messaging-view .scroll {
+  min-height: 100%;
+  padding: 10px 0 50px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003901;
+  }
+}
+
+.messaging-view .message {
+  padding: 0 10px 10px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003902;
+  }
+}
+
+.messaging-view .message .avatar {
+  height: 35px;
+  width: 35px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  float: left;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003903;
+  }
+}
+
+.messaging-view .message .avatar .resident-name {
+  text-align: center;
+  padding-top: 40px;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003905;
+  }
+}
+
+.messaging-view .message .message {
+  overflow: hidden;
+  padding: 5px 5px 0;
+  text-align: left;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003906;
+  }
+}
+
+.messaging-view .message .message span {
+  padding: 10px;
+  display: inline-block;
+  text-align: left;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003909;
+  }
+}
+
+.messaging-view .message.other .avatar {
+  float: right;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003910;
+  }
+}
+
+.messaging-view .message.other .message {
+  text-align: right;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003913;
+  }
+}
+
+.messaging-view .bar-footer {
+  height: initial !important;
 }

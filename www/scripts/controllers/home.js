@@ -28,6 +28,7 @@ angular.module('cirqlApp')
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
+
             if (user) {
                 $scope.user = user;
                 // redirect to select resident if not set
@@ -171,6 +172,11 @@ angular.module('cirqlApp')
             $scope.saveLocation = function(home) {
                 home.$save();
                 $state.go('app.home_settings');
+            };
+
+            $scope.logout = function() {
+                simpleLogin.logout();
+                $state.go('login');
             };
         }
     ]);

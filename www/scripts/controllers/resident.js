@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ResidentCtrl', ['$scope', '$localStorage', 'user', 'fbutil', '$state', '$ionicLoading', '$cordovaSplashscreen', '$timeout',
-        function($scope, $localStorage, user, fbutil, $state, $ionicLoading, $cordovaSplashscreen, $timeout) {
+    .controller('ResidentCtrl', ['$rootScope', '$scope', '$localStorage', 'user', 'fbutil', '$state', '$ionicLoading', '$cordovaSplashscreen', '$timeout',
+        function($rootScope, $scope, $localStorage, user, fbutil, $state, $ionicLoading, $cordovaSplashscreen, $timeout) {
 
             // hide Loading in case one arrives at this state
             // with a loading screen
@@ -52,6 +52,7 @@ angular.module('cirqlApp')
 
             $scope.select = function(resident) {
                 $localStorage.user.residentId = resident.$id;
+
                 $state.go('app.home');
             };
 
