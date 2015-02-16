@@ -26,6 +26,7 @@ angular.module('cirqlApp')
             if (window.screen.hasOwnProperty('lockOrientation')) {
                 window.screen.lockOrientation('portrait');
             }
+
             if (user) {
                 $scope.user = user;
                 // redirect to select resident if not set

@@ -28,7 +28,18 @@ angular.module('cirqlApp')
                 });
             }
 
+
             if (user) {
+                $scope.user = user;
+                // redirect to select resident if not set
+                if (!user.residentId) {
+                    $state.go('resident');
+                    console.log('go to resident');
+                } else {
+                    //initialize counter for unread messages
+                    $scope.messageCount = fbutil.syncObject('chat/' + user.uid + '/messageCount');
+                    $scope.messageRead = fbutil.syncObject('chat/' + user.uid + '/state/' + user.residentId + '/numberOfRead');
+                }
                 $scope.residents = fbutil.syncArray('homes/' + user.uid + '/residents');
 
                 $scope.resident = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId);

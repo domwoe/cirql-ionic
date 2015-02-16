@@ -856,6 +856,7 @@ input:-ms-input-placeholder {
 }
 
 
+
 // HISTORY
 // ----------------------
 
@@ -888,5 +889,27 @@ input:-ms-input-placeholder {
   border-bottom-right-radius: 0px;
   margin-right: 0px;
   width: 140px;
+}
+
+
+// Chat
+// -------------------------------
+
+
+.messaging-view {
+    .scroll { min-height:100%; padding:10px 0 50px; }
+    .message { padding:0 10px 10px;
+        .avatar { height:35px; width:35px; background-size:contain; background-repeat:no-repeat; float:left;
+            .resident-name {text-align: center;padding-top: 40px;}
+        }
+        .message { overflow:hidden; padding:5px 5px 0; text-align:left;
+            span { padding:10px; display:inline-block; text-align:left; }
+        }
+        &.other {
+            .avatar { float:right; }
+            .message { text-align:right; }
+        }
+    }
+    .bar-footer { height:initial !important; }
 }
 
