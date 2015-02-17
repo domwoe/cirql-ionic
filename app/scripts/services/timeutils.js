@@ -11,8 +11,7 @@ angular.module('cirqlApp').factory('timeutils', function() {
     return {
         isOld: function(date) {
             var now = Date.now();
-            var timestamp = (new Date(date)).getMilliseconds();
-
+            var timestamp = (new Date(date)).getTime();
             return (now - timestamp) >= 30 * 60 * 1000;
 
         }

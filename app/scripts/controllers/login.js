@@ -30,7 +30,7 @@ angular.module('cirqlApp')
             $scope.user = {
                 email: 'test',
                 password: '',
-                confirm: ''
+                confirm: '' 
             };
 
 
@@ -56,7 +56,7 @@ angular.module('cirqlApp')
                         '<div class="sk-circle12 sk-circle"></div>' +
                         '</div>'
                 });
-                setTimeout($ionicLoading.hide,3000);
+                setTimeout($ionicLoading.hide,5000);
 
 
                 simpleLogin.login($scope.user.email, $scope.user.password)
