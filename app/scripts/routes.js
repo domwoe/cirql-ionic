@@ -384,7 +384,9 @@ angular.module('cirqlApp')
         TYPE_MESSAGE: 'Type your message',
         RESET_PASSWORD: 'Reset Password',
         FORGOT_PASSWORD: 'Help! I forgot my password',
-        SEND_PASSWORD: 'Send new Password'
+        SEND_PASSWORD: 'Send new Password',
+        EMAIL_SENT_TEXT: "We've sent a temporary password to your mail address",
+        EMAIL_SENT: "You've got mail!"
 
 
 
@@ -485,11 +487,13 @@ angular.module('cirqlApp')
         NEXT_DAY: 'Nächster',
         PREVIOUS_DAY: 'Vorheriger',
         EXPERT: 'Expertenmodus',
-        CHAT: 'Mittleiungen',
+        CHAT: 'Mitteilungen',
         TYPE_MESSAGE: 'Schreib eine Nachricht',
         RESET_PASSWORD: 'Passwort zurücksetzen',
         FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',
-        SEND_PASSWORD: 'Neues Passwort zuschicken'
+        SEND_PASSWORD: 'Neues Passwort zuschicken',
+        EMAIL_SENT_TEXT: 'Wir haben ein temporäres Passwort an deine Mail Adresse geschickt!',
+        EMAIL_SENT: 'Mail ist raus!'
 
     });
 
