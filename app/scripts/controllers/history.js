@@ -102,7 +102,7 @@ angular.module('cirqlApp')
                         zoomType: 'x'
                     },
                     tooltip: {
-                        enabled: temperature
+                        enabled: false
                     },
                     title: {
                         text: ''
