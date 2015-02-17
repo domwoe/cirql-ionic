@@ -82,23 +82,106 @@ angular.module('cirqlApp')
             }
 
 
+            function addMaxThermostat(trvid) {
+
+                function addTrv(radiatorId, trvId) {
+                    console.log('RADIATORID: '+radiatorId);
+                    console.log('trvId: '+trvId);
+
+                    fbutil.ref('homes/' + user.uid + '/maxThermostats').child('radiator' + radiatorId).set({
+                        physAddr: trvId.toUpperCase(),
+                        room: $rootScope.room
+                    }, function(error) {
+                        if (error) {
+                            console.log(error);
+                        }
+                        else {
+                            fbutil.ref('homes/' + user.uid + '/rooms/' + $rootScope.room + '/maxThermostats').child('radiator' + radiatorId).set(true, function(error) {
+                                if (error) {
+                                    console.log(error);
+                                    fbutil.ref('homes/' + user.uid + '/maxThermostats').child('radiator' + radiatorId).remove();
+                                }
+                            });
+                        }
+                    });
+                }
+
+                (function(cb) {
+
+                    fbutil.ref('homes/' + user.uid + '/maxThermostats').once('value', function(fbMax) {
+                        var trvs = [];
+                        if (fbMax.val()) {
+                            fbMax.forEach(function(maxTrv) {
+                                var name = maxTrv.key();
+                                trvs.push(name.split('radiator')[1]);
+                            });
+                            cb(trvs);
+                        }
+                    });
+                })(function(trvs) {
+                    trvs.sort();
+                    for (var i = 0, j = 15; i < j; i++) {
+                        console.log(i +' '+trvs[i]) ;
+                        if (i != trvs[i]) {
+                            addTrv(i, trvid);
+                            break;
+                        }
+                    }
+                });
+
+
+            }
+
+
 
             $scope.pairNewThermostat = function() {
 
-                var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway');
+                fbutil.ref('homes/' + user.uid + '/gateway').once('value', function(fbGatewayId) {
 
-                gatewayIdObj.$loaded(function(gatewayId) {
+                    if (!fbGatewayId.val()) {
 
-                    if (!gatewayId.$value) {
+                        fbutil.ref('homes/' + user.uid + '/nefit').once('value', function(fbNefit) {
 
-                        $state.go('app.gateway');
+                            if (fbNefit.val()) {
+                                $scope.data = {};
+                                var showAddNefitTRVPopup = $ionicPopup.show({
+                                    template: '<input type="text" ng-model="data.trvid">',
+                                    title: 'Enter MAX! thermostat address',
+                                    scope: $scope,
+                                    buttons: [{
+                                        text: 'Cancel',
+                                        type: 'button-assertive transparent',
+                                    }, {
+                                        text: '<b>Add</b>',
+                                        type: 'button-positive',
+                                        onTap: function(e) {
+                                            if (!$scope.data.trvid) {
+                                                console.log($scope.data.trvid);
+                                                e.preventDefault();
+                                            } else {
+                                                addMaxThermostat($scope.data.trvid);
+                                            }
+                                        }
+                                    }]
+                                });
+                                showAddNefitTRVPopup.then(function(res) {
+                                    console.log('Tapped!', res);
+                                });
+                            } else {
+
+                                $state.go('app.gateway');
+
+                            }
+                        });
+
+
                     } else {
 
                         $scope.showPopup();
 
                         // Activate pairing mode
 
-                        fbutil.ref('gateways/' + gatewayId.$value + '/activatePairing').set(true);
+                        fbutil.ref('gateways/' + fbGatewayId.val() + '/activatePairing').set(true);
 
                         thermostatService.watchForNewThermostat(user).then(function(thermostat) {
 
@@ -106,9 +189,9 @@ angular.module('cirqlApp')
 
                         });
                     }
-
-
                 });
+
+
 
             };
 
@@ -172,6 +255,8 @@ angular.module('cirqlApp')
                     return timeString;
                 }
             };
+
+
 
             $scope.showPopup = function() {
                 pairingPopup = $ionicPopup.show({
