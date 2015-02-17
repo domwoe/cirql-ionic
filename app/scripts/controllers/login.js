@@ -16,9 +16,6 @@ angular.module('cirqlApp')
                 $state.go('app.home');
             }
 
-
-            console.log('I#m in login');
-
             if (navigator.splashscreen) {
                 if (navigator.splashscreen) {
                     $timeout(function() {
@@ -59,6 +56,7 @@ angular.module('cirqlApp')
                         '<div class="sk-circle12 sk-circle"></div>' +
                         '</div>'
                 });
+                setTimeout($ionicLoading.hide,3000);
 
 
                 simpleLogin.login($scope.user.email, $scope.user.password)
