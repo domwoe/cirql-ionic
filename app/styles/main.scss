@@ -665,11 +665,15 @@ input:-ms-input-placeholder {
 
 
 .centerAll {
-    display: table-cell;
+    //display: table-cell;
     vertical-align: middle;
     text-align: center;
     padding-left: 10%;
     padding-right: 10%;
+}
+
+.button-outline.button-outline.active, .button-outline.button-outline.activated {
+  color: #000 !important;
 }
 
 .popup {
