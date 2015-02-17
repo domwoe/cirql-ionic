@@ -390,6 +390,12 @@ input:-ms-input-placeholder {
     background-color: #FFCC00;
 }
 
+.old-bg {
+    background-color: #6C7A89;
+}
+
+
+
 .small-font {
     font-weight: 600;
     font-size: 14px;
@@ -436,6 +442,10 @@ input:-ms-input-placeholder {
 
 // Utility classes
 // -------------------------------
+// 
+.darken {
+  color: #ABB7B7;
+}
 
 .pull-left {
     float: left;

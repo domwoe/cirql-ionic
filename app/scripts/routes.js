@@ -386,7 +386,8 @@ angular.module('cirqlApp')
         FORGOT_PASSWORD: 'Help! I forgot my password',
         SEND_PASSWORD: 'Send new Password',
         EMAIL_SENT_TEXT: "We've sent a temporary password to your mail address",
-        EMAIL_SENT: "You've got mail!"
+        EMAIL_SENT: "You've got mail!",
+        VALUES_TOO_OLD: 'There are is no recent measurement data available.'
 
 
 
@@ -493,7 +494,8 @@ angular.module('cirqlApp')
         FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',
         SEND_PASSWORD: 'Neues Passwort zuschicken',
         EMAIL_SENT_TEXT: 'Wir haben ein temporäres Passwort an deine Mail Adresse geschickt!',
-        EMAIL_SENT: 'Mail ist raus!'
+        EMAIL_SENT: 'Mail ist raus!',
+        VALUES_TOO_OLD: 'Die Messwerte sind leider nicht aktuell'
 
     });
 
