@@ -125,7 +125,6 @@ angular.module('cirqlApp')
 
                     fbutil.ref('homes/' + user.uid + '/gateway').once('value', function(fbGatewayId) {
                         if (fbGatewayId.val()) {
-                            console.log(bGatewayId.val());
                             $rootScope.gateway = fbGatewayId.val();
                             initThermostats('hm');
 
