@@ -56,11 +56,11 @@
     "net.yoik.cordova.plugins.screenorientation",
     "org.apache.cordova.inappbrowser",
     "https://git-wip-us.apache.org/repos/asf/cordova-plugin-globalization.git",
-    "https://github.com/radshag/PhoneGap-Geofencing.git",
     "org.apache.cordova.network-information",
     "org.apache.cordova.splashscreen",
-    "https://github.com/cowbell/cordova-plugin-geofence",
     "./engine/cordova-crosswalk-engine-c0.5",
-    "org.apache.cordova.dialogs"
+    "org.apache.cordova.dialogs",
+    "com.cowbell.cordova.geofence",
+    "org.apache.cordova.geolocation"
   ]
 }
