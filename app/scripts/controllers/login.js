@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('LoginCtrl', ['$scope', '$localStorage', '$state', '$ionicLoading', 'simpleLogin', '$cordovaSplashscreen', '$timeout',
-        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, $cordovaSplashscreen, $timeout) {
+    .controller('LoginCtrl', ['$scope', '$localStorage', '$state', '$ionicLoading', 'simpleLogin', '$cordovaSplashscreen', '$timeout', '$ionicPopup', '$translate','$filter',
+        function($scope, $localStorage, $state, $ionicLoading, simpleLogin, $cordovaSplashscreen, $timeout, $ionicPopup, $translate, $filter) {
 
             if ($localStorage.user) {
                 console.log('Redirect to home');
@@ -63,7 +63,7 @@ angular.module('cirqlApp')
 
                 simpleLogin.login($scope.user.email, $scope.user.password)
                     .then(function() {
-                        $state.go('app.home');
+                        $state.go('resident');
                     })
                     .catch(handleLoginError);
             };
@@ -120,5 +120,36 @@ angular.module('cirqlApp')
                 }
                 $ionicLoading.hide();
             }
+
+            $scope.resetPassword = function(email) {
+                simpleLogin.resetPassword(email)
+                    .then(function() {
+                        $scope.showConfirm();
+                    })
+                    .catch(handleCreationError);
+            };
+
+            var translate = $filter('translate');
+            var language = $translate.use();
+            if (language !== 'de') {
+                language = 'en';
+            }
+
+            $scope.showConfirm = function() {
+                $ionicPopup.show({
+                    template: '<p>' + translate('EMAIL_SENT_TEXT') + '</p>',
+                    title: translate('EMAIL_SENT'),
+                    subTitle: '',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'OK',
+                        type: 'button-block button-dark transparent',
+                    }]
+                });
+            };
+
+            $scope.goBack = function() {
+                $state.go('login');
+            };
         }
     ]);

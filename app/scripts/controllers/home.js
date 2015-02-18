@@ -15,13 +15,17 @@ angular.module('cirqlApp')
 
         $scope.finishedloading = false;
 
-        log.event({
-            homeid: user.uid,
-            residentid: user.residentId,
-            type: 'view',
-            view: 'home',
-            roomid: null
-        });
+            if (window.screen.hasOwnProperty('lockOrientation')) {
+                window.screen.lockOrientation('portrait');
+            }
+
+            if (user) {
+                $scope.user = user;
+                // redirect to select resident if not set
+                if (!user.residentId) {
+                    $state.go('app.resident');
+                    console.log('go to resident');
+                } else {
 
         $ionicSideMenuDelegate.canDragContent(true);
 
@@ -125,30 +129,14 @@ angular.module('cirqlApp')
             alert(err);
         }
 
-        function success(err) {
-            alert(err);
+            $scope.saveLocation = function(home) {
+                home.$save();
+                $state.go('app.home_settings');
+            };
+
+            $scope.logout = function() {
+                simpleLogin.logout();
+                $state.go('login');
+            };
         }
-
-        $scope.changeEmail = function(pass, newEmail) {
-            $scope.err = null;
-            if (!newEmail) {
-                $scope.errorMessage = 'Email is incorrect';
-            } else {
-                simpleLogin.changeEmail(pass, user.password.email, newEmail)
-                    .then(function() {
-                        success('Email changed to ' + newEmail);
-                        //currently the user needs to login again after changing the email
-                        //TODO: reset user object without logout
-                        simpleLogin.logout();
-                        $state.go('login');
-                    })
-                    .catch(error);
-            }
-        };
-
-        $scope.saveLocation = function(home) {
-            home.$save();
-            $state.go('app.home_settings');
-        };
-    }
-]);
+    ]);

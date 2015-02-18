@@ -9,15 +9,21 @@ angular.module('cirqlApp')
 
 .config(function($stateProvider, $urlRouterProvider, $translateProvider) {
     $stateProvider
-        .state('login', {
-            url: '/login',
-            templateUrl: 'templates/login.html',
-            controller: 'LoginCtrl'
-        })
+    .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+    })
 
     .state('create', {
         url: '/create',
         templateUrl: 'templates/create.html',
+        controller: 'LoginCtrl'
+    })
+
+    .state('pwreset', {
+        url: '/reset',
+        templateUrl: 'templates/reset_password.html',
         controller: 'LoginCtrl'
     })
 
@@ -56,6 +62,24 @@ angular.module('cirqlApp')
         url: '/room',
         templateUrl: 'templates/wizard_room.html',
         controller: 'WizardCtrl'
+    })
+
+    .state('resident', {
+        url: '/resident',
+        templateUrl: 'templates/resident.html',
+        controller: 'ResidentCtrl',
+        resolve: {
+            // controller will not be invoked until getCurrentUser resolves
+            'user': ['simpleLogin',
+                function(simpleLogin) {
+                    // simpleLogin refers to our $firebaseSimpleLogin wrapper in the example above
+                    // since $getCurrentUser returns a promise resolved when auth is initialized,
+                    // we can simple return that here to ensure the controller waits for auth before
+                    // loading
+                    return simpleLogin.getUser();
+                }
+            ]
+        }
     })
 
     .state('app', {
@@ -136,6 +160,7 @@ angular.module('cirqlApp')
             }
         }
     })
+
 
     .state('app.resident_settings', {
         url: '/user',
@@ -245,6 +270,16 @@ angular.module('cirqlApp')
                 controller: 'NetatmoCtrl'
             }
         }
+    })
+
+    .state('app.chat', {
+        url: '/chat',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/chat.html',
+                controller: 'ChatCtrl'
+            }
+        }
     });
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/home');
@@ -285,12 +320,12 @@ angular.module('cirqlApp')
         GIVE_HOME_NAME: 'Give your home a name',
         LOCATION: 'location',
         CHANGE_LOCATION: 'Change location',
-        CHANGE: 'change',
+        CHANGE: 'Edit',
         HOME_ADDRESS: 'Address',
         HOME_CITY: 'City',
         HOME_POSTCODE: 'Postcode',
         HOME_COUNTRY: 'Country',
-        HOME_SETTINGS: 'Home Settings',
+        HOME_SETTINGS: 'Account Settings',
         ENTER_GATEWAY_ID: 'Enter your Gateway id to connect it with your account',
         ADD_GATEWAY: 'Add Gateway',
         CIRQL_HEADER: 'Connected intelligent room climate',
@@ -327,6 +362,7 @@ angular.module('cirqlApp')
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway is only possible in schedule mode',
         NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'No user bound to this room',
         ME: 'me',
+
         WEEK: 'Week',
         ADD: 'Add',
         DELETE: 'Delete',
@@ -342,8 +378,13 @@ angular.module('cirqlApp')
         TARGET: 'Desired Temperature',
         VALVE: 'Valve Opening',
         NEXT_DAY: 'Next',
-        PREVIOUS_DAY: 'Previous'
-
+        PREVIOUS_DAY: 'Previous',
+        EXPERT: 'Expertmode',
+        CHAT: 'Messages',
+        TYPE_MESSAGE: 'Type your message',
+        RESET_PASSWORD: 'Reset Password',
+        FORGOT_PASSWORD: 'Help! I forgot my password',
+        SEND_PASSWORD: 'Send new Password'
 
 
 
@@ -384,12 +425,12 @@ angular.module('cirqlApp')
         GIVE_HOME_NAME: 'Gib deinem Zuhause einen Namen',
         LOCATION: 'Adresse',
         CHANGE_LOCATION: 'Adresse ändern',
-        CHANGE: 'ändern',
+        CHANGE: 'Bearbeiten',
         HOME_ADDRESS: 'Strasse und Hausnummer',
         HOME_CITY: 'Ort',
         HOME_POSTCODE: 'PLZ',
         HOME_COUNTRY: 'Land',
-        HOME_SETTINGS: 'Zuhause einstellen',
+        HOME_SETTINGS: 'Konto verwalten',
         ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
         ADD_GATEWAY: 'Füge Gateway hinzu',
         CIRQL_HEADER: 'Dein intelligentes Raumklima',
@@ -426,6 +467,7 @@ angular.module('cirqlApp')
         NO_AUTOAWAY_BECAUSE_MANU_ALERT: 'AutoAway ist nur im Zeitplan-Modus möglich',
         NO_AUTOAWAY_BECAUSE_NO_RESIDENT_ALERT: 'Diesem Raum ist kein Nutzer zugeordnet',
         ME: 'Ich',
+
         WEEK: 'Woche',
         ADD: 'Hinzügen',
         DELETE: 'Entfernen',
@@ -441,7 +483,14 @@ angular.module('cirqlApp')
         TARGET: 'Wunschtemperatur',
         VALVE: 'Ventilöffnung',
         NEXT_DAY: 'Nächster',
-        PREVIOUS_DAY: 'Vorheriger'
+        PREVIOUS_DAY: 'Vorheriger',
+        EXPERT: 'Expertenmodus',
+        CHAT: 'Mittleiungen',
+        TYPE_MESSAGE: 'Schreib eine Nachricht',
+        RESET_PASSWORD: 'Passwort zurücksetzen',
+        FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',
+        SEND_PASSWORD: 'Neues Passwort zuschicken'
+
     });
 
     $translateProvider.preferredLanguage('de');
