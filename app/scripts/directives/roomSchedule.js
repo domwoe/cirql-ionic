@@ -652,11 +652,10 @@
                                     var entry = d3.select(this);
                                     var index = entry.attr('id');
                                     var schEntry = self.localSchedule[index];
+                                    var target = schEntry.target;
 
                                     var factor = self.weekDays.indexOf(destDay.attr('id'));
                                     var id = 'c' + self.nextId;
-
-                                    var target = parseInt(entry.select('tspan').text());
 
                                     var xpos = self.timeToPixelOffset(schEntry.hour, schEntry.minute);
                                     var ypos = self.height * factor + self.height / 2;
