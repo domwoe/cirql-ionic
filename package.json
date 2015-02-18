@@ -59,8 +59,9 @@
     "https://github.com/radshag/PhoneGap-Geofencing.git",
     "org.apache.cordova.network-information",
     "org.apache.cordova.splashscreen",
-    "https://github.com/cowbell/cordova-plugin-geofence",
     "./engine/cordova-crosswalk-engine-c0.5",
-    "org.apache.cordova.dialogs"
+    "org.apache.cordova.dialogs",
+    "com.cowbell.cordova.geofence",
+    "org.apache.cordova.geolocation"
   ]
 }
