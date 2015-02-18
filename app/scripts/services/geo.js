@@ -11,7 +11,6 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
         var signStarted = false;
         var allowsGeo = null;
         var regionMonitoringStarted = false;
-        var regions = [];
         var geofences = [];
         var regionsURL = null;
 
@@ -25,7 +24,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                 }
             });
 
-            var regionsURL = 'homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions';
+            regionsURL = 'homes/' + user.uid + '/residents/' + user.residentId + '/lastRegions';
 
             fbLocation = fbutil.syncObject('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocation');
             fbRegions = fbutil.syncObject(regionsURL);
@@ -34,109 +33,37 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                 console.log('GEO SERVICE: Geolocation allowed is set to ' + fbAllowsGeo.val());
                 if (fbAllowsGeo.val() === true) {
-
                     allowsGeo = true;
-
-                    if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
-                        if (window.plugins.DGGeofencing) {
-                            window.plugins.DGGeofencing.initCallbackForRegionMonitoring(new Array(),
-                                function(result) {
-
-                                    var callbacktype = result.callbacktype;
-                                    //var regionId = result.regionId;
-
-                                    if (callbacktype === 'initmonitor') {
-
-                                        console.log('initmonitor');
-
-                                    } else if (callbacktype === 'locationupdate') {
-
-                                        console.log('locationupdate');
-
-                                    } else if (callbacktype === 'monitorremoved') {
-                                        console.log('monitorremoved');
-
-                                    } else if (callbacktype === 'monitorfail') {
-
-                                        $rootScope.geoInitialized = false;
-
-                                        console.log('monitorfail');
-
-                                    } else if (callbacktype === 'monitorstart') {
-
-                                        regionMonitoringStarted = true;
-                                        console.log('monitorstart');
-
-                                    } else if (callbacktype === 'enter') {
-
-                                        console.log('enter');
-
-
-                                    } else if (callbacktype === 'exit') {
-
-                                        console.log('exit');
-
-                                    }
-
-                                },
-                                function(error) {
-                                    console.log('GEO SERVICE: Failed with error ' + error);
-                                    signStarted = false;
-                                    $rootScope.geoInitialized = false;
-                                    deferred.reject();
-
-                                });
-
-                            signStarted = true;
-                            window.plugins.DGGeofencing.startMonitoringSignificantLocationChanges(
-                                function() {
-                                    console.log('GEO SERVICE: start monitoring significant location changes');
-
-                                },
-                                function(error) {
-                                    console.log('GEO SERVICE: Error when starting significant location changes monitoring with error: ' + error);
-                                    signStarted = false;
-                                    deferred.reject();
-
-                                });
-                        } else {
-                            console.log('GEO SERVICE: Cordova Plugin not found');
-                        }
-                    }
-
 
                     var fbRefRegions = fbutil.ref('geolocation/regions');
 
-                    fbRefRegions.on('child_added', function(fbRegion) {
-
-                        if (fbRegion.val()) {
-
-                            regions.push(fbRegion);
-
-                            //console.log(fbRegion.val());
-
-                            addRegion(fbRegion);
-
-                        }
-
-
-                    });
-
-                    fbRefRegions.on('child_changed', function(fbRegion) {
-
-                        console.log('child_changed');
-
-                        if (fbRegion.val()) {
-
-                            if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
-                                removeRegion(fbRegion);
+                    fbRefRegions.on('value', function(fbRegions) {
+                        if (fbRegions.val()) {
+                            // Remove all!
+                            if (window.geofence) {
+                                window.geofence.removeAll()
+                                    .then(function() {
+                                        console.log('GEO SERVICE: All geofences successfully removed.');
+                                        addRegions(fbRegions.val(), function() {
+                                            if (geofences.length !== 0) {
+                                                window.geofence.addOrUpdate(geofences).then(function() {
+                                                    console.log('Geofences successfully added');
+                                                      deferred.resolve();
+                                                }, function(reason) {
+                                                    console.log('Adding geofences failed', reason);
+                                                      deferred.reject(reason);
+                                                });
+                                            } else {
+                                                console.log('No geofences found');
+                                            }
+                                        });
+                                    }, function(reason) {
+                                        console.log('GEO SERVICE: Removing geofences failed', reason);
+                                    });
+                            } else {
+                                console.log('Geofence plugin not ready');
                             }
-
-                            addRegion(fbRegion);
-
                         }
-
-
                     });
 
                     // Stop Everything
@@ -144,140 +71,84 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                     allowsGeo = false;
 
-                    if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
-
-                        if (signStarted) {
-
-                            window.plugins.DGGeofencing.stopMonitoringSignificantLocationChanges(
-                                function(result) {
-                                    console.log('Geo: Stop monitoring significant location changes');
-
-                                },
-                                function(error) {
-                                    console.log(' Geo: error');
-
-                                });
-                        }
-
-                        if (regionMonitoringStarted) {
-
-                            for (var i = 0, j = regions.length; i < j; i++) {
-
-                                removeRegion(regions[i]);
-                                regions[i] = null;
-                            }
-
-                            //console.log(fbRegion.val());
-                        }
-                    } else if (deviceDetector.os === 'android' && window.geofence) {
-
-                        window.geofence.removeAll()
-                            .then(function() {
-                                console.log('GEO SERVICE: All geofences successfully removed.');
-                            }, function(reason) {
-                                console.log('GEO SERVICE: Removing geofences failed', reason);
-                            });
-
-                    }
-
-
+                    window.geofence.removeAll()
+                        .then(function() {
+                            console.log('GEO SERVICE: All geofences successfully removed.');
+                        }, function(reason) {
+                            console.log('GEO SERVICE: Removing geofences failed', reason);
+                        });
                 }
             });
 
         }
 
-        function addRegion(region) {
+        function addRegions(regions, cb) {
             console.log('----------------------------');
-            console.log('GEO SERVICE: Adding region');
+            console.log('GEO SERVICE: Adding regions: ' + JSON.stringify(regions));
 
-            var deferred = $q.defer();
+            for (var regionKey in regions) {
+                var region = regions[regionKey];
+                console.log('region: ' + JSON.stringify(region));
+                if (home && home.lat && home.lng && region.radius) {
 
-            if (home && home.lat && home.lng && region.child('radius').val()) {
+                    var radius = parseInt(region.radius);
+
+                    console.log('GEO SERVICE: Region Id:' + regionKey);
+                    console.log('GEO SERVICE: Latitude:' + home.lat);
+                    console.log('GEO SERVICE: Longitude:' + home.lng);
+                    console.log('GEO SERVICE: Radius:' + radius);
+                    console.log('----------------------------');
+
+                    var tempreg = regionKey;
+                    var id = null;
+                    if (tempreg) {
+                        id = tempreg.substr(tempreg.indexOf("reg") + 3);
+                    }
+
+                    if (id !== null) {
+
+                        var enterId = id + '-enter';
+                        var geofence1 = {
+                            id: enterId,
+                            latitude: home.lat,
+                            longitude: home.lng,
+                            radius: radius,
+                            transitionType: TransitionType.ENTER,
+                            notification: {
+                                id: id,
+                                title: radius + '-enter',
+                                text: regionsURL,
+                                openAppOnClick: false
+                            }
+                        };
+                        geofences.push(geofence1);
+
+                        var exitId = id + "-exit";
+                        var geofence2 = {
+                            id: exitId,
+                            latitude: home.lat,
+                            longitude: home.lng,
+                            radius: radius,
+                            transitionType: TransitionType.EXIT,
+                            notification: {
+                                id: id,
+                                title: radius + "-exit",
+                                text: regionsURL,
+                                openAppOnClick: false
+                            }
+                        };
+                        geofences.push(geofence2);
 
 
+                    } else {
+                        console.log('Region Id could not parsed');
+                    }
 
-                var radius = parseInt(region.child('radius').val());
 
-                console.log('GEO SERVICE: Region Id:' + region.key());
-                console.log('GEO SERVICE: Latitude:' + home.lat);
-                console.log('GEO SERVICE: Longitude:' + home.lng);
-                console.log('GEO SERVICE: Radius:' + radius);
-                console.log('----------------------------');
-
-                if (deviceDetector.os === 'ios' && window.plugins.DGGeofencing) {
-
-                    var params = [region.key(), home.lat, home.lng, radius];
-
-                    window.plugins.DGGeofencing.startMonitoringRegion(params,
-                        function(result) {
-                            console.log('Geo: added new region ' + params);
-                            deferred.resolve(result);
-                        },
-                        function(error) {
-                            console.log('Monitor-Geo: error with ' + params);
-                            deferred.reject(error);
-                        });
-                } else if (deviceDetector.os === 'android' && window.geofence) {
-
-                    var reg = new RegExp('^[0-9]+$');
-                    var id = reg.match(region.key());
-
-                    var enterId = id + '-enter';
-                    var geofence1 = {
-                        id: enterId,
-                        latitude: home.lat,
-                        longitude: home.lng,
-                        radius: radius,
-                        transitionType: TransitionType.ENTER,
-                        notification: {
-                            id: id,
-                            title: radius + '-enter',
-                            text: regionsURL,
-                            openAppOnClick: false
-                        }
-                    };
-                    geofences.push(geofence1);
-
-                    var exitId = id + "-exit";
-                    var geofence2 = {
-                        id: exitId,
-                        latitude: home.lat,
-                        longitude: home.lng,
-                        radius: radius,
-                        transitionType: TransitionType.EXIT,
-                        notification: {
-                            id: id,
-                            title: radius + "-exit",
-                            text: regionsURL,
-                            openAppOnClick: false
-                        }
-                    };
-                    geofences.push(geofence2);
-
-                    window.geofence.addOrUpdate(geofences).then(function() {
-                        console.log('Geofences successfully added');
-                        deferred.resolve();
-                    }, function(reason) {
-                        console.log('Adding geofences failed', reason);
-                        deferred.reject(reason);
-                    });
                 }
-
             }
 
-            return deferred.promise;
-
-        }
-
-        function removeRegion(region) {
-
-            if (home && home.lat && home.lng) {
-
-                var params = [region.key(), home.lat, home.lng];
-
-                window.plugins.DGGeofencing.stopMonitoringRegion(params, function() {}, function() {});
-            }
-
+            cb();
         }
 
         function initUser() {

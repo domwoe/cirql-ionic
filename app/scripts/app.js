@@ -100,7 +100,6 @@ angular.module('cirqlApp', [
                     timeout: 10000,
                     enableHighAccuracy: true
                 };
-
                 simpleLogin.getUser().then(function(user) {
                     if (user.uid !== null && user.uid !== undefined) {
                         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
@@ -111,7 +110,7 @@ angular.module('cirqlApp', [
                                             $rootScope.geoPermission = true;
                                             var lat = position.coords.latitude;
                                             var long = position.coords.longitude;
-                                            console.log('Current position is: ' + lat + ' and ' + long);
+                                            //console.log('Current position is: ' + lat + ' and ' + long);
 
                                             fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
                                                 lat: lat,
@@ -120,10 +119,9 @@ angular.module('cirqlApp', [
 
                                         },
                                         function(err) {
-                                            console.log('Cordova Geolocation failed with error code: '+err.code +' and message: '+err.message);
+                                            console.log('Cordova Geolocation failed with error code: ' + err.code + ' and message: ' + err.message);
                                             if (err.code === 1) {
                                                 $rootScope.geoPermission = false;
-                                                if (navigator.notification && navigator.notification.alert) {
                                                 navigator.notification.alert(
                                                     'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
                                                     alertDismissed, // callback
@@ -131,10 +129,6 @@ angular.module('cirqlApp', [
                                                     'OK' // buttonName
                                                 );
                                             } else {
-                                                console.log("Can't find cordova dialog plugin");
-                                            }
-                                            }
-                                            else {
                                                 $rootScope.geoPermission = true;
                                             }
 
@@ -147,6 +141,9 @@ angular.module('cirqlApp', [
                 });
             }
         }
+
+
+        $timeout(getLocationAndCheckPermission, 3000);
 
         //getLocationAndCheckPermission()
 
