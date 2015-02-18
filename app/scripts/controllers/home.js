@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log', 'geo',
-    function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log, geo) {
+.controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
+    function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
 
 
         $scope.finishedloading = false;
@@ -89,20 +89,20 @@ angular.module('cirqlApp')
                 }
             });
 
-            if ($rootScope.geoPermission && $rootScope.geoInitialized !== true) {
+            // if ($rootScope.geoPermission && $rootScope.geoInitialized !== true) {
 
-                if (user.uid !== null && user.uid !== undefined) {
-                    if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+            //     if (user.uid !== null && user.uid !== undefined) {
+            //         if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
 
-                        geo.init();
+            //             geo.init();
 
-                    } else {
-                        console.log('user.residentId is not found');
-                    }
-                } else {
-                    console.log('user.uid is not found');
-                }
-            }
+            //         } else {
+            //             console.log('user.residentId is not found');
+            //         }
+            //     } else {
+            //         console.log('user.uid is not found');
+            //     }
+            // }
         }
         loadHome(user);
 

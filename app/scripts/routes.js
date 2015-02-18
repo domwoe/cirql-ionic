@@ -485,7 +485,7 @@ angular.module('cirqlApp')
         NEXT_DAY: 'Nächster',
         PREVIOUS_DAY: 'Vorheriger',
         EXPERT: 'Expertenmodus',
-        CHAT: 'Mittleiungen',
+        CHAT: 'Mitteilungen',
         TYPE_MESSAGE: 'Schreib eine Nachricht',
         RESET_PASSWORD: 'Passwort zurücksetzen',
         FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',

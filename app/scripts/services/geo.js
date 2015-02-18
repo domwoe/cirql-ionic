@@ -52,16 +52,20 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                                 }, function(reason) {
                                                     console.log('Adding geofences failed', reason);
                                                       deferred.reject(reason);
+                                                      $rootScope.geoInitialized = false
                                                 });
                                             } else {
                                                 console.log('No geofences found');
+                                                $rootScope.geoInitialized = false
                                             }
                                         });
                                     }, function(reason) {
                                         console.log('GEO SERVICE: Removing geofences failed', reason);
+                                        $rootScope.geoInitialized = false
                                     });
                             } else {
                                 console.log('Geofence plugin not ready');
+                                $rootScope.geoInitialized = false
                             }
                         }
                     });
@@ -76,6 +80,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             console.log('GEO SERVICE: All geofences successfully removed.');
                         }, function(reason) {
                             console.log('GEO SERVICE: Removing geofences failed', reason);
+                            $rootScope.geoInitialized = false
                         });
                 }
             });

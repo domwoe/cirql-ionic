@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ResidentCtrl', ['$rootScope', '$scope', '$localStorage', 'user', 'fbutil', '$state', '$ionicLoading', '$cordovaSplashscreen', '$timeout',
-        function($rootScope, $scope, $localStorage, user, fbutil, $state, $ionicLoading, $cordovaSplashscreen, $timeout) {
+    .controller('ResidentCtrl', ['$rootScope', '$scope', '$localStorage', 'user', 'fbutil', '$state', '$ionicLoading', '$cordovaSplashscreen', '$timeout', 'geo',
+        function($rootScope, $scope, $localStorage, user, fbutil, $state, $ionicLoading, $cordovaSplashscreen, $timeout, geo) {
 
             // hide Loading in case one arrives at this state
             // with a loading screen
@@ -66,10 +66,10 @@ angular.module('cirqlApp')
             $scope.name = '';
             $scope.create = function(name) {
                 $scope.residents.$add({
-                    name: name,
-                    isAway: false,
-                    allowsGeolocation: true
-                })
+                        name: name,
+                        isAway: false,
+                        allowsGeolocation: true
+                    })
                     .then(function(ref) {
                         console.log(ref.name());
                         $localStorage.user.residentId = ref.name();
@@ -83,6 +83,10 @@ angular.module('cirqlApp')
                 $scope.resident.$save()
                     .then(function() {
                         $state.go('app.home');
+                        if ($rootScope.geoInitialized !== true && $scope.resident.allowsGeolocation === true) {
+                            $rootScope.geoPermission = true;
+                            geo.init();
+                        }
                     });
             };
         }
