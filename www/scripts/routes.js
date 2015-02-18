@@ -320,7 +320,7 @@ angular.module('cirqlApp')
         GIVE_HOME_NAME: 'Give your home a name',
         LOCATION: 'location',
         CHANGE_LOCATION: 'Change location',
-        CHANGE: 'Edit',
+        CHANGE: 'Edit ',
         HOME_ADDRESS: 'Address',
         HOME_CITY: 'City',
         HOME_POSTCODE: 'Postcode',
@@ -328,6 +328,9 @@ angular.module('cirqlApp')
         HOME_SETTINGS: 'Account Settings',
         ENTER_GATEWAY_ID: 'Enter your Gateway id to connect it with your account',
         ADD_GATEWAY: 'Add Gateway',
+        SERIAL: 'Serial Number',
+        DEVICE_PASSWORD: 'Device Password (Toegangscode)',
+        USER_PASSWORD: 'User Password',
         CIRQL_HEADER: 'Connected intelligent room climate',
         OR: 'OR',
         CREATE_NEW_ACCOUNT: 'Create New Account',
@@ -383,8 +386,11 @@ angular.module('cirqlApp')
         CHAT: 'Messages',
         TYPE_MESSAGE: 'Type your message',
         RESET_PASSWORD: 'Reset Password',
-        FORGOT_PASSWORD: 'Help! I forgot my password',
-        SEND_PASSWORD: 'Send new Password'
+        FORGOT_PASSWORD: 'Forgot Password?',
+        SEND_PASSWORD: 'Send new Password',
+        EMAIL_SENT_TEXT: "We've sent a temporary password to your mail address",
+        EMAIL_SENT: "You've got mail!",
+        VALUES_TOO_OLD: 'There are is no recent measurement data available.'
 
 
 
@@ -425,7 +431,7 @@ angular.module('cirqlApp')
         GIVE_HOME_NAME: 'Gib deinem Zuhause einen Namen',
         LOCATION: 'Adresse',
         CHANGE_LOCATION: 'Adresse ändern',
-        CHANGE: 'Bearbeiten',
+        CHANGE: 'Ändern ',
         HOME_ADDRESS: 'Strasse und Hausnummer',
         HOME_CITY: 'Ort',
         HOME_POSTCODE: 'PLZ',
@@ -433,6 +439,9 @@ angular.module('cirqlApp')
         HOME_SETTINGS: 'Konto verwalten',
         ENTER_GATEWAY_ID: 'Gib deine Gateway Id ein um dein Gateway mit deinem Konto zu verbinden',
         ADD_GATEWAY: 'Füge Gateway hinzu',
+        SERIAL: 'Seriennummer',
+        DEVICE_PASSWORD: 'Gerätepasswort (Toegangscode)',
+        USER_PASSWORD: 'Benutzerpasswort',
         CIRQL_HEADER: 'Dein intelligentes Raumklima',
         OR: 'ODER',
         CREATE_NEW_ACCOUNT: 'Neues Konto anlegen',
@@ -485,11 +494,14 @@ angular.module('cirqlApp')
         NEXT_DAY: 'Nächster',
         PREVIOUS_DAY: 'Vorheriger',
         EXPERT: 'Expertenmodus',
-        CHAT: 'Mittleiungen',
+        CHAT: 'Mitteilungen',
         TYPE_MESSAGE: 'Schreib eine Nachricht',
         RESET_PASSWORD: 'Passwort zurücksetzen',
-        FORGOT_PASSWORD: 'Hilfe! Ich habe mein Passwort vergessen',
-        SEND_PASSWORD: 'Neues Passwort zuschicken'
+        FORGOT_PASSWORD: 'Passwort vergessen?',
+        SEND_PASSWORD: 'Neues Passwort zuschicken',
+        EMAIL_SENT_TEXT: 'Wir haben ein temporäres Passwort an deine Mail Adresse geschickt!',
+        EMAIL_SENT: 'Mail ist raus!',
+        VALUES_TOO_OLD: 'Die Messwerte sind leider nicht aktuell'
 
     });
 

@@ -7,33 +7,40 @@
   <div ui-view>
   <ion-content class="activity has-header">
     <div class="card opaque">
-      <div translate class="item item-divider">
-        LOCATION
-      </div>
-      <div class="item item-button-right">
+      <div class="item item-divider item-button-right">
+        <span translate>LOCATION</span>
+         <button class="button button-clear" ui-sref="app.home_settings_location">{{'CHANGE' | translate}}  &nbsp
+          <i class="ion-chevron-right"></i>
+         </button>
+       </div>  
+      <div class="item">
         {{homeSettings.name}}<br />
         {{homeSettings.address}}<br />
         {{homeSettings.postcode}} {{homeSettings.city}}<br />
         {{homeSettings.country}}
-        <button translate class="button button-balanced centerAll" ui-sref="app.home_settings_location">CHANGE</button>
+      
       </div>
     </div>
     <div class="card opaque">
-      <div class="item item-divider">
+      <div class="item item-divider item-button-right">
         Email
+         <button class="button button-clear" ui-sref="app.home_settings_email">{{'CHANGE' | translate}}  &nbsp
+          <i class="ion-chevron-right"></i>
+         </button>  
       </div>
-      <div class="item item-button-right">
+      <div class="item">
         {{user.password.email}}
-        <button translate class="button button-balanced centerAll" ui-sref="app.home_settings_email">CHANGE</button>
       </div>
     </div>
     <div class="card opaque">
-      <div translate class="item item-divider">
-        PASSWORD
+      <div class="item item-divider item-button-right">
+        {{'PASSWORD' | translate}}
+        <button class="button button-clear" ui-sref="app.home_settings_password">{{'CHANGE' | translate}}  &nbsp
+          <i class="ion-chevron-right"></i>
+         </button>  
       </div>
-      <div class="item item-button-right">
+      <div class="item">
         ••••••••
-        <button translate class="button  button-balanced centerAll" ui-sref="app.home_settings_password">CHANGE</button>
       </div>
     </div>
   </ion-content>

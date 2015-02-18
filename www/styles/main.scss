@@ -120,6 +120,20 @@ a {
     font-size: 16px;
     line-height: 32px;
 }
+
+.item-button-right .button {
+    font-weight: 600;
+    min-height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.button-password {
+    font-weight: 600;
+    min-height: 12px;
+    font-size: 12px;
+    line-height: 12px;
+}
 .item-input-inset {
     padding-left: 0px;
     padding-right: 0px;
@@ -383,6 +397,12 @@ input:-ms-input-placeholder {
     background-color: #FFCC00;
 }
 
+.old-bg {
+    background-color: #6C7A89;
+}
+
+
+
 .small-font {
     font-weight: 600;
     font-size: 14px;
@@ -429,6 +449,10 @@ input:-ms-input-placeholder {
 
 // Utility classes
 // -------------------------------
+// 
+.darken {
+  color: #ABB7B7;
+}
 
 .pull-left {
     float: left;
@@ -641,11 +665,15 @@ input:-ms-input-placeholder {
 
 
 .centerAll {
-    display: table-cell;
+    //display: table-cell;
     vertical-align: middle;
     text-align: center;
     padding-left: 10%;
     padding-right: 10%;
+}
+
+.button-outline.button-outline.active, .button-outline.button-outline.activated {
+  color: #000 !important;
 }
 
 .popup {
