@@ -9,8 +9,8 @@
  */
 angular.module('cirqlApp')
 
-.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log', '$ionicLoading',
-    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, log, $ionicLoading) {
+.controller('RoomCtrl', ['$rootScope', '$scope', '$state', 'user', 'simpleLogin', 'fbutil', '$timeout', '$stateParams', '$ionicPopup', '$filter', '$translate', '$ionicSideMenuDelegate', 'log', '$ionicLoading', 'timeutils',
+    function($rootScope, $scope, $state, user, simpleLogin, fbutil, $timeout, $stateParams, $ionicPopup, $filter, $translate, $ionicSideMenuDelegate, log, $ionicLoading, timeutils) {
 
         if (!$rootScope.room) {
             $rootScope.room = $state.params.roomId;
@@ -57,6 +57,14 @@ angular.module('cirqlApp')
         if (language !== 'de') {
             language = 'en';
         }
+
+        $scope.isOld = function(date) {
+            if (timeutils.isOld(date)) {
+                return 'darken';
+            } else {
+                return '';
+            }
+        };
 
         if (user.uid && $rootScope.room) {
 
@@ -131,16 +139,30 @@ angular.module('cirqlApp')
         };
 
         $scope.openAirQualityPopover = function() {
+            var msg = (function() {
+                if ($scope.isOld($scope.roomValues.lastExternalSensorUpdate)) {
+                    return translate('VALUES_TOO_OLD')+ '<br>'+new Date($scope.roomValues.lastExternalSensorUpdate);
+                } else {
+                    return $scope.roomValues.msg[language].airQualityMsg;
+                }
+            })();
             $ionicPopup.alert({
                 title: translate('AIR_QUALITY'),
-                template: $scope.roomValues.msg[language].airQualityMsg
+                template: msg
             });
         };
 
         $scope.openHumidityPopover = function() {
+            var msg = (function() {
+                if ($scope.isOld($scope.roomValues.lastExternalSensorUpdate)) {
+                    return translate('VALUES_TOO_OLD')+ '<br> '+new Date($scope.roomValues.lastExternalSensorUpdate);
+                } else {
+                    return $scope.roomValues.msg[language].humidityMsg;
+                }
+            })();
             $ionicPopup.alert({
                 title: translate('HUMIDITY'),
-                template: $scope.roomValues.msg[language].humidityMsg
+                template: msg
             });
         };
 

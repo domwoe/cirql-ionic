@@ -19,7 +19,7 @@
                         {{thermostat.$id}}
                     </div>
                 </div>
-                <div class="row">
+                <div ng-if="thermostat.serialNo" class="row">
                     <div class="col">
                         Serial No:
                     </div>
@@ -27,7 +27,15 @@
                         {{thermostat.serialNo}}
                     </div>
                 </div>
-                <div class="row">
+                <div ng-if="thermostat.physAddr" class="row">
+                    <div class="col">
+                        Address:
+                    </div>
+                    <div class="col">
+                        {{thermostat.physAddr}}
+                    </div>
+                </div>
+                <div ng-if="thermostat['fhem_desired-temp']" class="row">
                     <div class="col">
                         Setpoint:
                     </div>

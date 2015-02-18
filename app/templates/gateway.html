@@ -15,7 +15,7 @@
                         Id:
                     </div>
                     <div class="col">
-                        {{gateway.gatewayId}}
+                        {{gateway.gatewayId}}{{gateway.uuid}}
                     </div>
                 </div>
                 <div class="row">
@@ -45,28 +45,49 @@
         </div>
 
         <div ng-hide="hasGateway" class="centerAll" ng-cloak>
-            <div class="row row-center">
-                <div class="col col-center">
-                    <h3 translate>ENTER_GATEWAY_ID<h3> 
-                    <p>{{errorMsg}}</p>
-                </div>
+            <div class="button-bar padding">
+                <a class="button button-outline" ng-class="{'active' : cirql}" ng-click="cirql=true">CirqlPi</a>
+                <a class="button button-outline" ng-class="{'active' : !cirql}" ng-click="cirql=false">Nefit Easy</a>
             </div>
-            <div class="row">
-                <div class="col">
+
+            <div>
+
+                <p>{{errorMsg}}</p>
+
+            </div>
+            <form ng-if="cirql" ng-submit="addGateway(gatewayId)">
+                <div class="list">
                     <div class="item item-input-inset transparent">
                         <label class="item-input-wrapper">
-                            <input type="text" placeholder="gatewayId" ng-model="gatewayId">
+                            <input type="text" ng-model="gatewayId" placeholder="Gateway ID">
                         </label>
                     </div>
+
+                    <button type="submit" class="button button-stable button-balanced button-block transparent" translate>ADD_GATEWAY</button>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <button translate class="button button-balanced button-block transparent" ng-click="addGateway(gatewayId)">
-                        ADD_GATEWAY
-                    </button>
+            </form>
+            <form ng-if="!cirql" ng-submit="addNefit(nefit)">
+                <div class="list">
+                    <div class="item item-input-inset transparent">
+                        <label class="item-input-wrapper">
+                            <input type="text" ng-model="nefit.uuid" placeholder="{{'SERIAL' | translate}}">
+                        </label>
+                    </div>
+                    <div class="item item-input-inset transparent">
+                        <label class="item-input-wrapper">
+                            <input type="password" ng-model="nefit.devicePw" placeholder="{{'DEVICE_PASSWORD' | translate}}">
+                        </label>
+                    </div>
+                    <div class="item item-input-inset transparent">
+                        <label class="item-input-wrapper">
+                            <input type="password" ng-model="nefit.userPw" placeholder="{{'USER_PASSWORD' | translate}}">
+                        </label>
+                    </div>
+                    <button type="submit" class="button button-stable button-balanced button-block transparent" translate>ADD_GATEWAY</button>
                 </div>
-            </div>
+            </form>
         </div>
+
+
     </ion-content>
-</ion-view>    
+</ion-view>

@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .directive('climateindicator', [
+    .directive('climateindicator', ['timeutils',
 
-        function() {
+        function(timeutils) {
             return {
                 restrict: 'EA',
                 replace: true,
@@ -11,6 +11,7 @@ angular.module('cirqlApp')
                     type: '@',
                     value: '=',
                     thresholds: '=',
+                    date: '=',
                     cssclass: '@'
                 },
                 link: function(scope, element) {
@@ -63,11 +64,18 @@ angular.module('cirqlApp')
                     element.append(icon);
 
                     scope.$watch('value', function(newValue) {
-                        findState(newValue, scope.thresholds, function(state) {
-                            var cssClass = state + '-bg';
 
-                            element.addClass(cssClass);
-                        });
+                        if (!timeutils.isOld(scope.date)) {
+                            findState(newValue, scope.thresholds, function(state) {
+                                var cssClass = state + '-bg';
+
+                                element.addClass(cssClass);
+
+                            });
+                        }
+                        else {
+                            element.addClass('old-bg');
+                        }    
 
                     });
                 }

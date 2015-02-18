@@ -11,25 +11,9 @@ angular.module('cirqlApp')
     .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
         function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
 
-            $scope.hasGateway = true;
+            $scope.hasGateway = false;
 
-            $ionicLoading.show({
-                template: '<div class="sk-spinner sk-spinner-circle">' +
-                    '<div class="sk-circle1 sk-circle"></div>' +
-                    '<div class="sk-circle2 sk-circle"></div>' +
-                    '<div class="sk-circle3 sk-circle"></div>' +
-                    '<div class="sk-circle4 sk-circle"></div>' +
-                    '<div class="sk-circle5 sk-circle"></div>' +
-                    '<div class="sk-circle6 sk-circle"></div>' +
-                    '<div class="sk-circle7 sk-circle"></div>' +
-                    '<div class="sk-circle8 sk-circle"></div>' +
-                    '<div class="sk-circle9 sk-circle"></div>' +
-                    '<div class="sk-circle10 sk-circle"></div>' +
-                    '<div class="sk-circle11 sk-circle"></div>' +
-                    '<div class="sk-circle12 sk-circle"></div>' +
-                    '</div>'
-            });
-
+            $scope.cirql = true;
 
 
             // Get GatewayId
@@ -52,11 +36,31 @@ angular.module('cirqlApp')
                         $scope.hasGateway = false;
                     }
 
-                    $ionicLoading.hide();
 
                 }
             );
 
+            fbutil.ref('homes/' + user.uid + '/nefit').once('value', function(fbNefit) {
+                if (fbNefit.val()) {
+                    $scope.hasGateway = true;
+                    $scope.gateway = fbNefit.val();
+                }
+            });
+
+            $scope.addNefit = function(nefit) {
+                fbutil.ref('homes/' + user.uid + '/nefit').set(nefit, function(error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                    else {
+                        $scope.hasGateway = true;
+                        $scope.gateway = nefit;
+
+                    }
+                });
+            }    
+
+            
             $scope.addGateway = function(gatewayId) {
 
                 var gateway = fbutil.syncObject('gateways/' + gatewayId);
