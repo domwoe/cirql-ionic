@@ -2541,3 +2541,37 @@ input:-ms-input-placeholder {
 .messaging-view .bar-footer {
   height: initial !important;
 }
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003945;
+  }
+}
+
+.fade-in-out.ng-enter,
+.fade-in-out .ng-enter {
+  -webkit-animation: fadeIn 0.3s;
+  animation: fadeIn 0.3s;
+  position: absolute;
+}
+
+@media -sass-debug-info {
+  filename {
+    font-family: file\:\/\/\/Users\/dowoerne\/Development\/cirql-ionic\/app\/styles\/main\.scss;
+  }
+
+  line {
+    font-family: \00003950;
+  }
+}
+
+.fade-in-out.ng-leave,
+.fade-in-out .ng-leave {
+  -webkit-animation: fadeOut 0.3s;
+  animation: fadeOut 0.3s;
+  position: absolute;
+}

@@ -16189,6 +16189,7 @@ a.subdued:last-child {
 }
 
 .menu-animated {
+  transition: -webkit-transform 200ms ease;
   transition: transform 200ms ease;
 }
 
@@ -18995,6 +18996,7 @@ button.item.item-button-right {
 .item-right-editable .item-content {
   transition-duration: 250ms;
   transition-timing-function: ease-in-out;
+  transition-property: -webkit-transform;
   transition-property: transform;
 }
 
