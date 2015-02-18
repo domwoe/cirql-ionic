@@ -80,6 +80,7 @@ angular.module('cirqlApp')
 
 
                 $scope.rooms.$loaded().then(function() {
+
                     if (navigator.splashscreen) {
                         $timeout(function() {
                             $cordovaSplashscreen.hide();
