@@ -94,7 +94,8 @@ angular.module('cirqlApp', [
 
         function alertDismissed() {}
 
-        function getLocationAndCheckPermission() {
+        $rootScope.getLocationAndCheckPermission = function () {
+            console.log('GetLocationAndCheckPermission  is called');
             if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
                 var posOptions = {
                     timeout: 10000,
@@ -152,13 +153,13 @@ angular.module('cirqlApp', [
         }
 
 
-        $timeout(getLocationAndCheckPermission, 3000);
+        $timeout($rootScope.getLocationAndCheckPermission, 3000);
 
         //getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
 
-            getLocationAndCheckPermission();
+            $rootScope.getLocationAndCheckPermission();
         });
 
     });

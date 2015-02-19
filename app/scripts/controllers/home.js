@@ -153,6 +153,7 @@ angular.module('cirqlApp')
         };
 
         $scope.logout = function() {
+            $rootScope.geoInitialized = false;
             simpleLogin.logout();
             $state.go('login');
         };

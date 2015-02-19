@@ -48,11 +48,11 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                             if (geofences.length !== 0) {
                                                 window.geofence.addOrUpdate(geofences).then(function() {
                                                     console.log('Geofences successfully added');
-                                                      deferred.resolve();
+                                                    deferred.resolve();
                                                 }, function(reason) {
                                                     console.log('Adding geofences failed', reason);
-                                                      deferred.reject(reason);
-                                                      $rootScope.geoInitialized = false
+                                                    deferred.reject(reason);
+                                                    $rootScope.geoInitialized = false
                                                 });
                                             } else {
                                                 console.log('No geofences found');
@@ -90,7 +90,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
         function addRegions(regions, cb) {
             console.log('----------------------------');
             console.log('GEO SERVICE: Adding regions: ' + JSON.stringify(regions));
-
+            geofences = [];
             for (var regionKey in regions) {
                 var region = regions[regionKey];
                 console.log('region: ' + JSON.stringify(region));
@@ -196,6 +196,17 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
         }
 
 
+        function removeAll() {
+            $rootScope.geoInitialized = false;
+            if (window.geofence) {
+                window.geofence.removeAll()
+                    .then(function() {
+                        console.log('GEO SERVICE: All geofences successfully removed.');
+                    }, function(reason) {
+                        console.log('GEO SERVICE: Removing geofences failed', reason);
+                    });
+            }
+        }
 
 
         var service = {

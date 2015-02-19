@@ -83,9 +83,8 @@ angular.module('cirqlApp')
                 $scope.resident.$save()
                     .then(function() {
                         $state.go('app.home');
-                        if ($rootScope.geoInitialized !== true && $scope.resident.allowsGeolocation === true) {
-                            $rootScope.geoPermission = true;
-                            geo.init();
+                        if ($scope.resident.allowsGeolocation === true) {
+                            $rootScope.getLocationAndCheckPermission();
                         }
                     });
             };
