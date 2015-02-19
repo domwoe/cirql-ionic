@@ -21,22 +21,22 @@ angular.module('cirqlApp')
             var room = $rootScope.room;
 
             $scope.hasThermostat = true;
-            $ionicLoading.show({
-                template: '<div class="sk-spinner sk-spinner-circle">' +
-                    '<div class="sk-circle1 sk-circle"></div>' +
-                    '<div class="sk-circle2 sk-circle"></div>' +
-                    '<div class="sk-circle3 sk-circle"></div>' +
-                    '<div class="sk-circle4 sk-circle"></div>' +
-                    '<div class="sk-circle5 sk-circle"></div>' +
-                    '<div class="sk-circle6 sk-circle"></div>' +
-                    '<div class="sk-circle7 sk-circle"></div>' +
-                    '<div class="sk-circle8 sk-circle"></div>' +
-                    '<div class="sk-circle9 sk-circle"></div>' +
-                    '<div class="sk-circle10 sk-circle"></div>' +
-                    '<div class="sk-circle11 sk-circle"></div>' +
-                    '<div class="sk-circle12 sk-circle"></div>' +
-                    '</div>'
-            });
+            // $ionicLoading.show({
+            //     template: '<div class="sk-spinner sk-spinner-circle">' +
+            //         '<div class="sk-circle1 sk-circle"></div>' +
+            //         '<div class="sk-circle2 sk-circle"></div>' +
+            //         '<div class="sk-circle3 sk-circle"></div>' +
+            //         '<div class="sk-circle4 sk-circle"></div>' +
+            //         '<div class="sk-circle5 sk-circle"></div>' +
+            //         '<div class="sk-circle6 sk-circle"></div>' +
+            //         '<div class="sk-circle7 sk-circle"></div>' +
+            //         '<div class="sk-circle8 sk-circle"></div>' +
+            //         '<div class="sk-circle9 sk-circle"></div>' +
+            //         '<div class="sk-circle10 sk-circle"></div>' +
+            //         '<div class="sk-circle11 sk-circle"></div>' +
+            //         '<div class="sk-circle12 sk-circle"></div>' +
+            //         '</div>'
+            // });
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -69,7 +69,7 @@ angular.module('cirqlApp')
                                 };
                             }
 
-                            $timeout($ionicLoading.hide, 200);
+                            //$timeout($ionicLoading.hide, 200);
 
                         });
 
@@ -99,7 +99,7 @@ angular.module('cirqlApp')
                                 };
                             }
 
-                            $timeout($ionicLoading.hide, 200);
+                            //$timeout($ionicLoading.hide, 200);
 
 
 
