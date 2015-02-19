@@ -12,7 +12,7 @@ angular.module('cirqlApp', [
     'highcharts-ng'
 ])
 
-.run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state) {
+.run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state, geo) {
 
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -31,13 +31,13 @@ angular.module('cirqlApp', [
             StatusBar.styleLightContent();
         }
 
-        if (window.plugins && window.plugins.DGGeofencing) {
-            console.log('Radshag Geofencing plugin for IOS is available');
-        }
+        // if (window.plugins && window.plugins.DGGeofencing) {
+        //     console.log('Radshag Geofencing plugin for IOS is available');
+        // }
 
-        if (window.geofence) {
-            console.log('Cowbell Geofencing plugin for Android is available');
-        }
+        // if (window.geofence) {
+        //     console.log('Cowbell Geofencing plugin for Android is available');
+        // }
 
         if (typeof navigator.globalization !== 'undefined') {
             navigator.globalization.getPreferredLanguage(function(language) {
@@ -94,47 +94,57 @@ angular.module('cirqlApp', [
 
         function alertDismissed() {}
 
-        function getLocationAndCheckPermission() {
+        $rootScope.getLocationAndCheckPermission = function () {
+            console.log('GetLocationAndCheckPermission  is called');
             if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
                 var posOptions = {
                     timeout: 10000,
-                    enableHighAccuracy: true
+                    enableHighAccuracy: false
                 };
                 simpleLogin.getUser().then(function(user) {
-                    if (user.uid !== null && user.uid !== undefined) {
-                        if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
-                            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').once('value', function(fbAllowsGeo) {
-                                if (fbAllowsGeo.val() === true) {
-                                    $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+                    if (user !== null && user !== undefined) {
+                        if (user.uid !== null && user.uid !== undefined) {
+                            if (user.residentId !== null && user.residentId !== undefined && user.residentId !== 'undefined') {
+                                fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/allowsGeolocation').once('value', function(fbAllowsGeo) {
+                                    if (fbAllowsGeo.val() === true) {
+                                        $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
 
-                                            $rootScope.geoPermission = true;
-                                            var lat = position.coords.latitude;
-                                            var long = position.coords.longitude;
-                                            //console.log('Current position is: ' + lat + ' and ' + long);
-
-                                            fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
-                                                lat: lat,
-                                                lng: long
-                                            });
-
-                                        },
-                                        function(err) {
-                                            console.log('Cordova Geolocation failed with error code: ' + err.code + ' and message: ' + err.message);
-                                            if (err.code === 1) {
-                                                $rootScope.geoPermission = false;
-                                                navigator.notification.alert(
-                                                    'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
-                                                    alertDismissed, // callback
-                                                    'Cirql', // title
-                                                    'OK' // buttonName
-                                                );
-                                            } else {
                                                 $rootScope.geoPermission = true;
-                                            }
+                                                var lat = position.coords.latitude;
+                                                var long = position.coords.longitude;
+                                                var currDate = new Date();
+                                                currDate = currDate + '';
+                                                //console.log('Current position is: ' + lat + ' and ' + long);
 
-                                        });
-                                }
-                            });
+                                                fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/lastLocationByUser').set({
+                                                    lat: lat,
+                                                    lng: long,
+                                                    date: currDate
+                                                });
+
+                                            },
+                                            function(err) {
+                                                console.log('Cordova Geolocation failed with error code: ' + err.code + ' and message: ' + err.message);
+                                                if (err.code === 1) {
+                                                    $rootScope.geoPermission = false;
+                                                    navigator.notification.alert(
+                                                        'Bitte erlaube Cirql die Standortdienste zu nutzen oder schalte die Abwesenheitserkennung in den Benutzereinstellungen aus', // message
+                                                        alertDismissed, // callback
+                                                        'Cirql', // title
+                                                        'OK' // buttonName
+                                                    );
+                                                } else {
+                                                    $rootScope.geoPermission = true;
+                                                }
+
+                                            });
+                                        if ($rootScope.geoInitialized !== true) {
+                                            geo.init();
+                                        }
+                                    }
+
+                                });
+                            }
                         }
                     }
 
@@ -143,15 +153,14 @@ angular.module('cirqlApp', [
         }
 
 
-        $timeout(getLocationAndCheckPermission, 3000);
+        $timeout($rootScope.getLocationAndCheckPermission, 3000);
+
+        //getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
 
-            getLocationAndCheckPermission();
+            $rootScope.getLocationAndCheckPermission();
         });
-
-
-
 
     });
 });
