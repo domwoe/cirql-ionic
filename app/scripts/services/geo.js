@@ -118,7 +118,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             latitude: home.lat,
                             longitude: home.lng,
                             radius: radius,
-                            transitionType: TransitionType.ENTER,
+                            transitionType: 1,
                             notification: {
                                 id: id,
                                 title: radius + '-enter',
@@ -134,7 +134,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             latitude: home.lat,
                             longitude: home.lng,
                             radius: radius,
-                            transitionType: TransitionType.EXIT,
+                            transitionType: 2,
                             notification: {
                                 id: id,
                                 title: radius + "-exit",
@@ -193,19 +193,6 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
             });
 
             return deferred.promise;
-        }
-
-
-        function removeAll() {
-            $rootScope.geoInitialized = false;
-            if (window.geofence) {
-                window.geofence.removeAll()
-                    .then(function() {
-                        console.log('GEO SERVICE: All geofences successfully removed.');
-                    }, function(reason) {
-                        console.log('GEO SERVICE: Removing geofences failed', reason);
-                    });
-            }
         }
 
 

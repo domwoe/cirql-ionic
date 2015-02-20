@@ -99,7 +99,7 @@ angular.module('cirqlApp', [
             if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
                 var posOptions = {
                     timeout: 10000,
-                    enableHighAccuracy: false
+                    enableHighAccuracy: true
                 };
                 simpleLogin.getUser().then(function(user) {
                     if (user !== null && user !== undefined) {
