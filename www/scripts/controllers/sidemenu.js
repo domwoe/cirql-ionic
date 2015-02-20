@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading','$timeout','$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading, $timeout,$ionicSideMenuDelegate) {
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading', '$timeout', '$ionicSideMenuDelegate',
+        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading, $timeout, $ionicSideMenuDelegate) {
 
             $scope.logout = function() {
                 simpleLogin.logout();
@@ -211,7 +211,7 @@ angular.module('cirqlApp')
                     $state.go('app.schedule', {
                         roomId: $scope.room
                     });
-                },300);    
+                }, 300);
             };
 
             $scope.netatmo = function() {

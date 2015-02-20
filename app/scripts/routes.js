@@ -197,9 +197,11 @@ angular.module('cirqlApp')
         views: {
             'menuContent': {
                 templateUrl: 'templates/room.html',
-                controller: 'RoomCtrl'
+                controller: 'RoomCtrl',
+                preload: true
             }
         }
+
     })
 
     .state('app.activity', {

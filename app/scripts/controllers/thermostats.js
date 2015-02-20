@@ -38,7 +38,6 @@ angular.module('cirqlApp')
             //         '</div>'
             // });
 
-            // $ionicLoading.hide(10000);
 
             $ionicSideMenuDelegate.canDragContent(false);
 
@@ -71,7 +70,7 @@ angular.module('cirqlApp')
                                 };
                             }
 
-                            $timeout($ionicLoading.hide, 200);
+                            //$timeout($ionicLoading.hide, 200);
 
                         });
 
@@ -101,7 +100,7 @@ angular.module('cirqlApp')
                                 };
                             }
 
-                            $timeout($ionicLoading.hide, 200);
+                            //$timeout($ionicLoading.hide, 200);
 
 
 
@@ -115,8 +114,6 @@ angular.module('cirqlApp')
 
                 $scope.roomName = fbutil.syncObject('homes/' + user.uid + '/rooms/' + room + '/name');
 
-                console.log($rootScope.gateway);
-
                 if ($rootScope.gateway === 'nefit') {
                     initThermostats('max');
                 } else if ($rootScope.gateway !== null && $rootScope.gateway !== undefined ) {
@@ -129,7 +126,6 @@ angular.module('cirqlApp')
                         if (fbGatewayId.val()) {
                             $rootScope.gateway = fbGatewayId.val();
                             initThermostats('hm');
-
 
                         } else {
                             fbutil.ref('homes/' + user.uid + '/nefit').once('value', function(fbNefit) {

@@ -159,8 +159,8 @@ angular.module('cirqlApp')
                         fbData.forEach(function(fbMeasure) {
 
                             if (fbMeasure.val()) {
-
-                                if (fbMeasure.key() === 'valve' && !expertMode) {
+                                // No valve information!
+                                if (fbMeasure.key() === 'valve') { //&& !expertMode) {
 
                                 } else {
 
