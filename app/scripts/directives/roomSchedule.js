@@ -458,6 +458,65 @@
                                     .attr('y', ypos + (this.radius / 2) * 0.8)
                                     .text(dotTarget);
 
+                                var dragStartCallback = function(d, obj) {
+                                    var selectedNode = d3.select(obj);
+                                    var parentNode = selectedNode.node().parentNode;
+                                    var secondAncestor = d3.select(parentNode).node().parentNode;
+
+                                    if (self.inDeleteView) {
+                                        self.deleteSelectedEntry(parentNode);
+                                    } else {
+                                        if (self.inDetailedView) {
+                                            self.selectDay(secondAncestor);
+                                            self.entrySelector(self, parentNode);
+                                            self.dragging = true;
+
+                                            var group = d3.select(parentNode);
+                                            var selection = group.select('circle');
+
+                                            var trX = d3.transform(group.attr("transform")).translate[0];
+                                            var trY = d3.transform(group.attr("transform")).translate[1];
+
+                                            d.dragstart = d3.mouse(obj); // store this
+
+                                            var xpos = parseInt(selection.attr('cx')) + trX;
+                                            var ypos = parseInt(selection.attr('cy')) + trY;
+
+                                            var dayGroup = d3.select(secondAncestor);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'vpath')
+                                                .attr('x', xpos - self.radius)
+                                                .attr('y', 0)
+                                                .attr('width', 2 * self.radius)
+                                                .attr('height', 7 * self.height)
+                                                .attr('fill-opacity', 0.5);
+                                            dayGroup.insert('rect', 'g.entry')
+                                                .attr('id', 'hpath')
+                                                .attr('x', 95)
+                                                .attr('y', ypos - self.radius)
+                                                .attr('width', 650)
+                                                .attr('height', 2 * self.radius)
+                                                .attr('fill-opacity', 0.5);
+                                        } else {
+                                            self.selectDay(secondAncestor);
+                                            self.inDetailedView = true;
+                                        }
+                                    }
+                                };
+
+                                var dragEndCallback = function() {
+                                    if (!self.inDeleteView) {
+                                        self.dragging = false;
+                                        self.lockOnVerticalDrag = false;
+                                        self.lockOnHorizontalDrag = false;
+                                        // Remove path rectangles
+                                        d3.select('#vpath').remove();
+                                        d3.select('#hpath').remove();
+                                        // Deselect entry
+                                        self.deselectEntry();
+                                    }
+                                };
+
                                 var back = entryGroup.append('circle')
                                     .attr('cx', xpos)
                                     .attr('cy', ypos)
@@ -467,50 +526,7 @@
                                         .on('dragstart', function(d) {
                                             d3.event.sourceEvent.preventDefault();
                                             d3.event.sourceEvent.stopPropagation();
-
-                                            var selectedNode = d3.select(this);
-                                            var parentNode = selectedNode.node().parentNode;
-                                            var secondAncestor = d3.select(parentNode).node().parentNode;
-
-                                            if (self.inDeleteView) {
-                                                self.deleteSelectedEntry(parentNode);
-                                            } else {
-                                                if (self.inDetailedView) {
-                                                    self.selectDay(secondAncestor);
-                                                    self.entrySelector(self, parentNode);
-                                                    self.dragging = true;
-
-                                                    var group = d3.select(parentNode);
-                                                    var selection = group.select('circle');
-
-                                                    var trX = d3.transform(group.attr("transform")).translate[0];
-                                                    var trY = d3.transform(group.attr("transform")).translate[1];
-
-                                                    d.dragstart = d3.mouse(this); // store this
-
-                                                    var xpos = parseInt(selection.attr('cx')) + trX;
-                                                    var ypos = parseInt(selection.attr('cy')) + trY;
-
-                                                    var dayGroup = d3.select(secondAncestor);
-                                                    dayGroup.insert('rect', 'g.entry')
-                                                        .attr('id', 'vpath')
-                                                        .attr('x', xpos - self.radius)
-                                                        .attr('y', 0)
-                                                        .attr('width', 2 * self.radius)
-                                                        .attr('height', 7 * self.height)
-                                                        .attr('fill-opacity', 0.5);
-                                                    dayGroup.insert('rect', 'g.entry')
-                                                        .attr('id', 'hpath')
-                                                        .attr('x', 95)
-                                                        .attr('y', ypos - self.radius)
-                                                        .attr('width', 650)
-                                                        .attr('height', 2 * self.radius)
-                                                        .attr('fill-opacity', 0.5);
-                                                } else {
-                                                    self.selectDay(secondAncestor);
-                                                    self.inDetailedView = true;
-                                                }
-                                            }
+                                            dragStartCallback(d, this);
                                         })
                                         .on('drag', function(d) {
                                             if (self.dragging) {
@@ -518,21 +534,14 @@
                                             }
                                         })
                                         .on('dragend', function(d) {
-                                            if (!self.inDeleteView) {
-                                                self.dragging = false;
-                                                self.lockOnVerticalDrag = false;
-                                                self.lockOnHorizontalDrag = false;
-                                                // Remove path rectangles
-                                                d3.select('#vpath').remove();
-                                                d3.select('#hpath').remove();
-                                                // Deselect entry
-                                                self.deselectEntry();
-                                                delete d.dragstart;
-                                            }
+                                            dragEndCallback();
                                         })
-                                    );
+                                    )
+                                    .on('mouseup', function() {
+                                        dragEndCallback();
+                                    });
                             };
-
+                            
                             this.renderTimeline = function() {
                                 var weekGroup = d3.select('#weekdays');
 
@@ -850,7 +859,8 @@
                                         self.entriesToCopy = d3.select(self.contextSelectedDay).selectAll('g.entry');
                                     }
                                     self.closeContextMenu();
-                                }
+                                };
+
                                 copyButton.on('touchstart', copyDayCallback);
                                 copyButton.on('mousedown', copyDayCallback);
 
