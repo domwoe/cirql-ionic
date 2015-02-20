@@ -46,10 +46,10 @@
                 <div class="item menu-toggle" ng-if="isHome() && resident.expertMode" ui-sref="app.gateway({home: true})">
                     Gateway
                 </div>
-                 <div class="item nav-clear menu-toggle" ng-if="isHome()" ui-sref="app.chat">
+                 <!-- <div class="item nav-clear menu-toggle" ng-if="isHome()" ui-sref="app.chat">
                     <span translate>CHAT</span>
                     <span ng-if="messageCount.$value - messageRead.$value > 0" class="badge badge-assertive">{{messageCount.$value - messageRead.$value}}</span>
-                </div>
+                </div> -->
                 <div translate class="item nav-clear menu-toggle" ng-if="isHome()" ui-sref="app.resident_settings">
                     RESIDENT_SETTINGS
                 </div>
