@@ -42,73 +42,73 @@ angular.module('cirqlApp')
             $ionicSideMenuDelegate.canDragContent(false);
 
 
-                function initThermostats(type) {
+            function initThermostats(type) {
 
-                    if (type === 'hm') {
-                        var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
+                if (type === 'hm') {
+                    var trvUrl = 'homes/' + user.uid + '/rooms/' + room + '/thermostats';
 
-                        var trvsInRoom = fbutil.syncArray(trvUrl);
+                    var trvsInRoom = fbutil.syncArray(trvUrl);
 
-                        $scope.thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
+                    $scope.thermostats = fbutil.syncArray('homes/' + user.uid + '/thermostats');
 
-                        trvsInRoom.$loaded(function(trvs) {
+                    trvsInRoom.$loaded(function(trvs) {
 
-                            if (trvs.length > 0) {
+                        if (trvs.length > 0) {
 
-                                $scope.hasThermostat = true;
-                                $scope.isAddView = false;
-                                $scope.thermostatFilter = {
-                                    room: room
-                                };
+                            $scope.hasThermostat = true;
+                            $scope.isAddView = false;
+                            $scope.thermostatFilter = {
+                                room: room
+                            };
 
-                            } else {
+                        } else {
 
-                                $scope.hasThermostat = false;
-                                $scope.isAddView = true;
-                                $scope.thermostatFilter = {
-                                    room: 'null'
-                                };
-                            }
+                            $scope.hasThermostat = false;
+                            $scope.isAddView = true;
+                            $scope.thermostatFilter = {
+                                room: 'null'
+                            };
+                        }
 
-                            //$timeout($ionicLoading.hide, 200);
+                        //$timeout($ionicLoading.hide, 200);
 
-                        });
+                    });
 
-                    } else if (type === 'max') {
+                } else if (type === 'max') {
 
-                        // check for MAX Thermostats
-                        // 
-    
-                        $scope.thermostats = fbutil.syncArray('homes/' + user.uid + '/maxThermostats');
-                        $scope.thermostats.$loaded(function(maxTrvs) {
+                    // check for MAX Thermostats
+                    // 
 
-
-                            if (maxTrvs.length > 0) {
-
-                                $scope.hasThermostat = true;
-                                $scope.isAddView = false;
-                                $scope.thermostatFilter = {
-                                    room: room
-                                };
-
-                            } else {
-
-                                $scope.hasThermostat = false;
-                                $scope.isAddView = true;
-                                $scope.thermostatFilter = {
-                                    room: 'null'
-                                };
-                            }
-
-                            //$timeout($ionicLoading.hide, 200);
+                    $scope.thermostats = fbutil.syncArray('homes/' + user.uid + '/maxThermostats');
+                    $scope.thermostats.$loaded(function(maxTrvs) {
 
 
+                        if (maxTrvs.length > 0) {
+
+                            $scope.hasThermostat = true;
+                            $scope.isAddView = false;
+                            $scope.thermostatFilter = {
+                                room: room
+                            };
+
+                        } else {
+
+                            $scope.hasThermostat = false;
+                            $scope.isAddView = true;
+                            $scope.thermostatFilter = {
+                                room: 'null'
+                            };
+                        }
+
+                        //$timeout($ionicLoading.hide, 200);
 
 
-                        });
 
-                    }
+
+                    });
+
                 }
+            }
 
             if (user.uid && room) {
 
@@ -116,7 +116,7 @@ angular.module('cirqlApp')
 
                 if ($rootScope.gateway === 'nefit') {
                     initThermostats('max');
-                } else if ($rootScope.gateway !== null && $rootScope.gateway !== undefined ) {
+                } else if ($rootScope.gateway !== null && $rootScope.gateway !== undefined) {
 
                     initThermostats('hm');
 
@@ -125,6 +125,7 @@ angular.module('cirqlApp')
                     fbutil.ref('homes/' + user.uid + '/gateway').once('value', function(fbGatewayId) {
                         if (fbGatewayId.val()) {
                             $rootScope.gateway = fbGatewayId.val();
+                            $scope.type = 'hm';
                             initThermostats('hm');
 
                         } else {
@@ -133,6 +134,7 @@ angular.module('cirqlApp')
                                     console.log(fbNefit.val());
                                     $rootScope.gateway = 'nefit';
                                     initThermostats('max');
+                                    $scope.type = 'max';
 
 
                                 } else {
@@ -144,10 +146,10 @@ angular.module('cirqlApp')
 
                 }
 
-
-
-
-
+                $scope.saveObject = function(id) {
+                    var key = $scope.thermostats.$indexFor(id);
+                    $scope.thermostats.$save(key);
+                };
 
 
             } else {
