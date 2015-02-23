@@ -46,6 +46,32 @@ angular.module('cirqlApp')
 
                 $scope.room = $state.params.roomId;
 
+                fbutil.ref('homes/' + user.uid + '/isSuperuser').once('value', function(fbIsSuperuser) {
+                    if (fbIsSuperuser.val() === true) {
+
+                        $rootScope.isSuperuser = true;
+                        
+                    }
+                    else {
+
+                        $rootScope.isSuperuser = false;
+                    }
+                });
+
+                fbutil.ref('homes/' + user.uid + '/disabledAnalytics').once('value', function(fbDisabledAnalytics) {
+                    if (fbDisabledAnalytics.val() === true) {
+
+                        $rootScope.disabledAnalytics = true;
+                        
+                    }
+                    else {
+
+                        $rootScope.disabledAnalytics = false;
+                    }
+                });
+
+
+
                 $rootScope.$watch('room', function(room) {
 
                     if (room) {

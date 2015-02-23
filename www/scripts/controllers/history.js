@@ -160,7 +160,7 @@ angular.module('cirqlApp')
 
                             if (fbMeasure.val()) {
                                 // No valve information!
-                                if (fbMeasure.key() === 'valve') { //&& !expertMode) {
+                                if (fbMeasure.key() === 'valve' && !$rootScope.isSuperuser) {
 
                                 } else {
 
