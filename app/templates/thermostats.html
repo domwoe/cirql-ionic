@@ -115,6 +115,14 @@
                         <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
                     </div>
                 </div>
+                <div ng-if="type=='hm' && $root.isSuperuser" class="row">
+                    <div class="col">
+                        Prediction:
+                    </div>
+                    <div class="col">
+                        <ion-toggle ng-model="thermostat.usesPrediction" ng-disabled="thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
+                    </div>
+                </div>
             </div>
 
             <div ng-hide="isAddView" class="item item-image">
