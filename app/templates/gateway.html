@@ -18,7 +18,7 @@
                         {{gateway.gatewayId}}{{gateway.uuid}}
                     </div>
                 </div>
-                <div class="row">
+                <div ng-if="gateway.isPairing" class="row">
                     <div class="col">
                         isPairing:
                     </div>
@@ -26,7 +26,7 @@
                         {{gateway.isPairing}}
                     </div>
                 </div>
-                <div class="row">
+                <div ng-if="gateway.lastSeen" class="row">
                     <div class="col">
                         Last Seen:
                     </div>
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="item item-image">
+            <div ng-if="gateway.lastSeen" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="showConfirm()">
                     <span translate>REMOVE</span> Gateway
                 </button>
