@@ -15,6 +15,7 @@ angular.module('cirqlApp', [
 .run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state, geo, $window) {
 
     $ionicPlatform.ready(function() {
+
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
 
@@ -83,20 +84,25 @@ angular.module('cirqlApp', [
         $ionicPlatform.on('offline', showOffline);
         $ionicPlatform.on('online', hideOffline);
 
+        fbutil.ref('.info/connected').on('value', function(snap) {
+            if (snap.val() !== true) {
+                console.log('Firebase connection lost. Re-establish connection...');
+                $window.Firebase.goOnline();
+            }
+        });
+
 
         function checkFirebaseConnection() {
 
-            fbutil.ref('.info/connected').on('value', function(snap) {
+            fbutil.ref('.info/connected').once('value', function(snap) {
                 if (snap.val() !== true) {
                     console.log('Firebase connection lost. Re-establish connection...');
                     $window.Firebase.goOnline();
                 }
             });
+
+
         }
-
-        checkFirebaseConnection();
-
-
 
 
         function alertDismissed() {}
@@ -166,7 +172,7 @@ angular.module('cirqlApp', [
         //getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
-            
+
             checkFirebaseConnection();
             $rootScope.getLocationAndCheckPermission();
         });
