@@ -12,7 +12,7 @@ angular.module('cirqlApp', [
     'highcharts-ng'
 ])
 
-.run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state, geo) {
+.run(function($ionicPlatform, deviceDetector, $ionicLoading, simpleLogin, fbutil, $translate, $rootScope, $cordovaSplashscreen, $cordovaGeolocation, $timeout, $state, geo, $window) {
 
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -83,17 +83,25 @@ angular.module('cirqlApp', [
         $ionicPlatform.on('offline', showOffline);
         $ionicPlatform.on('online', hideOffline);
 
-        fbutil.ref('.info/connected').on('value', function(snap) {
-            if (snap.val() !== true) {
-                console.log('Firebase connection lost. Re-establish connection...');
-                Firebase.goOnline();
-            }
-        });
+
+        function checkFirebaseConnection() {
+
+            fbutil.ref('.info/connected').on('value', function(snap) {
+                if (snap.val() !== true) {
+                    console.log('Firebase connection lost. Re-establish connection...');
+                    $window.Firebase.goOnline();
+                }
+            });
+        }
+
+        checkFirebaseConnection();
+
+
 
 
         function alertDismissed() {}
 
-        $rootScope.getLocationAndCheckPermission = function () {
+        $rootScope.getLocationAndCheckPermission = function() {
             console.log('GetLocationAndCheckPermission  is called');
             if (deviceDetector.os === 'ios' || deviceDetector.os === 'android') {
                 var posOptions = {
@@ -158,7 +166,8 @@ angular.module('cirqlApp', [
         //getLocationAndCheckPermission()
 
         $ionicPlatform.on('resume', function() {
-
+            
+            checkFirebaseConnection();
             $rootScope.getLocationAndCheckPermission();
         });
 
