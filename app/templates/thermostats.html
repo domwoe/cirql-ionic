@@ -91,6 +91,14 @@
                         {{thermostat.waitForThermostat}}
                     </div>
                 </div>
+                 <div ng-if="thermostat.realOffset" class="row">
+                    <div class="col">
+                        Real Offset:
+                    </div>
+                    <div class="col">
+                        {{thermostat.realOffset}}
+                    </div>
+                </div>
                 <div ng-if="thermostat.lastSeen" class="row">
                     <div class="col">
                         Last Seen:
@@ -103,7 +111,7 @@
                     <div class="col">
                         Use Internal Temperature:
                     </div>
-                    <div class="col">
+                    <div class="col padding">
                         <ion-toggle ng-model="thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostat.$id)"></ion-toggle>
                     </div>
                 </div>
@@ -111,7 +119,7 @@
                     <div class="col">
                         Dynamic Offset:
                     </div>
-                    <div class="col">
+                    <div class="col padding ">
                         <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
                     </div>
                 </div>
@@ -119,7 +127,7 @@
                     <div class="col">
                         Prediction:
                     </div>
-                    <div class="col">
+                    <div class="col padding">
                         <ion-toggle ng-model="thermostat.usesPrediction" ng-disabled="thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
                     </div>
                 </div>

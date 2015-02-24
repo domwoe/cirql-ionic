@@ -191,6 +191,9 @@ angular.module('cirqlApp')
                             });
                             cb(trvs);
                         }
+                        else {
+                            addTrv(0, trvid);
+                        }
                     });
                 })(function(trvs) {
                     trvs.sort();
@@ -228,6 +231,7 @@ angular.module('cirqlApp')
                                     console.log($scope.data.trvid);
                                     e.preventDefault();
                                 } else {
+                                    console.log($scope.data.trvid);
                                     addMaxThermostat($scope.data.trvid);
                                 }
                             }
