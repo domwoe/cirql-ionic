@@ -10,7 +10,7 @@ angular.module('cirqlApp')
     .factory('thermostatService', ['fbutil', '$q',
         function(fbutil, $q) {
 
-        	var isWatching = null;
+            var isWatching = null;
 
             var thermostat = {
 
@@ -19,21 +19,21 @@ angular.module('cirqlApp')
                     isWatching = fbutil.ref('homes/' + user.uid + '/thermostats');
                     isWatching.on('child_added', function(fbThermostat) {
                         if (fbThermostat.child('room') === 'null') {
-                            fbutil.ref('homes/' + user.uid + '/thermostats').off('child_added',function() {
-                            	isWatching = null;
-                            	deferred.resolve(fbThermostat.key());
-                            }); 
+                            fbutil.ref('homes/' + user.uid + '/thermostats').off('child_added', function() {
+                                isWatching = null;
+                                deferred.resolve(fbThermostat.key());
+                            });
                         }
                     });
                     return deferred.promise;
                 },
 
                 cancelWatching: function() {
-                	if (isWatching) {
-                		isWatching.off('child_added', function() {
-                			isWatching = null;
-                		});
-                	}
+                    if (isWatching) {
+                        isWatching.off('child_added', function() {
+                            isWatching = null;
+                        });
+                    }
                 },
 
                 addToRoom: function(user, thermostat, room) {
@@ -66,17 +66,25 @@ angular.module('cirqlApp')
                     return deferred.promise;
                 },
 
-                deleteFromRoom: function(user, thermostat, room) {
+                deleteFromRoom: function(user, thermostat, room, type) {
 
                     var deferred = $q.defer();
 
-                    fbutil.ref('homes/' + user.uid + '/thermostats/' + thermostat).child('room').set('null', function(error) {
+                    var thermostats = 'thermostats';
+
+                    if (type === 'max') {
+
+                        thermostats = 'maxThermostats';
+
+                    }
+
+                    fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).child('room').set('null', function(error) {
                         if (error) {
                             console.log('Something went wrong deleting the thermostat to the room');
                             deferred.reject();
                         } else {
 
-                            fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/thermostats/').child(thermostat).set(null, function(error) {
+                            fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/' + thermostats + '/').child(thermostat).set(null, function(error) {
                                 if (error) {
                                     console.log('Something went wrong deleting the thermostat to the room');
                                     deferred.reject();
@@ -90,6 +98,10 @@ angular.module('cirqlApp')
 
 
                     });
+
+
+
+
                     return deferred.promise;
 
                 }

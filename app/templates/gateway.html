@@ -35,11 +35,50 @@
                         {{lastSeen(gateway.lastSeen)}}
                     </div>
                 </div>
+                <div ng-if="gateway.devicePw" class="row">
+                    <div class="col">
+                        {{'DEVICE_PASSWORD' | translate}}:
+                    </div>
+                    <div class="col">
+                        {{gateway.devicePw}}
+                    </div>
+                </div>
+                <div ng-if="gateway.userPw" class="row">
+                    <div class="col">
+                        {{'USER_PASSWORD' | translate}}:
+                    </div>
+                    <div class="col">
+                        {{gateway.userPw}}
+                    </div>
+                </div>
+                <div ng-if="gateway.session" class="row">
+                    <div class="col">
+                        {{'LAST_SESSION_ESTABLISHED' | translate}}:
+                    </div>
+                    <div class="col">
+                        {{gateway.session.date | date : 'medium'}}
+                    </div>
+                </div>
+                <div ng-if="gateway.devicePw" class="row">
+                    <div class="col">
+                        Status:
+                    </div>
+                    <div class="col">
+                        {{gateway.status}}
+                    </div>
+                </div>
+
             </div>
 
             <div ng-if="gateway.lastSeen" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="showConfirm()">
                     <span translate>REMOVE</span> Gateway
+                </button>
+            </div>
+
+            <div ng-if="gateway.devicePw" class="item item-image">
+                <button class="button button-full button-balanced transparent" ng-click="testConnection()">
+                    <span translate>TEST_CONNECTION</span>
                 </button>
             </div>
         </div>

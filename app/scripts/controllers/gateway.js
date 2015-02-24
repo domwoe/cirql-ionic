@@ -9,166 +9,172 @@
  */
 angular.module('cirqlApp')
     .controller('GatewayCtrl', ['$scope', '$state', 'user', 'fbutil', '$ionicLoading', '$ionicPopup', '$ionicNavBarDelegate',
-        function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
+    function($scope, $state, user, fbutil, $ionicLoading, $ionicPopup, $ionicNavBarDelegate) {
 
-            $scope.hasGateway = false;
+        $scope.hasGateway = false;
 
-            $scope.cirql = true;
-
-
-            // Get GatewayId
-            var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway');
-            gatewayIdObj.$loaded(
-                function() {
-
-                    if (gatewayIdObj.$value !== null) {
+        $scope.cirql = true;
 
 
-                        var gatewayId = gatewayIdObj.$value;
+        // Get GatewayId
+        var gatewayIdObj = fbutil.syncObject('homes/' + user.uid + '/gateway');
+        gatewayIdObj.$loaded(
+            function() {
 
-                        $scope.hasGateway = true;
-
-                        // Get Gateway object
-                        $scope.gateway = fbutil.syncObject('gateways/' + gatewayId);
-
-
-                    } else {
-                        $scope.hasGateway = false;
-                    }
+                if (gatewayIdObj.$value !== null) {
 
 
-                }
-            );
+                    var gatewayId = gatewayIdObj.$value;
 
-            fbutil.ref('homes/' + user.uid + '/nefit').once('value', function(fbNefit) {
-                if (fbNefit.val()) {
                     $scope.hasGateway = true;
-                    $scope.gateway = fbNefit.val();
+
+                    // Get Gateway object
+                    $scope.gateway = fbutil.syncObject('gateways/' + gatewayId);
+
+
+                } else {
+                    $scope.hasGateway = false;
                 }
-            });
-
-            $scope.addNefit = function(nefit) {
-                fbutil.ref('homes/' + user.uid + '/nefit').set(nefit, function(error) {
-                    if (error) {
-                        console.log(error);
-                    }
-                    else {
-                        $scope.hasGateway = true;
-                        $scope.gateway = nefit;
-
-                    }
-                });
-            }    
-
-            
-            $scope.addGateway = function(gatewayId) {
-
-                var gateway = fbutil.syncObject('gateways/' + gatewayId);
-
-                gateway.$loaded(function() {
-
-                    if (gateway.$value !== null) {
-                        gateway.homeId = user.uid;
-                        gateway.$save();
-
-                        gatewayIdObj.$value = gatewayId;
-                        gatewayIdObj.$save();
-
-                        $scope.gateway = gateway;
-
-                        $scope.hasGateway = true;
-
-                    } else {
-
-                        $scope.errorMsg = 'There is no Gateway with id ' + gatewayId;
-
-                    }
-
-                });
 
 
-            };
+            }
+        );
+
+        var nefitObj = fbutil.syncObject('homes/' + user.uid + '/nefit');
+        nefitObj.$loaded(
+            function() {
+                $scope.hasGateway = true;
+                $scope.gateway = nefitObj;
+            }
+        );
+
+    $scope.addNefit = function(nefit) {
+        fbutil.ref('homes/' + user.uid + '/nefit').set(nefit, function(error) {
+            if (error) {
+                console.log(error);
+            } else {
+                $scope.hasGateway = true;
+                $scope.gateway = nefit;
+
+            }
+        });
+    };
 
 
-            function delGateway() {
+    $scope.testConnection = function() {
 
-                // Delete Gateway reference from Home object
-                gatewayIdObj.$value = null;
-                gatewayIdObj.$save();
+        fbutil.ref('homes/' + user.uid + '/nefit').child('initiateTest').set(true);
 
-                // Delete home reference from room object
-                var gateway = $scope.gateway;
+    };
 
-                delete gateway.homeId;
 
+    $scope.addGateway = function(gatewayId) {
+
+        var gateway = fbutil.syncObject('gateways/' + gatewayId);
+
+        gateway.$loaded(function() {
+
+            if (gateway.$value !== null) {
+                gateway.homeId = user.uid;
                 gateway.$save();
 
-                $scope.hasGateway = false;
+                gatewayIdObj.$value = gatewayId;
+                gatewayIdObj.$save();
+
+                $scope.gateway = gateway;
+
+                $scope.hasGateway = true;
+
+            } else {
+
+                $scope.errorMsg = 'There is no Gateway with id ' + gatewayId;
 
             }
 
-            $scope.showConfirm = function() {
+        });
 
-                $ionicPopup.show({
-                    template: '<p>Are you sure you want to remove this gateway from your account?</p>' +
-                        '<p>The system won\'t work without a gateway!</p>',
-                    title: 'Remove Gateway',
-                    subTitle: '',
-                    scope: $scope,
-                    buttons: [{
-                        text: 'Cancel',
-                        type: 'button-block button-dark transparent',
-                    }, {
-                        text: 'Disconnect',
-                        type: 'button-block button-assertive transparent',
-                        onTap: function() {
-                            delGateway();
-                        }
-                    }]
-                });
-            };
 
-            $scope.lastSeen = function(timeString) {
+    };
 
-                var timestamp = Date.parse(timeString);
-                var now = Date.now();
 
-                var diff = now - timestamp;
+    function delGateway() {
 
-                if (diff < 15 * 60 * 1000) {
+        // Delete Gateway reference from Home object
+        gatewayIdObj.$value = null;
+        gatewayIdObj.$save();
 
-                    if (diff > 60 * 1000) {
+        // Delete home reference from room object
+        var gateway = $scope.gateway;
 
-                        $scope.alert = false;
-                        return Math.round(diff / 60 / 1000) + ' minutes ago';
+        delete gateway.homeId;
 
-                    } else {
+        gateway.$save();
 
-                        $scope.alert = false;
-                        return 'Just now';
+        $scope.hasGateway = false;
 
-                    }
-                } else {
-                    $scope.alert = true;
-                    return new Date(timestamp).toLocaleString();
+    }
+
+    $scope.showConfirm = function() {
+
+        $ionicPopup.show({
+            template: '<p>Are you sure you want to remove this gateway from your account?</p>' +
+                '<p>The system won\'t work without a gateway!</p>',
+            title: 'Remove Gateway',
+            subTitle: '',
+            scope: $scope,
+            buttons: [{
+                text: 'Cancel',
+                type: 'button-block button-dark transparent',
+            }, {
+                text: 'Disconnect',
+                type: 'button-block button-assertive transparent',
+                onTap: function() {
+                    delGateway();
                 }
-            };
+            }]
+        });
+    };
 
+    $scope.lastSeen = function(timeString) {
 
-            $scope.goBack = function() {
+        var timestamp = Date.parse(timeString);
+        var now = Date.now();
 
-                // Coming from home via sidemenu
-                // 
-                if ($state.params.home === 'true') {
-                    $state.go('app.home');
-                }
-                $ionicNavBarDelegate.back();
-            };
+        var diff = now - timestamp;
 
+        if (diff < 15 * 60 * 1000) {
 
-            /**
-             * Go back to home screen
-             */
-            // $scope.goToHome = function() {//     $state.go('app.home'); // }; 
+            if (diff > 60 * 1000) {
+
+                $scope.alert = false;
+                return Math.round(diff / 60 / 1000) + ' minutes ago';
+
+            } else {
+
+                $scope.alert = false;
+                return 'Just now';
+
+            }
+        } else {
+            $scope.alert = true;
+            return new Date(timestamp).toLocaleString();
         }
-    ]);
+    };
+
+
+    $scope.goBack = function() {
+
+        // Coming from home via sidemenu
+        // 
+        if ($state.params.home === 'true') {
+            $state.go('app.home');
+        }
+        $ionicNavBarDelegate.back();
+    };
+
+
+    /**
+     * Go back to home screen
+     */
+    // $scope.goToHome = function() {//     $state.go('app.home'); // }; 
+}]);
