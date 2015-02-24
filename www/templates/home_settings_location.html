@@ -1,0 +1,42 @@
+<ion-view title="{{'CHANGE_LOCATION' | translate}}">
+  <ion-nav-buttons side="left">
+  <button class="button-clear" ui-sref="app.home_settings">
+    <i class="ion-chevron-left"></i> {{'BACK' | translate}}
+  </button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" scroll="false">
+    <div class="create">
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
+      </div>
+      <form ng-submit="saveLocation(homeSettings)">
+        <div class="list">
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="text" ng-model="homeSettings.name" placeholder="{{'GIVE_HOME_NAME' | translate}}">
+            </label>
+          </div>
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="text" ng-model="homeSettings.address" placeholder="{{'HOME_ADDRESS' | translate}}">
+            </label>
+          </div>
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="text" ng-model="homeSettings.city" placeholder="{{'HOME_CITY' | translate}}">
+            </label>
+          </div>
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="text" ng-model="homeSettings.postcode" placeholder="{{'HOME_POSTCODE' | translate}}"> </label>
+          </div>
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="text" ng-model="homeSettings.country" placeholder="{{'HOME_COUNTRY' | translate}}">
+            </label>
+          </div>
+          <button type="submit" class="button button-stable button-balanced button-block transparent" translate>SAVE</button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>

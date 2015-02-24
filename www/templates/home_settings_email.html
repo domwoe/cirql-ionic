@@ -1,0 +1,28 @@
+<ion-view title="{{'CHANGE_EMAIL' | translate}}">
+  <ion-nav-buttons side="left">
+  <button class="button-clear" ui-sref="app.home_settings">
+    <i class="ion-chevron-left"></i> {{'BACK' | translate}}
+  </button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" scroll="false">
+    <div class="create">
+      <div class="error" ng-if="errorMessage" ng-bind="errorMessage">
+      </div>
+      <form ng-submit="changeEmail(pass, newEmail)">
+        <div class="list">
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="email" ng-model="newEmail" placeholder="{{'NEW_EMAIL' | translate}}">
+            </label>
+          </div>
+          <div class="item item-input-inset transparent">
+            <label class="item-input-wrapper">
+              <input type="password" ng-model="pass" placeholder="{{'PASSWORD' | translate}}">
+            </label>
+          </div>
+          <button translate type="submit" class="button button-stable button-balanced button-block transparent">CHANGE_EMAIL</button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>
