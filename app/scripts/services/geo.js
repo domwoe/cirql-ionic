@@ -58,7 +58,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                                             var date = new Date();
                                                             date = date + '';
                                                             var regionOb = {
-                                                                'date:': date,
+                                                                'date': date,
                                                                 'isInside': isInside,
                                                                 'radius': geo.radius
                                                             };
