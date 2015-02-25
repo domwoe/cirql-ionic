@@ -120,7 +120,7 @@
                         Dynamic Offset:
                     </div>
                     <div class="col padding ">
-                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
+                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostat.$id)"></ion-toggle>
                     </div>
                 </div>
                 <div ng-if="type=='hm' && $root.isSuperuser" class="row">
