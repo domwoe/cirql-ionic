@@ -88,7 +88,7 @@ angular.module('cirqlApp')
 
                         thermostats = 'maxThermostats';
 
-                        fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).set('null', function(error) {
+                        fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).set(null, function(error) {
                             if (error) {
                                 console.log('Something went wrong deleting the thermostat to the room');
                                 deferred.reject();
