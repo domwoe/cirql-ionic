@@ -150,7 +150,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             notification: {
                                 id: id,
                                 title: radius + '-enter',
-                                text: regionsURL,
+                                text: radius + '-enter',
                                 openAppOnClick: false
                             }
                         };
@@ -166,7 +166,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             notification: {
                                 id: id,
                                 title: radius + "-exit",
-                                text: regionsURL,
+                                text: radius + "-exit",
                                 openAppOnClick: false
                             }
                         };
@@ -229,17 +229,15 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                 var deferred = $q.defer();
 
-                if (deviceDetector.os === 'android') {
-                    if (window.geofence && window.geofence.initialize) {
+                if (window.geofence && window.geofence.initialize) {
 
-                        console.log('GEO SERVICE: Initializing...');
+                    console.log('GEO SERVICE: Initializing...');
 
-                        window.geofence.initialize();
-                    } else {
+                    window.geofence.initialize();
+                } else {
 
-                        console.log('GEO SERVICE: Android Geofencing plugin not found');
+                    console.log('GEO SERVICE: Android Geofencing plugin not found');
 
-                    }
                 }
 
                 initUser().then(function(cUser) {
