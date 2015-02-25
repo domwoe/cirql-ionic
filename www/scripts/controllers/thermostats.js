@@ -116,9 +116,11 @@ angular.module('cirqlApp')
 
                 if ($rootScope.gateway === 'nefit') {
                     initThermostats('max');
+                    $scope.type = 'max';
                 } else if ($rootScope.gateway !== null && $rootScope.gateway !== undefined) {
 
                     initThermostats('hm');
+                    $scope.type = 'hm';
 
                 } else {
 
@@ -231,7 +233,7 @@ angular.module('cirqlApp')
                                     e.preventDefault();
                                 } else {
                                     console.log($scope.data.trvid);
-                                    var trvExists = false            
+                                    var trvExists = false
                                     $scope.thermostats.forEach(function(thermostat) {
                                         if (thermostat.physAddr === $scope.data.trvid.toUpperCase()) {
                                             trvExists = true;
@@ -240,11 +242,11 @@ angular.module('cirqlApp')
 
                                     if (trvExists) {
                                         e.preventDefault();
-                                    }
-                                    else {
-                                        addMaxThermostat($scope.data.trvid);
+                                    } else {
                                         $scope.isAddView = false;
-                                    }    
+                                        addMaxThermostat($scope.data.trvid);
+
+                                    }
                                 }
                             }
                         }]
@@ -298,10 +300,12 @@ angular.module('cirqlApp')
                 thermostatService.deleteFromRoom(user, thermostat.$id, room, $scope.type).then(function() {
 
                     //Change to add view
-                    $scope.isAddView = true;
-                    $scope.thermostatFilter = {
-                        room: 'null'
-                    };
+                    if ($scope.type !== 'max') {
+                        $scope.isAddView = true;
+                        $scope.thermostatFilter = {
+                            room: 'null'
+                        };
+                    }
                 });
 
             };

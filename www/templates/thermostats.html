@@ -133,7 +133,7 @@
                 </div>
             </div>
 
-            <div ng-hide="isAddView" class="item item-image">
+            <div ng-if="isAddView && type == 'max'" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="delThermostat(thermostat)">
                     <span translate>REMOVE_FROM</span> {{roomName.$value}}
                 </button>
@@ -155,10 +155,13 @@
 
     </ion-content>
     <ion-footer-bar class="bar-footer">
-        <button translate ng-if="!isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
+        <button translate ng-if="!isAddView && type == 'hm'" class="button button-block button-light transparent" ng-click="addThermostatView()">
             ADD_THERMOSTAT
         </button>
-        <button translate ng-if="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+        <button translate ng-if="type == 'max'" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+            ADD_THERMOSTAT
+        </button>
+        <button translate ng-if="isAddView && type == 'hm'" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
             PAIR_THERMOSTAT
         </button>
     </ion-footer-bar>
