@@ -93,7 +93,15 @@
                 </div>
                  <div ng-if="thermostat.realOffset" class="row">
                     <div class="col">
-                        Real Offset:
+                        Offset:
+                    </div>
+                    <div class="col">
+                        {{thermostat.tempOffset.Value}}
+                    </div>
+                </div>
+                <div ng-if="thermostat.realOffset" class="row">
+                    <div class="col">
+                        True Offset:
                     </div>
                     <div class="col">
                         {{thermostat.realOffset}}
@@ -120,7 +128,7 @@
                         Dynamic Offset:
                     </div>
                     <div class="col padding ">
-                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
+                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostat.$id)"></ion-toggle>
                     </div>
                 </div>
                 <div ng-if="type=='hm' && $root.isSuperuser" class="row">
