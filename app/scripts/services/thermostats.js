@@ -72,32 +72,54 @@ angular.module('cirqlApp')
 
                     var thermostats = 'thermostats';
 
+                    function removeFromRoom() {
+                        fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/' + thermostats + '/').child(thermostat).set(null, function(error) {
+                            if (error) {
+                                console.log('Something went wrong deleting the thermostat to the room');
+                                deferred.reject();
+                            } else {
+                                console.log('Removing thermostat successful');
+                                deferred.resolve(true);
+                            }
+                        });
+                    }
+
                     if (type === 'max') {
 
                         thermostats = 'maxThermostats';
 
+                        fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).set('null', function(error) {
+                            if (error) {
+                                console.log('Something went wrong deleting the thermostat to the room');
+                                deferred.reject();
+                            } else {
+
+                                removeFromRoom();
+
+                            }
+
+
+                        });
+
+                    } else {
+
+                        fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).child('room').set('null', function(error) {
+                            if (error) {
+                                console.log('Something went wrong deleting the thermostat to the room');
+                                deferred.reject();
+                            } else {
+
+                                removeFromRoom();
+
+                            }
+
+
+                        });
+
                     }
 
-                    fbutil.ref('homes/' + user.uid + '/' + thermostats + '/' + thermostat).child('room').set('null', function(error) {
-                        if (error) {
-                            console.log('Something went wrong deleting the thermostat to the room');
-                            deferred.reject();
-                        } else {
-
-                            fbutil.ref('homes/' + user.uid + '/rooms/' + room + '/' + thermostats + '/').child(thermostat).set(null, function(error) {
-                                if (error) {
-                                    console.log('Something went wrong deleting the thermostat to the room');
-                                    deferred.reject();
-                                } else {
-                                    console.log('Removing thermostat successful');
-                                    deferred.resolve(true);
-                                }
-                            });
-
-                        }
 
 
-                    });
 
 
 
