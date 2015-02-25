@@ -93,11 +93,14 @@ angular.module('cirqlApp', [
 
 
         function checkFirebaseConnection() {
-
+            console.log(' Check Firebase Connection '); 
             fbutil.ref('.info/connected').once('value', function(snap) {
                 if (snap.val() !== true) {
                     console.log('Firebase connection lost. Re-establish connection...');
                     $window.Firebase.goOnline();
+                }
+                else {
+                    console.log('Firebase connection seems to be still active ' + snap.val());
                 }
             });
 
