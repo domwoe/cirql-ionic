@@ -236,7 +236,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                     window.geofence.initialize();
                 } else {
 
-                    console.log('GEO SERVICE: Android Geofencing plugin not found');
+                    console.log('GEO SERVICE: Geofencing plugin not found');
 
                 }
 
