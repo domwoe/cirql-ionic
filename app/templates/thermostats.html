@@ -93,7 +93,15 @@
                 </div>
                  <div ng-if="thermostat.realOffset" class="row">
                     <div class="col">
-                        Real Offset:
+                        Offset:
+                    </div>
+                    <div class="col">
+                        {{thermostat.tempOffset.Value}}
+                    </div>
+                </div>
+                <div ng-if="thermostat.realOffset" class="row">
+                    <div class="col">
+                        True Offset:
                     </div>
                     <div class="col">
                         {{thermostat.realOffset}}
