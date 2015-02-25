@@ -7,10 +7,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
         var home = null;
         var fbLocation = null;
         var fbRegions = null;
-        var monitorStarted = false;
-        var signStarted = false;
         var allowsGeo = null;
-        var regionMonitoringStarted = false;
         var geofences = [];
         var regionsURL = null;
 
@@ -44,6 +41,37 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                 window.geofence.removeAll()
                                     .then(function() {
                                         console.log('GEO SERVICE: All geofences successfully removed.');
+
+                                        window.geofence.receiveTransition = function(geofences) {
+                                            geofences.forEach(function(geo) {
+                                                console.log('Geofence transition detected', geo);
+                                                if (geo) {
+                                                    if (geo.notification) {
+                                                        if (geo.notification.id !== null) {
+                                                            var regionStr = 'reg' + geo.notification.id;
+                                                            var isInside = null;
+                                                            if (geo.transitionType === 1) {
+                                                                isInside = true;
+                                                            } else if (geo.transitionType === 2) {
+                                                                isInside = false;
+                                                            }
+                                                            var date = new Date();
+                                                            date = date + '';
+                                                            var regionOb = {
+                                                                'date:': date,
+                                                                'isInside': isInside,
+                                                                'radius': geo.radius
+                                                            };
+                                                            fbutil.ref(regionsURL).child(regionStr).set(regionOb);
+                                                            console.log('Geofence region is set: ' + JSON.stringify(regionOb));
+                                                        }
+                                                    }
+                                                }
+
+                                            });
+                                        };
+
+
                                         addRegions(fbRegions.val(), function() {
                                             if (geofences.length !== 0) {
                                                 window.geofence.addOrUpdate(geofences).then(function() {
@@ -52,20 +80,20 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                                 }, function(reason) {
                                                     console.log('Adding geofences failed', reason);
                                                     deferred.reject(reason);
-                                                    $rootScope.geoInitialized = false
+                                                    $rootScope.geoInitialized = false;
                                                 });
                                             } else {
                                                 console.log('No geofences found');
-                                                $rootScope.geoInitialized = false
+                                                $rootScope.geoInitialized = false;
                                             }
                                         });
                                     }, function(reason) {
                                         console.log('GEO SERVICE: Removing geofences failed', reason);
-                                        $rootScope.geoInitialized = false
+                                        $rootScope.geoInitialized = false;
                                     });
                             } else {
                                 console.log('Geofence plugin not ready');
-                                $rootScope.geoInitialized = false
+                                $rootScope.geoInitialized = false;
                             }
                         }
                     });
@@ -80,7 +108,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             console.log('GEO SERVICE: All geofences successfully removed.');
                         }, function(reason) {
                             console.log('GEO SERVICE: Removing geofences failed', reason);
-                            $rootScope.geoInitialized = false
+                            $rootScope.geoInitialized = false;
                         });
                 }
             });
@@ -122,7 +150,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             notification: {
                                 id: id,
                                 title: radius + '-enter',
-                                text: regionsURL,
+                                text: radius + '-enter',
                                 openAppOnClick: false
                             }
                         };
@@ -138,7 +166,7 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                             notification: {
                                 id: id,
                                 title: radius + "-exit",
-                                text: regionsURL,
+                                text: radius + "-exit",
                                 openAppOnClick: false
                             }
                         };
@@ -201,17 +229,15 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
 
                 var deferred = $q.defer();
 
-                if (deviceDetector.os === 'android') {
-                    if (window.geofence && window.geofence.initialize) {
+                if (window.geofence && window.geofence.initialize) {
 
-                        console.log('GEO SERVICE: Initializing...');
+                    console.log('GEO SERVICE: Initializing...');
 
-                        window.geofence.initialize();
-                    } else {
+                    window.geofence.initialize();
+                } else {
 
-                        console.log('GEO SERVICE: Android Geofencing plugin not found');
+                    console.log('GEO SERVICE: Geofencing plugin not found');
 
-                    }
                 }
 
                 initUser().then(function(cUser) {
