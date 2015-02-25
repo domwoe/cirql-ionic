@@ -8,8 +8,8 @@
  * Controller of the cirqlApp
  */
 angular.module('cirqlApp')
-    .controller('ThermostatsCtrl', ['$rootScope', '$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup', '$timeout', 'thermostatService',
-        function($rootScope, $scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup, $timeout, thermostatService) {
+    .controller('ThermostatsCtrl', ['$q', '$rootScope', '$scope', '$state', 'user', 'fbutil', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicPopup', '$timeout', 'thermostatService',
+        function($q, $rootScope, $scope, $state, user, fbutil, $ionicSideMenuDelegate, $ionicLoading, $ionicPopup, $timeout, thermostatService) {
 
             var pairingPopup;
 
@@ -116,9 +116,11 @@ angular.module('cirqlApp')
 
                 if ($rootScope.gateway === 'nefit') {
                     initThermostats('max');
+                    $scope.type = 'max';
                 } else if ($rootScope.gateway !== null && $rootScope.gateway !== undefined) {
 
                     initThermostats('hm');
+                    $scope.type = 'hm';
 
                 } else {
 
@@ -190,8 +192,7 @@ angular.module('cirqlApp')
                                 trvs.push(name.split('radiator')[1]);
                             });
                             cb(trvs);
-                        }
-                        else {
+                        } else {
                             addTrv(0, trvid);
                         }
                     });
@@ -232,7 +233,20 @@ angular.module('cirqlApp')
                                     e.preventDefault();
                                 } else {
                                     console.log($scope.data.trvid);
-                                    addMaxThermostat($scope.data.trvid);
+                                    var trvExists = false
+                                    $scope.thermostats.forEach(function(thermostat) {
+                                        if (thermostat.physAddr === $scope.data.trvid.toUpperCase()) {
+                                            trvExists = true;
+                                        }
+                                    });
+
+                                    if (trvExists) {
+                                        e.preventDefault();
+                                    } else {
+                                        $scope.isAddView = false;
+                                        addMaxThermostat($scope.data.trvid);
+
+                                    }
                                 }
                             }
                         }]
@@ -283,13 +297,15 @@ angular.module('cirqlApp')
 
             $scope.delThermostat = function(thermostat) {
 
-                thermostatService.deleteFromRoom(user, thermostat.$id, room).then(function() {
+                thermostatService.deleteFromRoom(user, thermostat.$id, room, $scope.type).then(function() {
 
                     //Change to add view
-                    $scope.isAddView = true;
-                    $scope.thermostatFilter = {
-                        room: 'null'
-                    };
+                    if ($scope.type !== 'max') {
+                        $scope.isAddView = true;
+                        $scope.thermostatFilter = {
+                            room: 'null'
+                        };
+                    }
                 });
 
             };

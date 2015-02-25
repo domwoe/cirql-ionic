@@ -392,7 +392,10 @@ angular.module('cirqlApp')
         SEND_PASSWORD: 'Send new Password',
         EMAIL_SENT_TEXT: "We've sent a temporary password to your mail address",
         EMAIL_SENT: "You've got mail!",
-        VALUES_TOO_OLD: 'There are is no recent measurement data available.'
+        VALUES_TOO_OLD: 'There are is no recent measurement data available.',
+
+        LAST_SESSION_ESTABLISHED: 'Last Session established',
+        TEST_CONNECTION: 'Test Gateway Connection'
 
 
 
@@ -503,7 +506,10 @@ angular.module('cirqlApp')
         SEND_PASSWORD: 'Neues Passwort zuschicken',
         EMAIL_SENT_TEXT: 'Wir haben ein temporäres Passwort an deine Mail Adresse geschickt!',
         EMAIL_SENT: 'Mail ist raus!',
-        VALUES_TOO_OLD: 'Die Messwerte sind leider nicht aktuell'
+        VALUES_TOO_OLD: 'Die Messwerte sind leider nicht aktuell',
+
+        LAST_SESSION_ESTABLISHED: 'Letzte Sitzung eröffnet',
+        TEST_CONNECTION: 'Gatewayverbindung testen'
 
     });
 

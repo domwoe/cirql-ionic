@@ -120,7 +120,7 @@
                         Dynamic Offset:
                     </div>
                     <div class="col padding ">
-                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostats.$indexFor(thermostat.$id))"></ion-toggle>
+                        <ion-toggle ng-model="thermostat.usesTemperatureOffset" ng-disabled="!thermostat.usesInternalTemperature" toggle-class="toggle-balanced" ng-change="saveObject(thermostat.$id)"></ion-toggle>
                     </div>
                 </div>
                 <div ng-if="type=='hm' && $root.isSuperuser" class="row">
@@ -155,10 +155,13 @@
 
     </ion-content>
     <ion-footer-bar class="bar-footer">
-        <button translate ng-if="!isAddView" class="button button-block button-light transparent" ng-click="addThermostatView()">
+        <button translate ng-if="!isAddView && type == 'hm'" class="button button-block button-light transparent" ng-click="addThermostatView()">
             ADD_THERMOSTAT
         </button>
-        <button translate ng-if="isAddView" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+        <button translate ng-if="type == 'max'" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
+            ADD_THERMOSTAT
+        </button>
+        <button translate ng-if="isAddView && type == 'hm'" class="button button-block button-light transparent" ng-click="pairNewThermostat()">
             PAIR_THERMOSTAT
         </button>
     </ion-footer-bar>
