@@ -133,7 +133,7 @@
                 </div>
             </div>
 
-            <div ng-if="isAddView && type == 'max'" class="item item-image">
+            <div ng-hide="isAddView" class="item item-image">
                 <button class="button button-full button-assertive" ng-click="delThermostat(thermostat)">
                     <span translate>REMOVE_FROM</span> {{roomName.$value}}
                 </button>
