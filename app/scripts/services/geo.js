@@ -58,12 +58,12 @@ angular.module('cirqlApp').service('geo', ['$rootScope', '$q', 'simpleLogin', 'f
                                                             var date = new Date();
                                                             date = date + '';
                                                             var regionOb = {
-                                                                'date:': date,
+                                                                'date': date,
                                                                 'isInside': isInside,
                                                                 'radius': geo.radius
                                                             };
                                                             fbutil.ref(regionsURL).child(regionStr).set(regionOb);
-                                                            console.log('Geofence region is set: ' + JSON.stringify(regionOb));
+                                                          //  console.log('Geofence region is set: ' + JSON.stringify(regionOb));
                                                         }
                                                     }
                                                 }
