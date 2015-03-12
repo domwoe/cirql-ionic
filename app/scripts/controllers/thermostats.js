@@ -197,7 +197,8 @@ angular.module('cirqlApp')
                         }
                     });
                 })(function(trvs) {
-                    trvs.sort();
+                    trvs.sort(function(a,b){return a-b;});
+                    console.log(trvs);
                     for (var i = 0, j = 15; i < j; i++) {
                         console.log(i + ' ' + trvs[i]);
                         if (i != trvs[i]) {
