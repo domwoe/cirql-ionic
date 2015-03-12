@@ -189,7 +189,7 @@ angular.module('cirqlApp')
                         if (fbMax.val()) {
                             fbMax.forEach(function(maxTrv) {
                                 var name = maxTrv.key();
-                                trvs.push(name.split('radiator')[1]);
+                                trvs.push(parseInt(name.split('radiator')[1]));
                             });
                             cb(trvs);
                         } else {
