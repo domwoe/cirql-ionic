@@ -224,14 +224,14 @@ angular.module('cirqlApp')
                                 bgTargetHandle.style('visibility', 'hidden');
                             }
 
-                            thermoIcon.on('click', function() {
-                                var visibility = tempDrawer.style('visibility');
-                                if (visibility === 'hidden') {
-                                    tempDrawer.style('visibility', 'visible');
-                                } else {
-                                    tempDrawer.style('visibility', 'hidden');
-                                }
-                            });
+                            // thermoIcon.on('click', function() {
+                            //     var visibility = tempDrawer.style('visibility');
+                            //     if (visibility === 'hidden') {
+                            //         tempDrawer.style('visibility', 'visible');
+                            //     } else {
+                            //         tempDrawer.style('visibility', 'hidden');
+                            //     }
+                            // });
 
                             scalingContainer.attr({
                                 'transform': 'scale(' + scope.scale + ')'

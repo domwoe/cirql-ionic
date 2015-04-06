@@ -179,8 +179,8 @@ angular.module('cirqlApp')
          * Go back to home screen
          */
         $scope.goToHome = function() {
-            $scope.roomValues.$destroy();
-            templates.$destroy();
+            //$scope.roomValues.$destroy();
+            //templates.$destroy();
             //trvObj.$destroy();
             $state.go('app.home', null, {
                 reload: false
