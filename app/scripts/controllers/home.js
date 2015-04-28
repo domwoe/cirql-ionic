@@ -9,10 +9,67 @@
  */
 angular.module('cirqlApp')
 
-.controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log',
-    function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log) {
+.controller('HomeCtrl', ['$rootScope', '$scope', 'user', 'simpleLogin', 'fbutil', '$state', '$ionicLoading', '$timeout', '$cordovaSplashscreen', '$ionicSideMenuDelegate', 'log', '$cordovaPush',
+    function($rootScope, $scope, user, simpleLogin, fbutil, $state, $ionicLoading, $timeout, $cordovaSplashscreen, $ionicSideMenuDelegate, log, $cordovaPush) {
 
 
+        function registerDeviceForPushNotifications(config) {
+
+            console.log('Register device for push notifications');
+
+            // Register device to receive push notifications
+            $cordovaPush.register(config).then(function(deviceToken) {
+
+                // LE.log({
+                //     homeid: user.uid,
+                //     residentid: user.residentId,
+                //     device: $rootScope.device,
+                //     obj: 'cordovaPush',
+                //     method: 'register',
+                //     deviceToken: deviceToken
+                // });
+                console.log('Token: ' +  deviceToken);
+
+                if (deviceToken && deviceToken.length > 0) {
+
+                    // Store device and deviceToken
+
+                    fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + $rootScope.device + '/token').set(deviceToken);
+                }
+
+
+            }, function(err) {
+
+                // LE.log({
+                //     homeid: user.uid,
+                //     residentid: user.residentId,
+                //     device: $rootScope.device,
+                //     obj: 'cordovaPush',
+                //     method: 'register',
+                //     error: err
+                // });
+                
+                console.log(err);
+
+            });
+        }
+
+        if ($rootScope.device === 'ios') {
+
+            var config = {
+                badge: false,
+                sound: true,
+                alert: true
+            };
+            registerDeviceForPushNotifications(config);
+
+        } else if ($rootScope.device === 'android') {
+
+            var config = {
+                senderID: ''
+            };
+            registerDeviceForPushNotifications(config);
+        }
 
         $scope.finishedloading = false;
 

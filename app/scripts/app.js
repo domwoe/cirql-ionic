@@ -16,6 +16,10 @@ angular.module('cirqlApp', [
 
     $ionicPlatform.ready(function() {
 
+        $rootScope.device = deviceDetector.os;
+
+        //LE.init('c37797a9-3897-4161-a238-64a3e3cc2aa9');
+
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
 
@@ -168,6 +172,8 @@ angular.module('cirqlApp', [
                 });
             }
         };
+
+
 
 
         $timeout($rootScope.getLocationAndCheckPermission, 3000);

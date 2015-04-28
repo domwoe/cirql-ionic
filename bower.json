@@ -11,7 +11,8 @@
     "ngCordova": "~0.1.10-alpha",
     "ng-device-detector": "~1.1.0",
     "highcharts-ng": "~0.0.7",
-    "highcharts-release": "~4.0.4"
+    "highcharts-release": "~4.0.4",
+    "logentries": "~0.0.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.17",

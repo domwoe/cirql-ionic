@@ -60,7 +60,8 @@
     "org.apache.cordova.splashscreen",
     "./engine/cordova-crosswalk-engine-c0.5",
     "org.apache.cordova.dialogs",
-    "com.cowbell.cordova.geofence",
-    "org.apache.cordova.geolocation"
+    "org.apache.cordova.geolocation",
+    "https://github.com/phonegap-build/PushPlugin.git",
+    "https://github.com/cowbell/cordova-plugin-geofence"
   ]
 }
