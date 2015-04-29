@@ -35,6 +35,8 @@ angular.module('cirqlApp')
             });
         }
 
+        $scope.resident = user.residentId;
+
         $ionicSideMenuDelegate.canDragContent(true);
 
         log.event({
@@ -228,6 +230,19 @@ angular.module('cirqlApp')
             }
 
         };
+
+        $scope.toggleRoomclimateNotifications = function() {
+
+            var residentid  = user.residentId;
+
+            // if ($scope.roomValues.notifications[residentid] === undefined) {
+            //     $scope.roomValues.notifications[residentid] = false;
+            // } 
+
+            $scope.roomValues.$save();
+
+
+        }
 
         $scope.save = function() {
             $scope.roomValues.$save().then(function() {

@@ -20,14 +20,29 @@
                     <select ng-model="roomValues.category" ng-options="category.$id as category.name | translate for category in categories" id="roomCategory"></select>
                 </label>
                 <!-- <button ng-click="addThermostat()" class="button button-light button-block transparent">Thermostats</button> -->
-
                 <div class="padding">
                     <p translate>RESIDENT_BINDING_MSG</p>
-
                     <div ng-cloak class="residents residents-select center">
                         <div class="resident" ng-class="{unselected: !isBoundResident(resident)}" ng-repeat="resident in residents">
                             <img class="avatar" ng-click="toggleBoundResident(resident)" ng-src="./images/avatar{{resident.avatar || '0'}}.png" />
                             <br /> {{resident.name}}
+                        </div>
+                    </div>
+                </div>
+                <div class="padding">
+                    <div class="row">
+                        <div class="col-67">
+                            <p translate>ALLOW_ROOMCLIMATE_NOTIFICATIONS</p>
+                        </div>
+                        <div class="col">
+                            <li class="item item-toggle" style="height:43px">
+                                <label class="toggle toggle-balanced">
+                                    <input type="checkbox" ng-model="roomValues.notifications[resident]" ng-change="toggleRoomclimateNotifications()">
+                                    <div class="track">
+                                        <div class="handle"></div>
+                                    </div>
+                                </label>
+                            </li>
                         </div>
                     </div>
                 </div>
