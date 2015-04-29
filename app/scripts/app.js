@@ -16,7 +16,6 @@ angular.module('cirqlApp', [
 
     $ionicPlatform.ready(function() {
 
-        $rootScope.device = deviceDetector.os;
 
         //LE.init('c37797a9-3897-4161-a238-64a3e3cc2aa9');
 
@@ -97,13 +96,12 @@ angular.module('cirqlApp', [
 
 
         function checkFirebaseConnection() {
-            console.log(' Check Firebase Connection '); 
+            console.log(' Check Firebase Connection ');
             fbutil.ref('.info/connected').once('value', function(snap) {
                 if (snap.val() !== true) {
                     console.log('Firebase connection lost. Re-establish connection...');
                     $window.Firebase.goOnline();
-                }
-                else {
+                } else {
                     console.log('Firebase connection seems to be still active ' + snap.val());
                 }
             });
@@ -174,9 +172,10 @@ angular.module('cirqlApp', [
         };
 
 
-
-
         $timeout($rootScope.getLocationAndCheckPermission, 3000);
+
+
+
 
         //getLocationAndCheckPermission()
 

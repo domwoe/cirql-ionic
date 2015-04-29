@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cirqlApp')
-    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading', '$timeout', '$ionicSideMenuDelegate',
-        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading, $timeout, $ionicSideMenuDelegate) {
+    .controller('SideMenuCtrl', ['$rootScope', '$scope', 'user', '$state', 'simpleLogin', 'netatmoService', 'fbutil', '$ionicPopup', '$ionicLoading', '$timeout', '$ionicSideMenuDelegate', 'deviceDetector', '$cordovaPush', '$translate',
+        function($rootScope, $scope, user, $state, simpleLogin, netatmoService, fbutil, $ionicPopup, $ionicLoading, $timeout, $ionicSideMenuDelegate, deviceDetector, $cordovaPush, $translate) {
 
             $scope.logout = function() {
                 simpleLogin.logout();
@@ -50,9 +50,8 @@ angular.module('cirqlApp')
                     if (fbIsSuperuser.val() === true) {
 
                         $rootScope.isSuperuser = true;
-                        
-                    }
-                    else {
+
+                    } else {
 
                         $rootScope.isSuperuser = false;
                     }
@@ -62,9 +61,8 @@ angular.module('cirqlApp')
                     if (fbDisabledAnalytics.val() === true) {
 
                         $rootScope.disabledAnalytics = true;
-                        
-                    }
-                    else {
+
+                    } else {
 
                         $rootScope.disabledAnalytics = false;
                     }
@@ -289,6 +287,72 @@ angular.module('cirqlApp')
                 }
                 return false;
             };
+
+            function registerDeviceForPushNotifications(config) {
+
+                console.log('Register device for push notifications');
+
+                // Register device to receive push notifications
+                $cordovaPush.register(config).then(function(deviceToken) {
+
+                    // LE.log({
+                    //     homeid: user.uid,
+                    //     residentid: user.residentId,
+                    //     device: $rootScope.device,
+                    //     obj: 'cordovaPush',
+                    //     method: 'register',
+                    //     deviceToken: deviceToken
+                    // });
+                    console.log('Token: ' + deviceToken);
+
+                    //var translate = $filter('translate');
+                    var language = $translate.use();
+                    if (language !== 'de') {
+                        language = 'en';
+                    }
+
+                    if (deviceToken && deviceToken.length > 0) {
+
+                        // Store device and deviceToken
+
+                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/token').set(deviceToken);
+                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/language').set(language);
+                    }
+
+
+                }, function(err) {
+
+                    // LE.log({
+                    //     homeid: user.uid,
+                    //     residentid: user.residentId,
+                    //     device: $rootScope.device,
+                    //     obj: 'cordovaPush',
+                    //     method: 'register',
+                    //     error: err
+                    // });
+
+                    console.log(err);
+
+                });
+            }
+
+
+            if (deviceDetector.os === 'ios') {
+
+                var config = {
+                    badge: false,
+                    sound: true,
+                    alert: true
+                };
+                registerDeviceForPushNotifications(config);
+
+            } else if (deviceDetector.os === 'android') {
+
+                var config = {
+                    senderID: ''
+                };
+                registerDeviceForPushNotifications(config);
+            }
 
 
 
