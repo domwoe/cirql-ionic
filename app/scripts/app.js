@@ -157,6 +157,7 @@ angular.module('cirqlApp', [
 
                                             });
                                         if ($rootScope.geoInitialized !== true) {
+                                            console.log('GEO SERVICE: init');
                                             geo.init();
                                         }
                                     }
