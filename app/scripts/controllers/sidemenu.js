@@ -349,7 +349,7 @@ angular.module('cirqlApp')
             } else if (deviceDetector.os === 'android') {
 
                 var config = {
-                    senderID: 'AIzaSyBJvwczrzvZU9lu8istqgkV-IWXJea7SIA'
+                    senderID: '133037073597'
                 };
                 registerDeviceForPushNotifications(config);
             }
