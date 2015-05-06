@@ -288,6 +288,24 @@ angular.module('cirqlApp')
                 return false;
             };
 
+
+            function storeDeviceToken(deviceToken) {
+
+                 var language = $translate.use();
+                    if (language !== 'de') {
+                        language = 'en';
+                    }
+
+                    if (deviceToken && deviceToken.length > 0) {
+
+                        // Store device and deviceToken
+
+                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/token').set(deviceToken);
+                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/language').set(language);
+                    }
+
+            }
+
             function registerDeviceForPushNotifications(config) {
 
                 console.log('Register device for push notifications');
@@ -303,21 +321,15 @@ angular.module('cirqlApp')
                     //     method: 'register',
                     //     deviceToken: deviceToken
                     // });
-                    console.log('Token: ' + deviceToken);
+                    if (deviceDetector.os === 'ios') {
+
+                        storeDeviceToken(deviceToken);
+
+                    }
+                    
 
                     //var translate = $filter('translate');
-                    var language = $translate.use();
-                    if (language !== 'de') {
-                        language = 'en';
-                    }
-
-                    if (deviceToken && deviceToken.length > 0) {
-
-                        // Store device and deviceToken
-
-                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/token').set(deviceToken);
-                        fbutil.ref('homes/' + user.uid + '/residents/' + user.residentId + '/notification/devices/' + deviceDetector.os + '/language').set(language);
-                    }
+                   
 
 
                 }, function(err) {
@@ -335,6 +347,13 @@ angular.module('cirqlApp')
 
                 });
             }
+
+            $scope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+                console.log(JSON.stringify([notification]));
+                if (deviceDetector.os === 'android') {
+                    storeDeviceToken(notification.regid);
+                } 
+            });
 
 
             if (deviceDetector.os === 'ios') {
